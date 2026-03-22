@@ -1,0 +1,6 @@
+unstructured
+pytesseract
+pdf2image
+python-docx
+langchain-community
+langchain-text-splitters
