@@ -2,16 +2,16 @@ import React, { useRef } from 'react';
 import { 
   Briefcase, Target, DollarSign, Sparkles, Users, AlertTriangle, XCircle, Map, ShieldAlert, BarChart3, History, PenTool, Send, ArrowLeft
 } from 'lucide-react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 
 export const CAT_CONFIG = {
-  MUST: { label: 'BẮT BUỘC LÕI', color: '#10B981', bg: 'bg-emerald-100', text: 'text-emerald-800' },
-  SHOULD: { label: 'NÊN CÓ', color: '#F59E0B', bg: 'bg-amber-100', text: 'text-amber-800' },
-  COULD: { label: 'RỦI RO TÀI CHÍNH', color: '#EF4444', bg: 'bg-rose-100', text: 'text-rose-800' }
+  MUST_HAVE: { label: 'BẮT BUỘC LÕI', color: '#10B981', bg: 'bg-emerald-500/20', text: 'text-emerald-400' },
+  SHOULD_HAVE: { label: 'NÊN CÓ', color: '#F59E0B', bg: 'bg-amber-500/20', text: 'text-amber-400' },
+  COULD_HAVE: { label: 'RỦI RO TÀI CHÍNH', color: '#EF4444', bg: 'bg-rose-500/20', text: 'text-rose-400' }
 };
 
 export default function ScreenDashboard({ 
-  activities, budgetData, chartHistory, iteration, 
+  campaignData, budgetData, chartHistory, iteration, 
   onRestart, onRemoveActivity, onImproveFeedback 
 }) {
   const feedbackInputRef = useRef(null);
@@ -22,38 +22,37 @@ export default function ScreenDashboard({
     }
   };
 
-  const phasesMap = activities.reduce((acc, obj) => {
-    const key = obj.phaseName;
-    if (!acc[key]) acc[key] = { name: key, duration: obj.phase, acts: [] };
-    acc[key].acts.push(obj);
-    return acc;
-  }, {});
-  const groupedPhases = Object.values(phasesMap);
+  const execSum = campaignData.executive_summary;
+  const targetAud = campaignData.target_audience_and_brand_voice.target_audience;
+  const brandVoice = campaignData.target_audience_and_brand_voice.brand_voice;
+  const breakdown = campaignData.activity_and_financial_breakdown;
+  const phasedExec = campaignData.phased_execution;
+
+  const groupedPhases = breakdown.map(b => {
+    const p = phasedExec.find(x => x.phase_id === b.phase_id);
+    return {
+      name: p ? p.phase_name : b.phase_id,
+      duration: p ? p.duration : '',
+      acts: b.activities
+    };
+  });
+
+  const kpiGrowthData = [
+    { name: 'Trước CĐ', khachMoi: 20, tuongTac: 150 },
+    { name: 'Tháng 4 (P1)', khachMoi: 120, tuongTac: 900 },
+    { name: 'Tháng 5 (P2)', khachMoi: 350, tuongTac: 2500 },
+  ];
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans pb-16">
-      {/* Navbar */}
-      <nav className="bg-slate-900 text-white px-8 py-4 flex items-center justify-between shadow-lg sticky top-0 z-50">
+    <div className="h-full bg-transparent font-sans pb-16">
+      <div className="bg-[#111C44] border-b border-[#1B254B] px-8 py-4 mb-8 flex items-center justify-between shadow-[0_4px_24px_rgba(0,0,0,0.1)]">
         <div className="flex items-center space-x-5">
-          <button onClick={onRestart} className="hover:bg-slate-800 p-2 rounded-lg transition-colors flex items-center text-slate-300 hover:text-white">
+          <button onClick={onRestart} className="hover:bg-[#1B254B] p-2 rounded-lg transition-colors flex items-center text-[#A0AEC0] hover:text-white">
             <ArrowLeft size={18} className="mr-2"/> Quay Lại
           </button>
-          <div className="h-6 w-px bg-slate-700"></div>
+          <div className="h-6 w-px bg-[#1B254B]"></div>
           <div className="flex items-center">
-            <Briefcase className="text-blue-400 mr-2" />
-            <span className="font-bold tracking-wide">BrandFlow Executive <span className="text-xs bg-blue-500/20 text-blue-300 ml-2 px-2 py-0.5 rounded-full border border-blue-500/30">VER {iteration}</span></span>
-          </div>
-        </div>
-      </nav>
-
-      {/* Header */}
-      <div className="bg-white border-b border-slate-200 py-8 px-8 mb-8 shadow-sm">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center">
-          <div>
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Hương Viên Trà Quán</h1>
-            <p className="text-slate-500 mt-2 max-w-2xl text-sm leading-relaxed border-l-4 border-blue-500 pl-3">
-               Định vị quán thành trạm dừng chân chữa lành tâm hồn, sử dụng nội dung mạng xã hội có chiều sâu và sự kiện workshop để thu hút khách hàng hướng nội sau Tết.
-            </p>
+            <span className="font-bold tracking-wide text-white">BrandFlow Executive <span className="text-xs bg-[#0075FF]/20 text-[#0075FF] ml-2 px-2 py-0.5 rounded-full border border-[#0075FF]/30">VER {iteration}</span></span>
           </div>
         </div>
       </div>
@@ -63,59 +62,54 @@ export default function ScreenDashboard({
         {/* LEFT: Target & Roadmap */}
         <div className="lg:col-span-8 space-y-8">
           
+          <div className="bg-[#111C44] rounded-[20px] p-6 shadow-[0_4px_24px_rgba(0,0,0,0.1)]">
+            <h1 className="text-3xl font-extrabold text-white tracking-tight leading-tight">{execSum.campaign_name}</h1>
+            <p className="text-[#A0AEC0] mt-3 mb-4 max-w-2xl text-sm leading-relaxed border-l-4 border-[#0075FF] pl-3">
+               {execSum.campaign_summary}
+            </p>
+            <div className="bg-[#0B1437] border border-[#1B254B] p-4 rounded-xl inline-block mt-2">
+               <div className="text-[11px] font-black text-[#0075FF] uppercase tracking-widest mb-1">MỤC TIÊU LÕI</div>
+               <div className="text-sm font-semibold text-white">{execSum.core_objectives}</div>
+            </div>
+          </div>
+
           {/* Top Metrics */}
-          <div className="grid grid-cols-3 gap-5">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <div className="text-[11px] font-black uppercase text-slate-400 tracking-widest mb-2 flex items-center"><Target size={14} className="mr-1 text-blue-500"/> Mục tiêu KH mới</div>
-              <div className="text-3xl font-black text-slate-800">20% Mới</div>
-              <div className="text-xs font-semibold text-emerald-600 mt-2 block">+15% Tổng Doanh Thu</div>
+          <div className="grid grid-cols-2 gap-5">
+            <div className="bg-[#111C44] p-6 rounded-[20px] border-none shadow-[0_4px_24px_rgba(0,0,0,0.1)]">
+              <div className="text-[11px] font-black uppercase text-emerald-400 tracking-widest mb-2 flex items-center"><DollarSign size={14} className="mr-1 "/> Tổng Ngân Sách Phân Bổ</div>
+              <div className="text-3xl font-black text-white">{(budgetData.reduce((s,a)=>s+a.value,0)/1000000).toLocaleString()}<span className="text-xl ml-1 font-bold text-[#A0AEC0]">Triệu</span></div>
+              <div className="text-xs font-medium text-[#A0AEC0] mt-2">Ngân sách gốc: {(execSum.total_budget_vnd/1000000).toLocaleString()} Triệu</div>
             </div>
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <div className="text-[11px] font-black uppercase text-emerald-500 tracking-widest mb-2 flex items-center"><DollarSign size={14} className="mr-1 "/> Tổng Vốn</div>
-              <div className="text-3xl font-black text-slate-800">{(budgetData.reduce((s,a)=>s+a.value,0)/1000000).toLocaleString()}<span className="text-xl ml-1 font-bold text-slate-400">Triệu</span></div>
-              <div className="text-xs font-medium text-slate-400 mt-2">Ngân sách eo hẹp thực tế</div>
-            </div>
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm bg-gradient-to-br from-indigo-900 to-slate-800 text-white border-none relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500 blur-3xl opacity-20 rounded-full translate-x-10 -translate-y-10"></div>
-              <div className="text-[11px] font-black uppercase text-blue-400 tracking-widest mb-2 flex items-center"><Sparkles size={14} className="mr-1 "/> Mô hình MoSCoW</div>
-              <div className="text-2xl font-black tracking-tighter w-full leading-tight mt-1 text-white">Chốt Cứng 75%<br/>Ngân Sách Lõi</div>
+            <div className="bg-[#111C44] p-6 rounded-[20px] border-none shadow-[0_4px_24px_rgba(0,0,0,0.1)] bg-gradient-to-br from-[#1860F5] to-[#111C44] text-white overflow-hidden relative">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#0075FF] blur-3xl opacity-20 rounded-full translate-x-10 -translate-y-10"></div>
+              <div className="text-[11px] font-black uppercase text-[#88b6ff] tracking-widest mb-2 flex items-center relative z-10"><Sparkles size={14} className="mr-1 "/> Mô hình MoSCoW</div>
+              <div className="text-2xl font-black tracking-tighter w-full leading-tight mt-1 relative z-10 text-white">Tối ưu hóa<br/>Phân bổ Ngân Sách</div>
             </div>
           </div>
 
           {/* Target Audience */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center">
-              <Users size={18} className="text-slate-700 mr-2" />
-              <h3 className="font-black text-slate-800 uppercase tracking-widest text-xs">Phân Tích Khách Hàng & Chất Giọng</h3>
+          <div className="bg-[#111C44] rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.1)] overflow-hidden">
+            <div className="bg-[#0B1437] px-6 py-4 border-b border-[#1B254B] flex items-center">
+              <Users size={18} className="text-[#A0AEC0] mr-2" />
+              <h3 className="font-black text-white uppercase tracking-widest text-xs">Phân Tích Khách Hàng & Chất Giọng</h3>
             </div>
-            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="p-6 grid grid-cols-1 gap-8">
               <div>
-                <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4">Nhân khẩu & Lối sống</h4>
-                <ul className="space-y-4">
-                  <li className="flex items-start">
-                    <div className="mt-0.5 mr-3 bg-blue-50 p-1.5 rounded-md text-blue-600"><Briefcase size={14}/></div>
-                    <span className="text-sm font-semibold text-slate-700 leading-tight">Thu nhập ổn định, hướng nội, yêu văn hóa truyền thống</span>
-                  </li>
-                  <li className="flex items-start">
-                    <div className="mt-0.5 mr-3 bg-rose-50 p-1.5 rounded-md text-rose-600"><AlertTriangle size={14}/></div>
-                    <div>
-                      <span className="text-xs font-bold text-rose-600 block mb-0.5">Điểm Đau (Pain Point):</span>
-                      <span className="text-sm font-medium text-slate-600 bg-rose-50">Áp lực công việc đô thị bận rộn sau Tết, cần không gian tĩnh lặng. Phục vụ tinh tế.</span>
-                    </div>
-                  </li>
-                </ul>
+                <h4 className="text-[11px] font-black text-[#A0AEC0] uppercase tracking-widest mb-4">Nhân khẩu & Lối sống</h4>
+                <div className="flex items-start">
+                  <div className="mt-0.5 mr-3 bg-[#0075FF]/20 p-2 rounded-lg text-[#0075FF]"><Users size={16}/></div>
+                  <span className="text-sm font-medium text-[#A0AEC0] leading-relaxed">{targetAud}</span>
+                </div>
               </div>
-              <div>
-                <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4">Giọng Điệu Thương Hiệu</h4>
-                <div className="bg-slate-900 rounded-xl p-5 text-white h-full relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500 opacity-20 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2"></div>
-                  <div className="relative z-10">
-                    <p className="font-mono text-sm leading-relaxed text-blue-50 mb-3 tracking-wide border-b border-slate-700 pb-3">
-                      "Chậm rãi, chân thành, mang đậm tính thiền vị và chữa lành. Kể chuyện văn hóa."
+              <div className="border-t border-[#1B254B] pt-6">
+                <h4 className="text-[11px] font-black text-[#A0AEC0] uppercase tracking-widest mb-4">Giọng Điệu Thương Hiệu</h4>
+                <div className="bg-[#0B1437] rounded-xl p-5 text-white h-full relative overflow-hidden border border-[#1B254B]">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#0075FF] opacity-10 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2"></div>
+                  <div className="relative z-10 flex items-start">
+                    <AlertTriangle size={18} className="text-emerald-400 mr-3 shrink-0" />
+                    <p className="font-mono text-sm leading-relaxed text-[#A0AEC0] tracking-wide">
+                      {brandVoice}
                     </p>
-                    <div className="inline-flex items-center text-rose-300 text-xs rounded-full font-medium">
-                      <XCircle size={14} className="mr-1.5" /> Tránh xa ngôn từ chạy sale, giật tít ồn ào.
-                    </div>
                   </div>
                 </div>
               </div>
@@ -123,49 +117,57 @@ export default function ScreenDashboard({
           </div>
 
           {/* Editable Roadmap List GROUPED BY PHASE */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden relative">
-            <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+          <div className="bg-[#111C44] rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.1)] overflow-hidden relative">
+            <div className="bg-[#0B1437] px-6 py-4 border-b border-[#1B254B] flex items-center justify-between">
               <div className="flex items-center">
-                <span className="bg-indigo-100 text-indigo-700 p-1.5 rounded-lg mr-2"><Map size={16}/></span>
-                <h3 className="font-black text-slate-800 uppercase tracking-widest text-xs">Lộ Trình Từng Giai Đoạn (Sắp xếp theo Timeline)</h3>
+                <span className="bg-[#0075FF]/20 text-[#0075FF] p-1.5 rounded-lg mr-2"><Map size={16}/></span>
+                <h3 className="font-black text-white uppercase tracking-widest text-xs">Lộ Trình Từng Giai Đoạn (Chi Phí & Hoạt Động)</h3>
               </div>
             </div>
             
             <div className="p-6">
               {groupedPhases.length === 0 ? (
-                <div className="text-center py-10 text-slate-400">Roadmap đã trống.</div>
+                <div className="text-center py-10 text-[#A0AEC0]">Roadmap đã trống.</div>
               ) : (
                 <div className="relative pl-6">
-                  <div className="absolute left-[11px] top-6 bottom-6 w-0.5 bg-slate-200"></div>
+                  <div className="absolute left-[11px] top-6 bottom-6 w-0.5 bg-[#1B254B]"></div>
                   
                   {groupedPhases.map((phaseGroup, pIdx) => (
                     <div key={pIdx} className="mb-10 relative">
                       <div className="flex items-center mb-4">
-                         <div className="absolute -left-[35px] w-6 h-6 rounded-full bg-blue-500 border-4 border-white shadow flex items-center justify-center text-white text-xs font-bold">●</div>
-                         <h4 className="font-black text-lg text-slate-900">{phaseGroup.name}</h4>
-                         <span className="ml-3 text-[10px] font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded uppercase tracking-wider">{phaseGroup.duration}</span>
+                         <div className="absolute -left-[35px] w-6 h-6 rounded-full bg-[#0075FF] border-4 border-[#111C44] shadow flex items-center justify-center text-white text-xs font-bold">●</div>
+                         <h4 className="font-black text-lg text-white">{phaseGroup.name}</h4>
+                         <span className="ml-3 text-[10px] font-bold bg-[#1B254B] text-[#A0AEC0] px-3 py-1 rounded-full uppercase tracking-wider">{phaseGroup.duration}</span>
                       </div>
+                      
+                      {phaseGroup.acts.length === 0 && (
+                        <div className="ml-2 mt-2 text-sm text-[#A0AEC0] italic border border-dashed border-[#1B254B] p-4 rounded-xl bg-[#0B1437]">
+                          Không có hoạt động nào trong Phase này.
+                        </div>
+                      )}
+
                       <div className="space-y-3">
                         {phaseGroup.acts.map(act => (
-                          <div key={act.id} className="group flex items-center justify-between p-4 border border-slate-200 rounded-xl hover:border-blue-400 hover:shadow-md transition-all bg-white relative ml-2">
+                          <div key={act.id} className="group flex items-center justify-between p-4 border border-[#1B254B] rounded-xl hover:border-[#0075FF] transition-all bg-[#0B1437] relative ml-2">
                             <div className="flex-1 w-full pr-12">
                               <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
-                                <h4 className="font-bold text-slate-800 text-[15px]">{act.name}</h4>
-                                <span className="text-sm font-black text-slate-900">{act.cost.toLocaleString()} đ</span>
+                                <h4 className="font-bold text-white text-[15px]">{act.activity_name}</h4>
+                                <span className="text-sm font-black text-white">{act.cost_vnd.toLocaleString()} đ</span>
                               </div>
                               <div className="flex items-center text-xs flex-wrap gap-y-2">
-                                <span className={`${CAT_CONFIG[act.cat].bg} ${CAT_CONFIG[act.cat].text} px-2 py-0.5 rounded font-black tracking-wider border border-${CAT_CONFIG[act.cat].text}/20`}>
-                                  {CAT_CONFIG[act.cat].label}
+                                <span className={`${CAT_CONFIG[act.moscow_tag].bg} ${CAT_CONFIG[act.moscow_tag].text} px-2 py-0.5 rounded font-black tracking-wider border border-${CAT_CONFIG[act.moscow_tag].text}/20`}>
+                                  {CAT_CONFIG[act.moscow_tag].label}
                                </span>
-                                <span className="mx-2 text-slate-300">•</span>
-                                <span className="text-slate-500 font-medium">{act.desc}</span>
-                                <span className="mx-2 text-slate-300">•</span>
-                                <span className="text-blue-600 font-bold flex items-center"><Target size={12} className="mr-1"/> KPI: {act.kpi}</span>
+                                <span className="mx-2 text-[#1B254B]">•</span>
+                                <span className="text-[#A0AEC0] font-medium block leading-relaxed max-w-2xl">{act.description}</span>
+                              </div>
+                              <div className="mt-3 text-[#0075FF] font-medium text-xs flex items-center bg-[#0075FF]/10 inline-flex px-2 py-1 rounded">
+                                <Target size={12} className="mr-1.5"/> KPI: {act.kpi_commitment}
                               </div>
                             </div>
                             <button 
                               onClick={() => onRemoveActivity(act.id)}
-                              className="absolute right-4 bg-rose-50 text-rose-500 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-rose-500 hover:text-white border border-rose-100"
+                              className="absolute right-4 bg-rose-500/20 text-rose-500 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-rose-500 hover:text-white border border-rose-500/30"
                               title="Gạch Bỏ Hạng Mục Này"
                             >
                               <XCircle size={18} />
@@ -181,19 +183,19 @@ export default function ScreenDashboard({
           </div>
 
            {/* Feedback Input Section */}
-           <div className="bg-indigo-50/50 rounded-2xl border border-indigo-100 p-6 flex items-start shadow-inner">
-            <div className="bg-indigo-600 p-3 rounded-xl text-white mr-4 shadow-sm"><PenTool size={20}/></div>
+           <div className="bg-[#0B1437] rounded-[20px] border border-[#1B254B] p-6 flex items-start shadow-inner">
+            <div className="bg-[#0075FF] p-3 rounded-xl text-white mr-4 shadow-sm"><PenTool size={20}/></div>
             <div className="flex-1 w-full">
-              <h4 className="font-bold text-indigo-900 mb-2">Không hài lòng? Viết Feedback để AI lên lại Plan</h4>
+              <h4 className="font-bold text-white mb-2">Không hài lòng? Viết Feedback để AI lên lại Plan</h4>
               <div className="flex">
                 <input 
                   type="text"
                   ref={feedbackInputRef}
-                  placeholder="Nhập yêu cầu. VD: Tôi muốn bỏ tiền chạy Workshop, tập trung Ads..."
-                  className="flex-1 border border-indigo-200 p-3 rounded-l-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+                  placeholder="Nhập yêu cầu. VD: Nhấn mạnh vào Workshop trải nghiệm trực tiếp..."
+                  className="flex-1 bg-[#111C44] border border-[#1B254B] text-white p-3 rounded-l-xl text-sm outline-none focus:ring-2 focus:ring-[#0075FF] shadow-sm placeholder-[#A0AEC0]"
                 />
-                <button onClick={submitFeedback} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-r-xl transition-colors flex items-center shadow-sm">
-                  Gửi Lệnh Cải Thiện <Send size={16} className="ml-2"/>
+                <button onClick={submitFeedback} className="bg-[#0075FF] hover:bg-[#0055c4] text-white font-bold px-6 py-3 rounded-r-xl transition-colors flex items-center shadow-sm whitespace-nowrap">
+                  Gửi Yêu Cầu <Send size={16} className="ml-2"/>
                 </button>
               </div>
             </div>
@@ -204,21 +206,21 @@ export default function ScreenDashboard({
         {/* RIGHT: MoSCoW Budget & History */}
         <div className="lg:col-span-4 space-y-6">
           
-          <div className="bg-rose-50 rounded-2xl border border-rose-100 p-6 flex items-start shadow-sm">
-            <ShieldAlert className="text-rose-500 shrink-0 mt-0.5 mr-3" size={20} />
+          <div className="bg-rose-500/10 rounded-[20px] border border-rose-500/20 p-6 flex items-start shadow-sm">
+            <ShieldAlert className="text-rose-400 shrink-0 mt-0.5 mr-3" size={20} />
             <div>
-               <h4 className="text-rose-800 font-black text-sm mb-1 uppercase tracking-wider">Lệnh Khóa Tiền Từ CFO</h4>
-               <p className="text-xs text-rose-700 leading-relaxed font-semibold">Khóa cứng chốt 75% ngân sách vào khối lượng MUST HAVE. Mọi khoản "quà tặng mứt" (COULD HAVE) là khoản chi sẵn sàng gạch bỏ để thế chấp bảo toàn dòng tiền nếu FB Ads tăng giá đầu tháng 4!</p>
+               <h4 className="text-rose-400 font-black text-sm mb-1 uppercase tracking-wider">Lệnh Khóa Tiền Từ CFO</h4>
+               <p className="text-xs text-[#A0AEC0] leading-relaxed font-semibold">Bơm ngân sách tối đa vào lượng MUST_HAVE. Các khoản COULD_HAVE sẽ là đối tượng đầu tiên bị CFO cắt rủi ro nếu chiến dịch cần huy động vốn khẩn cấp.</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border-t-8 border-t-slate-900 shadow-sm overflow-hidden flex flex-col relative">
-            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-white">
-              <h3 className="font-black text-slate-900 uppercase tracking-widest text-sm">Cơ Cấu Chi Phí</h3>
-              <BarChart3 size={16} className="text-blue-500" />
+          <div className="bg-[#111C44] rounded-[20px] border border-[#1B254B] shadow-[0_4px_24px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col relative border-t-8 border-t-[#0075FF]">
+            <div className="px-6 py-5 border-b border-[#1B254B] flex justify-between items-center bg-[#111C44]">
+              <h3 className="font-black text-white uppercase tracking-widest text-sm">Cơ Cấu MoSCoW</h3>
+              <BarChart3 size={16} className="text-[#0075FF]" />
             </div>
             
-            <div className="p-6 relative bg-white">
+            <div className="p-6 relative bg-[#111C44]">
                <div className="h-56 w-full relative">
                 {budgetData.length > 0 ? (
                   <ResponsiveContainer width="100%" height="100%">
@@ -226,36 +228,60 @@ export default function ScreenDashboard({
                       <Pie data={budgetData} cx="50%" cy="50%" innerRadius={60} outerRadius={85} paddingAngle={4} dataKey="value" stroke="none">
                         {budgetData.map((entry, index) => <Cell key={`cell-${index}`} fill={CAT_CONFIG[entry.cat].color} />)}
                       </Pie>
-                      <Tooltip formatter={(val) => val.toLocaleString() + ' đ'} contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 15px rgba(0,0,0,0.1)'}} />
+                      <RechartsTooltip formatter={(val) => val.toLocaleString() + ' đ'} contentStyle={{backgroundColor: '#0B1437', borderColor: '#1B254B', color: 'white'}} />
                     </PieChart>
                   </ResponsiveContainer>
                 ) : (
-                   <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold">Rỗng Ngân Sách</div>
+                   <div className="w-full h-full flex items-center justify-center text-[#A0AEC0] font-bold">Rỗng Ngân Sách</div>
                 )}
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-2xl font-black text-slate-900 tracking-tighter">{(budgetData.reduce((s,a)=>s+a.value,0)/1000000)}Tr</span>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Tổng Tiền Phân Bổ</span>
+                  <span className="text-2xl font-black text-white tracking-tighter">{(budgetData.reduce((s,a)=>s+a.value,0)/1000000)}Tr</span>
+                  <span className="text-[10px] font-bold text-[#A0AEC0] uppercase tracking-widest mt-0.5">Tiền Phân Bổ</span>
                 </div>
               </div>
 
               <div className="mt-6 space-y-3">
                 {budgetData.map((item, idx) => (
-                   <div key={idx} className={`flex justify-between items-center ${CAT_CONFIG[item.cat].bg} p-3 rounded-lg border border-${CAT_CONFIG[item.cat].text}/10`}>
-                     <span className={`font-black ${CAT_CONFIG[item.cat].text} text-[11px] tracking-wider`}>{item.name}</span>
-                     <span className={`font-black ${CAT_CONFIG[item.cat].text} text-sm`}>{(item.value/1000000).toLocaleString()} Tr đ</span>
+                   <div key={idx} className={`flex justify-between items-center ${CAT_CONFIG[item.cat].bg} p-3 rounded-lg border border-${CAT_CONFIG[item.cat].text}/20`}>
+                     <span className={`font-medium ${CAT_CONFIG[item.cat].text} text-[11px] truncate mr-2`}>{item.name}</span>
+                     <span className={`font-black ${CAT_CONFIG[item.cat].text} text-sm shrink-0`}>{(item.value/1000000).toLocaleString()} Tr đ</span>
                    </div>
                 ))}
               </div>
             </div>
           </div>
 
+          {/* KPI Projection Chart */}
+          <div className="bg-[#111C44] rounded-[20px] border border-[#1B254B] shadow-[0_4px_24px_rgba(0,0,0,0.1)] p-6">
+            <h3 className="font-black text-white uppercase tracking-widest text-sm mb-6 flex items-center">
+              <Target size={16} className="text-emerald-400 mr-2" /> Dự Phóng Tăng Trưởng KPI
+            </h3>
+            <div className="h-56 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={kpiGrowthData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1B254B" vertical={false} />
+                  <XAxis dataKey="name" stroke="#A0AEC0" tick={{fontSize: 10}} axisLine={false} tickLine={false} dy={10} />
+                  <YAxis stroke="#A0AEC0" tick={{fontSize: 10}} axisLine={false} tickLine={false} dx={-10} />
+                  <RechartsTooltip 
+                    contentStyle={{backgroundColor: '#0B1437', borderColor: '#1B254B', color: 'white', borderRadius: '8px'}}
+                    itemStyle={{fontSize: 12}}
+                    labelStyle={{fontSize: 12, fontWeight: 'bold', color: '#A0AEC0', marginBottom: '4px'}}
+                  />
+                  <Legend wrapperStyle={{fontSize: 11, paddingTop: '10px'}} iconType="circle" />
+                  <Line type="monotone" dataKey="khachMoi" name="Khách Mới (Người)" stroke="#10B981" strokeWidth={3} dot={{r: 4, strokeWidth: 2, fill: '#111C44'}} activeDot={{r: 6}} />
+                  <Line type="monotone" dataKey="tuongTac" name="Tương Tác (Lượt)" stroke="#0075FF" strokeWidth={3} dot={{r: 4, strokeWidth: 2, fill: '#111C44'}} activeDot={{r: 6}} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
           {chartHistory.length > 0 && (
-             <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-               <h3 className="font-bold text-slate-900 mb-4 flex items-center text-sm uppercase tracking-wider"><History size={16} className="mr-2 text-blue-500"/> Lịch Sử Sửa Đổi</h3>
+             <div className="bg-[#111C44] rounded-[20px] p-6 shadow-[0_4px_24px_rgba(0,0,0,0.1)] border border-[#1B254B]">
+               <h3 className="font-bold text-white mb-4 flex items-center text-sm uppercase tracking-wider"><History size={16} className="mr-2 text-[#0075FF]"/> Lịch Sử Sửa Đổi</h3>
                <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
                  {[...chartHistory].reverse().map((hist, idx) => (
-                    <div key={idx} className="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center hover:bg-slate-100 transition-colors">
+                    <div key={idx} className="bg-[#0B1437] border border-[#1B254B] p-3 rounded-xl flex items-center hover:bg-[#1B254B] transition-colors">
                       <div className="w-10 h-10 shrink-0 mr-3">
                          <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
@@ -266,8 +292,8 @@ export default function ScreenDashboard({
                          </ResponsiveContainer>
                       </div>
                       <div className="flex-1">
-                         <span className="font-black text-slate-900 text-[11px] uppercase block">Lần Cải Thiện Số {hist.v}</span>
-                         <span className="text-[10px] font-bold text-slate-500">Ngân sách: {(hist.data.reduce((s,a)=>s+a.value,0)/1000000)} Triệu VND</span>
+                         <span className="font-black text-white text-[11px] uppercase block">Lần Cải Thiện Số {hist.v}</span>
+                         <span className="text-[10px] font-medium text-[#A0AEC0]">Ngân sách: {(hist.data.reduce((s,a)=>s+a.value,0)/1000000)} Triệu VND</span>
                       </div>
                     </div>
                  ))}
