@@ -16,8 +16,9 @@ import json
 from typing import TypedDict, Optional
 from langgraph.graph import StateGraph, END
 
-from agents_core import build_planner_chain, build_cfo_chain, safe_invoke_chain
+from agents_core import build_planner_chain, build_cfo_chain, build_customer_chain, safe_invoke_chain
 from memory_rag import get_relevant_guidelines
+from customer_review import calculate_customer_rule_score, DEFAULT_CRITERIA_WEIGHTS
 
 # =============================================================================
 # HELPER — Tính toán Toán học bằng Python & In Terminal
@@ -93,6 +94,13 @@ class StrategyState(TypedDict):
     over_budget: int
     iteration_count: int
     is_approved: bool
+    customer_round: int
+    satisfaction_threshold: int
+    max_customer_rounds: int
+    customer_feedback: str
+    rule_score: int
+    client_self_score: int
+    final_score: int
     needs_human_intervention: bool
 
 
@@ -102,6 +110,7 @@ class StrategyState(TypedDict):
 
 planner_chain = build_planner_chain()
 cfo_chain = build_cfo_chain()
+customer_chain = build_customer_chain()
 
 def planner_node(state: StrategyState) -> dict:
     iteration = state.get("iteration_count", 0) + 1
@@ -167,6 +176,46 @@ def planner_node(state: StrategyState) -> dict:
         "company_guidelines": guidelines,
     }
 
+
+
+
+def customer_node(state: StrategyState) -> dict:
+    print("\n\ud83e\udd1d [Khach hang] Dang danh gia ke hoach...")
+
+    plan = state.get("current_plan") or {}
+    rule_score = calculate_customer_rule_score(plan, DEFAULT_CRITERIA_WEIGHTS)
+
+    customer_output = safe_invoke_chain(customer_chain, {
+        "budget": state["budget"],
+        "company_guidelines": state.get("company_guidelines", ""),
+        "rule_score": rule_score,
+        "master_plan": json.dumps(plan, ensure_ascii=False)
+    })
+
+    client_self_score = int(customer_output.get("client_self_score", 50))
+    feedback = customer_output.get("feedback", "Khong co phan hoi bo sung")
+    reasoning_summary = customer_output.get("reasoning_summary", "")
+
+    final_score = int(0.7 * rule_score + 0.3 * client_self_score)
+    customer_round = state.get("customer_round", 0) + 1
+
+    is_approved = final_score >= state.get("satisfaction_threshold", 70)
+    needs_human = customer_round >= state.get("max_customer_rounds", 3)
+
+    print(f"   [Customer] Rule score: {rule_score}")
+    print(f"   [Customer] Self score: {client_self_score}")
+    print(f"   [Customer] Final score: {final_score}")
+
+    return {
+        "customer_round": customer_round,
+        "customer_feedback": feedback,
+        "rule_score": rule_score,
+        "client_self_score": client_self_score,
+        "final_score": final_score,
+        "feedback": feedback,
+        "is_approved": is_approved,
+        "needs_human_intervention": needs_human,
+    }
 
 def cfo_node(state: StrategyState) -> dict:
     print(f"\n💼 [Giám Đốc Tài Chính] Đã nhận Master Plan. Bắt đầu audit...")
@@ -236,27 +285,52 @@ def route_after_cfo(state: StrategyState) -> str:
         return "END"
     
     print(f"\n   ⏭️ [Hệ Thống] Yêu cầu CMO sửa lại bản nháp Master Plan...")
-    return "continue_to_planner"
+    return "continue_to_customer"
 
 
 # =============================================================================
+
+
+def route_after_customer(state: StrategyState) -> str:
+    if state.get("is_approved") is True:
+        return "END"
+
+    if state.get("needs_human_intervention") is True:
+        print(f"\n{'=' * 70}")
+        print("\ud83d\udee1 Khach hang chua hai long sau nhieu vong. Can can thiep thu cong.")
+        print(f"{'=' * 70}")
+        return "END"
+
+    return "continue_to_cfo"
+
 # 4. CHUẨN BỊ GRAPH
 # =============================================================================
 
 builder = StateGraph(StrategyState)
 
 builder.add_node("planner", planner_node)
+builder.add_node("customer", customer_node)
 builder.add_node("cfo", cfo_node)
 
 builder.set_entry_point("planner")
-builder.add_edge("planner", "cfo")
+builder.add_edge("planner", "customer")
+
+builder.add_conditional_edges(
+    "customer",
+    route_after_customer,
+    {
+        "END": END,
+        "continue_to_cfo": "cfo"
+    }
+)
 
 builder.add_conditional_edges(
     "cfo",
     route_after_cfo,
     {
         "END": END,
-        "continue_to_planner": "planner"
+        "continue_to_planner": "planner",
+        "continue_to_customer": "customer"
     }
 )
 
@@ -279,7 +353,14 @@ if __name__ == "__main__":
         "over_budget": 0,
         "iteration_count": 0,
         "is_approved": False,
-        "needs_human_intervention": False
+        "needs_human_intervention": False,
+        "customer_round": 0,
+        "satisfaction_threshold": 70,
+        "max_customer_rounds": 3,
+        "customer_feedback": "",
+        "rule_score": 0,
+        "client_self_score": 0,
+        "final_score": 0
     }
     
     print("\n" + "═" * 70)
