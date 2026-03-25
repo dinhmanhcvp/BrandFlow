@@ -63,12 +63,19 @@ class CFODecision(BaseModel):
     )
 
 
+class CustomerReview(BaseModel):
+    client_self_score: int = Field(description="Customer self score (1-100)")
+    feedback: str = Field(description="Customer feedback details")
+    reasoning_summary: str = Field(description="Short reasoning summary")
+
+
 # =============================================================================
 # 2. OUTPUT PARSERS
 # =============================================================================
 
 planner_parser = JsonOutputParser(pydantic_object=MasterPlanOutput)
 cfo_parser = JsonOutputParser(pydantic_object=CFODecision)
+customer_parser = JsonOutputParser(pydantic_object=CustomerReview)
 
 
 # =============================================================================
@@ -184,6 +191,21 @@ Kế hoạch tổng thể (Master Plan):
     ),
 ])
 
+# ---- Customer Reviewer Prompt ----
+customer_prompt = ChatPromptTemplate.from_messages([
+    (
+        "system",
+        "You are the customer reviewing the marketing plan. Score satisfaction from 1-100.\n"
+        "Consider: activity/KPI clarity, feasibility vs budget, strategic coherence, target fit, brand fit.\n"
+        "Provide clear feedback for improvements. Return JSON only."
+        + JSON_ENFORCEMENT + "\n\n{format_instructions}"
+    ),
+    (
+        "human",
+        "Budget: {budget}\n\nBrand guidelines:\n{company_guidelines}\n\nRule score (Python): {rule_score}\n\nPlan:\n{master_plan}"
+    ),
+])
+
 
 # =============================================================================
 # 4. LLM INITIALIZATION
@@ -216,6 +238,14 @@ def build_cfo_chain():
         format_instructions=cfo_parser.get_format_instructions()
     )
     return prompt_with_format | llm | cfo_parser
+
+
+def build_customer_chain():
+    llm = get_llm(temperature=0.2)
+    prompt_with_format = customer_prompt.partial(
+        format_instructions=customer_parser.get_format_instructions()
+    )
+    return prompt_with_format | llm | customer_parser
 
 
 # =============================================================================
