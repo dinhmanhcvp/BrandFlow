@@ -93,25 +93,31 @@ export default function ScreenDashboard({
               <Users size={18} className="text-[#A0AEC0] mr-2" />
               <h3 className="font-black text-white uppercase tracking-widest text-xs">Phân Tích Khách Hàng & Chất Giọng</h3>
             </div>
-            <div className="p-6 grid grid-cols-1 gap-8">
-              <div>
-                <h4 className="text-[11px] font-black text-[#A0AEC0] uppercase tracking-widest mb-4">Nhân khẩu & Lối sống</h4>
-                <div className="flex items-start">
-                  <div className="mt-0.5 mr-3 bg-[#0075FF]/20 p-2 rounded-lg text-[#0075FF]"><Users size={16}/></div>
-                  <span className="text-sm font-medium text-[#A0AEC0] leading-relaxed">{targetAud}</span>
-                </div>
-              </div>
-              <div className="border-t border-[#1B254B] pt-6">
-                <h4 className="text-[11px] font-black text-[#A0AEC0] uppercase tracking-widest mb-4">Giọng Điệu Thương Hiệu</h4>
-                <div className="bg-[#0B1437] rounded-xl p-5 text-white h-full relative overflow-hidden border border-[#1B254B]">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#0075FF] opacity-10 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2"></div>
-                  <div className="relative z-10 flex items-start">
-                    <AlertTriangle size={18} className="text-emerald-400 mr-3 shrink-0" />
-                    <p className="font-mono text-sm leading-relaxed text-[#A0AEC0] tracking-wide">
-                      {brandVoice}
-                    </p>
+            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-[#0B1437] border border-[#1B254B] p-5 rounded-2xl relative overflow-hidden group hover:border-[#0075FF]/30 transition-colors">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#0075FF] opacity-[0.05] rounded-full blur-2xl group-hover:opacity-10 transition-opacity transform translate-x-1/4 -translate-y-1/4"></div>
+                <div className="flex items-center mb-4 relative z-10">
+                  <div className="bg-[#0075FF]/20 p-2.5 rounded-xl text-[#0075FF] mr-3">
+                    <Users size={18}/>
                   </div>
+                  <h4 className="text-[12px] font-black text-white uppercase tracking-widest">Nhân khẩu & Lối sống</h4>
                 </div>
+                <p className="text-sm font-medium text-[#A0AEC0] leading-relaxed relative z-10">
+                  {targetAud}
+                </p>
+              </div>
+
+              <div className="bg-[#0B1437] border border-[#1B254B] p-5 rounded-2xl relative overflow-hidden group hover:border-emerald-500/30 transition-colors">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500 opacity-[0.05] rounded-full blur-2xl group-hover:opacity-10 transition-opacity transform translate-x-1/4 -translate-y-1/4"></div>
+                <div className="flex items-center mb-4 relative z-10">
+                  <div className="bg-emerald-500/20 p-2.5 rounded-xl text-emerald-400 mr-3">
+                    <AlertTriangle size={18}/>
+                  </div>
+                  <h4 className="text-[12px] font-black text-white uppercase tracking-widest">Giọng Điệu Thương Hiệu</h4>
+                </div>
+                <p className="font-mono text-sm font-medium text-[#A0AEC0] leading-relaxed relative z-10">
+                  {brandVoice}
+                </p>
               </div>
             </div>
           </div>
