@@ -9,34 +9,81 @@ import ScreenDashboard from './components/ScreenDashboard';
 const initialCampaignData = {
   executive_summary: {
     campaign_name: "Hương Viên Trà Quán: Tìm Lại Sự Tĩnh Tại Sau Dịp Tết",
-    campaign_summary: "Chiến dịch định vị quán thành trạm dừng chân chữa lành tâm hồn, sử dụng nội dung mạng xã hội có chiều sâu và sự kiện workshop để thu hút khách hàng hướng nội đang cần tái cân bằng cảm xúc.",
-    core_objectives: "Tăng trưởng 20% lượng khách mới, đạt tỷ lệ quay lại 40% và tăng 15% doanh thu tổng thể trong Quý 2/2026.",
-    total_budget_vnd: 20000000
+    campaign_summary:
+      'Chiến dịch "Tìm Lại Sự Tĩnh Tại" tập trung khai thác xu hướng sống chậm sau dịp Tết Nguyên Đán, chuyển đổi mô hình từ chờ đợi khách hàng thụ động sang chủ động lan tỏa giá trị chữa lành thông qua mạng xã hội và workshop.',
+    core_objectives:
+      "Tăng trưởng 20% lượng khách mới, đạt tỷ lệ quay lại 40% và tăng 15% doanh thu tổng thể trong Quý 2/2026.",
+    total_budget_vnd: 20000000,
   },
   target_audience_and_brand_voice: {
-    target_audience: "Người trưởng thành có thu nhập ổn định, lối sống hướng nội, yêu thích văn hóa truyền thống. Điểm đau: Áp lực công việc đô thị bận rộn sau Tết, cần không gian tĩnh lặng, khắt khe về chất lượng trà và sự tinh tế trong phục vụ.",
-    brand_voice: "Chậm rãi, chân thành, mang đậm tính thiền vị và chữa lành. Tập trung kể những câu chuyện văn hóa, tuyệt đối tránh xa ngôn từ thương mại, giật tít ồn ào."
+    target_audience:
+      "Người trưởng thành, thu nhập ổn định, mang lối sống hướng nội. Họ đang gặp áp lực công việc đô thị, khao khát tìm kiếm một không gian tĩnh tại tuyệt đối để tái cân bằng cảm xúc",
+    brand_voice:
+      "Đậm chất thơ, thiền vị, mang tính chữa lành và chân thực. Tuyệt đối không dùng thông điệp 'đại hạ giá' hay quảng cáo ồn ào.",
   },
   phased_execution: [
-    { phase_id: "phase_1", phase_name: "Khơi Gợi & Lan Tỏa (Awareness)", duration: "Tháng 4/2026" },
-    { phase_id: "phase_2", phase_name: "Trải Nghiệm & Gắn Kết (Engagement & Retention)", duration: "Tháng 5/2026" }
+    {
+      phase_id: "phase_1",
+      phase_name: "Khơi Gợi & Lan Tỏa (Awareness)",
+      duration: "Tháng 4/2026",
+    },
+    {
+      phase_id: "phase_2",
+      phase_name: "Trải Nghiệm & Gắn Kết (Engagement & Retention)",
+      duration: "Tháng 5/2026",
+    },
   ],
   activity_and_financial_breakdown: [
     {
       phase_id: "phase_1",
       activities: [
-        { id: 1, activity_name: "Local Targeted Facebook Ads", description: "Chạy quảng cáo Facebook bán kính gần xung quanh quán. Sử dụng chuỗi bài viết kể chuyện trà đạo và hình ảnh không không gian tĩnh lặng vàng ấm để khơi gợi cảm xúc bình yên.", cost_vnd: 8000000, kpi_commitment: "Tăng 30% lượng người theo dõi và tương tác tự nhiên trên Fanpage.", moscow_tag: "MUST_HAVE" },
-        { id: 2, activity_name: "Sản xuất hình ảnh/Video ngắn", description: "Tự sản xuất hoặc thuê chụp các góc kiến trúc mộc mạc và quay video ngắn hướng dẫn nghệ thuật pha trà làm tư liệu truyền thông trực quan.", cost_vnd: 2000000, kpi_commitment: "Tối thiểu 10 hình ảnh chất lượng cao và 3 video ngắn.", moscow_tag: "SHOULD_HAVE" }
-      ]
+        {
+          id: 1,
+          activity_name: "Local Targeted Facebook Ads",
+          description:
+            "Chạy quảng cáo Facebook bán kính gần xung quanh quán. Sử dụng chuỗi bài viết kể chuyện trà đạo và hình ảnh không không gian tĩnh lặng vàng ấm để khơi gợi cảm xúc bình yên.",
+          cost_vnd: 8000000,
+          kpi_commitment:
+            "Tăng 30% lượng người theo dõi và tương tác tự nhiên trên Fanpage.",
+          moscow_tag: "MUST_HAVE",
+        },
+        {
+          id: 2,
+          activity_name: "Sản xuất hình ảnh/Video ngắn",
+          description:
+            "Tự sản xuất hoặc thuê chụp các góc kiến trúc mộc mạc và quay video ngắn hướng dẫn nghệ thuật pha trà làm tư liệu truyền thông trực quan.",
+          cost_vnd: 2000000,
+          kpi_commitment:
+            "Tối thiểu 10 hình ảnh chất lượng cao và 3 video ngắn.",
+          moscow_tag: "SHOULD_HAVE",
+        },
+      ],
     },
     {
       phase_id: "phase_2",
       activities: [
-        { id: 3, activity_name: "Workshop: Tìm lại sự tĩnh tại", description: "Tổ chức sự kiện thưởng trà cuối tuần quy mô nhỏ, mời chuyên gia trà đạo đến giao lưu nhằm khẳng định định vị chuyên gia và tạo tư liệu truyền thông tự nhiên.", cost_vnd: 7000000, kpi_commitment: "Kín 100% chỗ ngồi dự kiến, gia tăng niềm tin và sự gắn kết với thương hiệu.", moscow_tag: "MUST_HAVE" },
-        { id: 4, activity_name: "Chương trình kích cầu: Thêm bạn thêm vui", description: "Tặng kèm mứt truyền thống cho khách hàng đặt bàn nhóm từ ba người trở lên vào các khung giờ vắng để tận dụng tiếp thị truyền miệng.", cost_vnd: 3000000, kpi_commitment: "Tăng tối thiểu 15% số lượng hóa đơn đi theo nhóm.", moscow_tag: "COULD_HAVE" }
-      ]
-    }
-  ]
+        {
+          id: 3,
+          activity_name: "Workshop: Tìm lại sự tĩnh tại",
+          description:
+            "Tổ chức sự kiện thưởng trà cuối tuần quy mô nhỏ, mời chuyên gia trà đạo đến giao lưu nhằm khẳng định định vị chuyên gia và tạo tư liệu truyền thông tự nhiên.",
+          cost_vnd: 7000000,
+          kpi_commitment:
+            "Kín 100% chỗ ngồi dự kiến, gia tăng niềm tin và sự gắn kết với thương hiệu.",
+          moscow_tag: "MUST_HAVE",
+        },
+        {
+          id: 4,
+          activity_name: "Chương trình kích cầu: Thêm bạn thêm vui",
+          description:
+            "Tặng kèm mứt truyền thống cho khách hàng đặt bàn nhóm từ ba người trở lên vào các khung giờ vắng để tận dụng tiếp thị truyền miệng.",
+          cost_vnd: 3000000,
+          kpi_commitment: "Tăng tối thiểu 15% số lượng hóa đơn đi theo nhóm.",
+          moscow_tag: "COULD_HAVE",
+        },
+      ],
+    },
+  ],
 };
 
 const getBudgetData = (data) => {
