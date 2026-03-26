@@ -2,15 +2,18 @@ import sys
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8')
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from fastapi.responses import HTMLResponse
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 from schemas import PresetRequest, InterviewRequest, RawInputRequest
-from memory_rag import inject_industry_presets, generate_guideline_from_qa, analyze_and_extract_dna
-from intake_agent import analyze_raw_input, check_required_info
-from workflow_graph import strategy_app
-from document_processor import DocumentIngestor
+# from memory_rag import inject_industry_presets, generate_guideline_from_qa, analyze_and_extract_dna
+# from intake_agent import analyze_raw_input, check_required_info
+from workflow_graph import run_pipeline
+# from document_processor import DocumentIngestor
 from pydantic import BaseModel
 import os
 import uuid
@@ -179,19 +182,6 @@ async def home():
     """
     return html_content
 
-@app.post("/api/v1/onboarding/presets")
-async def onboarding_presets(request: PresetRequest):
-    """
-    Nạp bộ quy chuẩn ngành có sẵn (F&B, Spa_Beauty, B2B_Tech) vào hệ thống (ChromaDB).
-    """
-    try:
-        result = inject_industry_presets(request.industry)
-        if result.get("status") == "error":
-            raise HTTPException(status_code=400, detail=result.get("message"))
-        return result
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
-
 @app.post("/api/v1/onboarding/interview")
 async def onboarding_interview(request: InterviewRequest):
     """
@@ -268,6 +258,24 @@ def test_url_extract_only(request: UrlRequestCustom):
                 "cleaned_text": cleaned_text
             }
         return {"status": "success", "data": results}
+    except Exception as e:
+         raise HTTPException(status_code=500, detail=f"Lỗi khi xử lý URL: {str(e)}")
+
+@app.post("/api/v1/onboarding/upload-url")
+def onboarding_upload_url(request: UrlRequestCustom):
+    """
+    Nhận tập hợp URL, bóc tách nội dung HTML và lưu rải rác vào ChromaDB.
+    """
+    if not request.urls:
+        raise HTTPException(status_code=400, detail="Không có URL nào gửi lên.")
+    try:
+        ingestor = DocumentIngestor()
+        count = 0
+        for url in request.urls:
+            raw_text = ingestor.ingest_url(url)
+            ingestor.process_and_store_text(raw_text=raw_text, filename=url, category="brand_guidelines")
+            count += 1
+        return {"status": "success", "message": f"Đã lưu thành công {count} URL vào ChromaDB."}
     except Exception as e:
          raise HTTPException(status_code=500, detail=f"Lỗi khi xử lý URL: {str(e)}")
 
@@ -351,42 +359,24 @@ async def process_intake(request: RawInputRequest):
         if check_result.get("status") == "clarification_needed":
             return check_result
             
-        # 4. Đủ thông tin -> Gọi Graph
-        print("✅ Đủ thông tin, bắt đầu gọi MasterPlanner...")
+        # 4. Đủ thông tin -> Gọi Pipeline tuyến tính (v7)
+        print("✅ Đủ thông tin, bắt đầu gọi Pipeline Deterministic...")
         
-        initial_state = {
-            "goal": parsed_data.get("goal", request.raw_text),
-            "industry": parsed_data.get("industry", "General"),
-            "budget": parsed_data.get("budget", 0),
-            "target_audience": parsed_data.get("target_audience", ""),
-            "special_constraints": parsed_data.get("special_constraints", ""),
-            "feedback": "Chưa có",
-            "company_guidelines": "",
-            "previous_plan": None,
-            "current_plan": None,
-            "cfo_decision": None,
-            "actual_total_cost": 0,
-            "over_budget": 0,
-            "iteration_count": 0,
-            "is_approved": False,
-            "needs_human_intervention": False,
-            "customer_round": 0,
-            "satisfaction_threshold": 70,
-            "max_customer_rounds": 3,
-            "customer_feedback": "",
-            "rule_score": 0,
-            "client_self_score": 0,
-            "final_score": 0
-        }
-        
-        final_state = strategy_app.invoke(initial_state)
+        result = run_pipeline(
+            goal=parsed_data.get("goal", request.raw_text),
+            industry=parsed_data.get("industry", "General"),
+            budget=parsed_data.get("budget", 0),
+            target_audience=parsed_data.get("target_audience", ""),
+            constraints=parsed_data.get("special_constraints", ""),
+        )
         
         return {
             "status": "success",
-            "is_approved": final_state.get("is_approved"),
-            "iteration_count": final_state.get("iteration_count"),
-            "actual_total_cost": final_state.get("actual_total_cost"),
-            "plan": final_state.get("current_plan")
+            "is_approved": True,
+            "iteration_count": 1,
+            "actual_total_cost": result.get("actual_total_cost", 0),
+            "plan": result["final_plan"],
+            "agent_logs": result["agent_logs"]
         }
     except Exception as e:
         print(f"Lỗi hệ thống Intake: {e}")

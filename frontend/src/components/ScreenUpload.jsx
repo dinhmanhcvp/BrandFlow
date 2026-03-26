@@ -2,17 +2,21 @@ import React, { useState } from 'react';
 import { UploadCloud, Briefcase, CheckCircle, ArrowRight, FileText, X } from 'lucide-react';
 
 export default function ScreenUpload({ onGenerate }) {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [urlInput, setUrlInput] = useState("");
+  const [campaignName, setCampaignName] = useState("");
+  const [userRequest, setUserRequest] = useState("");
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      setSelectedFile(e.target.files[0]);
+      const newFiles = Array.from(e.target.files);
+      setSelectedFiles(prev => [...prev, ...newFiles]);
     }
   };
 
-  const removeFile = (e) => {
+  const removeFile = (indexToRemove, e) => {
     e.preventDefault();
-    setSelectedFile(null);
+    setSelectedFiles(prev => prev.filter((_, index) => index !== indexToRemove));
   };
 
   return (
@@ -42,6 +46,8 @@ export default function ScreenUpload({ onGenerate }) {
             <label className="block text-sm font-bold text-[#A0AEC0] mb-2">Tên Chiến Dịch</label>
             <input 
               type="text" 
+              value={campaignName}
+              onChange={(e) => setCampaignName(e.target.value)}
               className="w-full bg-[#0B1437] border border-[#1B254B] text-white rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#0075FF] outline-none placeholder-[#A0AEC0]" 
               placeholder="Nhập tên chiến dịch của bạn..."
             />
@@ -49,34 +55,54 @@ export default function ScreenUpload({ onGenerate }) {
 
           <div className="mb-5">
             <label className="block text-sm font-bold text-[#A0AEC0] mb-2">Tài Liệu Cốt Lõi (Guideline/Brief)</label>
-            {!selectedFile ? (
-              <label className="border-2 border-dashed border-[#1B254B] rounded-xl p-6 flex flex-col items-center justify-center text-[#A0AEC0] hover:bg-[#1B254B]/50 hover:border-[#0075FF] transition-colors cursor-pointer relative overflow-hidden bg-[#0B1437]">
-                <input type="file" className="absolute opacity-0 w-full h-full cursor-pointer top-0 left-0" onChange={handleFileChange} />
-                <UploadCloud size={32} className="text-[#0075FF] mb-2" />
-                <p className="text-sm font-medium text-white">Kéo thả hoặc nhấn để Upload tài liệu</p>
-                <p className="text-xs mt-1 text-[#A0AEC0]">PDF, DOCX (Max 10MB)</p>
-              </label>
-            ) : (
-              <div className="border border-[#1B254B] bg-[#0B1437] rounded-xl p-4 flex items-center justify-between">
-                <div className="flex items-center space-x-3 overflow-hidden">
-                  <div className="bg-[#111C44] p-2 rounded-lg shrink-0 flex items-center justify-center">
-                    <FileText className="text-[#0075FF] w-5 h-5" />
+            {/* Vùng Drop/Select luôn hiển thị */}
+            <label className="border-2 border-dashed border-[#1B254B] rounded-xl p-6 flex flex-col items-center justify-center text-[#A0AEC0] hover:bg-[#1B254B]/50 hover:border-[#0075FF] transition-colors cursor-pointer relative overflow-hidden bg-[#0B1437] mb-4">
+              <input type="file" multiple className="absolute opacity-0 w-full h-full cursor-pointer top-0 left-0" onChange={handleFileChange} />
+              <UploadCloud size={32} className="text-[#0075FF] mb-2" />
+              <p className="text-sm font-medium text-white">Kéo thả hoặc nhấn để Upload tài liệu</p>
+              <p className="text-xs mt-1 text-[#A0AEC0]">Quét chọn nhiều file PDF, DOCX (Max 10MB)</p>
+            </label>
+
+            {/* Danh sách file hiển thị */}
+            {selectedFiles.length > 0 && (
+              <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
+                {selectedFiles.map((file, idx) => (
+                  <div key={idx} className="border border-[#1B254B] bg-[#0B1437] rounded-xl p-3 flex items-center justify-between">
+                    <div className="flex items-center space-x-3 overflow-hidden">
+                      <div className="bg-[#111C44] p-2 rounded-lg shrink-0 flex items-center justify-center">
+                        <FileText className="text-[#0075FF] w-4 h-4" />
+                      </div>
+                      <div className="truncate pr-4">
+                        <p className="text-sm font-bold text-white truncate">{file.name}</p>
+                        <p className="text-xs text-[#A0AEC0] font-medium">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                      </div>
+                    </div>
+                    <button onClick={(e) => removeFile(idx, e)} className="text-[#A0AEC0] hover:text-rose-500 shrink-0 p-1.5 hover:bg-[#111C44] rounded-full transition-colors" title="Xóa file">
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
-                  <div className="truncate pr-4">
-                    <p className="text-sm font-bold text-white truncate">{selectedFile.name}</p>
-                    <p className="text-xs text-[#A0AEC0] font-medium">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
-                  </div>
-                </div>
-                <button onClick={removeFile} className="text-[#A0AEC0] hover:text-rose-500 shrink-0 p-1.5 hover:bg-[#111C44] rounded-full transition-colors" title="Xóa file">
-                  <X className="w-5 h-5" />
-                </button>
+                ))}
               </div>
             )}
+
+            {/* Component nhập Website URL */}
+            <div className="mt-4">
+              <label className="block text-sm font-bold text-[#A0AEC0] mb-2">Đính kèm Link Website (URL)</label>
+              <input 
+                type="url" 
+                value={urlInput}
+                onChange={(e) => setUrlInput(e.target.value)}
+                className="w-full bg-[#0B1437] border border-[#1B254B] text-white rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#0075FF] outline-none placeholder-[#A0AEC0]" 
+                placeholder="Dán đường dẫn bài viết hoặc tên miền website tham khảo..."
+              />
+            </div>
           </div>
 
           <div className="mb-8">
             <label className="block text-sm font-bold text-[#A0AEC0] mb-2">Mô Tả Chuyên Sâu & Yêu Cầu Của Bạn</label>
             <textarea 
+              value={userRequest}
+              onChange={(e) => setUserRequest(e.target.value)}
               className="w-full bg-[#0B1437] border border-[#1B254B] text-white rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#0075FF] outline-none placeholder-[#A0AEC0]" 
               rows="4" 
               placeholder="Điền các luồng yêu cầu, nhóm đối tượng, hoặc mô tả chi tiết chiến dịch..."
@@ -84,7 +110,7 @@ export default function ScreenUpload({ onGenerate }) {
           </div>
 
           <button 
-            onClick={() => onGenerate(selectedFile)}
+            onClick={() => onGenerate(selectedFiles, urlInput, campaignName, userRequest)}
             className="w-full py-4 bg-[#0075FF] hover:bg-[#0055c4] text-white rounded-xl font-bold text-lg flex items-center justify-center transition-all shadow-[0_4px_15px_rgba(0,117,255,0.4)]"
           >
             Giao Việc Cho Agents <ArrowRight className="ml-2" />

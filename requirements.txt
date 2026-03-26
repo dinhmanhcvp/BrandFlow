@@ -12,3 +12,5 @@ chromadb
 langchain-chroma
 langchain-ollama
 pydantic
+google-generativeai
+groq

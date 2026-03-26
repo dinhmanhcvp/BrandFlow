@@ -5,6 +5,7 @@ import DashboardOverview from './components/DashboardOverview';
 import ScreenUpload from './components/ScreenUpload';
 import ScreenSimulation from './components/ScreenSimulation';
 import ScreenDashboard from './components/ScreenDashboard';
+import { Database, Network } from 'lucide-react';
 
 const initialCampaignData = {
   executive_summary: {
@@ -104,15 +105,60 @@ export default function App() {
   const [currentView, setCurrentView] = useState('dashboard');
   const [iteration, setIteration] = useState(1);
   const [feedback, setFeedback] = useState('');
-  const [campaignData, setCampaignData] = useState(initialCampaignData);
+  const [campaignData, setCampaignData] = useState(null);
   const [chartHistory, setChartHistory] = useState([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState('');
 
-  const handleGenerate = () => {
+  const handleGenerate = async (files, url, name, requestText) => {
     setCurrentView('simulation');
     setIteration(1);
     setFeedback('');
-    setCampaignData(initialCampaignData);
+    setCampaignData(null);
     setChartHistory([]);
+    setIsGenerating(true);
+    setGenerateError('');
+
+    try {
+      if (files && files.length > 0) {
+        const formData = new FormData();
+        files.forEach(f => formData.append("files", f));
+        await fetch("http://localhost:8000/api/v1/onboarding/upload", { method: "POST", body: formData });
+      }
+
+      if (url) {
+        await fetch("http://localhost:8000/api/v1/onboarding/upload-url", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ urls: [url] })
+        });
+      }
+
+      const rawText = `Tên chiến dịch: ${name || 'N/A'}. Yêu cầu: ${requestText || 'Không mô tả'}`;
+      const res = await fetch("http://localhost:8000/api/v1/planning/intake", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ raw_text: rawText })
+      });
+      const result = await res.json();
+      
+      if (result.status === "success" && result.plan) {
+         let idCounter = 1;
+         let completePlan = result.plan;
+         if (completePlan.activity_and_financial_breakdown) {
+             completePlan.activity_and_financial_breakdown.forEach(phase => {
+                 phase.activities.forEach(act => { act.id = idCounter++; });
+             });
+         }
+         setCampaignData(completePlan);
+      } else {
+         throw new Error(result.detail || result.message || "Lỗi tạo kế hoạch từ Agent.");
+      }
+    } catch(err) {
+      setGenerateError(err.message || "Đã xảy ra lỗi kết nối Backend");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleRemoveActivity = (id) => {
@@ -144,11 +190,17 @@ export default function App() {
     }
   };
 
+  const handleNavigate = (view) => {
+    // Cho phép người dùng nhảy tự do giữa các màn hình
+    // Nếu đang ở simulation (AI đang chạy), vẫn cho phép thoát
+    setCurrentView(view);
+  };
+
   return (
     <div className="flex min-h-screen bg-[#0B1437] font-sans">
-      <Sidebar />
+      <Sidebar currentView={currentView} onNavigate={handleNavigate} />
       <div className="flex-1 ml-64 flex flex-col">
-        <Header onNewProjectClick={() => setCurrentView('upload')} />
+        <Header currentView={currentView} onNewProjectClick={() => setCurrentView('upload')} onNavigate={handleNavigate} />
         <main className="flex-1 overflow-y-auto w-full">
           {currentView === 'dashboard' && <DashboardOverview />}
           
@@ -160,11 +212,13 @@ export default function App() {
             <ScreenSimulation 
               iteration={iteration} 
               feedback={feedback} 
+              isReady={!!campaignData}
+              error={generateError}
               onComplete={() => setCurrentView('result')} 
             />
           )}
 
-          {currentView === 'result' && (
+          {currentView === 'result' && campaignData && (
             <ScreenDashboard 
               campaignData={campaignData}
               budgetData={getBudgetData(campaignData)}
@@ -174,6 +228,47 @@ export default function App() {
               onRemoveActivity={handleRemoveActivity}
               onImproveFeedback={handleImproveFeedback}
             />
+          )}
+
+          {currentView === 'knowledge' && (
+            <div className="p-8 max-w-4xl mx-auto">
+              <div className="bg-[#111C44] rounded-[20px] p-10 text-center shadow-[0_4px_24px_rgba(0,0,0,0.1)]">
+                <div className="bg-[#0075FF]/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Database className="w-8 h-8 text-[#0075FF]" />
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-3">Cơ Sở Tri Thức (ChromaDB)</h2>
+                <p className="text-[#A0AEC0] text-sm leading-relaxed max-w-lg mx-auto mb-6">
+                  Đây là kho lưu trữ các quy tắc thương hiệu, bài học từ các chiến dịch trước, và tài liệu hướng dẫn mà AI Agent của bạn dùng để lập kế hoạch thông minh hơn.
+                </p>
+                <p className="text-xs text-[#A0AEC0] italic">Tính năng đang được phát triển. Vui lòng quay lại sau.</p>
+              </div>
+            </div>
+          )}
+
+          {currentView === 'agents' && (
+            <div className="p-8 max-w-4xl mx-auto">
+              <div className="bg-[#111C44] rounded-[20px] p-10 text-center shadow-[0_4px_24px_rgba(0,0,0,0.1)]">
+                <div className="bg-emerald-500/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Network className="w-8 h-8 text-emerald-400" />
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-3">Mạng Lưới AI Agent</h2>
+                <p className="text-[#A0AEC0] text-sm leading-relaxed max-w-lg mx-auto mb-6">
+                  Theo dõi trạng thái hoạt động của các Agent: CMO (MasterPlanner), CFO (Financial Controller), Customer Persona và Learner Agent.
+                </p>
+                <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                  <div className="bg-[#0B1437] border border-[#1B254B] p-4 rounded-xl">
+                    <div className="w-3 h-3 rounded-full bg-emerald-500 mx-auto mb-2"></div>
+                    <p className="text-white font-bold text-sm">CMO</p>
+                    <p className="text-[10px] text-[#A0AEC0]">Online</p>
+                  </div>
+                  <div className="bg-[#0B1437] border border-[#1B254B] p-4 rounded-xl">
+                    <div className="w-3 h-3 rounded-full bg-emerald-500 mx-auto mb-2"></div>
+                    <p className="text-white font-bold text-sm">CFO</p>
+                    <p className="text-[10px] text-[#A0AEC0]">Online</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </main>
       </div>

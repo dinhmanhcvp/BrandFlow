@@ -1,6 +1,6 @@
 # 🚀 BrandFlow — AI Marketing Strategy Engine
 
-> **BrandFlow** là hệ thống Multi-Agent AI chạy **100% local** giúp các thương hiệu tự động hóa việc lập chiến lược marketing, kiểm soát ngân sách và xây dựng "Brand DNA" từ tài liệu nội bộ.
+> **BrandFlow** là hệ thống Multi-Agent AI sử dụng kiến trúc **Deterministic Arbitration** để tự động lập chiến lược marketing, kiểm soát ngân sách bằng Python thuần, và thu thập phản biện từ AI khách hàng ảo — tất cả trong **1 pipeline tuyến tính duy nhất**, không vòng lặp.
 
 ---
 
@@ -8,49 +8,104 @@
 
 | Tính năng | Mô tả |
 |---|---|
-| 🧠 **Multi-Agent AI** | CMO (MasterPlanner) + CFO tự động thương lượng tối ưu ngân sách |
-| 📚 **Long-Term Memory (RAG)** | Lưu quy chuẩn ngành & bài học vào ChromaDB, tự động áp dụng cho lần sau |
-| 🧬 **Brand DNA Extraction** | Upload PDF/DOCX/IMG → LLM trích xuất USPs, Tone of Voice, Target Audience |
-| 📊 **Dashboard Trực Quan** | Giao diện Next.js hiển thị Action Plan, KPI, Budget Allocation |
-| 🔄 **Vòng Lặp Hội Tụ** | Graph tự động chạy tối đa 3 vòng để kế hoạch không vượt ngân sách |
+| 🧠 **3 AI Agents + 1 Python Interceptor** | CMO lập kế hoạch → Python cắt ngân sách → CFO bình luận + Persona phản biện |
+| 🎯 **Deterministic Arbitration** | Pipeline tuyến tính 1 lượt, không vòng lặp — tránh tốn API và treo hệ thống |
+| 📚 **Long-Term Memory (RAG)** | Lưu quy chuẩn ngành & tài liệu brand vào ChromaDB |
+| 🧬 **Document Ingestion** | Upload nhiều PDF/DOCX + dán URL → OCR → Semantic Chunking → VectorDB |
+| 📊 **Dashboard Trực Quan** | Giao diện React hiển thị Action Plan, KPI ngành, MoSCoW Budget Chart |
+| 🕵️ **Mock Mode** | Từ khóa bí mật kích hoạt dữ liệu giả lập an toàn cho buổi Live Demo |
 
 ---
 
 ## 🏗️ Kiến Trúc Hệ Thống
 
+### Kiến Trúc Cốt Lõi: Deterministic Arbitration
+
+**Triết lý:** Tách bạch AI Sáng tạo và Python Logic. Tuyệt đối không dùng vòng lặp cho Agent tự sửa lỗi nhau.
+
+```
+[User Input]
+     │
+     ▼
+┌──────────────────────────────────────────────────────────┐
+│  INTAKE AGENT (Gemini Flash)                             │
+│  Bóc tách ngôn ngữ tự nhiên → JSON có cấu trúc          │
+└──────────────────────┬───────────────────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────────────────┐
+│  AGENT 1: MASTER PLANNER — CMO (Gemini Flash)            │
+│  Lập Master Plan, cố tình vượt ngân sách 10-20%         │
+│  bằng hạng mục COULD_HAVE (mồi nhử cho CFO)             │
+└──────────────────────┬───────────────────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────────────────┐
+│  PYTHON INTERCEPTOR (Không dùng AI)                      │
+│  Tính tổng cost → Cắt bỏ COULD_HAVE → Trả final_plan   │
+└──────────┬───────────────────────────────┬───────────────┘
+           │                               │
+           ▼                               ▼
+┌────────────────────────┐  ┌────────────────────────────┐
+│ AGENT 2: CFO           │  │ AGENT 3: PERSONA VALIDATOR │
+│ (Groq — Llama 3 8B)   │  │ (Groq — Mixtral 8x7B)     │
+│ 1 câu mắng/duyệt      │  │ Nhập vai KH mục tiêu      │
+│ Tốc độ: ~800 từ/giây  │  │ 1-2 câu khen/chê đời thường│
+└────────────┬───────────┘  └──────────────┬─────────────┘
+             │                              │
+             └──────────┬───────────────────┘
+                        ▼
+               [📋 Kết quả cuối cùng]
+           final_plan (JSON) + agent_logs (Text)
+```
+
+### Cấu Trúc Thư Mục
+
 ```
 BrandFlow/
-├── 🐍 Backend (FastAPI + LangGraph)
-│   ├── main.py               # FastAPI app, API endpoints
-│   ├── agents_core.py        # Định nghĩa CMO & CFO agents (LCEL chains)
-│   ├── workflow_graph.py     # LangGraph state machine (planner ↔ cfo loop)
-│   ├── memory_rag.py         # ChromaDB + Ollama RAG memory system
+├── 🐍 Backend (FastAPI)
+│   ├── main.py               # API endpoints + Mock Mode interceptor
+│   ├── agents_core.py        # 4 modules: MasterPlanner, Interceptor, CFO, Persona
+│   ├── workflow_graph.py     # Pipeline tuyến tính (ThreadPoolExecutor)
+│   ├── intake_agent.py       # Intake Agent (Gemini Flash JSON mode)
+│   ├── mock_manager.py       # Parse mock data từ file Markdown
+│   ├── memory_rag.py         # ChromaDB + Ollama RAG memory
 │   ├── document_processor.py # OCR + Semantic Chunking pipeline
 │   ├── schemas.py            # Pydantic request schemas
+│   ├── .env                  # API Keys (GEMINI + GROQ) — Gitignored
 │   └── requirements.txt
 │
-└── 🖥️ Frontend (Next.js 16 + TypeScript)
-    └── brandflow-ui/
+└── 🖥️ Frontend (React + Vite)
+    └── frontend/
         └── src/
-            ├── app/page.tsx           # Dashboard chính
-            └── components/            # StatCards, ActionPlanList, Charts...
+            ├── App.jsx                # State management + API orchestration
+            └── components/
+                ├── Sidebar.jsx        # Navigation tương tác
+                ├── Header.jsx         # Breadcrumb động
+                ├── DashboardOverview  # Tổng quan chiến dịch
+                ├── ScreenUpload.jsx   # Upload nhiều file + URL
+                ├── ScreenSimulation   # Hiệu ứng AI Board
+                └── ScreenDashboard    # Kết quả Plan + MoSCoW chart
 ```
 
-### Luồng Xử Lý Chiến Lược
+---
 
-```
-[User Input: Goal + Budget]
-        │
-        ▼
-   ┌─────────────┐     feedback     ┌──────────────┐
-   │ MasterPlanner│ ◄──────────────  │     CFO      │
-   │   (CMO AI)   │ ──────────────► │  (Budget AI)  │
-   └─────────────┘   master_plan   └──────────────┘
-        │                                  │
-        │ (is_approved = True)             │
-        ▼                                  │
-   [✅ Approved Plan]  ◄──────────────────┘
-```
+## 🤖 Lựa Chọn API & Model
+
+### Agent 1: Intake Agent & MasterPlanner — `gemini-1.5-flash`
+- **API:** Google Gemini (Google AI Studio)
+- `response_mime_type="application/json"` → Ép JSON chuẩn 100%, không crash
+- Context window 1 triệu token, hành văn Marketing tiếng Việt xuất sắc
+
+### Agent 2: CFO — `llama3-8b-8192`
+- **API:** Groq (chip LPU)
+- Tốc độ ~800 từ/giây → CFO "chửi" gần như real-time (Zero Latency)
+- Tư duy logic Llama 3 hợp giọng cộc lốc, đi thẳng vấn đề
+
+### Agent 3: Persona Validator — `mixtral-8x7b-32768`
+- **API:** Groq (chip LPU)
+- Mixture-of-Experts → Persona Adherence cực đỉnh
+- Biến hóa văn phong: Gen Z xì-teen ↔ dân văn phòng khắt khe
 
 ---
 
@@ -58,10 +113,10 @@ BrandFlow/
 
 - **Python** 3.10+
 - **Node.js** 18+ & npm
-- **[Ollama](https://ollama.com/)** đang chạy local với model:
-  - `ollama pull llama3.2` — LLM chính cho các agents
-  - `ollama pull nomic-embed-text` — Embedding cho RAG memory
-- **Tesseract OCR** (tuỳ chọn, cho tính năng upload ảnh/PDF scan)
+- **[Ollama](https://ollama.com/)** (cho RAG embeddings): `ollama pull nomic-embed-text`
+- **API Keys** (cấu hình trong file `.env`):
+  - `GEMINI_API_KEY` — [Google AI Studio](https://aistudio.google.com/)
+  - `GROQ_API_KEY` — [Groq Console](https://console.groq.com/keys)
 
 ---
 
@@ -70,45 +125,36 @@ BrandFlow/
 ### 1. Backend (Python / FastAPI)
 
 ```bash
-# Clone repo
-git clone <your-repo-url>
 cd BrandFlow
 
-# Tạo và kích hoạt môi trường ảo
 python -m venv venv
 .\venv\Scripts\activate  # Windows
-# source venv/bin/activate  # macOS/Linux
 
-# Cài dependencies
-pip install fastapi uvicorn langchain-ollama langgraph chromadb \
-            langchain-community langchain-text-splitters \
-            unstructured pytesseract pdf2image python-docx \
-            tenacity pydantic
+pip install -r requirements.txt
 
-# Chạy server
+# Cấu hình API Keys
+# Tạo file .env với nội dung:
+# GEMINI_API_KEY=your_key_here
+# GROQ_API_KEY=your_key_here
+
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-API Docs tự động tại: **http://localhost:8000/docs**
+API Docs: **http://localhost:8000/docs**
 
-### 2. Frontend (Next.js)
+### 2. Frontend (React + Vite)
 
 ```bash
-cd brandflow-ui
-
-# Cài dependencies
+cd frontend
 npm install
-
-# Chạy dev server
 npm run dev
 ```
 
-Mở trình duyệt tại: **http://localhost:3000**
+Mở trình duyệt: **http://localhost:5173**
 
-### 3. Chạy Strategy Engine (CLI)
+### 3. Chạy Pipeline trực tiếp (CLI)
 
 ```bash
-# Kích hoạt thẳng từ terminal (không cần giao diện)
 python workflow_graph.py
 ```
 
@@ -118,33 +164,13 @@ python workflow_graph.py
 
 | Method | Endpoint | Mô tả |
 |---|---|---|
-| `POST` | `/api/v1/onboarding/presets` | Nạp bộ quy chuẩn ngành (F&B, Spa, B2B) vào ChromaDB |
-| `POST` | `/api/v1/onboarding/interview` | Sinh Brand Guidelines từ Q&A phỏng vấn |
-| `POST` | `/api/v1/onboarding/upload` | Upload tài liệu → OCR → ChromaDB → Trả Brand DNA JSON |
-
-### Ví dụ Request
-
-```bash
-# Nạp preset ngành F&B
-curl -X POST http://localhost:8000/api/v1/onboarding/presets \
-  -H "Content-Type: application/json" \
-  -d '{"industry": "F&B"}'
-
-# Upload tài liệu brand
-curl -X POST http://localhost:8000/api/v1/onboarding/upload \
-  -F "file=@brand_guideline.pdf"
-```
-
----
-
-## 🧠 Hệ Thống Bộ Nhớ Dài Hạn (RAG)
-
-BrandFlow sử dụng **ChromaDB** + **Ollama Embeddings** để ghi nhớ:
-- Quy chuẩn ngành (F&B, Spa & Beauty, B2B Tech)
-- Brand Guidelines được trích xuất từ tài liệu upload
-- Bài học rút ra từ các kế hoạch bị từ chối
-
-Dữ liệu được persist tại thư mục `./chroma_db/`.
+| `POST` | `/api/v1/planning/intake` | Intake Agent → Pipeline (MasterPlanner → Interceptor → CFO & Persona) |
+| `POST` | `/api/v1/onboarding/upload` | Upload nhiều file PDF/DOCX → ChromaDB |
+| `POST` | `/api/v1/onboarding/upload-url` | Dán URL website → Thu thập text → ChromaDB |
+| `POST` | `/api/v1/onboarding/presets` | Nạp bộ quy chuẩn ngành (F&B, Spa, B2B) |
+| `POST` | `/api/v1/onboarding/test-upload` | Test đọc file (không lưu DB) |
+| `POST` | `/api/v1/onboarding/test-url` | Test đọc URL (không lưu DB) |
+| `GET`  | `/api/v1/onboarding/stats` | Thống kê số chunks trong ChromaDB |
 
 ---
 
@@ -152,25 +178,26 @@ Dữ liệu được persist tại thư mục `./chroma_db/`.
 
 **Backend**
 - [FastAPI](https://fastapi.tiangolo.com/) — REST API framework
-- [LangChain](https://python.langchain.com/) + [LangGraph](https://langchain-ai.github.io/langgraph/) — Multi-agent orchestration
-- [Ollama](https://ollama.com/) (`llama3.2`) — Local LLM inference
+- [Google Gemini](https://ai.google.dev/) — LLM cho Intake & MasterPlanner
+- [Groq](https://groq.com/) — LPU inference cho CFO & Persona
 - [ChromaDB](https://www.trychroma.com/) — Vector database cho RAG
-- [Tenacity](https://tenacity.readthedocs.io/) — Retry logic cho LLM calls
+- [Ollama](https://ollama.com/) — Local embeddings (`nomic-embed-text`)
 
 **Frontend**
-- [Next.js 16](https://nextjs.org/) + TypeScript
-- [Tailwind CSS v4](https://tailwindcss.com/)
+- [React](https://react.dev/) + [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
 - [Recharts](https://recharts.org/) — Biểu đồ ngân sách & KPI
 - [Lucide React](https://lucide.dev/) — Icons
 
 ---
 
-## 📝 Ghi Chú Phát Triển
+## 📝 Ghi Chú Kiến Trúc
 
-- **Agents chạy stateless**: Mỗi vòng lặp CMO/CFO nhận đầy đủ context qua prompt, không dùng `ConversationBufferMemory`.
-- **Python tự tính tiền**: Thay vì tin LLM tính toán số học, `workflow_graph.py` dùng Python để cộng chi phí — tránh sai số.
-- **Force Convergence**: Sau tối đa **3 vòng lặp** CFO vẫn từ chối → hệ thống dừng và yêu cầu can thiệp con người.
-- **ChromaDB persist**: Dữ liệu RAG được lưu lâu dài, không mất khi restart server.
+- **Deterministic Arbitration:** Không dùng vòng lặp (while/loop) giữa các Agent. Pipeline luôn chạy đúng 1 lượt.
+- **Python Interceptor:** Cắt ngân sách bằng code Python thuần — nhanh, chính xác 100%, không tốn API token.
+- **Song song hoá:** CFO & Persona chạy đồng thời bằng `ThreadPoolExecutor` — tiết kiệm thời gian.
+- **Mock Mode:** Từ khóa bí mật trong input tự động kích hoạt dữ liệu giả lập cho buổi Demo an toàn.
+- **ChromaDB persist:** Dữ liệu RAG lưu tại `./chroma_db/`, không mất khi restart.
 
 ---
 

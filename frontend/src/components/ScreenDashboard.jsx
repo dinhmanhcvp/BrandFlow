@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { 
   Briefcase, Target, DollarSign, Sparkles, Users, AlertTriangle, XCircle, Map, ShieldAlert, BarChart3, History, PenTool, Send, ArrowLeft
 } from 'lucide-react';
-import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 
 export const CAT_CONFIG = {
   MUST_HAVE: { label: 'BẮT BUỘC LÕI', color: '#10B981', bg: 'bg-emerald-500/20', text: 'text-emerald-400' },
@@ -37,11 +37,26 @@ export default function ScreenDashboard({
     };
   });
 
-  const kpiGrowthData = [
-    { name: 'Trước CĐ', khachMoi: 20, tuongTac: 150 },
-    { name: 'Tháng 4 (P1)', khachMoi: 120, tuongTac: 900 },
-    { name: 'Tháng 5 (P2)', khachMoi: 350, tuongTac: 2500 },
-  ];
+  // Dữ liệu biểu đồ ngân sách theo từng Phase (dynamic)
+  const phaseBudgetData = groupedPhases.map(pg => {
+    const total = pg.acts.reduce((s, a) => s + (a.cost_vnd || 0), 0);
+    return { name: pg.name.length > 20 ? pg.name.substring(0, 20) + '...' : pg.name, value: total };
+  });
+
+  // Dữ liệu phân bổ MoSCoW (dynamic)
+  const moscowSummary = { MUST_HAVE: 0, SHOULD_HAVE: 0, COULD_HAVE: 0 };
+  breakdown.forEach(phase => {
+    phase.activities.forEach(act => {
+      if (moscowSummary[act.moscow_tag] !== undefined) {
+        moscowSummary[act.moscow_tag] += (act.cost_vnd || 0);
+      }
+    });
+  });
+  const moscowBarData = [
+    { name: 'MUST', label: 'Bắt buộc', value: moscowSummary.MUST_HAVE, fill: '#10B981' },
+    { name: 'SHOULD', label: 'Nên có', value: moscowSummary.SHOULD_HAVE, fill: '#F59E0B' },
+    { name: 'COULD', label: 'Có thể cắt', value: moscowSummary.COULD_HAVE, fill: '#EF4444' },
+  ].filter(d => d.value > 0);
 
   return (
     <div className="h-full bg-transparent font-sans pb-16">
@@ -258,27 +273,56 @@ export default function ScreenDashboard({
             </div>
           </div>
 
-          {/* KPI Projection Chart */}
+          {/* Biểu đồ Ngân Sách Theo Phase */}
           <div className="bg-[#111C44] rounded-[20px] border border-[#1B254B] shadow-[0_4px_24px_rgba(0,0,0,0.1)] p-6">
             <h3 className="font-black text-white uppercase tracking-widest text-sm mb-6 flex items-center">
-              <Target size={16} className="text-emerald-400 mr-2" /> Dự Phóng Tăng Trưởng KPI
+              <Target size={16} className="text-emerald-400 mr-2" /> Phân Bổ Ngân Sách Theo Giai Đoạn
             </h3>
             <div className="h-56 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={kpiGrowthData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1B254B" vertical={false} />
-                  <XAxis dataKey="name" stroke="#A0AEC0" tick={{fontSize: 10}} axisLine={false} tickLine={false} dy={10} />
-                  <YAxis stroke="#A0AEC0" tick={{fontSize: 10}} axisLine={false} tickLine={false} dx={-10} />
-                  <RechartsTooltip 
-                    contentStyle={{backgroundColor: '#0B1437', borderColor: '#1B254B', color: 'white', borderRadius: '8px'}}
-                    itemStyle={{fontSize: 12}}
-                    labelStyle={{fontSize: 12, fontWeight: 'bold', color: '#A0AEC0', marginBottom: '4px'}}
-                  />
-                  <Legend wrapperStyle={{fontSize: 11, paddingTop: '10px'}} iconType="circle" />
-                  <Line type="monotone" dataKey="khachMoi" name="Khách Mới (Người)" stroke="#10B981" strokeWidth={3} dot={{r: 4, strokeWidth: 2, fill: '#111C44'}} activeDot={{r: 6}} />
-                  <Line type="monotone" dataKey="tuongTac" name="Tương Tác (Lượt)" stroke="#0075FF" strokeWidth={3} dot={{r: 4, strokeWidth: 2, fill: '#111C44'}} activeDot={{r: 6}} />
-                </LineChart>
-              </ResponsiveContainer>
+              {phaseBudgetData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={phaseBudgetData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1B254B" vertical={false} />
+                    <XAxis dataKey="name" stroke="#A0AEC0" tick={{fontSize: 9}} axisLine={false} tickLine={false} dy={10} />
+                    <YAxis stroke="#A0AEC0" tick={{fontSize: 10}} axisLine={false} tickLine={false} tickFormatter={(v) => (v/1000000) + 'Tr'} />
+                    <RechartsTooltip 
+                      formatter={(val) => val.toLocaleString() + ' đ'}
+                      contentStyle={{backgroundColor: '#0B1437', borderColor: '#1B254B', color: 'white', borderRadius: '8px'}}
+                      labelStyle={{fontSize: 12, fontWeight: 'bold', color: '#A0AEC0'}}
+                    />
+                    <Bar dataKey="value" name="Ngân sách (VND)" fill="#0075FF" radius={[6, 6, 0, 0]} barSize={40} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-[#A0AEC0] font-bold">Không có dữ liệu</div>
+              )}
+            </div>
+          </div>
+
+          {/* Biểu đồ MoSCoW Priority */}
+          <div className="bg-[#111C44] rounded-[20px] border border-[#1B254B] shadow-[0_4px_24px_rgba(0,0,0,0.1)] p-6">
+            <h3 className="font-black text-white uppercase tracking-widest text-sm mb-6 flex items-center">
+              <ShieldAlert size={16} className="text-amber-400 mr-2" /> Cơ Cấu Ưu Tiên MoSCoW
+            </h3>
+            <div className="h-48 w-full">
+              {moscowBarData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={moscowBarData} layout="vertical" margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1B254B" horizontal={false} />
+                    <XAxis type="number" stroke="#A0AEC0" tick={{fontSize: 10}} axisLine={false} tickLine={false} tickFormatter={(v) => (v/1000000) + 'Tr'} />
+                    <YAxis type="category" dataKey="label" stroke="#A0AEC0" tick={{fontSize: 11, fontWeight: 'bold'}} axisLine={false} tickLine={false} width={80} />
+                    <RechartsTooltip 
+                      formatter={(val) => val.toLocaleString() + ' đ'}
+                      contentStyle={{backgroundColor: '#0B1437', borderColor: '#1B254B', color: 'white', borderRadius: '8px'}}
+                    />
+                    <Bar dataKey="value" name="Ngân sách" radius={[0, 6, 6, 0]} barSize={20}>
+                      {moscowBarData.map((entry, i) => <Cell key={i} fill={entry.fill} />)}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-[#A0AEC0] font-bold">Không có dữ liệu</div>
+              )}
             </div>
           </div>
 

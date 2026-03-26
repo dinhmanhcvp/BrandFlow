@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageSquare, ShieldAlert, Bot, Users, ArrowRight } from 'lucide-react';
 
-export default function ScreenSimulation({ iteration, feedback, onComplete }) {
+export default function ScreenSimulation({ iteration, feedback, isReady, error, onComplete }) {
   const [progress, setProgress] = useState(0);
   const [messages, setMessages] = useState([]);
   const [activeAgent, setActiveAgent] = useState('SYSTEM');
@@ -90,9 +90,11 @@ export default function ScreenSimulation({ iteration, feedback, onComplete }) {
           {progress === 100 && (
             <button 
               onClick={onComplete}
-              className="mt-8 w-full py-4 bg-[#0075FF] hover:bg-[#0055c4] text-white rounded-xl font-bold text-md shadow-[0_0_20px_rgba(0,117,255,0.3)] flex items-center justify-center transition-colors"
+              disabled={!isReady && !error}
+              className={`mt-8 w-full py-4 text-white rounded-xl font-bold text-md shadow-[0_0_20px_rgba(0,117,255,0.3)] flex items-center justify-center transition-colors ${(!isReady && !error) ? 'bg-gray-600 opacity-50 cursor-not-allowed' : error ? 'bg-rose-600 hover:bg-rose-700' : 'bg-[#0075FF] hover:bg-[#0055c4]'}`}
             >
-              MỞ BẢN KẾ HOẠCH VER {iteration} <ArrowRight className="ml-2" />
+              {error ? `XUẤT HIỆN LỖI: ${error}` : (!isReady ? 'ĐANG CHỜ AI HOÀN TẤT...' : `MỞ BẢN KẾ HOẠCH VER ${iteration} `)} 
+              {isReady && !error && <ArrowRight className="ml-2" />}
             </button>
           )}
         </div>

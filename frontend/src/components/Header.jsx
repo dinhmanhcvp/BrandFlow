@@ -1,16 +1,25 @@
 import React from 'react';
 import { Home, Search, Bell, Settings, User, Plus } from 'lucide-react';
 
-export default function Header({ onNewProjectClick }) {
+const VIEW_LABELS = {
+  dashboard: 'Tổng quan',
+  upload: 'Tạo Kế hoạch mới',
+  simulation: 'Mô phỏng AI',
+  result: 'Kế hoạch Marketing',
+  knowledge: 'Cơ sở tri thức',
+  agents: 'Mạng lưới AI Agent',
+};
+
+export default function Header({ currentView, onNewProjectClick, onNavigate }) {
   return (
     <header className="flex items-center justify-between px-8 py-6 sticky top-0 z-10 bg-[#0B1437]/90 backdrop-blur-md">
       <div>
         <div className="flex items-center text-sm text-[#A0AEC0] mb-1">
           <Home className="w-4 h-4 mr-2" />
           <span>/</span>
-          <span className="mx-2 hover:text-white cursor-pointer transition-colors">BrandFlow</span>
+          <span onClick={() => onNavigate('dashboard')} className="mx-2 hover:text-white cursor-pointer transition-colors">BrandFlow</span>
           <span>/</span>
-          <span className="mx-2 hover:text-white cursor-pointer transition-colors">Tổng quan</span>
+          <span className="mx-2 text-white font-semibold">{VIEW_LABELS[currentView] || 'Tổng quan'}</span>
         </div>
         <h1 className="text-3xl font-bold text-white tracking-tight">Bảng điều khiển BrandFlow</h1>
       </div>

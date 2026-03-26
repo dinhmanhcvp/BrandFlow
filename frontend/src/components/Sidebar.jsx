@@ -1,7 +1,15 @@
 import React from 'react';
-import { LayoutDashboard, FileText, CheckSquare, Database, Network, HelpCircle, Star } from 'lucide-react';
+import { LayoutDashboard, FileText, CheckSquare, Database, Network, HelpCircle, Star, PlusCircle } from 'lucide-react';
 
-export default function Sidebar() {
+const NAV_ITEMS = [
+  { id: 'dashboard', label: 'Tổng quan', icon: LayoutDashboard, group: 'main' },
+  { id: 'upload', label: 'Tạo Kế hoạch mới', icon: PlusCircle, group: 'planning' },
+  { id: 'result', label: 'Kế hoạch Marketing', icon: FileText, group: 'planning' },
+  { id: 'knowledge', label: 'Cơ sở tri thức', icon: Database, group: 'system' },
+  { id: 'agents', label: 'Mạng lưới AI Agent', icon: Network, group: 'system' },
+];
+
+export default function Sidebar({ currentView, onNavigate }) {
   return (
     <aside className="w-64 bg-[#111C44] min-h-screen border-r border-[#1B254B]/50 flex flex-col py-8 fixed left-0 top-0">
       <div className="flex items-center justify-center mb-10 px-8">
@@ -12,9 +20,12 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 px-4">
-        {/* Active Route */}
-        <div className="bg-gradient-to-r from-[#0075FF] to-[#0055c4] rounded-xl flex items-center px-4 py-3 mb-8 cursor-pointer shadow-[0_4px_15px_rgba(0,117,255,0.4)] transition-transform hover:scale-[1.02]">
-          <div className="bg-white/20 p-2 rounded-lg mr-3">
+        {/* Dashboard */}
+        <div 
+          onClick={() => onNavigate('dashboard')}
+          className={`rounded-xl flex items-center px-4 py-3 mb-8 cursor-pointer transition-transform hover:scale-[1.02] ${currentView === 'dashboard' ? 'bg-gradient-to-r from-[#0075FF] to-[#0055c4] shadow-[0_4px_15px_rgba(0,117,255,0.4)]' : 'hover:bg-[#1B254B]'}`}
+        >
+          <div className={`${currentView === 'dashboard' ? 'bg-white/20' : 'bg-[#1B254B]'} p-2 rounded-lg mr-3`}>
             <LayoutDashboard className="w-5 h-5 text-white" />
           </div>
           <span className="text-white font-bold">Tổng quan</span>
@@ -23,36 +34,36 @@ export default function Sidebar() {
         <div className="mb-6">
           <h3 className="text-[#A0AEC0] text-xs font-bold uppercase tracking-widest px-4 mb-4">LẬP KẾ HOẠCH</h3>
           <ul className="space-y-2">
-            <li className="flex items-center px-4 py-2.5 text-[#A0AEC0] hover:text-white cursor-pointer rounded-lg hover:bg-[#1B254B] transition-colors group">
-              <div className="bg-[#1B254B] group-hover:bg-[#0075FF] p-2 rounded-lg mr-3 transition-colors">
-                <FileText className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-semibold text-sm">Kế hoạch Marketing</span>
-            </li>
-            <li className="flex items-center px-4 py-2.5 text-[#A0AEC0] hover:text-white cursor-pointer rounded-lg hover:bg-[#1B254B] transition-colors group">
-              <div className="bg-[#1B254B] group-hover:bg-[#0075FF] p-2 rounded-lg mr-3 transition-colors">
-                <CheckSquare className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-semibold text-sm">Phê duyệt (HITL)</span>
-            </li>
+            {NAV_ITEMS.filter(n => n.group === 'planning').map(item => (
+              <li 
+                key={item.id}
+                onClick={() => onNavigate(item.id)}
+                className={`flex items-center px-4 py-2.5 cursor-pointer rounded-lg transition-colors group ${currentView === item.id ? 'bg-[#1B254B] text-white' : 'text-[#A0AEC0] hover:text-white hover:bg-[#1B254B]'}`}
+              >
+                <div className={`${currentView === item.id ? 'bg-[#0075FF]' : 'bg-[#1B254B] group-hover:bg-[#0075FF]'} p-2 rounded-lg mr-3 transition-colors`}>
+                  <item.icon className="w-4 h-4 text-white" />
+                </div>
+                <span className="font-semibold text-sm">{item.label}</span>
+              </li>
+            ))}
           </ul>
         </div>
 
         <div className="mb-6">
           <h3 className="text-[#A0AEC0] text-xs font-bold uppercase tracking-widest px-4 mb-4">HỆ THỐNG</h3>
           <ul className="space-y-2">
-            <li className="flex items-center px-4 py-2.5 text-[#A0AEC0] hover:text-white cursor-pointer rounded-lg hover:bg-[#1B254B] transition-colors group">
-              <div className="bg-[#1B254B] group-hover:bg-[#0075FF] p-2 rounded-lg mr-3 transition-colors">
-                <Database className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-semibold text-sm">Cơ sở tri thức</span>
-            </li>
-            <li className="flex items-center px-4 py-2.5 text-[#A0AEC0] hover:text-white cursor-pointer rounded-lg hover:bg-[#1B254B] transition-colors group">
-              <div className="bg-[#1B254B] group-hover:bg-[#0075FF] p-2 rounded-lg mr-3 transition-colors">
-                <Network className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-semibold text-sm">Mạng lưới AI Agent</span>
-            </li>
+            {NAV_ITEMS.filter(n => n.group === 'system').map(item => (
+              <li 
+                key={item.id}
+                onClick={() => onNavigate(item.id)}
+                className={`flex items-center px-4 py-2.5 cursor-pointer rounded-lg transition-colors group ${currentView === item.id ? 'bg-[#1B254B] text-white' : 'text-[#A0AEC0] hover:text-white hover:bg-[#1B254B]'}`}
+              >
+                <div className={`${currentView === item.id ? 'bg-[#0075FF]' : 'bg-[#1B254B] group-hover:bg-[#0075FF]'} p-2 rounded-lg mr-3 transition-colors`}>
+                  <item.icon className="w-4 h-4 text-white" />
+                </div>
+                <span className="font-semibold text-sm">{item.label}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </nav>

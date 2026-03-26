@@ -1,29 +1,25 @@
 """
 =============================================================================
-BrandFlow Strategy Engine - agents_core.py (v6 — Non-Convergence Fix)
+BrandFlow Strategy Engine - agents_core.py (v7 — Deterministic Arbitration)
 =============================================================================
-Hệ thống Multi-Agent stateless chạy 100% Local bằng Ollama.
+Kiến trúc: Pipeline tuyến tính, KHÔNG vòng lặp.
+  Agent 1 (MasterPlanner) → Python Interceptor → Agent 2 (CFO) & Agent 3 (Persona) song song.
 
-Thay đổi v6 (Ép hội tụ):
-  - MasterPlanner nhận thêm `previous_plan`, `actual_total_cost` và bị cấm 
-    viết mới hoàn toàn nếu đang sửa lỗi dôi ngân sách.
-  - CFO KHÔNG CÒN phải làm toán. Output schema của CFO được tối giản lại, 
-    chỉ còn `target_cuts` và `feedback_to_planner`.
+APIs:
+  - MasterPlanner: Google Gemini 1.5 Flash (JSON mode)
+  - CFO Commentary: Groq llama3-8b-8192
+  - Persona Validator: Groq mixtral-8x7b-32768
 =============================================================================
 """
 
 import json
+import os
 from typing import List, Literal
-
-from langchain_core.output_parsers import JsonOutputParser
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_ollama import ChatOllama
-from langchain_core.exceptions import OutputParserException
 from pydantic import BaseModel, Field
-from tenacity import retry, stop_after_attempt, wait_fixed
+import google.generativeai as genai
 
 # =============================================================================
-# 1. PYDANTIC SCHEMAS — v6: Tối giản CFO, ép MasterPlanner chặt hơn
+# 1. PYDANTIC SCHEMAS (giữ nguyên cấu trúc output cho Frontend)
 # =============================================================================
 
 class ExecutiveSummary(BaseModel):
@@ -59,198 +55,290 @@ class MasterPlanOutput(BaseModel):
     activity_and_financial_breakdown: List[ActivityAndFinancialBreakdown]
 
 
-class CFODecision(BaseModel):
-    """(v6) Lược bỏ is_approved và total_cost_calculated vì Python tự tính."""
-    target_cuts: List[str] = Field(
-        default=[],
-        description="Danh sách TÊN CỤ THỂ các hoạt động (thuộc phase nào) cần cắt giảm hoặc giảm chi phí"
-    )
-    feedback_to_planner: str = Field(
-        description="Phản hồi chi tiết: yêu cầu cắt giảm hạng mục nào, thuộc Phase nào, để giảm bao nhiêu tiền."
-    )
-
-
-class CustomerReview(BaseModel):
-    client_self_score: int = Field(description="Customer self score (1-100)")
-    feedback: str = Field(description="Customer feedback details")
-    reasoning_summary: str = Field(description="Short reasoning summary")
-
-
 # =============================================================================
-# 2. OUTPUT PARSERS
+# 2. AGENT 1: MASTER PLANNER (Gemini 1.5 Flash — JSON Mode)
 # =============================================================================
 
-planner_parser = JsonOutputParser(pydantic_object=MasterPlanOutput)
-cfo_parser = JsonOutputParser(pydantic_object=CFODecision)
-customer_parser = JsonOutputParser(pydantic_object=CustomerReview)
+MASTER_PLANNER_PROMPT = """Role: Bạn là một Giám đốc Marketing (CMO) cấp C-level tại một Agency hàng đầu. Trách nhiệm của bạn là lập Báo cáo Chiến lược (Executive Report) cho doanh nghiệp.
 
-
-# =============================================================================
-# 3. SYSTEM PROMPTS — v6: Edit-Only & Python Math integration
-# =============================================================================
-
-JSON_ENFORCEMENT = (
-    "CHỈ TRẢ VỀ CHUỖI JSON HỢP LỆ. KHÔNG CÓ BẤT KỲ VĂN BẢN NÀO BÊN NGOÀI. "
-    "QUAN TRỌNG: Tất cả các con số (tiền tệ, cost, budget) PHẢI là SỐ NGUYÊN (Integer) THUẦN TÚY. "
-    "Ví dụ: 15000000 chứ KHÔNG PHẢI 15.000.000 hay 15,000,000."
-)
-
-# ---- Master Planner Prompt ----
-planner_prompt = ChatPromptTemplate.from_messages([
-    (
-        "system",
-        """Role: Bạn là một Giám đốc Marketing (CMO) cấp C-level tại một Agency hàng đầu. Trách nhiệm của bạn là lập Báo cáo Chiến lược (Executive Report) cho doanh nghiệp.
-
-CRITICAL RULES (LUẬT SỐNG CÒN BẮT BUỘC TUÂN THỦ):
-1. GIỌNG VĂN: Chuyên nghiệp, sắc bén. Không dùng từ ngữ sáo rỗng.
-2. TỪ ĐIỂN KPI NGÀNH BẮT BUỘC (Phải áp dụng đúng ngành của khách hàng vào trường 'kpi_commitment'):
-   - Ngành F&B: Footfall (Lượng khách đến quán), CPA (Cost per Action/Voucher), AOV (Giá trị trung bình đơn), Tỷ lệ quay lại (Retention Rate).
-   - Ngành Mỹ phẩm/Làm đẹp: CPL (Cost per Lead), ROAS (Return on Ad Spend), CVR% (Tỷ lệ chuyển đổi dùng thử), Lượng UGC (User-Generated Content).
-   - Ngành Công nghệ/B2B: MQL (Marketing Qualified Lead), Demo Booking Rate (Tỷ lệ đặt lịch), CAC (Chi phí thu thập khách hàng), CPA (Chi phí mỗi người dự sự kiện).
-   - Ngành General (Chưa xác định): Tập trung vào Sales, Conversion Rate, và Brand Awareness reach.
-3. LUẬT TÀI CHÍNH (DÀNH CHO CFO KIỂM DUYỆT): 
-   - Tổng chi phí (cost_vnd) của tất cả hoạt động phải CỐ TÌNH vượt ngân sách được giao khoảng 10% - 20%. Bạn CHỈ ĐƯỢC PHÉP cố tình vượt ngân sách nếu đây là LẦN LẬP KẾ HOẠCH ĐẦU TIÊN (khi previous_plan là "Không có").
-   - Để làm được điều này, hãy tạo ra 1-2 hạng mục mồi nhử mang tính chất "Nice-to-have" (Ví dụ: Tặng quà đắt tiền, Thuê KOL lớn) và GẮN NHÃN 'moscow_tag' LÀ "COULD_HAVE". 
-   - Các hoạt động cốt lõi mang lại doanh thu phải gắn nhãn "MUST_HAVE" và "SHOULD_HAVE".
-4. QUY TRÌNH HỒI TƯỞNG VÀ CHỈNH SỬA:
-   - KHI SỬA KẾ HOẠCH DO BỊ CFO TỪ CHỐI (vì vượt ngân sách quá lớn): BẠN CHỈ ĐƯỢC PHÉP CHỈNH SỬA bản nháp cũ (giảm tiền, xóa hoặc tắt hạng mục COULD_HAVE) DỰA THEO YÊU CẦU CỦA CFO. 
-   - Ở vòng lặp chỉnh sửa, BẮT BUỘC phải làm cho `total_budget_vnd` TỪ BẰNG ĐẾN NHỎ HƠN ngân sách ban đầu, KHÔNG THÊM HẠNG MỤC MỚI, KHÔNG cố tình vượt ngân sách nữa.
-   
-HƯỚNG DẪN TỪ BỘ NHỚ CÔNG TY:
-{company_guidelines}
-
-BẮT BUỘC TRẢ VỀ CHUỖI JSON HỢP LỆ, KHÔNG VĂN BẢN THỪA.
-
-{format_instructions}"""
-    ),
-    (
-        "human",
-        """Context:
+Context:
 - Ngành hàng (Industry): {industry}
 - Mục tiêu (Goal): {goal}
-- Ngân sách tối đa (Budget): {budget} VNĐ
+- Ngân sách (Budget): {budget} VNĐ
 - Khách hàng mục tiêu: {target_audience}
 - Ràng buộc/Lưu ý (Constraints): {constraints}
 
-TỔNG CHI PHÍ THỰC TẾ CỦA BẢN NHÁP TRƯỚC ĐÓ: {actual_total_cost} VND (Vượt ngân sách: {over_budget} VND).
+CRITICAL RULES (LUẬT SỐNG CÒN BẮT BUỘC TUÂN THỦ):
+1. GIỌNG VĂN: Chuyên nghiệp, sắc bén. Không dùng từ ngữ sáo rỗng.
+2. TỪ ĐIỂN KPI NGÀNH BẮT BUỘC — THÔNG TIN NGHIỆP VỤ BẮT BUỘC:
+   Khi phân bổ ngân sách và thiết lập KPI cho từng hoạt động, bạn PHẢI sử dụng ngôn ngữ quản trị chuyên ngành tùy theo lĩnh vực khách hàng.
+   Các con số KPI phải THỰC TẾ với thị trường Việt Nam. TUYỆT ĐỐI KHÔNG dùng các từ chung chung như "Nâng cao nhận diện" hay "Tăng doanh số".
 
-Feedback YÊU CẦU CẮT GIẢM từ CFO: {feedback}
+   🍜 Ngành F&B (Nhà hàng / Quán Cafe / FMCG):
+   Đặc thù: Vòng đời quyết định ngắn, mua bằng mắt (Visual), cảm xúc và khuyến mãi. Lợi nhuận trên từng món mỏng nên cần số lượng lớn (Volume).
+      - Footfall (Lượng khách đến quán): Chỉ số sống còn của F&B Offline.
+        VD: "Thu hút 500 lượt khách (Footfall) đến check-in tại cửa hàng trong tuần lễ khai trương."
+      - CPA (Cost Per Action - Chi phí cho mỗi hành động): Đo lường việc khách lấy Voucher hoặc đăng ký thẻ thành viên.
+        VD: "CPA < 15.000 VNĐ cho mỗi lượt lưu E-Voucher trên Zalo Mini App."
+      - Social Engagement Rate (Tỷ lệ tương tác mạng xã hội): Đo lường độ viral của món ăn mới.
+        VD: "Đạt 20.000 lượt thảo luận (Mentions) và tỷ lệ tương tác (ER) > 5% trên video TikTok của Food Reviewer."
+      - AOV (Average Order Value - Giá trị trung bình trên một đơn): KPI dùng cho các chiến dịch Upsell.
+        VD: "Tăng AOV từ 50k lên 75k thông qua chương trình Combo Mua Trà sữa tặng bánh."
 
-BẢN NHÁP TRƯỚC ĐÓ CỦA BẠN (previous_plan):
-{previous_plan}
+   💄 Ngành Mỹ phẩm / Làm đẹp (Skincare / Spa):
+   Đặc thù: Khách hàng mua bằng niềm tin (Trust). Cần nội dung giáo dục (Educate) và trải nghiệm thử. Rất quan tâm tỷ lệ khách quay lại.
+      - CPL (Cost Per Lead - Chi phí một khách hàng tiềm năng): Cực kỳ quan trọng với Spa/Clinic chạy quảng cáo tìm khách soi da.
+        VD: "Thu thập 300 Leads đăng ký soi da miễn phí với CPL tối đa 150.000 VNĐ/Lead."
+      - ROAS (Return On Ad Spend - Lợi nhuận trên chi phí quảng cáo): Chỉ số vua của ngành bán lẻ mỹ phẩm online (Shopee/TikTok Shop).
+        VD: "Đạt chỉ số ROAS > 3.5 cho chiến dịch Facebook Ads bán Set Serum mùa hè."
+      - Sample Conversion Rate (Tỷ lệ chuyển đổi từ Mẫu thử): Rất hay dùng khi ra mắt sản phẩm mới.
+        VD: "Tỷ lệ chuyển đổi (CVR) đạt 15% (15 người mua full-size trên 100 người nhận sample dùng thử)."
+      - UGC (User-Generated Content - Nội dung do khách hàng tự tạo): Review, feedback tự nhiên.
+        VD: "Tạo ra 100 bài review UGC tự nhiên kèm hashtag #ClearSummer trên các Group làm đẹp."
 
-NẾU previous_plan là "Không có", hãy lập một bản Kế hoạch Marketing cực kỳ thực dụng, data-driven và bám sát phương pháp MoSCoW. Nhớ TỰ ĐỘNG THÊM 10-20% NGÂN SÁCH ẢO bằng các hạng mục COULD_HAVE.
-NẾU CÓ previous_plan, HÃY CẮT GIẢM/SỬA TRÊN ĐÓ THEO ĐÚNG Ý CFO ĐỂ TỔNG CHI PHÍ BẰNG HOẶC NHỎ HƠN NGÂN SÁCH {budget} VNĐ. TUYỆT ĐỐI KHÔNG VƯỢT NGÂN SÁCH NỮA."""
-    ),
-])
+   💻 Ngành Công nghệ (B2B SaaS / Phần mềm):
+   Đặc thù: Khách hàng là doanh nghiệp (B2B). Vòng đời chốt sale dài (vài tuần đến vài tháng). Đòi hỏi tính chuyên môn và logic cao.
+      - MQL (Marketing Qualified Lead - Khách hàng tiềm năng chất lượng): Người để lại data có nhu cầu thực (tải Ebook, xem Webinar).
+        VD: "Thu về 200 MQLs thông qua chiến dịch chạy LinkedIn Ads tặng Ebook Quản trị Nhân sự."
+      - Demo Booking Rate (Tỷ lệ đặt lịch dùng thử): Chỉ số quan trọng nhất của SaaS.
+        VD: "Tỷ lệ chuyển đổi từ traffic Landing Page sang hành động Book Demo đạt tối thiểu 8%."
+      - CAC (Customer Acquisition Cost - Chi phí thu thập một khách hàng mới): Tổng tiền marketing chia cho số khách mua phần mềm.
+        VD: "Kiểm soát CAC ở mức < 2.000.000 VNĐ/Khách hàng trả phí doanh nghiệp."
+      - CPA (Cost Per Attendee - Chi phí cho một người tham dự): Dùng khi tổ chức Sự kiện hoặc Webinar.
+        VD: "CPA < 100.000 VNĐ cho mỗi lượt đăng ký tham gia Webinar thành công."
 
-# ---- CFO Agent Prompt ----
-cfo_prompt = ChatPromptTemplate.from_messages([
-    (
-        "system",
-        """Bạn là CFO (Giám đốc Tài chính) của công ty.
-Nhiệm vụ: Chỉ định CẮT GIẢM ngân sách cho Master Plan khi bị dôi chi phí. (Bạn không cần làm toán, hệ thống Python đã tính số liệu sẵn cho bạn).
+   📦 Ngành General (Chưa xác định ngành cụ thể):
+      - Sales conversion rate (Tỷ lệ chuyển đổi bán hàng): VD "CVR 2.5%"
+      - Reach (Số người tiếp cận thực): VD "Reach 50.000 người/tháng"
+      - CTR (Tỷ lệ nhấp chuột): VD "CTR đạt 1.8%"
+3. LUẬT TÀI CHÍNH CỐ TÌNH LỐ:
+   - Tổng chi phí (cost_vnd) phải CỐ TÌNH VƯỢT ngân sách 10-20%.
+   - Tạo 1-2 hạng mục "Nice-to-have" gắn nhãn moscow_tag = "COULD_HAVE" để tạo "đất diễn" cho CFO cắt giảm.
+   - Các hoạt động cốt lõi gắn nhãn "MUST_HAVE" hoặc "SHOULD_HAVE".
+4. Tất cả con số tiền phải là SỐ NGUYÊN thuần túy (VD: 15000000, KHÔNG phải 15.000.000).
 
-NGUYÊN TẮC CẮT GIẢM THÔNG MINH:
-- BƯỚC 1: Chỉ định cắt bỏ các hạng mục có priority = "COULD_HAVE" trước (Ghi rõ ở Phase nào).
-- BƯỚC 2: Nếu chưa đủ, chỉ định giảm QUY MÔ chi phí các hạng mục "SHOULD_HAVE".
-- BƯỚC 3: TUYỆT ĐỐI KHÔNG yêu cầu cắt bỏ các hạng mục "MUST_HAVE".
-
-CÁCH VIẾT feedback_to_planner:
-- Ghi rõ: Cần cắt/giảm hạng mục nào, thuộc Phase nào.
-- Ví dụ: "Yêu cầu xóa 'Sản xuất Video' (COULD_HAVE) ở Phase 1. Giảm ngân sách 'Booking KOL' ở Phase 2 xuống còn 8,000,000 VND."
-
-""" + JSON_ENFORCEMENT + """
-
-{format_instructions}"""
-    ),
-    (
-        "human",
-        """Ngân sách được duyệt: {budget} VND
-Tổng chi phí thực tế (do hệ thống máy tính tự cộng): {actual_total_cost} VND
-Vượt ngân sách     : {over_budget} VND
-
-Kế hoạch tổng thể (Master Plan):
-{master_plan}
-
-Đang bị vượt ngân sách, hãy chỉ định cắt giảm các hoạt động ngay lập tức."""
-    ),
-])
-
-# ---- Customer Reviewer Prompt ----
-customer_prompt = ChatPromptTemplate.from_messages([
-    (
-        "system",
-        "You are the customer reviewing the marketing plan. Score satisfaction from 1-100.\n"
-        "Consider: activity/KPI clarity, feasibility vs budget, strategic coherence, target fit, brand fit.\n"
-        "Provide clear feedback for improvements. Return JSON only."
-        + JSON_ENFORCEMENT + "\n\n{format_instructions}"
-    ),
-    (
-        "human",
-        "Budget: {budget}\n\nBrand guidelines:\n{company_guidelines}\n\nRule score (Python): {rule_score}\n\nPlan:\n{master_plan}"
-    ),
-])
+Trả về JSON hợp lệ theo schema sau (KHÔNG bọc trong markdown):
+{{
+  "executive_summary": {{
+    "campaign_name": "string",
+    "campaign_summary": "string",
+    "core_objectives": "string",
+    "total_budget_vnd": integer
+  }},
+  "target_audience_and_brand_voice": {{
+    "target_audience": "string",
+    "brand_voice": "string"
+  }},
+  "phased_execution": [
+    {{ "phase_id": "phase_1", "phase_name": "string", "duration": "string" }}
+  ],
+  "activity_and_financial_breakdown": [
+    {{
+      "phase_id": "phase_1",
+      "activities": [
+        {{
+          "activity_name": "string",
+          "description": "string",
+          "cost_vnd": integer,
+          "kpi_commitment": "string",
+          "moscow_tag": "MUST_HAVE | SHOULD_HAVE | COULD_HAVE"
+        }}
+      ]
+    }}
+  ]
+}}"""
 
 
-# =============================================================================
-# 4. LLM INITIALIZATION
-# =============================================================================
+def run_master_planner(goal: str, industry: str, budget: int, target_audience: str, constraints: str) -> dict:
+    """Agent 1: Gọi Gemini 1.5 Flash để sinh Master Plan (JSON mode)."""
+    print(f"\n{'═' * 70}")
+    print(f"👑 [AGENT 1 — MASTER PLANNER] Đang lên chiến lược Marketing...")
+    print(f"   API: Google Gemini 1.5 Flash | Mode: JSON")
+    print(f"{'═' * 70}")
 
-def get_llm(temperature: float = 0.5) -> ChatOllama:
-    return ChatOllama(
-        model="llama3.2",
-        temperature=temperature,
-        format="json",
+    model = genai.GenerativeModel(
+        model_name="gemini-1.5-flash",
+        generation_config={
+            "temperature": 0.4,
+            "response_mime_type": "application/json",
+        },
     )
 
-
-# =============================================================================
-# 5. LCEL CHAINS
-# =============================================================================
-
-def build_planner_chain():
-    # Giảm temperature xuống 0.2 để Planner tập trung tuân lệnh thay vì sáng tạo lung tung khi đang bị ép giảm ngân sách
-    llm = get_llm(temperature=0.2) 
-    prompt_with_format = planner_prompt.partial(
-        format_instructions=planner_parser.get_format_instructions()
+    prompt = MASTER_PLANNER_PROMPT.format(
+        industry=industry,
+        goal=goal,
+        budget=budget,
+        target_audience=target_audience or "Chưa xác định",
+        constraints=constraints or "Không có",
     )
-    return prompt_with_format | llm | planner_parser
 
+    response = model.generate_content(prompt)
+    plan = json.loads(response.text)
 
-def build_cfo_chain():
-    llm = get_llm(temperature=0.0)
-    prompt_with_format = cfo_prompt.partial(
-        format_instructions=cfo_parser.get_format_instructions()
-    )
-    return prompt_with_format | llm | cfo_parser
+    # Log ra terminal
+    campaign_name = plan.get("executive_summary", {}).get("campaign_name", "N/A")
+    print(f"   ✅ Tên Chiến Dịch: {campaign_name}")
 
-
-def build_customer_chain():
-    llm = get_llm(temperature=0.2)
-    prompt_with_format = customer_prompt.partial(
-        format_instructions=customer_parser.get_format_instructions()
-    )
-    return prompt_with_format | llm | customer_parser
+    return plan
 
 
 # =============================================================================
-# 6. FAULT-TOLERANT EXECUTION
+# 3. PYTHON INTERCEPTOR (Kế toán trưởng vô cảm — KHÔNG dùng AI)
 # =============================================================================
 
-@retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
-def safe_invoke_chain(chain, inputs: dict, validator=None):
+def python_interceptor(plan: dict, budget: int) -> dict:
+    """
+    Nhận JSON từ MasterPlanner. Tính tổng cost bằng Python.
+    Nếu vượt ngân sách, xóa/giảm các hạng mục COULD_HAVE cho đến khi hợp lệ.
+    Trả về: final_plan, overflow_amount, cut_items.
+    """
+    print(f"\n{'─' * 70}")
+    print(f"🧮 [PYTHON INTERCEPTOR] Đang kiểm toán bằng code Python...")
+    print(f"{'─' * 70}")
+
+    def calc_total(p):
+        total = 0
+        for phase in p.get("activity_and_financial_breakdown", []):
+            for act in phase.get("activities", []):
+                total += int(act.get("cost_vnd", 0))
+        return total
+
+    raw_total = calc_total(plan)
+    overflow = max(0, raw_total - budget)
+    cut_items = []
+
+    print(f"   Ngân sách được cấp : {budget:,} VND")
+    print(f"   Tổng chi phí gốc  : {raw_total:,} VND")
+    if overflow > 0:
+        print(f"   ⚠️ Vượt ngân sách : {overflow:,} VND → Bắt đầu cắt COULD_HAVE...")
+
+    # Cắt bỏ COULD_HAVE từ dưới lên
+    if overflow > 0:
+        for phase in plan.get("activity_and_financial_breakdown", []):
+            remaining_acts = []
+            for act in phase.get("activities", []):
+                if act.get("moscow_tag") == "COULD_HAVE" and overflow > 0:
+                    cut_cost = int(act.get("cost_vnd", 0))
+                    overflow -= cut_cost
+                    cut_items.append(f"{act.get('activity_name')} ({cut_cost:,}đ)")
+                    print(f"   ✂️ Cắt bỏ: {act.get('activity_name')} — {cut_cost:,} VND")
+                else:
+                    remaining_acts.append(act)
+            phase["activities"] = remaining_acts
+
+    final_total = calc_total(plan)
+    final_overflow = max(0, raw_total - budget)
+
+    print(f"   ✅ Tổng sau cắt    : {final_total:,} VND")
+    print(f"   📋 Hạng mục bị cắt: {len(cut_items)} mục")
+
+    return {
+        "final_plan": plan,
+        "overflow_amount": final_overflow,
+        "cut_items": cut_items,
+        "raw_total": raw_total,
+        "final_total": final_total,
+    }
+
+
+# =============================================================================
+# 4. AGENT 2: CFO COMMENTARY (Groq — llama3-8b-8192)
+# =============================================================================
+
+CFO_PROMPT = """Bạn là CFO (Giám đốc Tài chính) khó tính, lạnh lùng.
+Số tiền vượt ngân sách: {overflow_amount} VND.
+Danh sách hạng mục đã bị cắt bỏ: {cut_items}.
+Ngân sách được duyệt: {budget} VND.
+
+QUY TẮC:
+- Viết ĐÚNG 1 CÂU THOẠI (dưới 30 chữ), bằng tiếng Việt.
+- Nếu có cut_items: Mắng Planner vì vung tay quá trán, thông báo đã gạch bỏ hạng mục để bảo vệ dòng tiền.
+- Nếu không có cut_items: Nói ngắn gọn "Ngân sách hợp lý, đã duyệt."
+- CHỈ TRẢ VỀ CÂU THOẠI TRƠN, KHÔNG JSON, KHÔNG MARKDOWN."""
+
+
+def run_cfo_commentary(overflow_amount: int, cut_items: list, budget: int) -> str:
+    """Agent 2: Gọi Groq llama3-8b-8192 để sinh 1 câu bình luận CFO."""
+    print(f"\n💼 [AGENT 2 — CFO] Đang bình luận tài chính...")
+    print(f"   API: Groq | Model: llama3-8b-8192")
+
     try:
-        result = chain.invoke(inputs)
-        if validator:
-            validator(result)
-        return result
-    except OutputParserException as e:
-        print(f"\n   ⚠️ [Retry] Ollama xuất JSON lỗi, đang tự động thử lại... ({e.__class__.__name__})")
-        raise e
+        from groq import Groq
+        client = Groq()
+
+        prompt = CFO_PROMPT.format(
+            overflow_amount=f"{overflow_amount:,}",
+            cut_items=", ".join(cut_items) if cut_items else "Không có",
+            budget=f"{budget:,}",
+        )
+
+        response = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3,
+            max_tokens=100,
+        )
+        comment = response.choices[0].message.content.strip()
+        print(f"   💬 CFO nói: \"{comment}\"")
+        return comment
     except Exception as e:
-        print(f"\n   🔴 [Lỗi Invoke/Validation] {e}. Đang thử lại...")
-        raise e
+        fallback = "Đã cắt các khoản thừa. Ngân sách tạm ổn." if cut_items else "Ngân sách hợp lý, đã duyệt."
+        print(f"   ⚠️ Groq CFO lỗi ({e}), dùng fallback: \"{fallback}\"")
+        return fallback
+
+
+# =============================================================================
+# 5. AGENT 3: PERSONA VALIDATOR (Groq — mixtral-8x7b-32768)
+# =============================================================================
+
+PERSONA_PROMPT = """Bạn là một khách hàng thực tế thuộc tệp: "{target_audience}".
+
+Hãy đọc lướt qua bản kế hoạch marketing dưới đây và đưa ra phản biện:
+{activities_summary}
+
+QUY TẮC:
+- Đóng vai ĐÚNG tệp khách hàng. Xưng "tôi", văn phong đời thường, tự nhiên.
+  (Gen Z nói kiểu Gen Z, Giám đốc nói kiểu Giám đốc).
+- Đưa ra 1-2 câu nhận xét: Khen 1 điểm hấp dẫn HOẶC chê 1 điểm nhàm chán/sai kênh.
+- CHỈ TRẢ VỀ CÂU THOẠI TRƠN, KHÔNG JSON, KHÔNG MARKDOWN."""
+
+
+def run_persona_validator(plan: dict, target_audience: str) -> str:
+    """Agent 3: Gọi Groq mixtral-8x7b-32768 để nhập vai khách hàng mục tiêu."""
+    print(f"\n🎭 [AGENT 3 — PERSONA VALIDATOR] Đang nhập vai khách hàng...")
+    print(f"   API: Groq | Model: mixtral-8x7b-32768")
+
+    # Tóm tắt danh sách hoạt động
+    activities = []
+    for phase in plan.get("activity_and_financial_breakdown", []):
+        for act in phase.get("activities", []):
+            activities.append(f"- {act.get('activity_name')}: {act.get('description', '')}")
+    summary = "\n".join(activities) if activities else "Không có hoạt động nào."
+
+    try:
+        from groq import Groq
+        client = Groq()
+
+        prompt = PERSONA_PROMPT.format(
+            target_audience=target_audience or "Người tiêu dùng phổ thông",
+            activities_summary=summary,
+        )
+
+        response = client.chat.completions.create(
+            model="mixtral-8x7b-32768",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.6,
+            max_tokens=200,
+        )
+        comment = response.choices[0].message.content.strip()
+        print(f"   🗣️ Khách hàng nói: \"{comment}\"")
+        return comment
+    except Exception as e:
+        fallback = "Chiến dịch này nghe thú vị, nhưng tôi muốn thấy nhiều ưu đãi trực tiếp hơn."
+        print(f"   ⚠️ Groq Persona lỗi ({e}), dùng fallback: \"{fallback}\"")
+        return fallback
+
 
 if __name__ == "__main__":
-    print("File agents_core.py v6 — Non-Convergence Fixed")
+    print("agents_core.py v7 — Deterministic Arbitration Architecture")
+    print("Modules: run_master_planner, python_interceptor, run_cfo_commentary, run_persona_validator")
