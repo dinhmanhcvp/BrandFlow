@@ -43,6 +43,7 @@ except ImportError as _import_err:
 from app.core.access_audit import VisitorAuditStore
 from app.core.database import init_db as init_form_db
 from app.api.form_routes import router as form_router
+from app.api.design_routes import router as design_router
 from pydantic import BaseModel
 import os
 import uuid
@@ -109,6 +110,9 @@ async def app_startup() -> None:
 
 # ── Đăng ký Form Data CRUD Router ─────────────────────────────────
 app.include_router(form_router)
+
+# ── Đăng ký Design Module Router ──────────────────────────────────
+app.include_router(design_router)
 
 
 @app.middleware("http")
