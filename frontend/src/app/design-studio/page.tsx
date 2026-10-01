@@ -138,6 +138,40 @@ export default function DesignStudioPage() {
       setActiveAgent('Creative Agent');
       addLog("Creative Agent", "Đang xử lý song song DALL-E Visuals & Behance Layout...", "info");
 
+      // DEMO MOCK: Bếp Nhà Mộc
+      const isBepNhaMoc = masterDNA.brand_name?.toLowerCase().includes('bếp nhà mộc') || masterDNA.brand_name?.toLowerCase().includes('bep nha moc');
+      if (isBepNhaMoc) {
+        await new Promise(r => setTimeout(r, 2500));
+        const bnmAssets = {
+          logo_url: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&h=500&fit=crop",
+          banner_url: "https://images.unsplash.com/photo-1522336572468-97b06e8ef143?w=1200&h=400&fit=crop",
+          avatar_url: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200&h=200&fit=crop",
+          color_palette: [
+            { hex: "#064E3B", name: "Deep Forest (Chính)" },
+            { hex: "#B45309", name: "Amber Wood (Nhấn)" },
+            { hex: "#FEF3C7", name: "Warm Cream (Nền)" },
+            { hex: "#F3F4F6", name: "Slate 100" }
+          ],
+          typography: { heading: "Playfair Display, serif", body: "Inter, sans-serif" }
+        };
+        const bnmBlocks = [
+          { type: 'header', title: 'Bếp Nhà Mộc - Mindful Dining Identity', subtitle: 'Tái định vị thương hiệu 2026', description: 'Giao diện mộc mạc, truyền tải thông điệp chữa lành qua màu gỗ ấm và xanh lá tự nhiên.' },
+          { type: 'color_palette', colors: bnmAssets.color_palette },
+          { type: 'typography', fonts: [{ name: bnmAssets.typography.heading, usage: 'Headings & Menu Titles' }, { name: bnmAssets.typography.body, usage: 'Body Text & Descriptions' }] },
+          { type: 'image_full', url: bnmAssets.banner_url, caption: 'Không gian nội thất Concept' },
+          { type: 'text', title: 'Brand Vibe', content: 'Phong cách thiết kế đề cao sự tĩnh lặng. Sử dụng khoảng trắng lớn, hình ảnh đồ ăn chụp macro với ánh sáng ấm áp.' }
+        ];
+        
+        setActiveAgent('System');
+        addLog("System", "Render thành công 2 luồng (Mock Chuyên sâu Bếp Nhà Mộc).", "success");
+        setActiveAgent('Done');
+        
+        setResult(bnmAssets);
+        setBlocks(bnmBlocks);
+        setLoading(false);
+        return;
+      }
+
       const token = typeof window !== 'undefined' ? localStorage.getItem('brandflow_token') : null;
       const headers = {
         "Content-Type": "application/json",
@@ -221,6 +255,58 @@ export default function DesignStudioPage() {
     setDeckSlides([]);
     addLog("System", `Đang sinh ${deckTemplate === 'brand_guideline' ? 'Brand Guideline' : deckTemplate === 'pitch_deck' ? 'Pitch Deck' : 'Marketing Proposal'}...`, "info");
     try {
+      // DEMO MOCK: Bếp Nhà Mộc
+      const isBepNhaMoc = masterDNA.brand_name?.toLowerCase().includes('bếp nhà mộc') || masterDNA.brand_name?.toLowerCase().includes('bep nha moc');
+      if (isBepNhaMoc) {
+        await new Promise(r => setTimeout(r, 2000));
+        const bnmSlides = [
+          {
+            id: "slide_1",
+            type: "title",
+            title: "Bếp Nhà Mộc: Hành Trình Mindful Dining",
+            subtitle: deckTemplate === 'pitch_deck' ? "Corporate Pitch Deck 2026" : "Marketing Proposal Q3/2026",
+            speakerNotes: "Mở đầu với hình ảnh một mâm cơm ấm cúng. Gợi nhắc về giá trị cốt lõi: Ẩm thực là để chữa lành."
+          },
+          {
+            id: "slide_2",
+            type: "content",
+            title: "Tái định vị: Từ Quán Ăn đến 'Điểm Trú Ẩn'",
+            content: [
+              "Vấn đề: Giới văn phòng đang đối mặt với tỷ lệ Burnout kỷ lục (68%).",
+              "Sứ mệnh: Biến bữa trưa/tối thành một liệu trình giải tỏa căng thẳng.",
+              "Chiến thuật: Ra mắt gói 'Corporate Mindful Lunch' giao tận văn phòng."
+            ],
+            speakerNotes: "Nhấn mạnh sự chuyển dịch từ B2C thông thường sang ngách B2B Corporate, giải quyết bài toán Burnout."
+          },
+          {
+            id: "slide_3",
+            type: "metric",
+            title: "Dự Phóng Tài Chính & Trọng Tâm (KPIs)",
+            metrics: [
+              { label: "Mục tiêu MRR tăng trưởng", value: "+25% (Q3)" },
+              { label: "LTV:CAC Ratio kỳ vọng", value: "> 3.0x" },
+              { label: "Tỷ lệ tái tiêu dùng (Repeat Rate)", value: "65%" }
+            ],
+            speakerNotes: "Đưa ra bằng chứng tài chính rõ ràng để thuyết phục Ban Giám Đốc."
+          },
+          {
+            id: "slide_4",
+            type: "content",
+            title: "Kế Hoạch Triển Khai Chuyển Đổi Số",
+            content: [
+              "Tháng 1: Tối ưu UI/UX cho Zalo Mini App chuyên đặt bàn và tích điểm.",
+              "Tháng 2: Khởi động Data-driven Loyalty Program. Tích hợp AI CRM.",
+              "Tháng 3: Scale-up hệ thống chi nhánh thông qua Nhượng quyền tinh gọn."
+            ],
+            speakerNotes: "Roadmap rõ ràng cho 3 tháng tới."
+          }
+        ];
+        setDeckSlides(bnmSlides);
+        addLog("System", `[Mock Mode] Đã sinh 4 slides cực kỳ chi tiết cho Bếp Nhà Mộc.`, "success");
+        setDeckLoading(false);
+        return;
+      }
+
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://brandflow-jfha.onrender.com';
       const token = typeof window !== 'undefined' ? localStorage.getItem('brandflow_token') : null;
       const res = await fetch(`${API_URL}/api/v1/design/generate-slides`, {

@@ -35,6 +35,33 @@ export default function AgileOptimizer() {
         throw new Error("KPI data must be valid JSON format");
       }
 
+      // DEMO MOCK: Bếp Nhà Mộc
+      const isBepNhaMoc = campaignName.toLowerCase().includes('bếp nhà mộc') || campaignName.toLowerCase().includes('bep nha moc');
+      if (isBepNhaMoc) {
+        await new Promise(r => setTimeout(r, 2000)); // Simulate AI reasoning
+        const bepNhaMocMock = {
+          status: "critical",
+          pivot_suggested: true,
+          reasoning: "Tỷ lệ LTV:CAC hiện tại (1.2x) đang ở mức báo động đối với mô hình F&B cao cấp. Đồng thời, Churn Rate tháng 2 (68%) cho thấy trải nghiệm khách hàng chưa đủ sức giữ chân nhóm 'Corporate'. Với quỹ thời gian eo hẹp, việc dồn ngân sách vào các kênh quảng cáo diện rộng (Broad Targeting) đang làm lãng phí 45% ngân sách OPEX.",
+          pivot_strategy: {
+            immediate_actions: [
+              "Chấm dứt ngay lập tức các chiến dịch Facebook Ads nhắm mục tiêu chung (Broad Audience) > CPA đang vượt 350,000 VND.",
+              "Khởi động chiến dịch 'Corporate Mindful Lunch': Chào bán thẻ thành viên trả trước (Prepaid Loyalty Card) cho khối văn phòng xung quanh bán kính 3km.",
+              "Kích hoạt Zalo ZNS (Zalo Notification Service) kịch bản CSKH tự động hóa trong 24h đầu để giảm Churn Rate."
+            ],
+            budget_reallocation: {
+              "Facebook Ads (Broad)": "-100% (Cắt hoàn toàn)",
+              "Zalo OA & ZNS (Retention)": "+40% (Tăng cường)",
+              "B2B Direct Sales (Corporate)": "+60% (Dồn lực)"
+            }
+          },
+          confidence_score: 94
+        };
+        setResult(bepNhaMocMock);
+        setIsAnalyzing(false);
+        return;
+      }
+
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://brandflow-jfha.onrender.com';
       const token = localStorage.getItem('access_token');
       

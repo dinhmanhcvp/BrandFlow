@@ -25,6 +25,28 @@ export default function ContentLabPage() {
 
     setIsIngesting(true);
     try {
+      // DEMO MOCK: Bếp Nhà Mộc
+      const companyName = wizardAnswers?.["Tên doanh nghiệp"] || wizardAnswers?.company_name || "";
+      const isBepNhaMoc = companyName.toLowerCase().includes('bếp nhà mộc') || companyName.toLowerCase().includes('bep nha moc');
+      if (isBepNhaMoc) {
+        await new Promise(r => setTimeout(r, 1200));
+        const bnmMockSrc = {
+          url: urlInput,
+          platform: urlInput.includes('youtube') || urlInput.includes('youtu.be') ? 'youtube' : 'website',
+          title: "Bếp Nhà Mộc - Bài Phân Tích Thực Chiến",
+          description: "Phân tích chiến lược truyền thông từ đối thủ cạnh tranh trực tiếp.",
+          content: "Dữ liệu được bóc tách từ chiến dịch của đối thủ. Phù hợp để làm benchmarking cho Bếp Nhà Mộc."
+        };
+        setSources((prev) => {
+          const next = [...prev, bnmMockSrc];
+          setSelectedSourceIdx(next.length - 1);
+          return next;
+        });
+        setUrlInput('');
+        setIsIngesting(false);
+        return;
+      }
+
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://brandflow-jfha.onrender.com';
       const token = typeof window !== 'undefined' ? localStorage.getItem('brandflow_token') : null;
       const res = await fetch(`${API_URL}/api/content-lab/ingest`, {
@@ -68,6 +90,47 @@ export default function ContentLabPage() {
     const targetSource = sources[idx];
     
     try {
+      // DEMO MOCK: Bếp Nhà Mộc
+      const companyName = wizardAnswers?.["Tên doanh nghiệp"] || wizardAnswers?.company_name || "";
+      const isBepNhaMoc = companyName.toLowerCase().includes('bếp nhà mộc') || companyName.toLowerCase().includes('bep nha moc');
+      if (isBepNhaMoc) {
+        await new Promise(r => setTimeout(r, 2000));
+        const bnmMockReport = {
+          vibe_summary: 'Chữa lành, Ấm cúng & Chân thành',
+          vibe_keywords: ['Mindfulness', 'Heritage', 'Organic', 'Stress-relief'],
+          vibe_analysis: 'Nội dung sử dụng ngôn ngữ giàu cảm xúc, tập trung vào việc khơi gợi các giác quan (mùi khói bếp, vị ngọt của rau củ) để tạo cảm giác "về nhà".',
+          vibe_and_tone: 'Ấm áp, chân thành, xoa dịu tâm hồn.',
+          visual_style: 'Rustic & Warm Tone',
+          visual_colors: ['Amber Wood', 'Forest Green', 'Warm Yellow'],
+          visual_analysis: 'Sử dụng ánh sáng vàng ấm, background gỗ mộc và các góc chụp cận cảnh chất liệu tự nhiên, tạo độ tin cậy và cảm giác an toàn.',
+          copywriting_hooks: [
+            'Bắt đầu bằng một kỷ niệm quen thuộc thuở ấu thơ.',
+            'Nêu bật sự mệt mỏi của cuộc sống văn phòng để tạo sự đồng cảm.',
+            'Kêu gọi hành động nhẹ nhàng: "Ghé Bếp, uống bát canh cho mát lòng."'
+          ],
+          target_audience: [
+            'Dân văn phòng đang gặp tình trạng Burnout (25-35 tuổi).',
+            'Các cặp đôi/gia đình trẻ tìm kiếm không gian yên tĩnh cuối tuần.',
+            'Chuyên gia, Quản lý cấp trung cần nơi tiếp khách mang tính văn hóa.'
+          ],
+          learning_actions: [
+            'Thử nghiệm chuỗi Video ASMR âm thanh nấu ăn mộc mạc trên TikTok.',
+            'Ra mắt chuyên mục "Câu chuyện Thực Khách" trên Fanpage.',
+            'Thiết kế lại Menu theo phong cách viết tay truyền thống.'
+          ]
+        };
+        setSources((prev) => {
+          const next = [...prev];
+          next[idx] = {
+            ...next[idx],
+            report: bnmMockReport
+          };
+          return next;
+        });
+        setIsAnalyzing(false);
+        return;
+      }
+
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://brandflow-jfha.onrender.com';
       const token = typeof window !== 'undefined' ? localStorage.getItem('brandflow_token') : null;
       const res = await fetch(`${API_URL}/api/content-lab/analyze`, {
