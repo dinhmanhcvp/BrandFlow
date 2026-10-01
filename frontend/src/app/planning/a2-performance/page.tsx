@@ -30,7 +30,7 @@ export default function PageA2Performance() {
         <div className="flex items-center justify-between">
           <span>{row.reason}</span>
           {row.rationale && (
-            <RationaleTooltip rationale={row.rationale}>
+            <RationaleTooltip rationale={row.rationale} type="source">
               <span className="sr-only">Why</span>
             </RationaleTooltip>
           )}

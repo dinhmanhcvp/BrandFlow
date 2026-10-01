@@ -26,7 +26,7 @@ export default function PageC2History() {
         <div className="flex items-center justify-between">
           <span>{row.sbu}</span>
           {row.rationale && (
-            <RationaleTooltip rationale={row.rationale}>
+            <RationaleTooltip rationale={row.rationale} type="source">
               <span className="sr-only">Why</span>
             </RationaleTooltip>
           )}
