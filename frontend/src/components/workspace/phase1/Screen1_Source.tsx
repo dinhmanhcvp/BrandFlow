@@ -15,6 +15,7 @@ function cn(...inputs: ClassValue[]) {
 export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | 'dashboard') => void }) {
   const { t, language } = useLanguage();
   const setExtractedAnswers = useFormStore(state => state.setExtractedAnswers);
+  const setIntakeAnalysis = useFormStore(state => state.setIntakeAnalysis);
   const appendRawIngestedContent = useFormStore(state => state.appendRawIngestedContent);
   const [selectedSources, setSelectedSources] = useState<string[]>([]);
 
@@ -270,6 +271,31 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
             financial_health: "Tỷ lệ LTV:CAC hiện tại (1.2x) đang ở vùng nguy hiểm đối với ngành F&B cao cấp (Benchmark ngành: 2.5x). Việc đốt tiền vào Facebook Ads diện rộng đang làm xói mòn 45% ngân sách OPEX vô ích.",
             operational_bottlenecks: "Quy trình chăm sóc khách hàng sau bữa ăn đang bị bỏ ngỏ. Không có kịch bản kích thích Upsell/Cross-sell qua Zalo ZNS, dẫn tới Churn Rate cực kỳ cao (68%) ngay trong tháng thứ 2.",
             strategic_recommendation: "Cắt ngay 100% ngân sách Facebook Broad Ads. Chuyển hướng sang 'Corporate Mindful Lunch' (B2B) và ra mắt Thẻ Thành Viên (Prepaid Loyalty Card) để chốt dòng tiền trước, cải thiện ngay Cash Flow trong ngắn hạn."
+          }
+        });
+        
+        // Populate IntakeAnalysis so Screen3_Dashboard displays beautiful Brand DNA
+        setIntakeAnalysis({
+          company_name: "Bếp Nhà Mộc",
+          strategic_marketing_audit: {
+            trust_score: 85,
+            competitive_positioning: "Thương hiệu lâu đời (3 thế hệ), có nền tảng cốt lõi cực mạnh về chất lượng sản phẩm (Organic, No MSG). Tuy nhiên, đang đối mặt với sự già hóa tệp khách hàng và định vị mờ nhạt (hay bị nhầm với quán cơm bình dân).",
+            macro_environment_pestle: [
+              "Chưa tối ưu hóa trải nghiệm mượt mà trên môi trường Digital (App/Zalo).",
+              "Hình ảnh truyền thông mờ nhạt, bao bì take-away sơ sài làm giảm giá trị."
+            ],
+            core_competences: [
+              "Giải quyết nỗi đau 'Cơm văn phòng dầu mỡ' bằng chất lượng Organic.",
+              "Không gian kiến trúc 'Nhà gỗ cổ' độc bản, tạo trải nghiệm chữa lành."
+            ],
+            marketing_objectives: [
+              "Tái định vị thành 'Mindful Dining' cho tệp khách Gen Y/Z."
+            ]
+          },
+          visual_brand_dna: {
+            visual_archetype: "Rustic, Chữa Lành & Chân Thành",
+            primary_colors: ["#064E3B", "#B45309", "#FEF3C7"],
+            moodboard_keywords: ["Heritage", "Organic", "Mindfulness", "Warm Wood"]
           }
         });
         
@@ -992,34 +1018,36 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
                 </button>
               </div>
               <div id="preview-scroll-container" className="flex-1 overflow-y-auto p-6 bg-slate-900/50 custom-scrollbar text-slate-300 font-mono text-xs leading-relaxed whitespace-pre-wrap">
-{`# Bếp Nhà Mộc - Business Profile & Strategy Document 2026
+{`HỒ SƠ MÔ PHỎNG DOANH NGHIỆP F&B
+dành cho kiểm thử hệ thống BrandFlow
+Thương hiệu mô phỏng: Bếp Nhà Mộc
+Nhà hàng cơm gia đình Việt Nam · Hà Nội · 2 chi nhánh · 28 nhân sự
 
-## 1. Executive Summary
-Bếp Nhà Mộc là thương hiệu F&B theo mô hình Casual Dining, tập trung vào các món ăn truyền thống Việt Nam với điểm nhấn là nguyên liệu hữu cơ (Organic) và không sử dụng bột ngọt (No MSG). Trải qua 3 thế hệ phát triển từ một quán ăn gia đình nhỏ, Bếp Nhà Mộc hiện đang sở hữu 2 chi nhánh tại trung tâm thành phố.
+Mục Lục Nội Dung
+1. Tổng quan doanh nghiệp
+2. Bối cảnh thị trường và cạnh tranh
+3. Chân dung doanh nghiệp
+4. Brand Guidelines / Quy chuẩn thương hiệu
+5. Customer Personas / Chân dung khách hàng mục tiêu
+6. Historical Campaign Archive / Lịch sử chiến dịch
+7. Campaign Scenarios / Kịch bản chiến dịch kiểm thử
+8. Bộ dữ liệu đầu vào khuyến nghị cho BrandFlow
+9. Tóm tắt cuối cùng
 
-## 2. Current Business Health & Metrics
-- **Revenue**: Đạt trung bình 1.2 tỷ VNĐ/tháng (Đi ngang trong 18 tháng qua).
-- **Profit Margin**: 15% (Đang thấp hơn mức trung bình ngành F&B là 22% do chi phí nguyên liệu hữu cơ cao và tỷ lệ lấp đầy chưa tối ưu).
-- **Customer Acquisition Cost (CAC)**: Khoảng 250,000 VNĐ/khách mới.
-- **Occupancy Rate**: 
-  - Khung giờ cao điểm cuối tuần: 80-90%
-  - Khung giờ trong tuần (Trưa/Tối): 35-40%
+1. Tổng Quan Doanh Nghiệp
+1.5 Mục tiêu kinh doanh
+Ngắn hạn (3–6 tháng)
+- Tăng lượng đơn suất trưa ngày thường thêm 15%
+- Cải thiện tỷ lệ khách văn phòng quay lại
+- Giảm phụ thuộc vào các chương trình giảm giá trên app giao đồ ăn
+- Xây dựng thông điệp thương hiệu nhất quán: "cơm nhà sạch, tiện, đáng tin"
 
-## 3. Core Values & USP (Unique Selling Propositions)
-- Chuỗi cung ứng khép kín "Từ Nông Trại đến Bàn Ăn", 100% nguyên liệu đạt chuẩn VietGAP & Organic.
-- Công thức ẩm thực di sản 3 đời, cam kết không sử dụng hóa chất tạo vị.
-- Kiến trúc không gian quán là nhà gỗ cổ Bắc Bộ nguyên bản được phục dựng, tạo giá trị "chữa lành" và "hoài niệm".
+Trung hạn (6–18 tháng)
+- Phát triển đơn hàng trực tiếp qua Zalo và điện thoại
+- Ra mắt gói cơm văn phòng theo tháng (subscription)
 
-## 4. Problem Statement & Challenges
-- **Lão hóa tệp khách hàng**: Khách hàng trung thành hiện tại chủ yếu là nhóm người lớn tuổi (>45 tuổi). Khó tiếp cận Gen Y và Gen Z (nhóm có thu nhập cao và sẵn sàng chi trả cho trải nghiệm).
-- **Định vị thương hiệu mờ nhạt**: Thường bị khách hàng đánh đồng với các "quán nhậu bình dân" hoặc "quán cơm phần", làm giảm giá trị cảm nhận (Perceived Value) dù chất lượng món ăn rất cao.
-- **Missing Digital Presence**: Bao bì Take-away sơ sài, hình ảnh trên mạng xã hội thiếu chuyên nghiệp, không tối ưu hóa cho các nền tảng Delivery (ShopeeFood, GrabFood).
-
-## 5. Strategic Objectives for 2026
-- Tái định vị thương hiệu thành "Nhà hàng trải nghiệm ẩm thực Chữa Lành", nhắm đến tệp khách hàng trẻ.
-- Tăng trưởng doanh thu 35% trong 12 tháng tới.
-- Cải thiện Profit Margin lên 20% thông qua việc ra mắt các combo "Corporate Lunch" cao cấp để lấp đầy khung giờ vắng khách.
-- Xây dựng Brand Guideline hoàn chỉnh và đồng bộ hóa bao bì nhận diện thương hiệu.
+3. Chân Dung Doanh Nghiệp
+Bếp Nhà Mộc ra đời từ một quan sát rất thực tế: nhiều nhân viên văn phòng quanh khu Cầu Giấy đang phải ăn những bữa trưa dầu mỡ, đơn điệu và không đảm bảo chất lượng. Chị Nguyễn Thị Mai Anh, người sáng lập, quyết định mở quán với một ý tưởng đơn giản: nấu cơm đúng kiểu cơm nhà - không quá cầu kỳ, không quá mặn, không ngập dầu mỡ, và có thể ăn nhiều lần trong tuần mà không chán.
 
 *...[End of Preview]...*`}
               </div>
