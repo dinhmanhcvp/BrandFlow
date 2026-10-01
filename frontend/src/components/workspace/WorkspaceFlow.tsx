@@ -104,12 +104,12 @@ export default function WorkspaceFlow() {
       {/* ── Main Content Area ── */}
       <div className="flex-1 w-full h-full overflow-hidden relative">
         <div className="absolute inset-0 transition-opacity duration-300">
-          {currentStage === 1 && <Phase2_Debate onNext={() => goToState(2)} onBack={() => {}} />}
+          {currentStage === 1 && <Phase2_Debate onNext={() => goToState(2)} onBack={() => window.location.href = '/onboarding'} />}
           {currentStage === 2 && <Phase3_Tactics onNext={() => goToState(3)} onBack={() => goToState(1)} globalBudget={globalBudget} />}
           {currentStage === 3 && <Phase4_Execution onNext={() => goToState(4)} onBack={() => goToState(2)} />}
-          {currentStage === 4 && <Phase5_Creative onNext={() => goToState(5)} />}
-          {currentStage === 5 && <Phase6_AgentDeploy onNext={() => goToState(6)} />}
-          {currentStage === 6 && <Phase7_Report onExport={() => alert('Exporting')} />}
+          {currentStage === 4 && <Phase5_Creative onNext={() => goToState(5)} onBack={() => goToState(3)} />}
+          {currentStage === 5 && <Phase6_AgentDeploy onNext={() => goToState(6)} onBack={() => goToState(4)} />}
+          {currentStage === 6 && <Phase7_Report onExport={() => alert('Exporting')} onBack={() => goToState(5)} />}
         </div>
       </div>
     </div>

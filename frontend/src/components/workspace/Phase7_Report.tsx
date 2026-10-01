@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Download, CheckCircle, FileBarChart, Presentation, Mail } from 'lucide-react';
 
-export default function Phase7_Report({ onExport }: { onExport: () => void }) {
+export default function Phase7_Report({ onExport, onBack }: { onExport: () => void, onBack?: () => void }) {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -22,6 +22,16 @@ export default function Phase7_Report({ onExport }: { onExport: () => void }) {
 
   return (
     <div className="h-full w-full flex flex-col items-center justify-center p-6 z-10 relative">
+      <div className="absolute top-6 left-6 z-20">
+        <button 
+          onClick={onBack} 
+          className="px-5 py-2.5 rounded-lg border border-linear-border bg-linear-surface hover:bg-linear-surface/80 text-foreground font-bold transition-all shadow-sm flex items-center justify-center"
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg> Quay lại
+        </button>
+      </div>
       <div className="max-w-2xl w-full text-center">
         <motion.div 
           initial={{scale: 0.8, opacity: 0}} 

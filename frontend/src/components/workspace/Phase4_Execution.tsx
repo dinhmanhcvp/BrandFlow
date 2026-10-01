@@ -48,13 +48,21 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
           </h2>
           <p className="text-linear-text-muted mt-1">Đảm bảo P&L dương và xuất báo cáo hoàn chỉnh</p>
         </div>
-        <button 
-          id="btn-next-phase4"
-          onClick={onNext}
-          className={`px-6 py-2.5 rounded-lg font-bold flex items-center transition-all ${step >= 3 ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-blue-500/20' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`}
-        >
-          Creative & Design <Download className="ml-2 w-4 h-4 hidden" />
-        </button>
+        <div className="flex gap-3">
+          <button 
+            onClick={onBack} 
+            className="px-5 py-2.5 rounded-lg border border-linear-border bg-linear-surface hover:bg-linear-surface/80 text-foreground font-bold transition-all shadow-sm flex items-center justify-center"
+          >
+            <ArrowRight className="w-4 h-4 mr-2 rotate-180" /> Quay lại
+          </button>
+          <button 
+            id="btn-next-phase4"
+            onClick={onNext}
+            className={`px-6 py-2.5 rounded-lg font-bold flex items-center transition-all ${step >= 3 ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-blue-500/20' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`}
+          >
+            Creative & Design <Download className="ml-2 w-4 h-4 hidden" />
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 grid grid-cols-2 gap-6">

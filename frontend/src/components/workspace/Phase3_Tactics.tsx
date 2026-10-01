@@ -88,16 +88,24 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
           </h2>
           <p className="text-linear-text-muted mt-2 font-medium">Chiến thuật chi tiết được tự động xây dựng dựa trên kết quả Debate</p>
         </div>
-        <button 
-          id="btn-next-phase3" 
-          onClick={onNext} 
-          className="group relative px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-          <span className="relative z-10 flex items-center">
-            Chuyển sang Execution <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </span>
-        </button>
+        <div className="flex gap-3 w-full md:w-auto">
+          <button 
+            onClick={onBack} 
+            className="px-5 py-3 rounded-xl border border-linear-border bg-linear-surface hover:bg-linear-surface/80 text-foreground font-bold transition-all shadow-sm flex items-center justify-center"
+          >
+            <ArrowRight className="w-4 h-4 mr-2 rotate-180" /> Quay lại
+          </button>
+          <button 
+            id="btn-next-phase3" 
+            onClick={onNext} 
+            className="group relative px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] overflow-hidden flex-1 md:flex-none flex items-center justify-center"
+          >
+            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+            <span className="relative z-10 flex items-center">
+              Chuyển sang Execution <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* ── Tabs Navigation ── */}

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Palette, FileText, Image as ImageIcon, Wand2, Type, Layout } from 'lucide-react';
 
-export default function Phase5_Creative({ onNext }: { onNext: () => void }) {
+export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void, onBack?: () => void }) {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -29,16 +29,26 @@ export default function Phase5_Creative({ onNext }: { onNext: () => void }) {
           </h2>
           <p className="text-linear-text-muted mt-1">Multi-modal content generation & brand identity</p>
         </div>
-        <button 
-          id="btn-next-phase5"
-          onClick={onNext}
-          className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-lg font-bold shadow-lg shadow-blue-500/25 transition-all flex items-center group"
-        >
-          Deploy Custom Agent
-          <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </button>
+        <div className="flex gap-3">
+          <button 
+            onClick={onBack} 
+            className="px-5 py-2.5 rounded-lg border border-linear-border bg-linear-surface hover:bg-linear-surface/80 text-foreground font-bold transition-all shadow-sm flex items-center justify-center"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg> Quay lại
+          </button>
+          <button 
+            id="btn-next-phase5"
+            onClick={onNext}
+            className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-lg font-bold shadow-lg shadow-blue-500/25 transition-all flex items-center group"
+          >
+            Deploy Custom Agent
+            <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 grid grid-cols-12 gap-6">
