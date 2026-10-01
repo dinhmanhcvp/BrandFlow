@@ -20,8 +20,13 @@ export default function DailyContentPage() {
   const brandName = brandDNA?.brand_name || wizardAnswers?.company_name || extractedAnswers?.company_name || "Thương hiệu";
   const coreUsps = brandDNA?.core_usps || wizardAnswers?.core_usps || extractedAnswers?.core_usps || ["Sản phẩm chất lượng"];
 
+  const isBepNhaMoc = brandName.toLowerCase().includes('mộc');
   // States for Google Trends
-  const [trends, setTrends] = useState<string[]>(["Tối ưu dòng tiền", "Phát triển đội ngũ"]);
+  const [trends, setTrends] = useState<string[]>(
+    isBepNhaMoc 
+      ? ["Ăn trưa không buồn ngủ", "Giảm stress văn phòng", "Cơm niêu truyền thống", "Corporate Catering"]
+      : ["Tối ưu dòng tiền", "Phát triển đội ngũ"]
+  );
 
   // AI loading steps
   const AI_STEPS = [
@@ -41,7 +46,27 @@ export default function DailyContentPage() {
 
     setTimeout(() => {
       clearInterval(stepInterval);
-      setGeneratedContent(`${topic.toUpperCase()}\n\nBạn đang gặp vấn đề với việc quản trị doanh nghiệp?\n\nTại ${brandName}, chúng tôi tin rằng lợi thế: "${coreUsps[0]}" chính là giải pháp tối ưu dành cho bạn.\n\nHãy bắt đầu xây dựng hệ thống tự vận hành ngay hôm nay!\n\n#${brandName.replace(/\s+/g, '')} #SME`);
+      
+      let finalContent = "";
+      
+      if (isBepNhaMoc) {
+        if (platform === 'Zalo') {
+          finalContent = `[GÓC HỎI ĐÁP] TRƯA NAY ANH CHỊ ĂN GÌ? 🍱\n\nNắng nóng hoặc mưa rào thế này, bước ra ngoài mua cơm là một cực hình. Để Bếp Nhà Mộc giao tận bàn cho anh chị nhé!\n\n🌟 Hôm nay Bếp có:\n- Thịt kho niêu đất mềm tan (Must-try)\n- Cá bống kho tiêu đậm đà\n- Canh chua cá lóc giải nhiệt\n\n✅ Tặng ngay mã FREESHIP_T5 cho đơn từ 2 phần.\n✅ Hộp bã mía 100% an toàn sức khỏe.\n\n👇 Nhấn nút Mua Ngay bên dưới để xem menu hôm nay ạ!`;
+        } else if (platform === 'LinkedIn') {
+          finalContent = `CORPORATE LUNCH: KHÔNG CHỈ LÀ BỮA ĂN, MÀ LÀ PHÚC LỢI NHÂN SỰ 💼\n\nBạn có biết: Một bữa trưa dinh dưỡng, sạch sẽ giúp tăng 30% hiệu suất làm việc buổi chiều của nhân sự?\n\nTại Bếp Nhà Mộc, chúng tôi cung cấp giải pháp B2B Corporate Catering được thiết kế riêng cho dân văn phòng:\n\n✔️ Cân bằng dinh dưỡng, không gây "Food Coma" (buồn ngủ).\n✔️ 100% nguyên liệu tươi mới, không chất bảo quản.\n✔️ Hóa đơn VAT đầy đủ, quy trình chuẩn chỉnh.\n\nInbox ngay để nhận mẫu ăn thử (Sampling) miễn phí cho công ty của bạn hôm nay. Bếp Nhà Mộc đồng hành cùng sự phát triển của Doanh nghiệp.`;
+        } else if (platform === 'TikTok') {
+          finalContent = `pov: 11h30 trưa sếp dí deadline rớt nước mắt nhưng bụng thì kêu réo rắt 😭\n\nĐừng lo mấy ní ơi, lưu ngay cứu tinh Bếp Nhà Mộc nha!\n✨ Cơm hộp bã mía sạch sẽ\n✨ Đóng gói 2 lớp giữ nhiệt nóng hổi\n✨ Vị nhà làm ăn bao dính\n\nLink trong giỏ hàng nha mí bồ 🛒 Chốt đơn lẹ không hết phần ngon! #bepnhamoc #comvanphong #anngonmoingay`;
+        } else if (platform === 'Instagram') {
+          finalContent = `Một chút bình yên giữa guồng quay hối hả của thành phố 🌿\n\nBữa cơm trưa không chỉ để no bụng, mà còn là khoảnh khắc để bạn dừng lại, "thở" và nạp lại năng lượng.\n\nBếp Nhà Mộc nâng niu từng nguyên liệu, chọn lọc từng hạt gạo mềm dẻo để mang đến cho bạn hương vị vẹn nguyên của bữa cơm nhà mẹ nấu.\n\nVuốt sang trái để xem quá trình chúng tôi chuẩn bị món Thịt kho niêu Signature sáng nay nhé! ✨\n\n#BepNhaMoc #MindfulDining #ThucDonChuaLanh #HealthyLifestyle`;
+        } else {
+          // Facebook
+          finalContent = `🔥 [ĐỘC QUYỀN TRÊN APP] COMBO CHỮA LÀNH DÀNH CHO DÂN VĂN PHÒNG BURN-OUT 🔥\n\nBạn cảm thấy uể oải, cạn kiệt năng lượng sau phiên họp sáng?\n\nChỉ với 65K, Bếp Nhà Mộc mang đến giải pháp nạp năng lượng chuẩn chỉnh:\n👉 1 Phần Cơm Niêu Gạo ST25 dẻo thơm.\n👉 1 Món chính tự chọn (Sườn chua ngọt/Thịt kho trứng).\n👉 Tặng kèm Canh rau theo mùa thanh mát.\n\n🎯 3 CAM KẾT TỪ BẾP NHÀ MỘC:\n1️⃣ Không sử dụng bột ngọt hóa học.\n2️⃣ Hộp bã mía thân thiện môi trường, an toàn khi quay lò vi sóng.\n3️⃣ Giao hàng trong 30 phút, luôn nóng hổi.\n\n🎁 Đặc biệt: Giảm ngay 15% khi nhập mã MOC15 qua Inbox Zalo.\n💬 Inbox m.me/bepnhamoc hoặc Zalo OA để đặt ngay!`;
+        }
+      } else {
+        finalContent = `${topic.toUpperCase()}\n\nBạn đang gặp vấn đề với việc quản trị doanh nghiệp?\n\nTại ${brandName}, chúng tôi tin rằng lợi thế: "${coreUsps[0]}" chính là giải pháp tối ưu dành cho bạn.\n\nHãy bắt đầu xây dựng hệ thống tự vận hành ngay hôm nay!\n\n#${brandName.replace(/\s+/g, '')} #SME`;
+      }
+
+      setGeneratedContent(finalContent);
       setIsGenerating(false);
       setLoadingStep(0);
     }, 3600);
