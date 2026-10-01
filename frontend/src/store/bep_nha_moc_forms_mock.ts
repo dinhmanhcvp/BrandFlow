@@ -122,21 +122,26 @@ export const BEP_NHA_MOC_FORMS_MOCK: Record<string, any> = {
   },
   "b5-pnl": {
     items: [
-      { item: 'Doanh thu trung bình/Tháng (Current)', val: '685 tr', ratio: '100%', rationale: 'Base Line vững chắc từ 2 chi nhánh nhưng cần tối ưu chất lượng dòng tiền.' },
-      { item: 'Giá vốn (Food Cost - 35%)', val: '239 tr', ratio: '35.0%', rationale: 'Tỷ lệ Vàng của ngành F&B, phải giữ vững dù vật giá leo thang.' },
-      { item: 'Chiết khấu App (15% trên tổng DT)', val: '102 tr', ratio: '15.0%', rationale: 'Điểm đau (Pain point) chảy máu lợi nhuận lớn nhất.' },
-      { item: 'Vận hành (Mặt bằng, Lương)', val: '250 tr', ratio: '36.5%', rationale: 'Chi phí nặng, phải dùng Dine-in buổi tối để gánh.' },
-      { item: 'Chi phí Marketing', val: '27 tr', ratio: '3.9%', rationale: 'Cực kỳ tinh gọn so với Industry Standard (8-10%).' },
-      { item: 'Lợi Nhuận Ròng Trước Thuế', val: '67 tr', ratio: '9.8%', rationale: 'Mức rủi ro, cần kéo lên 15% để có quỹ dự phòng.' }
+      { item: 'Tổng Doanh Thu Gộp (Gross Revenue)', val: '12.500.000.000 đ', ratio: '100%', rationale: 'Dự phóng cho 12 tháng tới dựa trên việc mở rộng kênh B2B và Dine-in.' },
+      { item: '(-) Giảm trừ doanh thu (Voucher, Freeship)', val: '875.000.000 đ', ratio: '7.0%', rationale: 'Tối ưu hóa so với năm ngoái (12%). Dịch chuyển ngân sách KM từ App sang kênh Zalo Direct.' },
+      { item: 'Doanh Thu Thuần (Net Revenue)', val: '11.625.000.000 đ', ratio: '93.0%', rationale: 'Dòng tiền thực tế chạy vào hệ thống để tính toán giá vốn.' },
+      { item: '(-) Giá vốn hàng bán (COGS - Food Cost)', val: '4.068.750.000 đ', ratio: '35.0%', rationale: 'Luôn giữ tỷ lệ vàng 35%. Áp dụng quy trình đo lường định lượng nghiêm ngặt tại bếp trung tâm (Central Kitchen).' },
+      { item: 'Lợi Nhuận Gộp (Gross Margin)', val: '7.556.250.000 đ', ratio: '65.0%', rationale: 'Biên lợi nhuận gộp rất khỏe, tạo tiền đề để bù đắp chi phí vận hành.' },
+      { item: '(-) Chi phí Bán hàng (Marketing & Sales)', val: '930.000.000 đ', ratio: '8.0%', rationale: 'Bao gồm hoa hồng App (đã giảm) và chi phí phát triển kênh B2B (Sampling, Lương Sales cứng).' },
+      { item: '(-) Chi phí Quản lý (G&A, Mặt bằng, Nhân sự)', val: '3.952.500.000 đ', ratio: '34.0%', rationale: 'Chi phí cố định (Fixed Cost) lớn nhưng đã được tối ưu hiệu suất (Asset Utilization) nhờ việc khai thác tối đa ca tối.' },
+      { item: 'EBITDA (LN trước Thuế, Khấu hao & Lãi vay)', val: '2.673.750.000 đ', ratio: '23.0%', rationale: 'Chỉ số quan trọng nhất cho Nhà đầu tư thấy khả năng tạo tiền thực sự của mô hình kinh doanh.' },
+      { item: '(-) Khấu hao tài sản cố định (Depreciation)', val: '450.000.000 đ', ratio: '3.8%', rationale: 'Khấu hao dàn bếp công nghiệp và hệ thống POS trong vòng 5 năm.' },
+      { item: 'Lợi Nhuận Ròng Trước Thuế (EBT)', val: '2.223.750.000 đ', ratio: '19.1%', rationale: 'Lợi nhuận gộp thực tế. Mức 19.1% là xuất sắc trong ngành F&B chuỗi, vượt xa mức 9% hiện tại.' }
     ]
   },
   "b6-gantt": {
     items: [
-      { name: 'Chuẩn hóa Menu ảnh & Set up Zalo OA', t8: true, t9: false, t10: false, t11: false, t12: false, rationale: 'Bước chuẩn bị nền tảng (Foundation) không thể bỏ qua.' },
-      { name: 'Kẹp tờ rơi chuyển đổi App -> Zalo', t8: true, t9: true, t10: true, t11: true, t12: true, rationale: 'Chiến dịch Always-on (Chạy liên tục) để vớt data.' },
-      { name: 'Content Thực Đơn Hàng Ngày (10h)', t8: true, t9: true, t10: true, t11: true, t12: true, rationale: 'Hình thành thói quen (Habit-forming) cho tệp dân văn phòng.' },
-      { name: 'Sampling Cơm Văn Phòng (B2B Sales)', t8: false, t9: true, t10: true, t11: false, t12: false, rationale: 'Thực hiện sau khi hệ thống bếp đã trơn tru.' },
-      { name: 'Chiến dịch Tết "Bữa Cơm Cuối Năm"', t8: false, t9: false, t10: false, t11: true, t12: true, rationale: 'Điểm rơi doanh số mảng Tiệc/Catering.' }
+      { name: 'Khởi tạo Central Kitchen & Setup SOP Bếp', t8: true, t9: false, t10: false, t11: false, t12: false, rationale: 'Trạm kiểm soát rủi ro đầu tiên. Phải hoàn tất SOP (Standard Operating Procedure) trước khi tung ngân sách Sales.' },
+      { name: 'Tái thiết kế Nhận diện (Visual Identity)', t8: true, t9: true, t10: false, t11: false, t12: false, rationale: 'Bao bì là điểm chạm vật lý cuối cùng (Last-mile touchpoint). Nâng cấp hộp bã mía và dải niêm phong.' },
+      { name: 'Thiết lập Zalo Mini App & Loyalty', t8: false, t9: true, t10: true, t11: false, t12: false, rationale: 'Vũ khí chiến lược (Strategic Weapon) để khóa chặt khách hàng cũ, giảm Customer Churn Rate.' },
+      { name: 'Chiến dịch O2O: Rút máu từ App', t8: false, t9: true, t10: true, t11: true, t12: true, rationale: 'Vampire Attack: Dùng chính đơn hàng bán trên App (kẹp tờ rơi) để kéo khách về Kênh Sở Hữu.' },
+      { name: 'Khởi động Đội Sales B2B & Sampling', t8: false, t9: false, t10: true, t11: true, t12: false, rationale: 'Tuyển 2 Key Account Manager, lập danh sách 100 doanh nghiệp bán kính 3km để phát hộp cơm ăn thử.' },
+      { name: 'Chiến dịch Cao Điểm "Tiệc Tất Niên"', t8: false, t9: false, t10: false, t11: true, t12: true, rationale: 'Hốt trọn ngân sách tất niên của các SME bằng Set lẩu Catering giao tận văn phòng.' }
     ]
   },
   "c1-direction": {

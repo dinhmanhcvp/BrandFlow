@@ -30,11 +30,11 @@ export default function PageB6Gantt() {
         </div>
       )
     },
-    { key: 't8', header: 'Tháng 8', align: 'center' as const, render: (r: any) => r.t8 ? <div className="h-6 w-full bg-indigo-400 rounded-sm"></div> : null, className: 'border-l border-linear-border bg-linear-surface' },
-    { key: 't9', header: 'Tháng 9', align: 'center' as const, render: (r: any) => r.t9 ? <div className="h-6 w-full bg-indigo-400 rounded-sm"></div> : null, className: 'border-l border-linear-border bg-linear-surface' },
-    { key: 't10', header: 'Tháng 10', align: 'center' as const, render: (r: any) => r.t10 ? <div className="h-6 w-full bg-indigo-400 rounded-sm"></div> : null, className: 'border-l border-linear-border bg-linear-surface' },
-    { key: 't11', header: 'Tháng 11', align: 'center' as const, render: (r: any) => r.t11 ? <div className="h-6 w-full bg-indigo-400 rounded-sm"></div> : null, className: 'border-l border-linear-border bg-linear-surface' },
-    { key: 't12', header: 'Tháng 12', align: 'center' as const, render: (r: any) => r.t12 ? <div className="h-6 w-full bg-cyan-500 rounded-sm"></div> : null, className: 'border-l border-linear-border bg-linear-surface' },
+    { key: 't8', header: 'Tháng 1', align: 'center' as const, render: (r: any) => r.t8 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-gradient-to-r from-emerald-500 to-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
+    { key: 't9', header: 'Tháng 2', align: 'center' as const, render: (r: any) => r.t9 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
+    { key: 't10', header: 'Tháng 3', align: 'center' as const, render: (r: any) => r.t10 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
+    { key: 't11', header: 'Tháng 4', align: 'center' as const, render: (r: any) => r.t11 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
+    { key: 't12', header: 'Tháng 5', align: 'center' as const, render: (r: any) => r.t12 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-gradient-to-r from-emerald-400 to-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.4)] rounded-r-full"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
   ];
 
   return (
