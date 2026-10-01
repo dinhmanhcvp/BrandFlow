@@ -601,7 +601,7 @@ export default function SlideEditor({ slides: initialSlides, onSlidesChange, bra
   const handleExportPPTX = async () => {
     setIsExporting('pptx');
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://brandflow-jfha.onrender.com';
       const token = typeof window !== 'undefined' ? localStorage.getItem('brandflow_token') : null;
       const res = await fetch(`${API_URL}/api/v1/design/export-pptx`, {
         method: 'POST',
@@ -613,7 +613,10 @@ export default function SlideEditor({ slides: initialSlides, onSlidesChange, bra
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = `${brandName.replace(/\s+/g, '_')}_BrandDeck.pptx`; a.click();
       URL.revokeObjectURL(url);
-    } catch (err: any) { alert('Lỗi xuất PPTX: ' + err.message); }
+    } catch (err: any) { 
+      console.log('PPTX export error:', err);
+      alert('Không thể kết nối đến Backend Render để tạo file PPTX. (Chế độ Mock Demo: Việc xuất file PPTX thực tế đòi hỏi module python-pptx trên server). Lỗi: ' + err.message); 
+    }
     finally { setIsExporting(null); }
   };
 
