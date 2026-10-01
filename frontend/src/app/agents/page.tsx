@@ -64,16 +64,25 @@ export default function AgentsPage() {
 
  const loadCustomAgents = async () => {
    setIsLoading(true);
+   
+   const local = localStorage.getItem('brandflow_custom_agents');
+   const localAgents = local ? JSON.parse(local) : [];
+   
    try {
      const res = await fetch('/api/v1/agents');
      if (res.ok) {
        const data = await res.json();
-       setCustomAgents(data);
+       if (data && data.length > 0) {
+         setCustomAgents(data);
+       } else {
+         setCustomAgents(localAgents);
+       }
+     } else {
+       throw new Error('API error');
      }
    } catch {
      // Fallback: load from localStorage if API is unavailable
-     const local = localStorage.getItem('brandflow_custom_agents');
-     if (local) setCustomAgents(JSON.parse(local));
+     setCustomAgents(localAgents);
    } finally {
      setIsLoading(false);
    }
