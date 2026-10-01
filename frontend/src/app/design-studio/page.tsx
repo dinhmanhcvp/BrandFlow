@@ -155,11 +155,22 @@ export default function DesignStudioPage() {
           typography: { heading: "Playfair Display, serif", body: "Inter, sans-serif" }
         };
         const bnmBlocks = [
-          { type: 'header', title: 'Bếp Nhà Mộc - Mindful Dining Identity', subtitle: 'Tái định vị thương hiệu 2026', description: 'Giao diện mộc mạc, truyền tải thông điệp chữa lành qua màu gỗ ấm và xanh lá tự nhiên.' },
-          { type: 'color_palette', colors: bnmAssets.color_palette },
-          { type: 'typography', fonts: [{ name: bnmAssets.typography.heading, usage: 'Headings & Menu Titles' }, { name: bnmAssets.typography.body, usage: 'Body Text & Descriptions' }] },
-          { type: 'image_full', url: bnmAssets.banner_url, caption: 'Không gian nội thất Concept' },
-          { type: 'text', title: 'Brand Vibe', content: 'Phong cách thiết kế đề cao sự tĩnh lặng. Sử dụng khoảng trắng lớn, hình ảnh đồ ăn chụp macro với ánh sáng ấm áp.' }
+          { type: 'HeroBlock', title: 'Bếp Nhà Mộc', subtitle: 'Mindful Dining & Corporate Catering', image_url: bnmAssets.banner_url, primary_color: '#064E3B' },
+          { type: 'MissionBlock', headline: 'Từ Quán Ăn đến Trạm Sạc Chữa Lành', body_text: 'Bếp Nhà Mộc không chỉ bán những hộp cơm trưa. Chúng tôi cung cấp giải pháp xoa dịu áp lực (Burn-out) cho giới văn phòng thông qua triết lý Mindful Dining. Sử dụng hộp bã mía thân thiện môi trường và nguyên liệu tươi mới.', accent_color: '#064E3B', features: [
+              { title: 'Nguyên liệu sạch (Farm-to-Table)', desc: '100% rau củ hữu cơ, không sử dụng chất bảo quản hay bột ngọt công nghiệp.' },
+              { title: 'Thiết kế bền vững', desc: 'Bao bì 100% phân hủy sinh học, giảm thiểu rác thải nhựa tại văn phòng.' }
+          ]},
+          { type: 'StatsBlock', headline: 'Dấu ấn 2025', background_color: '#B45309', accent_color: '#FEF3C7', stats: [
+              { value: '50K+', label: 'Bữa trưa phục vụ' },
+              { value: '100%', label: 'Hộp bã mía (Không nhựa)' },
+              { value: '25+', label: 'Đối tác Corporate' },
+              { value: '4.9★', label: 'Khách hàng đánh giá' },
+          ]},
+          { type: 'PaletteBlock', colors: ['#064E3B', '#166534', '#B45309', '#D97706', '#FEF3C7'], description: 'Bảng màu lấy cảm hứng từ thiên nhiên: Màu xanh của lá, màu nâu của đất, và màu vàng ấm của ánh nắng len lỏi qua ô cửa sổ Bếp Nhà Mộc.' },
+          { type: 'TypographyBlock', heading_font: 'Playfair Display', body_font: 'Inter', rationale: 'Playfair Display mang lại sự tinh tế, chậm rãi và sang trọng mang tính di sản. Inter đảm bảo độ đọc tối ưu trên các ứng dụng giao thức ăn và Zalo Mini App.' },
+          { type: 'BeforeAfterBlock', headline: 'Bao bì: Bước nhảy vọt về nhận diện', before_text: 'Hộp xốp nhựa trong - Đơn điệu, không giữ nhiệt tốt và gây hại môi trường.', after_text: 'Hộp bã mía thiết kế tối giản có bọc đai giấy Kraft in Logo Bếp Nhà Mộc, mang lại trải nghiệm "Unbox" cao cấp.', accent_color: '#166534' },
+          { type: 'TestimonialBlock', quote: 'Từ khi công ty đặt cơm trưa của Bếp Nhà Mộc, nhân sự phòng tôi không còn cảm giác buồn ngủ (Food coma) đầu giờ chiều nữa. Cơm dẻo, thức ăn thanh đạm rất hợp lý.', author: 'Chị Mai Nguyễn', role: 'HR Manager - VinaTech', background_color: '#F3F4F6', text_color: '#064E3B' },
+          { type: 'GalleryBlock', screen_url: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=1200&h=800&fit=crop', app_name: 'Zalo Mini App - Corporate Lunch Interface' }
         ];
         
         setActiveAgent('System');
@@ -263,42 +274,53 @@ export default function DesignStudioPage() {
           {
             id: "slide_1",
             type: "title",
-            title: "Bếp Nhà Mộc: Hành Trình Mindful Dining",
-            subtitle: deckTemplate === 'pitch_deck' ? "Corporate Pitch Deck 2026" : "Marketing Proposal Q3/2026",
+            title: "BẾP NHÀ MỘC: GIẢI PHÁP CORPORATE LUNCH",
+            subtitle: deckTemplate === 'pitch_deck' ? "Pitch Deck: Chiến lược B2B Catering 2026" : "Brand & Marketing Proposal 2026",
             speakerNotes: "Mở đầu với hình ảnh một mâm cơm ấm cúng. Gợi nhắc về giá trị cốt lõi: Ẩm thực là để chữa lành."
           },
           {
             id: "slide_2",
             type: "content",
-            title: "Tái định vị: Từ Quán Ăn đến 'Điểm Trú Ẩn'",
+            title: "Vấn Đề: Khủng Hoảng 'Food Coma' Chốn Văn Phòng",
             content: [
-              "Vấn đề: Giới văn phòng đang đối mặt với tỷ lệ Burnout kỷ lục (68%).",
-              "Sứ mệnh: Biến bữa trưa/tối thành một liệu trình giải tỏa căng thẳng.",
-              "Chiến thuật: Ra mắt gói 'Corporate Mindful Lunch' giao tận văn phòng."
+              "Thực trạng: 68% nhân sự văn phòng phàn nàn về mệt mỏi, buồn ngủ (Food Coma) sau giờ nghỉ trưa.",
+              "Nguyên nhân: Cơm trưa nhiều tinh bột xấu, chiên xào nhiều dầu mỡ từ các quán ăn bình dân.",
+              "Hệ quả: Giảm 30% hiệu suất làm việc buổi chiều của toàn doanh nghiệp."
             ],
-            speakerNotes: "Nhấn mạnh sự chuyển dịch từ B2C thông thường sang ngách B2B Corporate, giải quyết bài toán Burnout."
+            speakerNotes: "Nhấn mạnh nỗi đau của khối Corporate để nêu bật tầm quan trọng của giải pháp Bếp Nhà Mộc."
           },
           {
             id: "slide_3",
-            type: "metric",
-            title: "Dự Phóng Tài Chính & Trọng Tâm (KPIs)",
-            metrics: [
-              { label: "Mục tiêu MRR tăng trưởng", value: "+25% (Q3)" },
-              { label: "LTV:CAC Ratio kỳ vọng", value: "> 3.0x" },
-              { label: "Tỷ lệ tái tiêu dùng (Repeat Rate)", value: "65%" }
+            type: "content",
+            title: "Giải Pháp: Hệ Sinh Thái 'Mindful Dining'",
+            content: [
+              "Sản phẩm: Mâm cơm dinh dưỡng chuẩn khoa học, Gạo ST25 nguyên cám, nấu bằng dầu Olive.",
+              "Trải nghiệm: Đóng gói hộp Bã mía 100% an toàn lò vi sóng. Khăn giấy ướt tinh dầu xả chanh.",
+              "Vận hành: Zalo Mini App dành riêng cho Doanh nghiệp, cho phép nhân sự tự chọn món trước 10h sáng."
             ],
-            speakerNotes: "Đưa ra bằng chứng tài chính rõ ràng để thuyết phục Ban Giám Đốc."
+            speakerNotes: "Trình bày 3 trụ cột của Bếp Nhà Mộc."
           },
           {
             id: "slide_4",
-            type: "content",
-            title: "Kế Hoạch Triển Khai Chuyển Đổi Số",
-            content: [
-              "Tháng 1: Tối ưu UI/UX cho Zalo Mini App chuyên đặt bàn và tích điểm.",
-              "Tháng 2: Khởi động Data-driven Loyalty Program. Tích hợp AI CRM.",
-              "Tháng 3: Scale-up hệ thống chi nhánh thông qua Nhượng quyền tinh gọn."
+            type: "metric",
+            title: "Tài Chính & Chỉ Tiêu Đạt Được (KPIs)",
+            metrics: [
+              { label: "Mục tiêu Ký kết B2B", value: "30+ Doanh nghiệp" },
+              { label: "Doanh thu Đều đặn (MRR)", value: "1.2 Tỷ/Tháng" },
+              { label: "Lợi Nhuận Gộp (Gross Margin)", value: "45%" }
             ],
-            speakerNotes: "Roadmap rõ ràng cho 3 tháng tới."
+            speakerNotes: "Các con số dự phóng để thuyết phục C-level và nhà đầu tư rót vốn cho xưởng Bếp Trung tâm (Central Kitchen)."
+          },
+          {
+            id: "slide_5",
+            type: "content",
+            title: "Timeline Triển Khai",
+            content: [
+              "Tháng 1: Hoàn thiện Central Kitchen & Quy trình Đóng gói Bã mía.",
+              "Tháng 2: Khởi chạy Zalo Mini App. Tung chương trình Sampling (Ăn thử miễn phí) cho 50 Công ty.",
+              "Tháng 3: Chính thức chốt Hợp đồng nguyên tắc (MOU). Kích hoạt Loyalty System."
+            ],
+            speakerNotes: "Lộ trình rõ ràng cho 3 tháng tới."
           }
         ];
         setDeckSlides(bnmSlides);
