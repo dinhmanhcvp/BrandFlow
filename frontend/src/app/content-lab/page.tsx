@@ -444,12 +444,20 @@ export default function ContentLabPage() {
                       <div className="relative z-10 flex-1">
                         {Array.isArray(currentReport.target_audience) ? (
                           <ul className="space-y-3">
-                            {currentReport.target_audience.map((aud: string, i: number) => (
-                              <li key={i} className="flex items-center text-sm text-foreground/90 bg-linear-surface/40 p-2.5 rounded-lg border border-linear-border/30"><span className="text-blue-400 mr-2.5">👤</span> <span className="leading-relaxed font-medium">{aud}</span></li>
+                            {currentReport.target_audience.map((aud: any, i: number) => (
+                              <li key={i} className="flex items-center text-sm text-foreground/90 bg-linear-surface/40 p-2.5 rounded-lg border border-linear-border/30"><span className="text-blue-400 mr-2.5">👤</span> <span className="leading-relaxed font-medium">{typeof aud === 'object' ? JSON.stringify(aud) : aud}</span></li>
                             ))}
                           </ul>
+                        ) : typeof currentReport.target_audience === 'object' && currentReport.target_audience !== null ? (
+                          <div className="space-y-3 text-sm text-foreground/90 bg-linear-surface/40 p-4 rounded-lg border border-linear-border/30 leading-relaxed">
+                            {Object.entries(currentReport.target_audience).map(([key, val]) => (
+                              <div key={key} className="mb-2 last:mb-0">
+                                <span className="font-bold text-blue-400">{key}:</span> {String(val)}
+                              </div>
+                            ))}
+                          </div>
                         ) : (
-                          <p className="text-sm text-foreground leading-relaxed">{currentReport.target_audience}</p>
+                          <p className="text-sm text-foreground leading-relaxed">{String(currentReport.target_audience || '')}</p>
                         )}
                       </div>
                     </div>
