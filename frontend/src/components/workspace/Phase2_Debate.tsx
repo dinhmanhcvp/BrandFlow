@@ -139,7 +139,7 @@ export default function Phase2_Debate({ onNext, onBack }: { onNext: () => void, 
   const historyMsgs = messages.slice(0, -1);
 
   return (
-    <div className="w-full h-[calc(100vh-80px)] md:h-[calc(100vh-120px)] flex flex-col relative bg-transparent overflow-hidden">
+    <div className="w-full h-full flex flex-col relative bg-transparent overflow-y-auto custom-scrollbar">
       
       {/* Header */}
       <div className="flex-none p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full z-10">
