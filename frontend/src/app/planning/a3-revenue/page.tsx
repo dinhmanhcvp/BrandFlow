@@ -9,6 +9,14 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TranslationKey } from '@/i18n/translations';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer } from 'recharts';
+
+const CHART_DATA = [
+  { year: 'Năm t0 (Nay)', app: 6.5, direct: 1.7, dineIn: 0, b2b: 0 },
+  { year: 'Năm t+1', app: 5.2, direct: 4.5, dineIn: 1.2, b2b: 1.5 },
+  { year: 'Năm t+2', app: 4.1, direct: 7.2, dineIn: 2.5, b2b: 3.8 },
+  { year: 'Năm t+3', app: 3.0, direct: 9.5, dineIn: 4.0, b2b: 6.5 },
+];
 
 const FIN_DATA = [
   { metric: 'Doanh thu thuần', t0: '60 tỷ', t1: '80 tỷ', t2: '100 tỷ', t3: '120 tỷ', source: 'Sản phẩm mới (Mix hạt)' },
@@ -55,11 +63,41 @@ export default function PageA3Revenue() {
            <PastelTable columns={FIN_COLUMNS} data={localData.items} />
         </div>
 
-        {/* Charts Mock */}
-        <div className="bento-card p-6 min-h-[350px] flex flex-col">
-           <h3 className="text-sm font-semibold text-linear-text-muted mb-4 uppercase tracking-widest text-center">Biểu đồ Doanh Thu Cột/Đường</h3>
-           <div className="flex-1 flex items-center justify-center border-2 border-dashed border-linear-border rounded-lg">
-             <span className="text-linear-text-muted">--- Chart Area ---</span>
+        {/* Charts Section */}
+        <div className="bento-card p-6 min-h-[400px] flex flex-col">
+           <h3 className="text-sm font-semibold text-linear-text-muted mb-6 uppercase tracking-widest text-center">Cơ cấu Doanh thu (Tỷ VNĐ) - Xu hướng Pivot</h3>
+           <div className="flex-1 h-[300px]">
+             <ResponsiveContainer width="100%" height="100%">
+               <AreaChart data={CHART_DATA} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                 <defs>
+                   <linearGradient id="colorApp" x1="0" y1="0" x2="0" y2="1">
+                     <stop offset="5%" stopColor="#94A3B8" stopOpacity={0.8}/>
+                     <stop offset="95%" stopColor="#94A3B8" stopOpacity={0.1}/>
+                   </linearGradient>
+                   <linearGradient id="colorDirect" x1="0" y1="0" x2="0" y2="1">
+                     <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                     <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1}/>
+                   </linearGradient>
+                   <linearGradient id="colorDineIn" x1="0" y1="0" x2="0" y2="1">
+                     <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
+                     <stop offset="95%" stopColor="#10B981" stopOpacity={0.1}/>
+                   </linearGradient>
+                   <linearGradient id="colorB2B" x1="0" y1="0" x2="0" y2="1">
+                     <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.8}/>
+                     <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0.1}/>
+                   </linearGradient>
+                 </defs>
+                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" />
+                 <XAxis dataKey="year" stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} />
+                 <YAxis stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `${v} tỷ`} />
+                 <RechartsTooltip contentStyle={{ backgroundColor: '#0F172A', borderColor: '#334155', borderRadius: '12px' }} />
+                 <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                 <Area type="monotone" dataKey="app" name="Kênh App (Thu hẹp)" stackId="1" stroke="#94A3B8" fill="url(#colorApp)" />
+                 <Area type="monotone" dataKey="direct" name="Kênh Zalo Direct" stackId="1" stroke="#3B82F6" fill="url(#colorDirect)" />
+                 <Area type="monotone" dataKey="dineIn" name="Kênh Dine-in" stackId="1" stroke="#10B981" fill="url(#colorDineIn)" />
+                 <Area type="monotone" dataKey="b2b" name="Kênh B2B Catering" stackId="1" stroke="#8B5CF6" fill="url(#colorB2B)" />
+               </AreaChart>
+             </ResponsiveContainer>
            </div>
         </div>
         

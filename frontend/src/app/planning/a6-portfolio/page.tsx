@@ -9,6 +9,29 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TranslationKey } from '@/i18n/translations';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, ReferenceLine, Cell } from 'recharts';
+
+const BCG_DATA = [
+  { name: 'Cơm Văn Phòng (App)', share: 80, growth: 15, fill: '#3B82F6', z: 300, quadrant: 'Bò Sữa (Cash Cow)' }, 
+  { name: 'Thịt kho niêu (Signature)', share: 75, growth: 85, fill: '#10B981', z: 200, quadrant: 'Ngôi Sao (Star)' }, 
+  { name: 'Gói Cơm B2B', share: 20, growth: 90, fill: '#F59E0B', z: 150, quadrant: 'Dấu Hỏi (Question Mark)' }, 
+  { name: 'Món chiên xào', share: 15, growth: 10, fill: '#EF4444', z: 100, quadrant: 'Chó Mực (Dog)' }, 
+];
+
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-[#0F172A] border border-slate-700 p-3 rounded-lg shadow-xl">
+        <p className="font-bold text-white mb-1">{data.name}</p>
+        <p className="text-xs text-slate-400">Phân loại: <span className="text-white font-medium">{data.quadrant}</span></p>
+        <p className="text-xs text-slate-400">Thị phần tương đối: <span className="text-white font-medium">{data.share}%</span></p>
+        <p className="text-xs text-slate-400">Tốc độ tăng trưởng: <span className="text-white font-medium">{data.growth}%</span></p>
+      </div>
+    );
+  }
+  return null;
+};
 
 const DPM_DATA = [
   { segment: 'Mẹ & Trẻ em', attr: 'Cao', pos: 'Mạnh', decision: 'Đầu tư mạnh để tăng trưởng' },
@@ -52,9 +75,34 @@ export default function PageA6Portfolio() {
            <PastelTable columns={COLUMNS} data={localData.items} />
         </div>
         
-        {/* Placeholder for visual 2x2 or 3x3 matrix */}
-        <div className="bento-card p-6 min-h-[300px] flex items-center justify-center">
-           <span className="text-linear-text-muted">--- DPM / GE Matrix Interactive Chart ---</span>
+        {/* BCG Matrix ScatterChart */}
+        <div className="bento-card p-6 min-h-[450px] flex flex-col">
+           <h3 className="text-sm font-semibold text-linear-text-muted mb-2 uppercase tracking-widest text-center">Ma trận Boston (BCG Matrix)</h3>
+           <p className="text-xs text-center text-slate-500 mb-6">Trục X: Thị phần tương đối (Đảo ngược) — Trục Y: Tốc độ tăng trưởng thị trường</p>
+           <div className="flex-1 h-[350px] relative">
+             <ResponsiveContainer width="100%" height="100%">
+               <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                 <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" />
+                 {/* X Axis is reversed in traditional BCG matrix (High on left, Low on right) */}
+                 <XAxis type="number" dataKey="share" name="Thị phần" domain={[0, 100]} reversed={true} stroke="#64748B" fontSize={11} tickFormatter={(v) => `${v}%`} />
+                 <YAxis type="number" dataKey="growth" name="Tăng trưởng" domain={[0, 100]} stroke="#64748B" fontSize={11} tickFormatter={(v) => `${v}%`} />
+                 <RechartsTooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3', stroke: '#475569' }} />
+                 <ReferenceLine x={50} stroke="#475569" strokeDasharray="4 4" />
+                 <ReferenceLine y={50} stroke="#475569" strokeDasharray="4 4" />
+                 <Scatter name="SBU" data={BCG_DATA} fill="#8884d8">
+                   {BCG_DATA.map((entry, index) => (
+                     <Cell key={`cell-${index}`} fill={entry.fill} />
+                   ))}
+                 </Scatter>
+               </ScatterChart>
+             </ResponsiveContainer>
+             
+             {/* Quadrant Labels */}
+             <div className="absolute top-[10%] left-[10%] opacity-20 pointer-events-none font-bold text-2xl text-emerald-500">STAR</div>
+             <div className="absolute top-[10%] right-[10%] opacity-20 pointer-events-none font-bold text-2xl text-amber-500">QUESTION</div>
+             <div className="absolute bottom-[10%] left-[10%] opacity-20 pointer-events-none font-bold text-2xl text-blue-500">CASH COW</div>
+             <div className="absolute bottom-[10%] right-[10%] opacity-20 pointer-events-none font-bold text-2xl text-rose-500">DOG</div>
+           </div>
         </div>
         <WizardNavigation prevLink="/planning/a5-swot" prevLabel="Về A.5" nextLink="/planning/a7-assumptions" nextLabel="Tiếp tục: A.7 Giả định" />
       </div>

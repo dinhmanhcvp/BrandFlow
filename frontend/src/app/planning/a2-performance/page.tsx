@@ -7,6 +7,13 @@ import InstructionAlert from '@/components/b2b/InstructionAlert';
 import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
+import { ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer } from 'recharts';
+
+const CHART_DATA = [
+  { year: 'Năm t-3 (2023)', revenue: 4.5, margin: 16.5 },
+  { year: 'Năm t-2 (2024)', revenue: 6.96, margin: 11.2 },
+  { year: 'Năm t-1 (2025)', revenue: 8.22, margin: 8.4 },
+];
 
 const PERF_DATA = [
   { metric: 'Khối lượng bán ra', y3: '50 tấn', y2: '85 tấn', y1: '150 tấn', reason: 'Nắm bắt xu hướng "healthy"' },
@@ -55,6 +62,25 @@ export default function PageA2Performance() {
              <h3 className="text-sm font-semibold text-linear-text-muted mb-4 uppercase tracking-widest">Tóm tắt hiệu suất</h3>
              <PastelTable columns={COLUMNS} data={localData.items} />
           </div>
+
+          <div className="bento-card p-6 min-h-[400px] flex flex-col">
+             <h3 className="text-sm font-semibold text-linear-text-muted mb-6 uppercase tracking-widest text-center">Tương quan Doanh thu & Biên lợi nhuận</h3>
+             <div className="flex-1 h-[300px]">
+               <ResponsiveContainer width="100%" height="100%">
+                 <ComposedChart data={CHART_DATA} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" />
+                   <XAxis dataKey="year" stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} />
+                   <YAxis yAxisId="left" stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `${v} tỷ`} />
+                   <YAxis yAxisId="right" orientation="right" stroke="#10B981" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}%`} />
+                   <RechartsTooltip contentStyle={{ backgroundColor: '#0F172A', borderColor: '#334155', borderRadius: '12px' }} />
+                   <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                   <Bar yAxisId="left" dataKey="revenue" name="Doanh thu (Tỷ VNĐ)" fill="#3B82F6" radius={[4, 4, 0, 0]} maxBarSize={50} />
+                   <Line yAxisId="right" type="monotone" dataKey="margin" name="Biên LN Ròng (%)" stroke="#10B981" strokeWidth={3} dot={{ r: 6, fill: '#10B981' }} activeDot={{ r: 8 }} />
+                 </ComposedChart>
+               </ResponsiveContainer>
+             </div>
+          </div>
+
           <WizardNavigation 
             prevLink="/planning/a1-mission" prevLabel="A.1 Sứ mệnh" 
             nextLink="/planning/a3-revenue" nextLabel="A.3 Dự phóng Doanh thu" 
