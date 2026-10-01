@@ -166,6 +166,61 @@ const AGENT_TEMPLATES = [
   },
 ];
 
+const parseAgentMarkdown = (text: string) => {
+  if (!text) return '';
+  let parsed = text;
+  
+  // 1. Parse tables
+  parsed = parsed.replace(/(\|.*\|\n)+(\|.*\|)/g, (match) => {
+    const rows = match.trim().split('\n');
+    let tableHtml = `<div class="overflow-x-auto my-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-[0_4px_20px_rgba(0,0,0,0.03)]"><table class="w-full text-left border-collapse text-[13px] bg-white dark:bg-[#0F172A]">`;
+    rows.forEach((row, idx) => {
+      let rowContent = row.replace(/^\||\|$/g, '');
+      const cells = rowContent.split('|').map(c => c.trim());
+      if (cells.every(c => c.includes('---'))) return;
+      
+      if (idx === 0) {
+        tableHtml += `<thead class="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700"><tr>`;
+        cells.forEach(c => {
+          tableHtml += `<th class="px-4 py-3 font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider text-[11px] whitespace-nowrap">${c}</th>`;
+        });
+        tableHtml += `</tr></thead><tbody class="divide-y divide-slate-100 dark:divide-slate-800">`;
+      } else {
+        tableHtml += `<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">`;
+        cells.forEach((c, i) => {
+          const extraClass = i === 0 ? "font-semibold text-slate-800 dark:text-slate-200" : "text-slate-600 dark:text-slate-400";
+          let cellContent = c.replace(/\*\*(.*?)\*\*/g, '<strong class="text-emerald-600 dark:text-emerald-400 font-bold">$1</strong>');
+          tableHtml += `<td class="px-4 py-3 ${extraClass} whitespace-nowrap">${cellContent}</td>`;
+        });
+        tableHtml += `</tr>`;
+      }
+    });
+    tableHtml += `</tbody></table></div>`;
+    return tableHtml;
+  });
+
+  // 2. Parse Headings
+  parsed = parsed.replace(/^## (.*$)/gm, '<h3 class="flex items-center gap-2.5 text-[16px] font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-3 mb-4 mt-6"><div class="w-2 h-5 bg-gradient-to-b from-blue-500 to-cyan-500 rounded-full shadow-sm"></div>$1</h3>');
+  parsed = parsed.replace(/^### (.*$)/gm, '<h4 class="flex items-center gap-2 text-[14.5px] font-bold text-slate-800 dark:text-slate-200 mt-5 mb-3"><div class="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-sm"></div>$1</h4>');
+  
+  // 3. Parse Bold & Italic
+  parsed = parsed.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-900 dark:text-white">$1</strong>');
+  parsed = parsed.replace(/\*(.*?)\*/g, '<em class="text-slate-600 dark:text-slate-400 italic">$1</em>');
+  
+  // 4. Parse Lists
+  parsed = parsed.replace(/^- (.*$)/gm, '<li class="ml-4 list-disc marker:text-cyan-500 mb-1.5">$1</li>');
+  parsed = parsed.replace(/(<li.*?>.*?<\/li>\n?)+/g, '<ul class="mb-4 space-y-1 text-slate-700 dark:text-slate-300">$&</ul>');
+  
+  // 5. Wrap paragraphs (newlines)
+  parsed = parsed.split('\n').map(line => {
+    if (line.trim() === '') return '';
+    if (line.trim().startsWith('<')) return line;
+    return `<p class="mb-2.5 leading-relaxed text-slate-700 dark:text-slate-300">${line}</p>`;
+  }).join('');
+  
+  return parsed;
+};
+
 export default function AgentBuilderPage() {
   const router = useRouter();
   const [name, setName] = useState('');
@@ -634,7 +689,7 @@ export default function AgentBuilderPage() {
                             : 'bg-slate-50 dark:bg-[#1E293B] border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-tl-sm w-full shadow-sm'
                         }`}>
                           {msg.role === 'agent' ? (
-                            <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-slate-800 dark:prose-headings:text-slate-100 prose-a:text-blue-500" dangerouslySetInnerHTML={{ __html: msg.content.replace(/\n/g, '<br/>').replace(/## (.*?)\n/g, '<h3 class="text-[15px] border-b border-slate-200 dark:border-slate-700 pb-2 mb-3 mt-1">$1</h3>').replace(/### (.*?)\n/g, '<h4 class="text-[14px] mt-4 mb-2">$1</h4>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/\|(.*)\|/g, (match) => `<div class="overflow-x-auto my-3"><table class="w-full text-left border-collapse text-[13px]">${match.replace(/\|/g, '').split('<br/>').map(row => `<tr>${row.split('---').join('').split('  ').map(cell => `<td class="border-b border-slate-200 dark:border-slate-700 p-2">${cell.trim()}</td>`).join('')}</tr>`).join('')}</table></div>`) }} />
+                            <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-slate-800 dark:prose-headings:text-slate-100 prose-a:text-blue-500" dangerouslySetInnerHTML={{ __html: parseAgentMarkdown(msg.content) }} />
                           ) : (
                             msg.content
                           )}
