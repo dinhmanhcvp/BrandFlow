@@ -355,10 +355,10 @@ export default function AgentBuilderPage() {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
 
-          {/* ── Left Column: Config (3/5) ───────────────── */}
-          <div className="xl:col-span-3 space-y-6">
+          {/* ── Left Column: Config (5/12) ───────────────── */}
+          <div className="xl:col-span-5 space-y-6">
 
             {/* Tab Switcher */}
             <div className="flex gap-1 p-1 bg-linear-surface border border-linear-border rounded-xl w-fit shadow-sm">
@@ -545,8 +545,8 @@ export default function AgentBuilderPage() {
             </AnimatePresence>
           </div>
 
-          {/* ── Right Column: Test Drive (2/5) ────────── */}
-          <div className="xl:col-span-2">
+          {/* ── Right Column: Test Drive (7/12) ────────── */}
+          <div className="xl:col-span-7">
             <div className="bento-card flex flex-col overflow-hidden sticky top-6 shadow-[0_8px_30px_rgba(0,0,0,0.08)] border-cyan-500/20 !p-0" style={{ height: 'calc(100vh - 8rem)' }}>
               {/* Professional Testing Sandbox Header */}
               <div className="bg-white dark:bg-[#111827] px-5 py-4 flex items-center justify-between shrink-0 border-b border-linear-border z-10">
