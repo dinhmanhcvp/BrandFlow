@@ -260,6 +260,36 @@ export default function DesignStudioPage() {
     setTimeout(() => setCopiedColor(null), 2000);
   };
 
+  // Helper to convert draft slides to SlideData format required by SlideEditor
+  const generateSlideElements = (slide: any, index: number) => {
+    const elements: any[] = [];
+    if (slide.type === 'title') {
+      elements.push({ type: 'heading', content: slide.title, style: { color: '#ffffff', fontSize: 60, fontWeight: 'bold', textAlign: 'center', x: 10, y: 35, w: 80, h: 20 } });
+      if (slide.subtitle) elements.push({ type: 'subheading', content: slide.subtitle, style: { color: '#06B6D4', fontSize: 24, fontWeight: 'normal', textAlign: 'center', x: 10, y: 55, w: 80, h: 10 } });
+    } else if (slide.type === 'content') {
+      elements.push({ type: 'heading', content: slide.title, style: { color: '#ffffff', fontSize: 36, fontWeight: 'bold', textAlign: 'left', x: 10, y: 15, w: 80, h: 15 } });
+      elements.push({ type: 'divider', content: '', style: { color: '#06B6D4', fontSize: 0, fontWeight: 'normal', textAlign: 'left', x: 10, y: 30, w: 80, h: 2 } });
+      if (slide.content) {
+        elements.push({ type: 'text', content: Array.isArray(slide.content) ? slide.content.join('\n\n') : slide.content, style: { color: '#cbd5e1', fontSize: 18, fontWeight: 'normal', textAlign: 'left', x: 10, y: 40, w: 80, h: 50 } });
+      }
+    } else if (slide.type === 'metric') {
+      elements.push({ type: 'heading', content: slide.title, style: { color: '#ffffff', fontSize: 36, fontWeight: 'bold', textAlign: 'left', x: 10, y: 15, w: 80, h: 15 } });
+      elements.push({ type: 'divider', content: '', style: { color: '#06B6D4', fontSize: 0, fontWeight: 'normal', textAlign: 'left', x: 10, y: 30, w: 80, h: 2 } });
+      if (slide.metrics) {
+        const metricText = slide.metrics.map((m: any) => `${m.label}: ${m.value}`).join('\n\n');
+        elements.push({ type: 'text', content: metricText, style: { color: '#cbd5e1', fontSize: 24, fontWeight: 'bold', textAlign: 'left', x: 10, y: 40, w: 80, h: 50 } });
+      }
+    }
+    return {
+      slide_id: `slide_${index}`,
+      slide_number: index + 1,
+      layout: slide.type,
+      background: { type: 'solid', color: '#0f172a', dark_mode: true },
+      elements: elements,
+      notes: slide.speakerNotes
+    };
+  };
+
   // Generate Deck Slides
   const handleGenerateDeck = async () => {
     setDeckLoading(true);
@@ -324,7 +354,7 @@ export default function DesignStudioPage() {
             speakerNotes: "Lộ trình rõ ràng cho 3 tháng tới."
           }
         ];
-        setDeckSlides(bnmSlides);
+        setDeckSlides(bnmSlides.map((slide, i) => generateSlideElements(slide, i)));
         addLog("System", `[Mock Mode] Đã sinh 4 slides cực kỳ chi tiết cho Bếp Nhà Mộc.`, "success");
         setDeckLoading(false);
         return;
@@ -400,7 +430,7 @@ export default function DesignStudioPage() {
           speakerNotes: "Nhấn mạnh vào các con số tài chính."
         }
       ];
-      setDeckSlides(mockSlides);
+      setDeckSlides(mockSlides.map((slide, i) => generateSlideElements(slide, i)));
       addLog("System", `[Mock Mode] Đã sinh 3 slides mẫu thành công.`, "success");
     } finally {
       setDeckLoading(false);
@@ -448,7 +478,9 @@ export default function DesignStudioPage() {
   // ════════════════════════════════════════════════════════════════════
 
   const renderBlock = (block: any) => {
-    const { type, props } = block;
+    if (!block) return null;
+    const type = block.type;
+    const props = block.props || block;
 
     if (type === 'HeroBlock' || type === 'GridHeroBlock') {
       return (
