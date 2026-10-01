@@ -43,14 +43,65 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
   };
 
   const planMock = isBepNhaMoc ? [
-    { name: "Zalo Mini App (Loyalty)", phase: "M1-M2", lead: "@TechLead", budget: "65,000,000đ", status: "Ready" },
-    { name: "Hero Video: Mùi Khói Bếp", phase: "M1", lead: "@CreativeDir", budget: "50,000,000đ", status: "Drafting" },
-    { name: "30 Lifestyle Micro-KOLs", phase: "M2-M3", lead: "@PRManager", budget: "100,000,000đ", status: "Planning" },
-    { name: "Corporate Lunch Activation", phase: "M3", lead: "@GrowthHacker", budget: "30,000,000đ", status: "Queued" }
+    { 
+      id: "TSK-01",
+      name: "Zalo Mini App (Loyalty & Retention)", 
+      phase: "Tháng 1-2", 
+      lead: "@TechLead", 
+      budget: "65,000,000đ", 
+      status: "Ready",
+      kpis: "Giảm Churn Rate 20% | Đạt 5,000 users",
+      roi: "150%",
+      details: "Xây dựng hệ thống tích điểm Zalo Mini App dành riêng cho khách hàng Corporate. Tự động hóa tin nhắn nhắc lịch ăn trưa, tặng voucher sinh nhật và ưu đãi nhóm."
+    },
+    { 
+      id: "TSK-02",
+      name: "Hero Video Campaign: Mùi Khói Bếp", 
+      phase: "Tháng 1", 
+      lead: "@CreativeDir", 
+      budget: "50,000,000đ", 
+      status: "Drafting",
+      kpis: "1M Views | 5% CTR | 200 Booking",
+      roi: "210%",
+      details: "Sản xuất Cinematic Video khai thác câu chuyện 'Bữa cơm nhà' giữa lòng thành phố nhộn nhịp. Phân phối tập trung trên TikTok và Facebook Reels."
+    },
+    { 
+      id: "TSK-03",
+      name: "30 Lifestyle Micro-KOLs (Food & Office)", 
+      phase: "Tháng 2-3", 
+      lead: "@PRManager", 
+      budget: "100,000,000đ", 
+      status: "Planning",
+      kpis: "Reach 2M | 150 UGC",
+      roi: "180%",
+      details: "Tổ chức chiến dịch Review chân thực thông qua tệp Micro-KOLs là dân văn phòng (Office workers). Mục tiêu tạo hiệu ứng truyền miệng (Word of Mouth) tại các toà nhà văn phòng lớn."
+    },
+    { 
+      id: "TSK-04",
+      name: "B2B Corporate Lunch Activation", 
+      phase: "Tháng 3-4", 
+      lead: "@GrowthHacker", 
+      budget: "30,000,000đ", 
+      status: "Queued",
+      kpis: "Ký kết 10 Hợp đồng | LTV tăng 35%",
+      roi: "300%",
+      details: "Tiếp cận trực tiếp phòng Nhân sự/Công đoàn của các doanh nghiệp lớn bán kính 5km. Cung cấp gói ăn trưa định kỳ (Corporate Subscription) với chiết khấu 15%."
+    },
+    { 
+      id: "TSK-05",
+      name: "Omni-channel Retargeting System", 
+      phase: "Tháng 2-4", 
+      lead: "@PerformanceLead", 
+      budget: "45,000,000đ", 
+      status: "Planning",
+      kpis: "Giảm CPA 40% | CVR 3.5%",
+      roi: "250%",
+      details: "Cài đặt Facebook Pixel & GTM. Thu thập data từ website và Zalo, chạy chiến dịch Retargeting động với thông điệp 'Menu thay đổi mỗi ngày' bám đuổi tập khách đã tương tác."
+    }
   ] : [
-    { name: "Setup Omni-channel Hub", phase: "Month 1", lead: "@TechLead", budget: "30%", status: "Ready" },
-    { name: "Produce Hero Video", phase: "Month 2", lead: "@CreativeDir", budget: "40%", status: "Drafting" },
-    { name: "PR Articles Deployment", phase: "Month 3", lead: "@PRManager", budget: "30%", status: "Planning" }
+    { id: "TSK-01", name: "Setup Omni-channel Hub", phase: "Month 1", lead: "@TechLead", budget: "30%", status: "Ready", kpis: "100% Integration", roi: "120%", details: "Set up the core data infrastructure and connect all marketing channels." },
+    { id: "TSK-02", name: "Produce Hero Video", phase: "Month 2", lead: "@CreativeDir", budget: "40%", status: "Drafting", kpis: "500k Views", roi: "180%", details: "High-end production video focusing on brand story." },
+    { id: "TSK-03", name: "PR Articles Deployment", phase: "Month 3", lead: "@PRManager", budget: "30%", status: "Planning", kpis: "10 Tier-1 Articles", roi: "150%", details: "Publish PR articles on top tier business magazines to build trust." }
   ];
 
   useEffect(() => {
@@ -320,29 +371,48 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
                     {planMock.map((task, i) => (
                       <motion.div 
                         initial={{x: -20, opacity: 0}} animate={{x: 0, opacity: 1}} transition={{delay: i * 0.1}}
-                        key={i} className="glassbox-card !p-4 hover:border-emerald-500/40 transition-colors group bg-slate-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                        key={i} className="glassbox-card !p-5 hover:border-emerald-500/40 transition-all group bg-slate-900/60 flex flex-col gap-4 relative overflow-hidden"
                       >
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0 border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-colors">
-                            <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-cyan-500 opacity-70" />
+                        
+                        {/* Top Row: Title and Badges */}
+                        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <span className="text-[10px] font-black px-2 py-1 rounded bg-slate-800 text-emerald-400 border border-emerald-500/20">{task.id}</span>
+                              <h4 className="font-bold text-slate-100 text-lg">{task.name}</h4>
+                            </div>
+                            <p className="text-sm text-slate-400 max-w-3xl leading-relaxed">{task.details}</p>
                           </div>
-                          <div>
-                            <h4 className="font-bold text-slate-100 mb-1">{task.name}</h4>
-                            <div className="flex gap-3 text-xs text-slate-400">
-                              <span className="flex items-center"><Activity className="w-3 h-3 mr-1" /> {task.phase}</span>
-                              <span className="flex items-center"><Bot className="w-3 h-3 mr-1" /> {task.lead}</span>
+                          
+                          <div className="flex md:flex-col items-center md:items-end gap-3 shrink-0">
+                            <div className={`px-4 py-1.5 text-xs font-bold rounded-full border shadow-sm ${task.status === 'Ready' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : task.status === 'Drafting' ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' : 'bg-slate-800 text-slate-400 border-slate-700'}`}>
+                              {task.status}
+                            </div>
+                            <div className="text-right">
+                               <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Allocated Budget</div>
+                               <div className="font-black text-emerald-400 text-lg">{task.budget}</div>
                             </div>
                           </div>
                         </div>
                         
-                        <div className="flex items-center gap-6 sm:justify-end">
-                           <div className="text-right">
-                             <div className="text-xs text-slate-500 mb-1">Allocated Budget</div>
-                             <div className="font-bold text-emerald-400">{task.budget}</div>
-                           </div>
-                           <div className={`px-3 py-1 text-xs font-bold rounded-full border ${task.status === 'Ready' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : task.status === 'Drafting' ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' : 'bg-slate-800 text-slate-400 border-slate-700'}`}>
-                             {task.status}
-                           </div>
+                        {/* Bottom Row: Metrics & Assignment */}
+                        <div className="pt-4 border-t border-slate-700/50 flex flex-wrap items-center justify-between gap-4">
+                          <div className="flex items-center gap-8">
+                            <div>
+                              <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Activity className="w-3 h-3 text-blue-400" /> Expected KPIs</div>
+                              <div className="text-xs font-bold text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">{task.kpis}</div>
+                            </div>
+                            <div>
+                              <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Activity className="w-3 h-3 text-emerald-400" /> Proj. ROI</div>
+                              <div className="text-sm font-black text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg border border-emerald-500/20">{task.roi}</div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center gap-3 text-xs text-slate-300 font-medium ml-auto md:ml-0 mt-2 md:mt-0">
+                            <span className="flex items-center bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-lg"><Activity className="w-3.5 h-3.5 mr-2 text-cyan-400" /> {task.phase}</span>
+                            <span className="flex items-center bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-lg"><Bot className="w-3.5 h-3.5 mr-2 text-purple-400" /> {task.lead}</span>
+                          </div>
                         </div>
                       </motion.div>
                     ))}
