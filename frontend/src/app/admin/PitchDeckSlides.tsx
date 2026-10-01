@@ -1,22 +1,22 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { 
   ChevronLeft, ChevronRight, Activity, Sparkles, Shield, Layers, Brain, Code, Target,
   TrendingUp, Globe2, DollarSign, Crown, Award, Lock, Zap, Network, Crosshair, ArrowRight, CheckCircle2
 } from 'lucide-react';
 
 /* --- ANIMATION VARIANTS --- */
-const staggerContainer = {
+const staggerContainer: Variants = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.1 } }
 };
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
   show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } }
 };
-const scaleIn = {
+const scaleIn: Variants = {
   hidden: { opacity: 0, scale: 0.8 },
   show: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 100, damping: 20 } }
 };

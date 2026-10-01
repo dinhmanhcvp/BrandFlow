@@ -1027,7 +1027,6 @@ export default function BoothMaterialsPage() {
                 key={tab.key}
                 onClick={() => {
                   setActiveTab(tab.key);
-                  if (!exportingAll) handleExport(tab.key);
                 }}
                 disabled={exporting !== null}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-all disabled:opacity-50"

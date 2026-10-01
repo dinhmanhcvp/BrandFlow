@@ -39,23 +39,28 @@ export default function AgileOptimizer() {
       const isBepNhaMoc = campaignName.toLowerCase().includes('bếp nhà mộc') || campaignName.toLowerCase().includes('bep nha moc');
       if (isBepNhaMoc) {
         await new Promise(r => setTimeout(r, 2000)); // Simulate AI reasoning
-        const bepNhaMocMock = {
-          status: "critical",
-          pivot_suggested: true,
-          reasoning: "Tỷ lệ LTV:CAC hiện tại (1.2x) đang ở mức báo động đối với mô hình F&B cao cấp. Đồng thời, Churn Rate tháng 2 (68%) cho thấy trải nghiệm khách hàng chưa đủ sức giữ chân nhóm 'Corporate'. Với quỹ thời gian eo hẹp, việc dồn ngân sách vào các kênh quảng cáo diện rộng (Broad Targeting) đang làm lãng phí 45% ngân sách OPEX.",
-          pivot_strategy: {
-            immediate_actions: [
-              "Chấm dứt ngay lập tức các chiến dịch Facebook Ads nhắm mục tiêu chung (Broad Audience) > CPA đang vượt 350,000 VND.",
-              "Khởi động chiến dịch 'Corporate Mindful Lunch': Chào bán thẻ thành viên trả trước (Prepaid Loyalty Card) cho khối văn phòng xung quanh bán kính 3km.",
-              "Kích hoạt Zalo ZNS (Zalo Notification Service) kịch bản CSKH tự động hóa trong 24h đầu để giảm Churn Rate."
-            ],
-            budget_reallocation: {
-              "Facebook Ads (Broad)": "-100% (Cắt hoàn toàn)",
-              "Zalo OA & ZNS (Retention)": "+40% (Tăng cường)",
-              "B2B Direct Sales (Corporate)": "+60% (Dồn lực)"
+        const bepNhaMocMock: PivotResponse = {
+          status_analysis: "Tỷ lệ LTV:CAC hiện tại (1.2x) đang ở mức báo động đối với mô hình F&B cao cấp. Đồng thời, Churn Rate tháng 2 (68%) cho thấy trải nghiệm khách hàng chưa đủ sức giữ chân nhóm 'Corporate'.",
+          root_cause_hypothesis: "Với quỹ thời gian eo hẹp, việc dồn ngân sách vào các kênh quảng cáo diện rộng (Broad Targeting) đang làm lãng phí 45% ngân sách OPEX.",
+          pivot_strategy: "Chuyển hướng từ quảng cáo diện rộng sang tập trung vào tệp khách hàng B2B (Corporate) thông qua các kênh Direct Sales và Zalo.",
+          actionable_tactics: [
+            {
+              name: "Tạm dừng Facebook Ads Broad",
+              description: "Chấm dứt ngay lập tức các chiến dịch Facebook Ads nhắm mục tiêu chung > CPA đang vượt 350,000 VND.",
+              expected_impact: "Tiết kiệm 45% ngân sách OPEX lãng phí"
+            },
+            {
+              name: "Corporate Mindful Lunch",
+              description: "Chào bán thẻ thành viên trả trước (Prepaid Loyalty Card) cho khối văn phòng xung quanh bán kính 3km.",
+              expected_impact: "Tăng 60% doanh thu từ tệp Corporate"
+            },
+            {
+              name: "Kích hoạt Zalo ZNS",
+              description: "Kích hoạt kịch bản CSKH tự động hóa trong 24h đầu để giảm Churn Rate.",
+              expected_impact: "Giảm Churn Rate xuống dưới 40%"
             }
-          },
-          confidence_score: 94
+          ],
+          message_angle_shift: "Chuyển từ 'Món ăn ngon' sang 'Giải pháp ăn trưa dinh dưỡng, tiện lợi cho dân văn phòng'."
         };
         setResult(bepNhaMocMock);
         setIsAnalyzing(false);
@@ -87,23 +92,28 @@ export default function AgileOptimizer() {
     } catch (err: any) {
       console.log('Using mock for AgileOptimizer due to error:', err);
       // Detailed professional mock fallback
-      const mockResponse = {
-        status: "critical",
-        pivot_suggested: true,
-        reasoning: "Tỷ lệ chuyển đổi hiện tại (2%) đang thấp hơn mức chuẩn ngành (4.5%). Với số ngày còn lại không nhiều, chiến dịch có nguy cơ không đạt mục tiêu nếu duy trì ngân sách hiện tại.",
-        pivot_strategy: {
-          immediate_actions: [
-            "Tạm dừng các Ad Sets có CPA > 500,000 VND trên Facebook.",
-            "Tái phân bổ 30% ngân sách sang kênh Search Ads cho các từ khóa ngách.",
-            "Thay đổi Call-to-Action (CTA) trên Landing Page để tăng tính cấp bách (Urgency)."
-          ],
-          budget_reallocation: {
-            "Facebook Ads": "-30%",
-            "Google Search": "+30%",
-            "Tiktok Ads": "Giữ nguyên"
+      const mockResponse: PivotResponse = {
+        status_analysis: "Tỷ lệ chuyển đổi hiện tại (2%) đang thấp hơn mức chuẩn ngành (4.5%). Với số ngày còn lại không nhiều, chiến dịch có nguy cơ không đạt mục tiêu nếu duy trì ngân sách hiện tại.",
+        root_cause_hypothesis: "Ngân sách đang phân bổ vào các kênh có chi phí chuyển đổi (CPA) quá cao, thiếu tính cấp bách trong thông điệp để thúc đẩy quyết định mua.",
+        pivot_strategy: "Tái phân bổ ngân sách sang kênh intent cao (Search Ads) và tăng tính cấp bách (Urgency) trong thông điệp để chốt sale nhanh.",
+        actionable_tactics: [
+          {
+            name: "Tạm dừng Ads kém hiệu quả",
+            description: "Tạm dừng các Ad Sets có CPA > 500,000 VND trên Facebook.",
+            expected_impact: "Tiết kiệm 30% ngân sách Facebook Ads"
+          },
+          {
+            name: "Đẩy mạnh Search Ads",
+            description: "Tái phân bổ 30% ngân sách sang kênh Search Ads cho các từ khóa ngách.",
+            expected_impact: "Tăng trưởng 20% lượng leads chất lượng"
+          },
+          {
+            name: "Thay đổi CTA Landing Page",
+            description: "Thay đổi Call-to-Action (CTA) trên Landing Page để tăng tính cấp bách (Urgency).",
+            expected_impact: "Cải thiện CVR lên mức 4%"
           }
-        },
-        confidence_score: 88
+        ],
+        message_angle_shift: "Chỉ còn 5 ngày! Đăng ký ngay hôm nay để nhận ưu đãi độc quyền."
       };
       setResult(mockResponse);
     } finally {

@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { 
   Brain, Zap, DollarSign, Users, Target, Activity, CheckCircle2, 
   PieChart, Crown, Award, PlayCircle, BookOpen, RefreshCw, Hexagon,
@@ -9,15 +9,15 @@ import {
 } from 'lucide-react';
 
 /* --- ANIMATION VARIANTS --- */
-const container = {
+const container: Variants = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } }
 };
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } }
 };
-const scaleIn = {
+const scaleIn: Variants = {
   hidden: { opacity: 0, scale: 0.95 },
   show: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 100, damping: 20 } }
 };
