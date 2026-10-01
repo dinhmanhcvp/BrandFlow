@@ -251,19 +251,26 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
         setUploadMessage('✅ bepnhamoc.docx · 12.5k ký tự · 4 trang [AI Extraction]\n⚡ Math Engine & Cross-Validation: Hoàn tất (0.8s)');
         
         setExtractedAnswers({
-          "Tên doanh nghiệp": "Hệ thống F&B Bếp Nhà Mộc",
-          "Mô hình kinh doanh": "Chuỗi Casual Dining - Phân khúc Trung & Cao cấp",
-          "Khách hàng mục tiêu": "Chuyên gia, Quản lý cấp trung (28-45) có tần suất tái chi tiêu (Repeat Purchase) cao",
-          "Thực trạng Pain Points": "Customer Acquisition Cost (CAC) tăng 42% y-o-y. Churn Rate ở tháng thứ 2 cao (68%). Brand Core Values chưa đồng bộ trên các Touchpoints.",
-          "Mục tiêu Chiến lược": "Tối ưu LTV:CAC Ratio lên > 3.0x. Tăng trưởng MRR từ thẻ thành viên thêm 25% trong Q3. Xây dựng Data-driven Loyalty Program.",
-          "Ngân sách (OPEX)": "150,000,000 VND / tháng (Performance & Branding Allocation)"
+          "Tên doanh nghiệp": "Hệ thống F&B Bếp Nhà Mộc (Casual Dining)",
+          "Mô hình kinh doanh": "Dịch vụ F&B tập trung vào 'Therapeutic Dining Experience' (Ẩm thực chữa lành). Không chỉ cung cấp bữa ăn, mà bán không gian tái tạo năng lượng cho dân văn phòng.",
+          "Khách hàng mục tiêu": "Chuyên gia, Quản lý cấp trung (28-45 tuổi) tại các quận trung tâm. Đặc điểm: Thường xuyên chịu áp lực cao (Burnout), có xu hướng chi trả cao cho trải nghiệm yên tĩnh, cá nhân hóa.",
+          "Thực trạng Pain Points": "1. Khách hàng: Căng thẳng, thiếu thời gian nghỉ ngơi chất lượng. 2. Doanh nghiệp: Customer Acquisition Cost (CAC) tăng 42% y-o-y trên kênh Facebook. Churn Rate tháng 2 lên tới 68% do thiếu luồng chăm sóc (Retention Flow).",
+          "Mục tiêu Chiến lược": "Chuyển dịch ngân sách sang B2B Corporate (Gói ăn trưa doanh nghiệp). Tối ưu LTV:CAC Ratio > 3.0x. Triển khai AI CRM để tăng tỷ lệ khách quay lại (Retention) lên 45% trong Q4.",
+          "Ngân sách (OPEX)": "150,000,000 VND / tháng (Cần tái phân bổ gấp từ Broad Ads sang Direct Sales & Loyalty)."
         });
         
         setCompleteness({ 
-          missing_fields: [], 
-          completeness_score: 1.0, 
+          completeness_score: 98, 
           status: "ready_to_plan", 
-          gap_questions: [] 
+          missing_fields: [], 
+          gap_questions: [],
+          expert_review: {
+            title: "Báo Cáo Thẩm Định Chiến Lược (Executive Audit)",
+            trust_score: 85,
+            financial_health: "Tỷ lệ LTV:CAC hiện tại (1.2x) đang ở vùng nguy hiểm đối với ngành F&B cao cấp (Benchmark ngành: 2.5x). Việc đốt tiền vào Facebook Ads diện rộng đang làm xói mòn 45% ngân sách OPEX vô ích.",
+            operational_bottlenecks: "Quy trình chăm sóc khách hàng sau bữa ăn đang bị bỏ ngỏ. Không có kịch bản kích thích Upsell/Cross-sell qua Zalo ZNS, dẫn tới Churn Rate cực kỳ cao (68%) ngay trong tháng thứ 2.",
+            strategic_recommendation: "Cắt ngay 100% ngân sách Facebook Broad Ads. Chuyển hướng sang 'Corporate Mindful Lunch' (B2B) và ra mắt Thẻ Thành Viên (Prepaid Loyalty Card) để chốt dòng tiền trước, cải thiện ngay Cash Flow trong ngắn hạn."
+          }
         });
         
         return;
@@ -853,8 +860,74 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
             )}
           </AnimatePresence>
 
-          {/* ── Input Completeness Card Removed ── */}
+          {/* ── Executive Audit Card ── */}
+          <AnimatePresence>
+            {completeness?.expert_review && (
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="w-full mt-8 p-[1px] rounded-3xl bg-gradient-to-br from-amber-500/30 via-emerald-500/20 to-cyan-500/30 shadow-2xl overflow-hidden relative"
+              >
+                <div className="absolute inset-0 bg-linear-surface/90 backdrop-blur-3xl rounded-3xl z-0" />
+                <div className="relative z-10 p-8">
+                  {/* Header */}
+                  <div className="flex items-start justify-between border-b border-linear-border/50 pb-6 mb-6">
+                    <div>
+                      <h3 className="text-xl font-black text-foreground mb-2 flex items-center gap-2">
+                        <Sparkles className="w-5 h-5 text-amber-500" />
+                        {completeness.expert_review.title}
+                      </h3>
+                      <p className="text-sm text-linear-text-muted max-w-2xl">
+                        {language === 'vi' 
+                          ? 'Trích xuất tự động từ tài liệu nội bộ. Phân tích bởi AI CMO Engine với bộ khung chuẩn chiến lược.' 
+                          : 'Extracted automatically from internal documents. Analyzed by AI CMO Engine.'}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <div className="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-500">
+                        {completeness.expert_review.trust_score}<span className="text-lg opacity-50">/100</span>
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-500 mt-1">Trust Score</span>
+                    </div>
+                  </div>
 
+                  {/* Body Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Block 1 */}
+                    <div className="p-5 rounded-2xl bg-black/20 border border-linear-border/30 hover:border-amber-500/30 transition-colors">
+                      <h4 className="text-xs font-bold uppercase tracking-widest text-amber-400 mb-3 flex items-center gap-2">
+                        <PieChart className="w-4 h-4" /> Bức Tranh Tài Chính
+                      </h4>
+                      <p className="text-sm text-slate-300 leading-relaxed font-medium">
+                        {completeness.expert_review.financial_health}
+                      </p>
+                    </div>
+
+                    {/* Block 2 */}
+                    <div className="p-5 rounded-2xl bg-black/20 border border-linear-border/30 hover:border-red-500/30 transition-colors">
+                      <h4 className="text-xs font-bold uppercase tracking-widest text-red-400 mb-3 flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4" /> Điểm Nghẽn Vận Hành
+                      </h4>
+                      <p className="text-sm text-slate-300 leading-relaxed font-medium">
+                        {completeness.expert_review.operational_bottlenecks}
+                      </p>
+                    </div>
+
+                    {/* Block 3 - Full Width */}
+                    <div className="md:col-span-2 p-5 rounded-2xl bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 hover:border-cyan-400/50 transition-colors">
+                      <h4 className="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3 flex items-center gap-2">
+                        <BrainCircuit className="w-4 h-4" /> Khuyến Nghị Tác Chiến (Actionable Strategy)
+                      </h4>
+                      <p className="text-[15px] text-foreground leading-relaxed font-semibold">
+                        {completeness.expert_review.strategic_recommendation}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
