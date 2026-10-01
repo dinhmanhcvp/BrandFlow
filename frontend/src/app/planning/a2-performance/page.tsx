@@ -6,6 +6,7 @@ import B2BPageTemplate from '@/components/b2b/B2BPageTemplate';
 import InstructionAlert from '@/components/b2b/InstructionAlert';
 import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const PERF_DATA = [
   { metric: 'Khối lượng bán ra', y3: '50 tấn', y2: '85 tấn', y1: '150 tấn', reason: 'Nắm bắt xu hướng "healthy"' },
@@ -21,7 +22,21 @@ export default function PageA2Performance() {
     { key: 'y3', header: 'Năm t-3 (2023)', align: 'center' as const, className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted' },
     { key: 'y2', header: 'Năm t-2 (2024)', align: 'center' as const, className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted' },
     { key: 'y1', header: 'Năm ngoái (2025)', align: 'center' as const, headerClassName: 'text-cyan-400 bg-cyan-500/10', className: 'bg-cyan-500/10 font-bold text-cyan-400' },
-    { key: 'reason', header: 'Nguyên nhân chính', className: 'bg-linear-surface text-linear-text-muted text-sm' },
+    { 
+      key: 'reason', 
+      header: 'Nguyên nhân chính', 
+      className: 'bg-linear-surface text-linear-text-muted text-sm',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.reason}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale}>
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
   ];
 
   return (

@@ -6,6 +6,7 @@ import B2BPageTemplate from '@/components/b2b/B2BPageTemplate';
 import InstructionAlert from '@/components/b2b/InstructionAlert';
 import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const PORT_DATA = [
   { bcg: 'Ngôi sao (Star)', sbu: 'Thực đơn Chữa lành (Mindful Menu)', rev: '45 tỷ', target: '120 tỷ' },
@@ -17,7 +18,21 @@ export default function PageC2History() {
   const { localData, saveStatus } = useAutoSaveForm('c2-history', { items: [] });
   const COLUMNS = [
     { key: 'bcg', header: 'Phân loại SBU (BCG)', className: 'bg-linear-surface font-bold text-linear-text-muted' },
-    { key: 'sbu', header: 'Tên Đơn vị kinh doanh', className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted' },
+    { 
+      key: 'sbu', 
+      header: 'Tên Đơn vị kinh doanh', 
+      className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.sbu}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale}>
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
     { key: 'rev', header: 'Doanh thu hiện tại', align: 'right' as const, className: 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 font-semibold border-x border-white dark:border-slate-800' },
     { key: 'target', header: 'Mục tiêu (+3 năm)', align: 'right' as const, headerClassName: 'bg-cyan-500/10 text-cyan-400', className: 'bg-cyan-500/10 text-cyan-400 font-bold' },
   ];
