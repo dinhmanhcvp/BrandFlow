@@ -7,6 +7,7 @@ import InstructionAlert from '@/components/b2b/InstructionAlert';
 import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { Target, Compass, Globe, Clock, Users, Wrench } from 'lucide-react';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const ACTION_DATA = [
   { obj: 'Trực quan hóa công dụng lợi khuẩn', tactic: 'vận hành bếp TVC hoạt hình: 1 Mascot duy nhất vươn tay chỉ trực diện vào đồ họa đường ruột đang tiêu hóa tốt.', owner: 'Creative Team', deadline: 'Tuần 3, Tháng 8', cost: '300,000,000' },
@@ -18,7 +19,18 @@ export default function PageB2Action() {
   
   const COLUMNS = [
     { key: 'obj', header: 'Mục tiêu phụ', className: 'bg-linear-surface font-medium text-linear-text-muted', width: '200px' },
-    { key: 'tactic', header: 'Hành động / Chiến thuật', className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted' },
+    { key: 'tactic', header: 'Hành động / Chiến thuật', className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.tactic}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="rationale">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
     { key: 'owner', header: 'Trách nhiệm', align: 'center' as const, headerClassName: 'bg-sky-100 dark:bg-sky-900/30 text-sky-900 dark:text-sky-400', className: 'bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 font-semibold' },
     { key: 'deadline', header: 'Deadline', align: 'center' as const, className: 'bg-linear-surface text-linear-text-muted' },
     { key: 'cost', header: 'Chi phí (VNĐ)', align: 'right' as const, className: 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-400 font-bold border-l border-white dark:border-slate-800' },

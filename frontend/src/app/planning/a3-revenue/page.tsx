@@ -8,6 +8,7 @@ import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TranslationKey } from '@/i18n/translations';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const FIN_DATA = [
   { metric: 'Doanh thu thuần', t0: '60 tỷ', t1: '80 tỷ', t2: '100 tỷ', t3: '120 tỷ', source: 'Sản phẩm mới (Mix hạt)' },
@@ -23,7 +24,18 @@ export default function PageA3Revenue() {
     { key: 't1', header: 'Năm t+1', align: 'center' as const, className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted' },
     { key: 't2', header: 'Năm t+2', align: 'center' as const, className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted' },
     { key: 't3', header: 'Năm t+3', align: 'center' as const, headerClassName: 'bg-cyan-500/10 text-cyan-400', className: 'bg-cyan-500/10 font-bold text-cyan-400' },
-    { key: 'source', header: 'Nguồn tăng trưởng', className: 'bg-linear-surface text-linear-text-muted text-xs' },
+    { key: 'source', header: 'Nguồn tăng trưởng', className: 'bg-linear-surface text-linear-text-muted text-xs',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.source}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="source">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
   ];
 
   return (

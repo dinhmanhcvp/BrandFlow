@@ -8,6 +8,7 @@ import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TranslationKey } from '@/i18n/translations';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const KSF_DATA = [
   { ksf: 'Không gian tĩnh lặng & Concept', weight: '35%', our_score: 9, comp_score: 6, issue: 'Điểm khác biệt cốt lõi (VRIO) cần duy trì' },
@@ -24,7 +25,18 @@ export default function PageA5Swot() {
     { key: 'weight', header: 'Trọng số', align: 'center' as const, className: 'bg-slate-100 dark:bg-slate-800/30 font-semibold' },
     { key: 'our_score', header: 'Điểm SBU (1-10)', align: 'center' as const, headerClassName: 'bg-[#eecbff] text-purple-900 dark:text-purple-400', className: 'bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 font-bold border-r border-white dark:border-slate-800' },
     { key: 'comp_score', header: 'Điểm Đối thủ', align: 'center' as const, headerClassName: 'bg-[#ffdec2] text-orange-900 dark:text-orange-400', className: 'bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 font-bold' },
-    { key: 'issue', header: 'Vấn đề then chốt rút ra', className: 'bg-linear-surface text-linear-text-muted border-l border-linear-border' },
+    { key: 'issue', header: 'Vấn đề then chốt rút ra', className: 'bg-linear-surface text-linear-text-muted border-l border-linear-border',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.issue}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="rationale">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
   ];
 
   return (

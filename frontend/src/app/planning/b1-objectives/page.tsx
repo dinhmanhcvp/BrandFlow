@@ -6,6 +6,7 @@ import B2BPageTemplate from '@/components/b2b/B2BPageTemplate';
 import InstructionAlert from '@/components/b2b/InstructionAlert';
 import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const OBJ_DATA = [
   { pair: 'Vị nguyên bản / Mẹ & Bé', vol: '130 tấn', margin: '42%', strategy: 'Đẩy mạnh Sampling & TVC', budget: '1,500' },
@@ -18,7 +19,18 @@ export default function PageB1Objectives() {
     { key: 'pair', header: 'Cặp Sản phẩm / Phân khúc', className: 'bg-linear-surface font-medium text-linear-text-muted' },
     { key: 'vol', header: 'Mục tiêu Khối lượng', align: 'center' as const, className: 'bg-indigo-50 dark:bg-indigo-500/10 font-semibold text-indigo-700 dark:text-indigo-400' },
     { key: 'margin', header: 'Mục tiêu Biên LN Gộp', align: 'center' as const, className: 'bg-cyan-500/10 font-bold text-cyan-400 border-l border-white dark:border-slate-800' },
-    { key: 'strategy', header: 'Chiến lược chính', className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted' },
+    { key: 'strategy', header: 'Chiến lược chính', className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.strategy}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="rationale">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
     { key: 'budget', header: 'Ngân sách (Triệu)', align: 'right' as const, headerClassName: 'bg-rose-100 dark:bg-rose-900/30 text-rose-900 dark:text-rose-400', className: 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-400 font-bold' },
   ];
 

@@ -8,6 +8,7 @@ import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TranslationKey } from '@/i18n/translations';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const DIR_DATA = [
   { item: 'Đóng góp mục tiêu', content: 'Tổng doanh thu 500 tỷ trong 3 năm.' },
@@ -19,8 +20,30 @@ export default function PageC1Direction() {
   const { localData, saveStatus } = useAutoSaveForm('c1-direction', { items: [] });
   const { t } = useLanguage();
   const COLUMNS = [
-    { key: 'item', header: 'Yếu tố Cấp Tập đoàn (HQ)', className: 'bg-linear-surface font-medium text-linear-text-muted w-1/3' },
-    { key: 'content', header: 'Nội dung', className: 'bg-slate-50 dark:bg-slate-800/50 text-foreground font-semibold' },
+    { key: 'item', header: 'Yếu tố Cấp Tập đoàn (HQ)', className: 'bg-linear-surface font-medium text-linear-text-muted w-1/3',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.item}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="rationale">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
+    { key: 'content', header: 'Nội dung', className: 'bg-slate-50 dark:bg-slate-800/50 text-foreground font-semibold',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.content}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="rationale">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
   ];
 
   return (

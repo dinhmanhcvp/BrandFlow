@@ -6,6 +6,7 @@ import B2BPageTemplate from '@/components/b2b/B2BPageTemplate';
 import InstructionAlert from '@/components/b2b/InstructionAlert';
 import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const CONT_DATA = [
   { risk: 'Phí sàn TikTok tăng', level: 'TB', impact: 'Giảm 15% biên LN Online', trigger: 'CPO > 25%', action: 'Dịch chuyển 50% ngân sách sang kênh mầm non' },
@@ -19,7 +20,18 @@ export default function PageB4Contingency() {
     { key: 'level', header: 'Mức độ', align: 'center' as const, className: 'bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 font-semibold border-x border-white dark:border-slate-800' },
     { key: 'impact', header: 'Tác động tài chính', className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted' },
     { key: 'trigger', header: 'Điểm kích hoạt', align: 'center' as const, headerClassName: 'bg-rose-100 dark:bg-rose-900/30 text-rose-900 dark:text-rose-400', className: 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-400 font-bold border-x border-white dark:border-slate-800' },
-    { key: 'action', header: 'Hành động dự phòng thực tế', className: 'bg-cyan-500/10 text-cyan-400' },
+    { key: 'action', header: 'Hành động dự phòng thực tế', className: 'bg-cyan-500/10 text-cyan-400',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.action}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="rationale">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
   ];
 
   return (

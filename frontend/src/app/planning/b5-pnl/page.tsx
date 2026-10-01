@@ -6,6 +6,7 @@ import B2BPageTemplate from '@/components/b2b/B2BPageTemplate';
 import InstructionAlert from '@/components/b2b/InstructionAlert';
 import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const PNL_DATA = [
   { item: 'Doanh thu thuần', val: '60.0', ratio: '100%' },
@@ -17,9 +18,31 @@ const PNL_DATA = [
 export default function PageB5Pnl() {
   const { localData, saveStatus } = useAutoSaveForm('b5-pnl', { items: [] });
   const COLUMNS = [
-    { key: 'item', header: 'Hạng mục Tài chính', className: 'bg-linear-surface font-medium text-linear-text-muted' },
+    { key: 'item', header: 'Hạng mục Tài chính', className: 'bg-linear-surface font-medium text-linear-text-muted',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.item}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="rationale">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
     { key: 'val', header: 'Giá trị (Tỷ VNĐ)', align: 'right' as const, className: 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 font-bold border-x border-white dark:border-slate-800' },
-    { key: 'ratio', header: 'Tỷ lệ (% Doanh thu)', align: 'center' as const, className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted' },
+    { key: 'ratio', header: 'Tỷ lệ (% Doanh thu)', align: 'center' as const, className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.ratio}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="source">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
   ];
 
   return (

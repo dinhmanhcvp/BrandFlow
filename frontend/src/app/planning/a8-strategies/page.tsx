@@ -6,6 +6,7 @@ import B2BPageTemplate from '@/components/b2b/B2BPageTemplate';
 import InstructionAlert from '@/components/b2b/InstructionAlert';
 import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const MATRIX_DATA = [
   { level: 'Tổng Doanh Thu', past: '1.2 tỷ', now: '1.8 tỷ', target: '3 tỷ', note: 'Mục tiêu sau 90 ngày Launching' },
@@ -36,12 +37,34 @@ export default function PageA8Strategies() {
     { key: 'past', header: 'Năm ngoái (t-1)', align: 'center' as const, className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted' },
     { key: 'now', header: 'Năm nay (t0)', align: 'center' as const, headerClassName: 'bg-purple-100 dark:bg-purple-900/30 text-purple-900 dark:text-purple-400', className: 'bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-400 font-semibold border-x border-white dark:border-slate-800' },
     { key: 'target', header: 'Mục tiêu (t+3)', align: 'center' as const, headerClassName: 'bg-cyan-500/10 text-cyan-400', className: 'bg-cyan-500/10 text-cyan-400 font-bold' },
-    { key: 'note', header: 'Ghi chú', className: 'bg-linear-surface text-linear-text-muted' },
+    { key: 'note', header: 'Ghi chú', className: 'bg-linear-surface text-linear-text-muted',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.note}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="rationale">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
   ];
 
   const FOUR_P_COLS = [
     { key: 'p', header: 'Chiến thuật 4P', className: 'bg-slate-50 dark:bg-slate-800/50 font-bold text-foreground' },
-    { key: 'content', header: 'Nội dung triển khai chiến lược', className: 'bg-linear-surface text-linear-text-muted' },
+    { key: 'content', header: 'Nội dung triển khai chiến lược', className: 'bg-linear-surface text-linear-text-muted',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.content}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="rationale">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
     { key: 'cost', header: 'Chi phí ước tính (3 năm)', align: 'right' as const, className: 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-400 font-semibold border-l border-white dark:border-slate-800' },
   ];
 

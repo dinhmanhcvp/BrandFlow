@@ -6,6 +6,7 @@ import B2BPageTemplate from '@/components/b2b/B2BPageTemplate';
 import InstructionAlert from '@/components/b2b/InstructionAlert';
 import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const ISSUES_DATA = [
   { sbu: 'Thực đơn Chữa lành', market: 'Tăng trưởng nhanh (40%)', comp: 'Khốc liệt về giá, đa dạng đối thủ', issue: 'Mở rộng dung tích nhỏ để tối ưu giá dùng thử.' },
@@ -15,10 +16,32 @@ const ISSUES_DATA = [
 export default function PageC3Issues() {
   const { localData, saveStatus } = useAutoSaveForm('c3-issues', { items: [] });
   const COLUMNS = [
-    { key: 'sbu', header: 'Tên SBU', className: 'bg-linear-surface font-bold text-foreground' },
+    { key: 'sbu', header: 'Tên SBU', className: 'bg-linear-surface font-bold text-foreground',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.sbu}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="source">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
     { key: 'market', header: 'Đặc điểm Thị trường', className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted border-l border-white dark:border-slate-800' },
     { key: 'comp', header: 'Đặc điểm Cạnh tranh', className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted border-l border-white dark:border-slate-800' },
-    { key: 'issue', header: 'Vấn đề Chiến lược Then chốt', className: 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-400 font-medium border-l border-white dark:border-slate-800' },
+    { key: 'issue', header: 'Vấn đề Chiến lược Then chốt', className: 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-400 font-medium border-l border-white dark:border-slate-800',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.issue}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="rationale">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
   ];
 
   return (

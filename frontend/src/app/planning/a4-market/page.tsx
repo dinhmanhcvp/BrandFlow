@@ -7,6 +7,7 @@ import InstructionAlert from '@/components/b2b/InstructionAlert';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { ShieldAlert, Crosshair, Zap, Activity } from 'lucide-react';
 import clsx from 'clsx';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const MAP_DATA = [
   { role: 'Initiator (Khởi xướng)', pain_points: 'Hệ thống cũ chậm chạp', decision_drivers: 'Tăng hiệu suất', opportunism_risk: 'Muốn chứng tỏ năng lực cá nhân với sếp', icon: Zap, color: 'emerald' },
@@ -88,7 +89,14 @@ export default function PageA4Market() {
                                  <ShieldAlert className="w-4 h-4 text-rose-500 mt-0.5 shrink-0" />
                                  <div>
                                    <span className="text-[10px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 block mb-0.5">Rủi ro Trục lợi / Cảm tính</span>
-                                   <p className="text-xs font-medium text-rose-700/80 dark:text-rose-300/80 leading-relaxed">{node.opportunism_risk}</p>
+                                   <div className="flex items-start gap-1">
+                                     <p className="text-xs font-medium text-rose-700/80 dark:text-rose-300/80 leading-relaxed">{node.opportunism_risk}</p>
+                                     {node.rationale && (
+                                       <RationaleTooltip rationale={node.rationale}>
+                                         <span className="sr-only">Why</span>
+                                       </RationaleTooltip>
+                                     )}
+                                   </div>
                                  </div>
                               </div>
                            </div>

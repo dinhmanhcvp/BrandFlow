@@ -6,6 +6,7 @@ import B2BPageTemplate from '@/components/b2b/B2BPageTemplate';
 import InstructionAlert from '@/components/b2b/InstructionAlert';
 import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const PNL_DATA = [
   { item: 'Doanh thu thuần', t0: '60.0', t1: '80.0', t2: '100.0', t3: '120.0' },
@@ -17,7 +18,18 @@ const PNL_DATA = [
 export default function PageA9Budget() {
   const { localData, saveStatus } = useAutoSaveForm('a9-budget', { items: [] });
   const COLUMNS = [
-    { key: 'item', header: 'Hạng mục P&L', className: 'bg-linear-surface font-medium text-linear-text-muted' },
+    { key: 'item', header: 'Hạng mục P&L', className: 'bg-linear-surface font-medium text-linear-text-muted',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.item}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="rationale">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
     { key: 't0', header: 'Năm t0', align: 'right' as const, headerClassName: 'bg-purple-100 dark:bg-purple-900/30 text-purple-900 dark:text-purple-400', className: 'bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-400 font-semibold' },
     { key: 't1', header: 'Năm t+1', align: 'right' as const, className: 'bg-cyan-500/10 text-cyan-400 font-semibold' },
     { key: 't2', header: 'Năm t+2', align: 'right' as const, className: 'bg-cyan-500/10/70 text-cyan-400 font-bold' },

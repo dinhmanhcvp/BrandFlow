@@ -6,6 +6,7 @@ import B2BPageTemplate from '@/components/b2b/B2BPageTemplate';
 import InstructionAlert from '@/components/b2b/InstructionAlert';
 import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const GANTT_DATA = [
   { name: 'On-air TVC Mascot ruột', t8: true, t9: true, t10: false, t11: false, t12: false },
@@ -17,7 +18,18 @@ const GANTT_DATA = [
 export default function PageB6Gantt() {
   const { localData, saveStatus } = useAutoSaveForm('b6-gantt', { items: [] });
   const COLUMNS = [
-    { key: 'name', header: 'Chiến dịch / Hành động', className: 'bg-linear-surface font-medium text-foreground', width: '250px' },
+    { key: 'name', header: 'Chiến dịch / Hành động', className: 'bg-linear-surface font-medium text-foreground', width: '250px',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.name}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="rationale">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
     { key: 't8', header: 'Tháng 8', align: 'center' as const, render: (r: any) => r.t8 ? <div className="h-6 w-full bg-indigo-400 rounded-sm"></div> : null, className: 'border-l border-linear-border bg-linear-surface' },
     { key: 't9', header: 'Tháng 9', align: 'center' as const, render: (r: any) => r.t9 ? <div className="h-6 w-full bg-indigo-400 rounded-sm"></div> : null, className: 'border-l border-linear-border bg-linear-surface' },
     { key: 't10', header: 'Tháng 10', align: 'center' as const, render: (r: any) => r.t10 ? <div className="h-6 w-full bg-indigo-400 rounded-sm"></div> : null, className: 'border-l border-linear-border bg-linear-surface' },

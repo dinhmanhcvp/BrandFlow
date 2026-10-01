@@ -8,6 +8,7 @@ import PastelTable from '@/components/b2b/PastelTable';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TranslationKey } from '@/i18n/translations';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const DPM_DATA = [
   { segment: 'Mẹ & Trẻ em', attr: 'Cao', pos: 'Mạnh', decision: 'Đầu tư mạnh để tăng trưởng' },
@@ -21,7 +22,18 @@ export default function PageA6Portfolio() {
     { key: 'segment', header: 'Phân khúc', className: 'bg-linear-surface font-medium text-linear-text-muted' },
     { key: 'attr', header: 'Sức hấp dẫn thị trường', align: 'center' as const, className: 'bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 font-semibold' },
     { key: 'pos', header: 'Vị thế cạnh tranh', align: 'center' as const, className: 'bg-cyan-500/10 text-cyan-400 font-semibold border-l border-white dark:border-slate-800' },
-    { key: 'decision', header: 'Quyết định đầu tư', className: 'bg-linear-surface text-linear-text-muted' },
+    { key: 'decision', header: 'Quyết định đầu tư', className: 'bg-linear-surface text-linear-text-muted',
+      render: (row: any) => (
+        <div className="flex items-center justify-between">
+          <span>{row.decision}</span>
+          {row.rationale && (
+            <RationaleTooltip rationale={row.rationale} type="rationale">
+              <span className="sr-only">Why</span>
+            </RationaleTooltip>
+          )}
+        </div>
+      )
+    },
   ];
 
   return (
