@@ -58,19 +58,21 @@ export function RationaleTooltip({ rationale, type = 'rationale', children }: Ra
             
             <div className="p-5 space-y-4 relative z-10">
               <div>
-                <h5 className={`text-sm font-semibold text-slate-300 mb-2 uppercase tracking-wider flex items-center gap-2 ${isSource ? 'text-amber-400' : 'text-emerald-500'}`}>
+                <h5 className={`text-sm font-semibold text-slate-300 mb-4 uppercase tracking-wider flex items-center gap-2 ${isSource ? 'text-amber-400' : 'text-emerald-500'}`}>
                   {isSource ? <BookOpen className="w-4 h-4" /> : <Info className="w-4 h-4" />}
-                  {isSource ? "Trích đoạn & Phân tích" : "Cơ sở đề xuất"}
+                  {isSource ? "Trích đoạn & Phân tích" : "Cơ sở đề xuất & Lập luận (Rationale)"}
                 </h5>
-                <p className="text-sm text-slate-300 leading-relaxed font-light">
-                  {rationale}
-                </p>
+                <div className="text-sm text-slate-300 leading-relaxed font-light space-y-3">
+                  {rationale.split('\n').map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
+                </div>
               </div>
             </div>
             
             <div className="bg-black/40 p-3 text-center text-xs text-slate-500 border-t border-white/5 flex items-center justify-center gap-2">
               {isSource ? <Quote className="w-3 h-3 text-amber-500/50" /> : <Sparkles className="w-3 h-3 text-emerald-500/50" />}
-              Powered by BrandFlow AI - Dữ liệu nội bộ Bếp Nhà Mộc
+              Powered by BrandFlow Strategic AI
             </div>
           </motion.div>
         </div>,
