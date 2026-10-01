@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import B2BPageTemplate from '@/components/b2b/B2BPageTemplate';
 import InstructionAlert from '@/components/b2b/InstructionAlert';
 import WizardNavigation from '@/components/b2b/WizardNavigation';
+import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TranslationKey } from '@/i18n/translations';
 import { Plus, Trash2, Save, Loader2, CheckCircle2 } from 'lucide-react';
@@ -62,7 +63,7 @@ export default function PageA1Mission() {
   const handleDirectionChange = (idx: number, type: string, text: string) => {
     userHasEdited.current = true;
     const newArr = [...localData.directions];
-    newArr[idx] = { type, text };
+    newArr[idx] = { ...newArr[idx], type, text };
     setLocalData(prev => ({ ...prev, directions: newArr }));
   };
 
@@ -92,25 +93,57 @@ export default function PageA1Mission() {
               <h3 className="text-lg font-semibold text-foreground mb-6 border-b border-linear-border pb-2">1. Định vị & Năng lực</h3>
               <div className="space-y-5">
                 <div>
-                  <label className="block text-sm font-semibold text-linear-text-muted mb-1.5">Vai trò của doanh nghiệp (Role)</label>
+                  <label className="block text-sm font-semibold text-linear-text-muted mb-1.5 flex items-center">
+                    {localData?.role_rationale ? (
+                      <RationaleTooltip rationale={localData.role_rationale}>
+                        <span>Vai trò của doanh nghiệp (Role)</span>
+                      </RationaleTooltip>
+                    ) : (
+                      "Vai trò của doanh nghiệp (Role)"
+                    )}
+                  </label>
                   <input type="text" className="w-full px-4 py-2.5 bg-linear-surface/50 text-foreground border border-linear-border rounded-lg focus:bg-linear-surface focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all" 
                     value={localData?.role || ""} onChange={e => handleFieldChange('role', e.target.value)} />
                 </div>
 
                 <div className="pt-2 border-t border-linear-border">
-                  <label className="block text-sm font-semibold text-linear-text-muted mb-1.5">Giá trị mang lại</label>
+                  <label className="block text-sm font-semibold text-linear-text-muted mb-1.5 flex items-center">
+                    {localData?.business_def_rationale ? (
+                      <RationaleTooltip rationale={localData.business_def_rationale}>
+                        <span>Giá trị mang lại</span>
+                      </RationaleTooltip>
+                    ) : (
+                      "Giá trị mang lại"
+                    )}
+                  </label>
                   <input type="text" className="w-full px-4 py-2.5 bg-linear-surface/50 text-foreground border border-linear-border rounded-lg focus:bg-linear-surface focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all" 
                     value={localData?.business_def || ""} onChange={e => handleFieldChange('business_def', e.target.value)} />
                 </div>
 
                 <div className="pt-2 border-t border-linear-border">
-                  <label className="block text-sm font-semibold text-linear-text-muted mb-1.5">Mục đích (Brand Purpose)</label>
+                  <label className="block text-sm font-semibold text-linear-text-muted mb-1.5 flex items-center">
+                    {localData?.purpose_rationale ? (
+                      <RationaleTooltip rationale={localData.purpose_rationale}>
+                        <span>Mục đích (Brand Purpose)</span>
+                      </RationaleTooltip>
+                    ) : (
+                      "Mục đích (Brand Purpose)"
+                    )}
+                  </label>
                   <input type="text" className="w-full px-4 py-2.5 bg-linear-surface/50 text-foreground border border-linear-border rounded-lg focus:bg-linear-surface focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all" 
                     value={localData?.purpose || ""} onChange={e => handleFieldChange('purpose', e.target.value)} />
                 </div>
 
                 <div className="pt-2 border-t border-linear-border">
-                  <label className="block text-sm font-semibold text-linear-text-muted mb-1.5">Luật chơi độc quyền (Năng lực khác biệt)</label>
+                  <label className="block text-sm font-semibold text-linear-text-muted mb-1.5 flex items-center">
+                    {localData?.competency_rationale ? (
+                      <RationaleTooltip rationale={localData.competency_rationale}>
+                        <span>Luật chơi độc quyền (Năng lực khác biệt)</span>
+                      </RationaleTooltip>
+                    ) : (
+                      "Luật chơi độc quyền (Năng lực khác biệt)"
+                    )}
+                  </label>
                   <textarea rows={3} className="w-full px-4 py-2.5 bg-linear-surface/50 text-foreground border border-linear-border rounded-lg focus:bg-linear-surface focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all resize-none" 
                     value={localData?.competency || ""} onChange={e => handleFieldChange('competency', e.target.value)} />
                 </div>
@@ -144,13 +177,22 @@ export default function PageA1Mission() {
                      <input type="text" className="flex-1 px-4 py-2.5 bg-linear-surface/50 text-foreground border border-linear-border rounded-lg focus:bg-linear-surface focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all" 
                        value={dir.text} onChange={(e) => handleDirectionChange(idx, dir.type, e.target.value)} />
                      
-                     <button onClick={() => {
-                        userHasEdited.current = true;
-                        const newArr = localData.directions.filter((_, i) => i !== idx);
-                        setLocalData(prev => ({...prev, directions: newArr}));
-                     }} className="p-2.5 mt-0.5 text-linear-text-muted hover:text-rose-500 hover:bg-rose-50 dark:bg-rose-500/10 rounded-lg transition-colors">
-                       <Trash2 className="w-4 h-4" />
-                     </button>
+                     <div className="flex items-center mt-1">
+                       {dir.rationale && (
+                         <div className="mr-1 mt-0.5">
+                           <RationaleTooltip rationale={dir.rationale}>
+                             <span className="sr-only">Why</span>
+                           </RationaleTooltip>
+                         </div>
+                       )}
+                       <button onClick={() => {
+                          userHasEdited.current = true;
+                          const newArr = localData.directions.filter((_, i) => i !== idx);
+                          setLocalData(prev => ({...prev, directions: newArr}));
+                       }} className="p-2.5 text-linear-text-muted hover:text-rose-500 hover:bg-rose-50 dark:bg-rose-500/10 rounded-lg transition-colors">
+                         <Trash2 className="w-4 h-4" />
+                       </button>
+                     </div>
                    </div>
                  ))}
                  

@@ -165,7 +165,8 @@ export const useFormStore = create<FormStore>((set, get) => ({
         await get().loadAllForms();
       } else {
         console.warn("⚠️ Không thể kết nối Backend FastAPI.");
-        const isNhaMoc = get().extractedAnswers?.["Tên doanh nghiệp"]?.includes("Nhà Mộc");
+        const comp = get().extractedAnswers?.["Tên doanh nghiệp"];
+        const isNhaMoc = !comp || comp.includes("Nhà Mộc");
         set({ 
           projectId: 'demo-mock-project-id', 
           saveStatus: 'idle', 
@@ -175,7 +176,8 @@ export const useFormStore = create<FormStore>((set, get) => ({
       }
     } catch (e) {
       console.warn("⚠️ Lỗi khởi tạo DB (Backend có thể chưa chạy).", e);
-      const isNhaMoc = get().extractedAnswers?.["Tên doanh nghiệp"]?.includes("Nhà Mộc");
+      const comp = get().extractedAnswers?.["Tên doanh nghiệp"];
+      const isNhaMoc = !comp || comp.includes("Nhà Mộc");
       set({ 
         projectId: 'demo-mock-project-id', 
         saveStatus: 'idle', 
@@ -213,12 +215,14 @@ export const useFormStore = create<FormStore>((set, get) => ({
         handleUnauthorized();
         return;
       } else {
-        const isNhaMoc = get().extractedAnswers?.["Tên doanh nghiệp"]?.includes("Nhà Mộc");
+        const comp = get().extractedAnswers?.["Tên doanh nghiệp"];
+        const isNhaMoc = !comp || comp.includes("Nhà Mộc");
         set({ forms: isNhaMoc ? BEP_NHA_MOC_FORMS_MOCK : {} });
       }
     } catch (e) {
       console.error("Failed to load forms:", e);
-      const isNhaMoc = get().extractedAnswers?.["Tên doanh nghiệp"]?.includes("Nhà Mộc");
+      const comp = get().extractedAnswers?.["Tên doanh nghiệp"];
+      const isNhaMoc = !comp || comp.includes("Nhà Mộc");
       set({ forms: isNhaMoc ? BEP_NHA_MOC_FORMS_MOCK : {} });
     } finally {
       set({ isLoading: false });
@@ -299,7 +303,8 @@ export const useFormStore = create<FormStore>((set, get) => ({
       await get().updateForm('market_research', realData);
     } catch (e) {
       console.error("Market research failed.", e);
-      const isNhaMoc = get().extractedAnswers?.["Tên doanh nghiệp"]?.includes("Nhà Mộc");
+      const comp = get().extractedAnswers?.["Tên doanh nghiệp"];
+      const isNhaMoc = !comp || comp.includes("Nhà Mộc");
       
       if (isNhaMoc) {
         // Giả lập thời gian suy nghĩ của AI để tạo cảm giác chân thực
@@ -363,7 +368,8 @@ export const useFormStore = create<FormStore>((set, get) => ({
       }
     } catch (error) {
       console.error("Debate API failed:", error);
-      const isNhaMoc = get().extractedAnswers?.["Tên doanh nghiệp"]?.includes("Nhà Mộc");
+      const comp = get().extractedAnswers?.["Tên doanh nghiệp"];
+      const isNhaMoc = !comp || comp.includes("Nhà Mộc");
       
       if (isNhaMoc) {
         // Giả lập thời gian AI Agents tranh luận
@@ -437,7 +443,8 @@ export const useFormStore = create<FormStore>((set, get) => ({
       }
     } catch (e) {
       console.error("Error calling extract-dna API.", e);
-      const isNhaMoc = get().extractedAnswers?.["Tên doanh nghiệp"]?.includes("Nhà Mộc");
+      const comp = get().extractedAnswers?.["Tên doanh nghiệp"];
+      const isNhaMoc = !comp || comp.includes("Nhà Mộc");
       
       if (isNhaMoc) {
         // Giả lập thời gian phân tích tài liệu
