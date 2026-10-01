@@ -132,10 +132,14 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     {CommonBackground}
 
     {/* Global Header with Menu Button */}
-    <header className="h-16 bg-white/70 dark:bg-[#0B1120]/40 backdrop-blur-xl border-b border-linear-border/50 z-40 flex items-center px-4 md:px-6 print-hide transition-colors duration-500 shadow-sm shrink-0">
+    <header className="h-16 bg-white/70 dark:bg-[#0B1120]/40 backdrop-blur-xl border-b border-linear-border/50 z-40 flex items-center px-4 md:px-6 print-hide transition-colors duration-500 shadow-sm shrink-0 accent-line-bottom">
       <button 
         onClick={() => setIsSidebarOpen(true)}
-        className="p-2 rounded-lg hover:bg-linear-surface transition-colors text-foreground focus:outline-none flex items-center justify-center border border-transparent hover:border-linear-border"
+        className={`p-2 rounded-lg transition-all text-foreground focus:outline-none flex items-center justify-center border ${
+          isSidebarOpen 
+            ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-500' 
+            : 'border-transparent hover:bg-linear-surface hover:border-linear-border'
+        }`}
       >
         <Menu className="w-6 h-6" />
       </button>
@@ -143,7 +147,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
         Brand<span className="text-cyan-500">F</span>low
       </div>
 
-      <div className="ml-auto flex items-center gap-2">
+      <div className="ml-auto flex items-center gap-3">
         <ThemeToggle />
         <div className="flex bg-background/50 rounded-lg p-1 border ultra-thin-border h-10 w-[120px]">
           <button 

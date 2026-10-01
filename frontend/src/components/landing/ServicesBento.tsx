@@ -2,7 +2,7 @@
 
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Megaphone, PenTool, BarChart } from 'lucide-react';
+import { Search, Megaphone, PenTool, BarChart, ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function ServicesBento() {
@@ -14,40 +14,55 @@ export default function ServicesBento() {
       title: t('landing_services.s1_title'),
       description: t('landing_services.s1_desc'),
       colSpan: "col-span-1 md:col-span-2",
-      accent: "text-cyan-400"
+      accent: "text-cyan-400",
+      accentBg: "bg-cyan-500/10 border-cyan-500/20",
+      glowColor: "rgba(6,182,212,0.12)"
     },
     {
       icon: Megaphone,
       title: t('landing_services.s2_title'),
       description: t('landing_services.s2_desc'),
       colSpan: "col-span-1",
-      accent: "text-cyan-400"
+      accent: "text-cyan-400",
+      accentBg: "bg-cyan-500/10 border-cyan-500/20",
+      glowColor: "rgba(6,182,212,0.12)"
     },
     {
       icon: PenTool,
       title: t('landing_services.s3_title'),
       description: t('landing_services.s3_desc'),
       colSpan: "col-span-1",
-      accent: "text-blue-400"
+      accent: "text-blue-400",
+      accentBg: "bg-blue-500/10 border-blue-500/20",
+      glowColor: "rgba(37,99,235,0.12)"
     },
     {
       icon: BarChart,
       title: t('landing_services.s4_title'),
       description: t('landing_services.s4_desc'),
       colSpan: "col-span-1 md:col-span-2",
-      accent: "text-blue-500"
+      accent: "text-blue-500",
+      accentBg: "bg-blue-500/10 border-blue-500/20",
+      glowColor: "rgba(37,99,235,0.12)"
     }
   ];
 
   return (
     <section id="services" className="py-24 max-w-7xl mx-auto px-6">
       <div className="mb-16">
-        <h2 className="text-3xl md:text-5xl font-bold text-foreground tracking-tight mb-4">
-          {t('landing_services.title_1')} <span className="gradient-ai-text">{t('landing_services.title_2')}</span>
-        </h2>
-        <p className="text-linear-text-muted text-lg max-w-2xl">
-          {t('landing_services.desc')}
-        </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-3xl md:text-5xl font-bold text-foreground tracking-tight mb-4">
+            {t('landing_services.title_1')} <span className="gradient-ai-text">{t('landing_services.title_2')}</span>
+          </h2>
+          <p className="text-linear-text-muted text-lg max-w-2xl">
+            {t('landing_services.desc')}
+          </p>
+        </motion.div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[minmax(250px,auto)]">
@@ -60,18 +75,21 @@ export default function ServicesBento() {
             transition={{ duration: 0.4, delay: idx * 0.1 }}
             className={service.colSpan}
           >
-            <SpotlightCard className="h-full p-8 w-full">
+            <SpotlightCard className="h-full p-8 w-full" glowColor={service.glowColor}>
               <div>
-                <div className="w-12 h-12 rounded-xl bg-linear-surface/50 border ultra-thin-border flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-sm">
+                {/* Enhanced icon with glow hover */}
+                <div className={`w-12 h-12 rounded-xl ${service.accentBg} border flex items-center justify-center mb-6 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300 shadow-sm`}>
                   <service.icon className={`w-6 h-6 ${service.accent}`} />
                 </div>
                 <h3 className="text-2xl font-bold text-foreground mb-3">{service.title}</h3>
                 <p className="text-linear-text-muted leading-relaxed relative z-10">{service.description}</p>
               </div>
               
+              {/* Enhanced CTA with arrow icon */}
               <div className="mt-8 relative z-10 w-full flex items-center justify-start">
-                <span className="text-xs font-semibold text-zinc-400 group-hover:text-cyan-500 transition-colors cursor-pointer flex items-center">
-                  {t('landing_services.connect')} <span className="ml-1 group-hover:translate-x-1 transition-transform">&gt;</span>
+                <span className={`text-xs font-bold ${service.accent} group-hover:text-cyan-400 transition-colors cursor-pointer flex items-center gap-1.5 uppercase tracking-wider`}>
+                  {t('landing_services.connect')} 
+                  <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </span>
               </div>
             </SpotlightCard>
@@ -82,7 +100,7 @@ export default function ServicesBento() {
   );
 }
 
-function SpotlightCard({ children, className = "" }: { children: React.ReactNode, className?: string }) {
+function SpotlightCard({ children, className = "", glowColor = "rgba(6,182,212,0.1)" }: { children: React.ReactNode, className?: string, glowColor?: string }) {
   const divRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -123,14 +141,15 @@ function SpotlightCard({ children, className = "" }: { children: React.ReactNode
       onBlur={handleBlur}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`bento-card relative overflow-hidden group ${className}`}
+      className={`bento-card relative overflow-hidden group card-hover-lift ${className}`}
       style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
     >
+      {/* Tighter, more focused spotlight gradient */}
       <div
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 z-0 rounded-2xl"
         style={{
           opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(6,182,212,0.1), transparent 40%)`,
+          background: `radial-gradient(400px circle at ${position.x}px ${position.y}px, ${glowColor}, transparent 40%)`,
         }}
       />
       <div className="relative z-10 w-full h-full flex flex-col justify-between">

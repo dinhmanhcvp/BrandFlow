@@ -182,7 +182,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
             </div>
             <div className="flex gap-2">
               {QUICK_ACTIONS.map((qa, i) => (
-                <Link key={i} href={qa.href} onClick={onClose} className={`flex-1 flex flex-col items-center p-2.5 rounded-xl border ${qa.bg} hover:scale-[1.03] transition-all`}>
+                <Link key={i} href={qa.href} onClick={onClose} className={`flex-1 flex flex-col items-center p-2.5 rounded-xl border ${qa.bg} hover:scale-105 hover:shadow-lg transition-all duration-300`}>
                   <qa.icon className={`w-4 h-4 ${qa.color} mb-1`} />
                   <span className={`text-[9px] font-bold ${qa.color}`}>{qa.label[language]}</span>
                 </Link>
@@ -192,7 +192,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
         )}
 
         {/* ─── Main Navigation ─── */}
-        <nav className="flex-1 px-3 pt-3 overflow-y-auto no-scrollbar min-h-0">
+        <nav className="flex-1 px-3 pt-3 overflow-y-auto min-h-0 scroll-fade-bottom no-scrollbar">
           
           {isAdmin && (
             /* ADMIN ONLY NAVIGATION */
@@ -208,17 +208,22 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
                       <Link href={item.href} onClick={onClose}>
                         <motion.div whileHover={{ x: 3 }} whileTap={{ scale: 0.98 }}
                           className={cn(
-                            "flex items-center py-2 px-3 rounded-lg transition-colors cursor-pointer relative",
+                            "flex items-center py-2 px-3 rounded-lg transition-all duration-300 cursor-pointer relative overflow-hidden group",
                             active 
-                              ? "bg-linear-surface text-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.1)]" 
-                              : "text-linear-text-muted hover:text-foreground hover:bg-linear-surface/70"
+                              ? "bg-linear-surface text-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.15)] border border-amber-500/20" 
+                              : "text-linear-text-muted hover:text-foreground hover:bg-linear-surface border border-transparent"
                           )}
                         >
-                          <item.icon className={cn("w-4 h-4 mr-3 shrink-0", active ? "text-amber-500" : "text-linear-text-muted")} />
-                          <div className="flex-1 min-w-0">
+                          <item.icon className={cn("w-4 h-4 mr-3 shrink-0 transition-transform group-hover:scale-110", active ? "text-amber-500" : "text-linear-text-muted")} />
+                          <div className="flex-1 min-w-0 z-10">
                             <div className="text-sm font-medium truncate">{item.desc[language]}</div>
                           </div>
-                          {active && <div className="absolute left-0 w-[3px] h-5 bg-gradient-to-b from-amber-400 to-orange-500 rounded-r-full" />}
+                          {active && (
+                            <>
+                              <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-400 to-orange-500 rounded-r-full" />
+                              <div className="absolute inset-0 bg-amber-500/5 z-0" />
+                            </>
+                          )}
                         </motion.div>
                       </Link>
                     </li>
@@ -243,18 +248,23 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
                         <Link href={item.href} onClick={onClose}>
                           <motion.div whileHover={{ x: 3 }} whileTap={{ scale: 0.98 }}
                             className={cn(
-                              "flex items-center py-2 px-3 rounded-lg transition-colors cursor-pointer relative",
+                              "flex items-center py-2 px-3 rounded-lg transition-all duration-300 cursor-pointer relative overflow-hidden group",
                               active 
-                                ? "bg-linear-surface text-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.1)]" 
-                                : "text-linear-text-muted hover:text-foreground hover:bg-linear-surface/70"
+                                ? "bg-linear-surface text-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.15)] border border-cyan-500/20" 
+                                : "text-linear-text-muted hover:text-foreground hover:bg-linear-surface border border-transparent"
                             )}
                           >
-                            <item.icon className={cn("w-4 h-4 mr-3 shrink-0", active ? "text-cyan-400" : "text-linear-text-muted")} />
-                            <div className="flex-1 min-w-0">
+                            <item.icon className={cn("w-4 h-4 mr-3 shrink-0 transition-transform group-hover:scale-110", active ? "text-cyan-400" : "text-linear-text-muted")} />
+                            <div className="flex-1 min-w-0 z-10">
                               <div className="text-sm font-medium truncate">{t(item.langKey as TranslationKey)}</div>
-                              <div className="text-[9px] text-linear-text-muted/60 truncate">{item.desc[language]}</div>
+                              <div className="text-[9px] text-linear-text-muted/60 truncate group-hover:text-linear-text-muted transition-colors">{item.desc[language]}</div>
                             </div>
-                            {active && <div className="absolute left-0 w-[3px] h-5 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-r-full" />}
+                            {active && (
+                              <>
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-r-full" />
+                                <div className="absolute inset-0 bg-cyan-500/5 z-0" />
+                              </>
+                            )}
                           </motion.div>
                         </Link>
                       </li>
@@ -276,15 +286,23 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
                         <Link href={item.href} onClick={item.id === 'b2b' ? undefined : onClose}>
                           <motion.div whileHover={{ x: 3 }} whileTap={{ scale: 0.98 }}
                             className={cn(
-                              "flex items-center py-2 px-3 rounded-lg transition-colors cursor-pointer",
-                              active ? "bg-linear-surface text-cyan-400" : "text-linear-text-muted hover:text-foreground hover:bg-linear-surface/70"
+                              "flex items-center py-2 px-3 rounded-lg transition-all duration-300 cursor-pointer relative overflow-hidden group",
+                              active 
+                                ? "bg-linear-surface text-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.15)] border border-cyan-500/20" 
+                                : "text-linear-text-muted hover:text-foreground hover:bg-linear-surface border border-transparent"
                             )}
                           >
-                            <item.icon className={cn("w-4 h-4 mr-3 shrink-0", active ? "text-cyan-400" : "text-linear-text-muted")} />
-                            <div className="flex-1 min-w-0">
+                            <item.icon className={cn("w-4 h-4 mr-3 shrink-0 transition-transform group-hover:scale-110", active ? "text-cyan-400" : "text-linear-text-muted")} />
+                            <div className="flex-1 min-w-0 z-10">
                               <div className="text-sm font-medium truncate">{t(item.langKey as TranslationKey)}</div>
-                              <div className="text-[9px] text-linear-text-muted/60 truncate">{item.desc[language]}</div>
+                              <div className="text-[9px] text-linear-text-muted/60 truncate group-hover:text-linear-text-muted transition-colors">{item.desc[language]}</div>
                             </div>
+                            {active && (
+                              <>
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-r-full" />
+                                <div className="absolute inset-0 bg-cyan-500/5 z-0" />
+                              </>
+                            )}
                           </motion.div>
                         </Link>
 
@@ -296,10 +314,10 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
                                 {section.items.map(sub => (
                                   <Link key={sub.id} href={sub.href} onClick={onClose}>
                                     <div className={cn(
-                                      "text-[11px] py-1.5 px-2.5 rounded-md transition-colors truncate mb-0.5",
+                                      "text-[11px] py-1.5 px-2.5 rounded-md transition-all duration-200 truncate mb-0.5 border border-transparent",
                                       pathname === sub.href 
-                                        ? "bg-cyan-500/10 text-cyan-400 font-semibold" 
-                                        : "text-linear-text-muted hover:text-foreground hover:bg-linear-surface/70"
+                                        ? "bg-cyan-500/10 text-cyan-400 font-semibold border-cyan-500/20 shadow-[0_0_8px_rgba(6,182,212,0.1)]" 
+                                        : "text-linear-text-muted hover:text-foreground hover:bg-linear-surface"
                                     )}>
                                       {sub.label[language] as string}
                                     </div>
@@ -332,9 +350,9 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
                         <li key={item.id}>
                           <Link href={item.href} onClick={onClose}>
                             <motion.div whileHover={{ x: 3 }} whileTap={{ scale: 0.98 }}
-                              className="flex items-center py-2 px-3 rounded-lg transition-colors cursor-pointer text-linear-text-muted hover:text-foreground hover:bg-linear-surface/70"
+                              className="flex items-center py-2 px-3 rounded-lg transition-all duration-300 cursor-pointer text-linear-text-muted hover:text-foreground hover:bg-linear-surface group"
                             >
-                              <item.icon className="w-4 h-4 mr-3 shrink-0 text-linear-text-muted" />
+                              <item.icon className="w-4 h-4 mr-3 shrink-0 text-linear-text-muted group-hover:scale-110 transition-transform" />
                               <span className="text-sm font-medium truncate">{t(item.langKey as TranslationKey)}</span>
                             </motion.div>
                           </Link>

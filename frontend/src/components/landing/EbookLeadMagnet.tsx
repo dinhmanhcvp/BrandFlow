@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Download, BookOpen, Star, CheckCircle2 } from 'lucide-react';
+import { Download, BookOpen, Star } from 'lucide-react';
 
 const EBOOKS = [
   {
@@ -40,24 +40,24 @@ export default function EbookLeadMagnet() {
         
         {/* Header Section */}
         <div className="text-center mb-16 space-y-6">
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold uppercase tracking-widest shadow-sm">
-            <Star className="w-3.5 h-3.5 mr-2 fill-cyan-400" />
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 text-xs font-bold uppercase tracking-widest shadow-sm">
+            <Star className="w-3.5 h-3.5 mr-2 fill-cyan-500" />
             Tài Nguyên Độc Quyền Dành Cho Lãnh Đạo
           </div>
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-foreground tracking-tight leading-tight">
             Bộ 3 Cẩm Nang Thực Chiến <br className="hidden md:block"/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600 dark:from-cyan-400 dark:to-blue-500">
               Dành Cho CEO & CMO Enterprise
             </span>
           </h2>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+          <p className="text-linear-text-muted text-lg max-w-2xl mx-auto">
             Hệ thống kiến thức độc quyền giúp bạn tối ưu chi phí, tự động hóa quy trình và xây dựng đế chế kinh doanh trong kỷ nguyên AI. Tải miễn phí toàn bộ!
           </p>
         </div>
 
         {/* 3 Ebooks Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-8 items-end mt-12">
-          {EBOOKS.map((ebook, idx) => (
+          {EBOOKS.map((ebook) => (
             <div key={ebook.id} className="flex flex-col items-center group">
               
               {/* 3D Ebook Mockup */}
@@ -73,42 +73,46 @@ export default function EbookLeadMagnet() {
                 >
                   {/* Ebook Cover - Clean Image Only */}
                   <div 
-                    className="absolute inset-0 bg-[#1a2744] rounded-r-2xl rounded-l-md shadow-[15px_15px_40px_rgba(0,0,0,0.5),inset_2px_0_10px_rgba(255,255,255,0.1)] overflow-hidden bg-contain bg-no-repeat bg-center transition-all duration-300"
+                    className="absolute inset-0 bg-slate-900 dark:bg-[#1a2744] rounded-r-2xl rounded-l-md shadow-[15px_15px_40px_rgba(0,0,0,0.15)] dark:shadow-[15px_15px_40px_rgba(0,0,0,0.5),inset_2px_0_10px_rgba(255,255,255,0.1)] overflow-hidden bg-contain bg-no-repeat bg-center transition-all duration-300"
                     style={{ backgroundImage: `url('${ebook.cover}')` }}
                   >
                     {/* Spine */}
                     <div className="absolute top-0 bottom-0 left-0 w-1.5 bg-gradient-to-r from-slate-950/80 to-slate-800/20 shadow-[inset_-1px_0_2px_rgba(0,0,0,0.5)] z-10" />
                   </div>
                   
-                  {/* Ebook Pages (Side view thickness) */}
-                  <div className="absolute top-2 bottom-2 right-[-8px] w-[8px] bg-slate-200 rounded-r-sm transform-gpu origin-left translate-z-[-8px] rotate-y-90 shadow-[inset_0_0_10px_rgba(0,0,0,0.2)] flex flex-col justify-evenly z-0">
-                     <div className="w-full h-px bg-slate-300"></div>
-                     <div className="w-full h-px bg-slate-300"></div>
-                     <div className="w-full h-px bg-slate-300"></div>
-                     <div className="w-full h-px bg-slate-300"></div>
+                  {/* Ebook Pages (Side view thickness - softer) */}
+                  <div className="absolute top-2 bottom-2 right-[-8px] w-[8px] bg-white dark:bg-slate-200 rounded-r-sm transform-gpu origin-left translate-z-[-8px] rotate-y-90 shadow-[inset_0_0_10px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_10px_rgba(0,0,0,0.2)] flex flex-col justify-evenly z-0">
+                     <div className="w-full h-px bg-slate-200 dark:bg-slate-300"></div>
+                     <div className="w-full h-px bg-slate-200 dark:bg-slate-300"></div>
+                     <div className="w-full h-px bg-slate-200 dark:bg-slate-300"></div>
+                     <div className="w-full h-px bg-slate-200 dark:bg-slate-300"></div>
                   </div>
                 </motion.div>
               </div>
 
               {/* Info & Buttons */}
               <div className="text-center flex flex-col items-center w-full px-4">
-                <h3 className="text-xl font-bold text-white mb-2 leading-tight h-14 flex items-center justify-center">{ebook.title}</h3>
-                <p className="text-sm text-slate-400 mb-6 h-10">{ebook.desc}</p>
+                <h3 className="text-xl font-bold text-foreground mb-2 leading-tight h-14 flex items-center justify-center">{ebook.title}</h3>
+                <p className="text-sm text-linear-text-muted mb-6 h-10">{ebook.desc}</p>
                 
                 <div className="flex flex-col w-full gap-3">
                   <a 
                     href={ebook.pdf} 
                     download 
-                    className={`w-full py-3 px-4 font-bold rounded-xl shadow-lg transition-all flex items-center justify-center ${ebook.featured ? 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white shadow-cyan-500/25 hover:-translate-y-1' : 'bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 hover:border-slate-600 hover:-translate-y-1'}`}
+                    className={`w-full py-3 px-4 font-bold rounded-xl shadow-lg transition-all flex items-center justify-center relative overflow-hidden btn-shine ${
+                      ebook.featured 
+                        ? 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white shadow-cyan-500/25 hover:-translate-y-1' 
+                        : 'bg-linear-surface hover:bg-linear-surface/80 text-foreground border ultra-thin-border hover:-translate-y-1 hover:border-cyan-500/30'
+                    }`}
                   >
-                    <Download className="w-4 h-4 mr-2" />
-                    Tải Miễn Phí
+                    <Download className="w-4 h-4 mr-2 relative z-10" />
+                    <span className="relative z-10">Tải Miễn Phí</span>
                   </a>
                   <a 
                     href={ebook.pdf} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="w-full py-3 px-4 bg-transparent hover:bg-slate-900 text-slate-300 hover:text-white font-medium rounded-xl transition-colors flex items-center justify-center text-sm"
+                    className="w-full py-3 px-4 bg-transparent hover:bg-linear-surface/50 text-linear-text-muted hover:text-foreground font-medium rounded-xl transition-colors flex items-center justify-center text-sm focus-ring"
                   >
                     <BookOpen className="w-4 h-4 mr-2" />
                     Xem trước

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap } from 'lucide-react';
+import { ArrowRight, Zap, Shield, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import LiveCommandCenter from './LiveCommandCenter';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -41,13 +41,14 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg md:text-xl text-linear-text-muted mb-10 max-w-xl leading-relaxed space-y-4 text-pretty"
+            className="text-lg md:text-xl text-linear-text-muted mb-8 max-w-xl leading-relaxed space-y-4 text-pretty"
           >
             <p>
               {t('landing_hero.desc')}
             </p>
           </motion.div>
 
+          {/* CTA Buttons — unified rounded-full */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -55,13 +56,34 @@ export default function HeroSection() {
             className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
           >
             <Link href="/login" className="w-full sm:w-auto">
-              <button className="flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold shadow-lg shadow-blue-500/30 hover:shadow-cyan-500/50 hover:-translate-y-0.5 transition-all duration-200 w-full group">
+              <button className="flex items-center justify-center px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold shadow-lg shadow-blue-500/30 hover:shadow-cyan-500/50 hover:-translate-y-0.5 transition-all duration-200 w-full group btn-shine">
                 {t('landing_hero.btn_start')} <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
-            <button className="flex items-center justify-center px-8 py-4 rounded-xl border border-linear-border bg-linear-surface hover:bg-linear-surface/80 text-foreground font-semibold backdrop-blur-sm transition-all duration-200 w-full sm:w-auto group shadow-sm z-20 relative hover:text-cyan-500">
+            <button className="flex items-center justify-center px-8 py-4 rounded-full border border-linear-border bg-linear-surface hover:bg-linear-surface/80 text-foreground font-semibold backdrop-blur-sm transition-all duration-200 w-full sm:w-auto group shadow-sm z-20 relative hover:text-cyan-500 hover:border-cyan-500/30">
               <Zap className="w-5 h-5 mr-2 text-cyan-500" /> {t('landing_hero.btn_demo')}
             </button>
+          </motion.div>
+
+          {/* Trust Signals — Floating badges */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="flex flex-wrap items-center gap-4 mt-8"
+          >
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/5 border border-emerald-500/15 backdrop-blur-sm">
+              <Shield className="w-3.5 h-3.5 text-emerald-500" />
+              <span className="text-[11px] font-bold text-emerald-500 uppercase tracking-wider">SOC 2 Compliant</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/5 border border-cyan-500/15 backdrop-blur-sm">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-500" />
+              <span className="text-[11px] font-bold text-cyan-500 uppercase tracking-wider">12+ AI Agents</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-500/5 border border-indigo-500/15 backdrop-blur-sm">
+              <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+              <span className="text-[11px] font-bold text-indigo-500 uppercase tracking-wider">Zero Data Retention</span>
+            </div>
           </motion.div>
         </div>
 
