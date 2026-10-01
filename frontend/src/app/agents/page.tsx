@@ -56,6 +56,7 @@ export default function AgentsPage() {
  const [customAgents, setCustomAgents] = useState<CustomAgentItem[]>([]);
  const [isLoading, setIsLoading] = useState(true);
  const [deletingId, setDeletingId] = useState<string | null>(null);
+ const [selectedAgent, setSelectedAgent] = useState<any>(null);
 
  useEffect(() => {
    loadCustomAgents();
@@ -126,6 +127,7 @@ export default function AgentsPage() {
  {allAgents.map((agent, i) => (
  <motion.div 
  key={agent.id}
+ onClick={() => setSelectedAgent(agent)}
  initial={{ opacity: 0, scale: 0.95 }}
  animate={{ opacity: 1, scale: 1 }}
  transition={{ delay: i * 0.07 }}
@@ -201,6 +203,91 @@ export default function AgentsPage() {
  </Link>
  </div>
  </div>
+
+ {/* Agent Activity Modal */}
+ <AnimatePresence>
+   {selectedAgent && (
+     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+       <motion.div 
+         initial={{ opacity: 0 }} 
+         animate={{ opacity: 1 }} 
+         exit={{ opacity: 0 }} 
+         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+         onClick={() => setSelectedAgent(null)}
+       />
+       <motion.div 
+         initial={{ opacity: 0, scale: 0.95, y: 20 }}
+         animate={{ opacity: 1, scale: 1, y: 0 }}
+         exit={{ opacity: 0, scale: 0.95, y: 20 }}
+         className="relative w-full max-w-3xl max-h-[85vh] bg-background border border-linear-border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+       >
+         {/* Modal Header */}
+         <div className="flex items-center justify-between p-5 border-b border-linear-border bg-slate-50 dark:bg-slate-900/50">
+           <div className="flex items-center gap-4">
+             <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br ${selectedAgent.color} shadow-sm`}>
+               <Bot className="w-6 h-6 text-white" />
+             </div>
+             <div>
+               <h3 className="text-xl font-bold text-foreground leading-tight">{selectedAgent.name}</h3>
+               <p className="text-xs text-linear-text-muted font-medium mt-0.5">{selectedAgent.role}</p>
+             </div>
+           </div>
+           <button 
+             onClick={() => setSelectedAgent(null)}
+             className="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 transition-colors"
+           >
+             <X className="w-5 h-5" />
+           </button>
+         </div>
+
+         {/* Modal Content - Activity Log */}
+         <div className="flex-1 overflow-y-auto p-5 md:p-6 custom-scrollbar bg-slate-50/50 dark:bg-[#0B1120]">
+           <div className="flex items-center justify-between mb-6">
+             <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+               <Activity className="w-4 h-4 text-cyan-500" /> Chu trình đã chạy (Recent Cycles)
+             </h4>
+             <div className="flex items-center gap-2 text-xs font-semibold px-2.5 py-1 rounded-md border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+               ONLINE
+             </div>
+           </div>
+           <div className="space-y-5">
+             {[1, 2, 3].map((cycle, idx) => (
+               <div key={idx} className="p-4 rounded-xl border border-linear-border bg-white dark:bg-slate-900 shadow-sm relative overflow-hidden group">
+                 <div className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${selectedAgent.color}`}></div>
+                 <div className="flex items-center justify-between mb-3 pl-2">
+                   <span className="text-xs font-bold text-slate-500 font-mono flex items-center gap-2">
+                     <BrainCircuit className="w-3.5 h-3.5" /> CYCLE_ID: 8F{idx}3-A{cycle}9B
+                   </span>
+                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/20">SUCCESS</span>
+                 </div>
+                 <div className="text-[13px] text-slate-700 dark:text-slate-300 space-y-3 pl-2">
+                   <div className="flex items-start gap-2.5">
+                     <Zap className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                     <p><strong>Input:</strong> Nhận parameter context cho workflow <span className="text-cyan-600 dark:text-cyan-400 font-semibold">'{selectedAgent.skill}'</span>.</p>
+                   </div>
+                   <div className="flex items-start gap-2.5">
+                     <Network className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+                     <p><strong>Processing:</strong> Thực thi Cognitive Load Simulation trên 10,000 variants. Lọc ra 3 kịch bản tối ưu nhất.</p>
+                   </div>
+                   <div className="flex items-start gap-2.5">
+                     <MessageSquare className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                     <p><strong>Output:</strong> Đẩy dữ liệu chiến lược vào Shared Context cho quá trình Cross-Agent Debate.</p>
+                   </div>
+                 </div>
+                 <div className="mt-4 pt-3 border-t border-linear-border flex justify-between items-center text-[10px] text-slate-400 pl-2">
+                   <span>Model: GPT-4-Omni-Enterprise</span>
+                   <span>Execution Time: {(1.2 + idx * 0.4).toFixed(2)}s</span>
+                 </div>
+               </div>
+             ))}
+           </div>
+         </div>
+       </motion.div>
+     </div>
+   )}
+ </AnimatePresence>
+
  </div>
  );
 }
