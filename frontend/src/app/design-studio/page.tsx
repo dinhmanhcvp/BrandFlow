@@ -144,9 +144,9 @@ export default function DesignStudioPage() {
       if (isBepNhaMoc) {
         await new Promise(r => setTimeout(r, 2500));
         const bnmAssets = {
-          logo_url: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&h=500&fit=crop",
-          banner_url: "https://images.unsplash.com/photo-1522336572468-97b06e8ef143?w=1200&h=400&fit=crop",
-          avatar_url: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200&h=200&fit=crop",
+          logo_url: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=500&q=80",
+          banner_url: "https://images.unsplash.com/photo-1498837167922-41c54b310a08?auto=format&fit=crop&w=1200&q=80",
+          avatar_url: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=80",
           color_palette: [
             { hex: "#064E3B", name: "Deep Forest (Chính)" },
             { hex: "#B45309", name: "Amber Wood (Nhấn)" },
@@ -858,20 +858,73 @@ export default function DesignStudioPage() {
 
            {/* TAB: VISUALS */}
            {!loading && result && activeTab === 'visuals' && (
-              <div className="flex flex-col gap-5">
-                  {/* Logo */}
-                  <div className="bento-card p-0 overflow-hidden border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
-                     <div className="p-3.5 border-b border-linear-border flex justify-between items-center bg-linear-surface/50">
-                        <div className="flex items-center font-bold text-xs text-foreground">
-                          <Briefcase className="w-3.5 h-3.5 text-cyan-500 mr-2" /> Master Brand Logo
+              <div className="flex flex-col gap-8">
+                  {/* Executive Identity Summary */}
+                  <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+                     <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/20 rounded-full blur-[100px] pointer-events-none"></div>
+                     <div className="absolute bottom-0 left-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+                     
+                     <div className="relative z-10">
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold uppercase tracking-widest text-cyan-300 mb-6">
+                           <Sparkles className="w-3.5 h-3.5" /> Brand Identity Protocol
                         </div>
-                        <span className="text-[9px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded flex items-center">
-                          <CheckCircle2 className="w-3 h-3 mr-1" /> AI Generated
-                        </span>
+                        <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight">{masterDNA?.brand_name}</h2>
+                        <p className="text-lg md:text-xl text-slate-300 font-light max-w-3xl leading-relaxed mb-10">
+                           Thiết kế nhận diện được xây dựng trên triết lý <strong className="text-white font-medium">Mindful Dining</strong>. Chúng tôi kết hợp các sắc độ của thiên nhiên (Earth Tones) để mang lại cảm giác bình yên, xoa dịu áp lực (Burn-out) cho giới văn phòng.
+                        </p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+                              <h3 className="text-cyan-400 font-bold mb-2 flex items-center gap-2"><Type className="w-4 h-4" /> Naming & Tone</h3>
+                              <p className="text-sm text-slate-300 leading-relaxed">Tên Fanpage chính thức: <strong className="text-white">Bếp Nhà Mộc - Corporate Catering</strong>. Giọng điệu (Tone of Voice): Điềm tĩnh, thấu cảm, chuyên nghiệp.</p>
+                           </div>
+                           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+                              <h3 className="text-emerald-400 font-bold mb-2 flex items-center gap-2"><ImageIcon className="w-4 h-4" /> Cover Art Concept</h3>
+                              <p className="text-sm text-slate-300 leading-relaxed">Hình ảnh mâm cơm gia đình với ánh sáng hoàng hôn ấm áp. Tạo cảm giác "Về Nhà" ngay tại bàn làm việc văn phòng.</p>
+                           </div>
+                           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+                              <h3 className="text-amber-400 font-bold mb-2 flex items-center gap-2"><Briefcase className="w-4 h-4" /> Visual Anchor</h3>
+                              <p className="text-sm text-slate-300 leading-relaxed">Logo sử dụng nét chữ thư pháp hiện đại (Modern Calligraphy) kết hợp với icon Lá mầm xanh biểu thị sự sống và tái tạo năng lượng.</p>
+                           </div>
+                        </div>
                      </div>
-                     <div className="aspect-[4/3] bg-gradient-to-br from-slate-900 to-slate-950 flex flex-col items-center justify-center p-8 relative">
-                        <img src={result.logo_url} alt="Logo" className="w-[60%] h-[60%] object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.05)] hover:scale-105 transition-transform duration-500" />
-                     </div>
+                  </div>
+
+                  {/* Logo Display */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="bento-card p-0 overflow-hidden border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)] h-full">
+                       <div className="p-4 border-b border-linear-border flex justify-between items-center bg-linear-surface/50">
+                          <div className="flex items-center font-bold text-sm text-foreground">
+                            <Briefcase className="w-4 h-4 text-cyan-500 mr-2" /> Master Brand Logo
+                          </div>
+                          <span className="text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-md flex items-center">
+                            <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Vector Approved
+                          </span>
+                       </div>
+                       <div className="aspect-[4/3] bg-slate-900 flex flex-col items-center justify-center p-8 relative">
+                          <img src={result.logo_url} alt="Logo" className="w-[70%] h-[70%] object-cover rounded-3xl drop-shadow-[0_20px_30px_rgba(0,0,0,0.5)] hover:scale-105 transition-transform duration-700" />
+                       </div>
+                    </div>
+                    
+                    {/* Color Specs (Next to Logo) */}
+                    <div className="bento-card p-6 flex flex-col justify-center border-slate-200/50 shadow-sm">
+                       <h3 className="font-bold text-foreground text-lg mb-6">Color System</h3>
+                       <div className="space-y-4">
+                          {[
+                            { hex: "#064E3B", name: "Deep Forest", usage: "Primary Brand Color" },
+                            { hex: "#B45309", name: "Amber Wood", usage: "CTA & Accents" },
+                            { hex: "#FEF3C7", name: "Warm Cream", usage: "Backgrounds" }
+                          ].map(c => (
+                            <div key={c.hex} className="flex items-center gap-4">
+                               <div className="w-12 h-12 rounded-xl shadow-inner border border-black/5" style={{backgroundColor: c.hex}}></div>
+                               <div>
+                                  <div className="font-bold text-sm text-foreground">{c.name}</div>
+                                  <div className="text-xs text-linear-text-muted font-mono">{c.hex} • {c.usage}</div>
+                               </div>
+                            </div>
+                          ))}
+                       </div>
+                    </div>
                   </div>
 
                   {/* High-Fidelity Fanpage Mockup */}
@@ -898,7 +951,7 @@ export default function DesignStudioPage() {
                               </div>
                               <div className="mt-4 md:mt-0 md:ml-6 mb-2 text-center md:text-left flex-1">
                                  <div className="flex items-center justify-center md:justify-start gap-2 mb-1">
-                                    <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">{masterDNA?.brand_name}</h2>
+                                    <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">{masterDNA?.brand_name} - Corporate Catering</h2>
                                     <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center shadow-md">
                                        <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                                     </div>
@@ -967,8 +1020,8 @@ export default function DesignStudioPage() {
                                  Thay vì những món chiên xào nặng bụng, {masterDNA?.brand_name} mang đến cho khối Corporate một giải pháp Mindful Dining với cơm ST25 dẻo thơm, rau củ thanh mát và hộp bã mía tự hủy hoàn toàn.<br/><br/>
                                  Gửi gắm sự an yên vào từng bữa ăn trưa. Inbox ngay để nhận Set cơm trải nghiệm (Sampling) cho Doanh nghiệp của bạn!
                               </div>
-                              <div className="w-full aspect-[4/3] overflow-hidden relative group mt-3">
-                                 <img src={result?.banner_url} className="w-full h-full object-cover" />
+                              <div className="w-full aspect-[4/3] overflow-hidden relative group mt-3 rounded-lg border border-slate-200 dark:border-slate-700">
+                                 <img src="https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=1200&q=80" className="w-full h-full object-cover" />
                               </div>
                               <div className="px-4 py-2 mt-2">
                                  <div className="flex justify-between items-center text-[15px] text-slate-500 dark:text-[#B0B3B8] border-b border-slate-200 dark:border-slate-700 pb-3">
