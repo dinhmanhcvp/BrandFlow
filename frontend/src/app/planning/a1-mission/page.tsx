@@ -20,7 +20,7 @@ export default function PageA1Mission() {
   const { forms, saveStatus, updateForm, initializeProject } = useFormStore();
   
   // State cục bộ (tránh lag khi gõ)
-  const [localData, setLocalData] = useState({
+  const [localData, setLocalData] = useState<any>({
     role: "Tiên phong tạo ra không gian 'Mindful Dining' (Ẩm thực chánh niệm) tại TP.HCM.",
     business_def: "Mang đến trải nghiệm xoa dịu tâm hồn qua mâm cơm truyền thống và không gian tĩnh lặng, giải quyết vấn đề Burnout của người trẻ.",
     purpose: "Thơm Khói Bếp - Ấm Tình Nhà: Chữa lành người thị dân bằng hương vị nguyên bản.",
