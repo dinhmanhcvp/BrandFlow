@@ -86,7 +86,7 @@ export default function MascotChatbot({ formName, purpose, sections }: MascotCha
 
   useEffect(() => {
     if (aiResponse && bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+      bottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [aiResponse]);
 
