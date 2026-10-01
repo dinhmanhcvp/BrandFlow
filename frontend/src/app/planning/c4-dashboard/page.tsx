@@ -8,30 +8,30 @@ import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip 
 import { AlertTriangle, TrendingDown, RefreshCw, Zap, TrendingUp, CheckCircle2, Factory } from 'lucide-react';
 
 const NORMAL_DATA = [
-  { month: 'T1', 'Thực đơn Chữa lành': 120, 'Giao hàng O2O (Zalo Mini App)': 85, profit: 45 },
-  { month: 'T2', 'Thực đơn Chữa lành': 135, 'Giao hàng O2O (Zalo Mini App)': 90, profit: 52 },
-  { month: 'T3', 'Thực đơn Chữa lành': 160, 'Giao hàng O2O (Zalo Mini App)': 95, profit: 60 },
-  { month: 'T4', 'Thực đơn Chữa lành': 180, 'Giao hàng O2O (Zalo Mini App)': 110, profit: 75 },
-  { month: 'T5', 'Thực đơn Chữa lành': 210, 'Giao hàng O2O (Zalo Mini App)': 120, profit: 90 },
-  { month: 'T6', 'Thực đơn Chữa lành': 250, 'Giao hàng O2O (Zalo Mini App)': 140, profit: 110 },
+  { month: 'T1', 'Kênh Food App': 500, 'Kênh Zalo & B2B': 150, profit: 45 },
+  { month: 'T2', 'Kênh Food App': 520, 'Kênh Zalo & B2B': 200, profit: 52 },
+  { month: 'T3', 'Kênh Food App': 550, 'Kênh Zalo & B2B': 280, profit: 65 },
+  { month: 'T4', 'Kênh Food App': 540, 'Kênh Zalo & B2B': 350, profit: 78 },
+  { month: 'T5', 'Kênh Food App': 500, 'Kênh Zalo & B2B': 450, profit: 95 },
+  { month: 'T6', 'Kênh Food App': 450, 'Kênh Zalo & B2B': 580, profit: 120 },
 ];
 
 const SHOCK_DATA = [
-  { month: 'T1', 'Thực đơn Chữa lành': 120, 'Giao hàng O2O (Zalo Mini App)': 85, profit: 45 },
-  { month: 'T2', 'Thực đơn Chữa lành': 135, 'Giao hàng O2O (Zalo Mini App)': 90, profit: 52 },
-  { month: 'T3', 'Thực đơn Chữa lành': 160, 'Giao hàng O2O (Zalo Mini App)': 95, profit: 60 },
-  { month: 'T4', 'Thực đơn Chữa lành': 90, 'Giao hàng O2O (Zalo Mini App)': 60, profit: 15 }, // bão giá nguyên liệu hữu cơ
-  { month: 'T5', 'Thực đơn Chữa lành': 60, 'Giao hàng O2O (Zalo Mini App)': 45, profit: -10 }, // Đáy
-  { month: 'T6', 'Thực đơn Chữa lành': 45, 'Giao hàng O2O (Zalo Mini App)': 30, profit: -25 }, 
+  { month: 'T1', 'Kênh Food App': 500, 'Kênh Zalo & B2B': 150, profit: 45 },
+  { month: 'T2', 'Kênh Food App': 520, 'Kênh Zalo & B2B': 200, profit: 52 },
+  { month: 'T3', 'Kênh Food App': 550, 'Kênh Zalo & B2B': 280, profit: 65 },
+  { month: 'T4', 'Kênh Food App': 600, 'Kênh Zalo & B2B': 290, profit: -15 }, // Thuật toán App đổi, phí tăng lên 35%
+  { month: 'T5', 'Kênh Food App': 700, 'Kênh Zalo & B2B': 300, profit: -45 }, // Đáy (Bán càng nhiều càng lỗ)
+  { month: 'T6', 'Kênh Food App': 800, 'Kênh Zalo & B2B': 310, profit: -80 }, 
 ];
 
 const RECOVERY_DATA = [
-  { month: 'T1', 'Thực đơn Chữa lành': 120, 'Giao hàng O2O (Zalo Mini App)': 85, profit: 45 },
-  { month: 'T2', 'Thực đơn Chữa lành': 135, 'Giao hàng O2O (Zalo Mini App)': 90, profit: 52 },
-  { month: 'T3', 'Thực đơn Chữa lành': 160, 'Giao hàng O2O (Zalo Mini App)': 95, profit: 60 },
-  { month: 'T4', 'Thực đơn Chữa lành': 90, 'Giao hàng O2O (Zalo Mini App)': 60, profit: 15 }, // Shock
-  { month: 'T5', 'Thực đơn Chữa lành': 140, 'Giao hàng O2O (Zalo Mini App)': 110, profit: 35 }, // Recovery Start
-  { month: 'T6', 'Thực đơn Chữa lành': 280, 'Giao hàng O2O (Zalo Mini App)': 190, profit: 130 }, // Corporate Lunch Pivot Success
+  { month: 'T1', 'Kênh Food App': 500, 'Kênh Zalo & B2B': 150, profit: 45 },
+  { month: 'T2', 'Kênh Food App': 520, 'Kênh Zalo & B2B': 200, profit: 52 },
+  { month: 'T3', 'Kênh Food App': 550, 'Kênh Zalo & B2B': 280, profit: 65 },
+  { month: 'T4', 'Kênh Food App': 600, 'Kênh Zalo & B2B': 290, profit: -15 }, // Shock
+  { month: 'T5', 'Kênh Food App': 300, 'Kênh Zalo & B2B': 600, profit: 55 }, // AI Pivot Start (Tắt Ads App)
+  { month: 'T6', 'Kênh Food App': 150, 'Kênh Zalo & B2B': 950, profit: 185 }, // B2B Success, High Margin
 ];
 
 export default function PageC4Dashboard() {
@@ -90,18 +90,18 @@ export default function PageC4Dashboard() {
                     <TrendingDown className="w-6 h-6 text-red-500" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-black text-red-400 mb-2">CẢNH BÁO: Hiệu quả kế hoạch lao dốc (Tháng 4)</h3>
+                    <h3 className="text-xl font-black text-red-400 mb-2">CẢNH BÁO: Bán càng nhiều càng lỗ (Biên lợi nhuận âm)</h3>
                     <p className="text-sm text-slate-300 mb-4 leading-relaxed">
-                      <strong>Phân tích nguyên nhân (Ngoại cảnh):</strong> Giá nguyên liệu Sữa chua nguyên chất nhập khẩu tăng 35% do bão giá nguyên liệu hữu cơ (Organic) tăng 40%. Đồng thời, đối thủ A vừa tung chương trình khuyến mãi mua 1 tặng 1 ở mọi hệ thống siêu thị.
+                      <strong>Phân tích nguyên nhân (Ngoại cảnh):</strong> Nền tảng Giao thức ăn (App) vừa thay đổi thuật toán, ép buộc nhà hàng phải mua gói hiển thị "Freeship Xtra Plus", đẩy tổng chi phí chiết khấu lên mức 35%. Điều này khiến Kênh App rơi vào trạng thái "Bleeding" (Chảy máu dòng tiền) dù doanh số tăng.
                     </p>
                     <div className="flex gap-4">
                       <div className="flex-1 bg-black/40 p-3 rounded-xl border border-red-500/20">
-                        <div className="text-xs text-red-400 font-bold">Doanh số Thực đơn Chữa lành</div>
-                        <div className="text-2xl font-black text-white">📉 -50%</div>
+                        <div className="text-xs text-red-400 font-bold">Doanh số Kênh App</div>
+                        <div className="text-2xl font-black text-white">📈 +30%</div>
                       </div>
                       <div className="flex-1 bg-black/40 p-3 rounded-xl border border-red-500/20">
-                        <div className="text-xs text-red-400 font-bold">Biên lợi nhuận gộp</div>
-                        <div className="text-2xl font-black text-white">🚨 -75%</div>
+                        <div className="text-xs text-red-400 font-bold">Biên lợi nhuận ròng</div>
+                        <div className="text-2xl font-black text-white">🚨 -120%</div>
                       </div>
                     </div>
                   </div>
@@ -109,10 +109,10 @@ export default function PageC4Dashboard() {
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-400" />
                     <div className="flex items-center gap-2 mb-2">
                       <Zap className="w-4 h-4 text-blue-400" />
-                      <div className="text-xs font-bold text-blue-400 uppercase">AI CMO Đề Xuất</div>
+                      <div className="text-xs font-bold text-blue-400 uppercase">AI CMO Đề Xuất Pivot</div>
                     </div>
                     <p className="text-[11px] text-slate-300 mb-4">
-                      Kế hoạch B2C hiện tại không còn khả thi về lợi nhuận. Đề xuất: Dịch chuyển ngay lập tức ngân sách sang kênh <strong>B2B Phục vụ Doanh nghiệp (Corporate Lunch)</strong> và tung sản phẩm "Hộp quà mix Bếp Nhà Mộc" biên độ LN cao.
+                      Kênh App hiện tại không còn khả năng sinh lời. Đề xuất: Tắt ngay lập tức 100% quảng cáo nội sàn. Dịch chuyển toàn bộ ngân sách sang <strong>Remarketing Zalo OA</strong> và phát triển <strong>Mâm Cơm Gia Đình/Cơm B2B</strong>.
                     </p>
                     <button onClick={triggerAIPivot} className="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition-colors">
                       Áp dụng Chiến lược Pivoting mới
@@ -128,8 +128,8 @@ export default function PageC4Dashboard() {
               <div className="flex items-center gap-3">
                 <CheckCircle2 className="w-6 h-6 text-emerald-500" />
                 <div>
-                  <h3 className="text-sm font-black text-emerald-400">Chiến lược B2B Pivot đã được kích hoạt thành công</h3>
-                  <p className="text-xs text-emerald-500/80">Hệ thống đã tự động điều chỉnh KPIs, Ngân sách và Kế hoạch truyền thông tập trung vào khối Doanh nghiệp.</p>
+                  <h3 className="text-sm font-black text-emerald-400">Chiến lược Zalo Direct & B2B Pivot đã được kích hoạt thành công</h3>
+                  <p className="text-xs text-emerald-500/80">Hệ thống đã tự động dừng Ads trên nền tảng trung gian, chuyển dòng tiền đầu tư sang Loyalty Program và B2B Catering.</p>
                 </div>
               </div>
               <button onClick={() => setScenario('normal')} className="text-xs font-bold text-emerald-500 hover:underline">
@@ -149,8 +149,8 @@ export default function PageC4Dashboard() {
                 <XAxis dataKey="month" stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="#94A3B8" fontSize={12} tickLine={false} axisLine={false} />
                 <RechartsTooltip contentStyle={{ backgroundColor: '#0F172A', borderColor: '#334155', borderRadius: '12px' }} />
-                <Line type="monotone" dataKey="Thực đơn Chữa lành" stroke="#F43F5E" strokeWidth={4} dot={{ r: 4, fill: '#F43F5E' }} activeDot={{ r: 6 }} />
-                <Line type="monotone" dataKey="Giao hàng O2O (Zalo Mini App)" stroke="#EAB308" strokeWidth={4} dot={{ r: 4, fill: '#EAB308' }} />
+                <Line type="monotone" dataKey="Kênh Food App" stroke="#F43F5E" strokeWidth={4} dot={{ r: 4, fill: '#F43F5E' }} activeDot={{ r: 6 }} />
+                <Line type="monotone" dataKey="Kênh Zalo & B2B" stroke="#EAB308" strokeWidth={4} dot={{ r: 4, fill: '#EAB308' }} />
               </LineChart>
             </ResponsiveContainer>
           </div>

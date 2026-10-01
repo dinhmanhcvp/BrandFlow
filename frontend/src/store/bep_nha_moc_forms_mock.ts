@@ -146,23 +146,24 @@ export const BEP_NHA_MOC_FORMS_MOCK: Record<string, any> = {
   },
   "c1-direction": {
     items: [
-      { item: 'Định vị Kênh (Channel Strategy)', content: 'Biến Zalo thành trụ cột mang lại lợi nhuận cốt lõi (Core Profit Engine). Các App giao đồ ăn chỉ đóng vai trò kênh thu hút khách hàng mới (Acquisition Channel).', rationale: 'Tránh việc phụ thuộc hoàn toàn vào sân chơi của bên thứ 3.' },
-      { item: 'Lợi thế Khác biệt (Differentiator)', content: 'Sự tỉ mỉ, cá nhân hóa. Nhớ khẩu vị khách quen (VD: Không hành, ít cơm). Định vị là nhà hàng có dịch vụ chu đáo chứ không phải xưởng nấu công nghiệp.', rationale: 'Tạo hàng rào cảm xúc (Emotional Moat) khó sao chép.' },
-      { item: 'Quy tắc Content', content: 'Chụp ảnh thật, ánh sáng tự nhiên. Tuyệt đối không dùng từ phóng đại (Ngon nhất, rẻ nhất), không áp lực giả (Flash sale).', rationale: 'Bảo vệ giá trị cốt lõi "Authentic" (Chân thực) của thương hiệu.' }
+      { item: 'Định vị Kênh (Channel Strategy)', content: 'Biến Zalo thành trụ cột mang lại lợi nhuận cốt lõi (Core Profit Engine). Các App giao đồ ăn chỉ đóng vai trò kênh thu hút khách hàng mới (Acquisition Channel) với tỷ trọng tối đa 25% doanh thu.', rationale: 'Tránh việc phụ thuộc hoàn toàn vào sân chơi của bên thứ 3. Khi thuật toán App thay đổi hoặc hoa hồng tăng, doanh nghiệp vẫn có bức tường thành Zalo bảo vệ dòng tiền.' },
+      { item: 'Lợi thế Khác biệt (Differentiator)', content: 'Sự tỉ mỉ, cá nhân hóa. Nhớ khẩu vị khách quen (VD: Không hành, ít cơm, ăn nhạt). Định vị là nhà hàng có dịch vụ chu đáo chứ không phải xưởng nấu công nghiệp (Industrial Kitchen).', rationale: 'Tạo hàng rào cảm xúc (Emotional Moat) khó sao chép. Máy móc có thể nấu nhanh, nhưng chỉ con người mới tạo ra sự kết nối và lòng trung thành.' },
+      { item: 'Quy tắc Truyền thông (Content)', content: '100% hình ảnh phải là ảnh thật chụp bằng điện thoại dưới ánh sáng tự nhiên. Tuyệt đối không dùng từ ngữ cường điệu (Ngon nhất, rẻ nhất), không tạo áp lực giả (Flash sale ảo).', rationale: 'Bảo vệ giá trị cốt lõi "Authentic" (Chân thực) của thương hiệu. Khách hàng Gen Z cực kỳ nhạy bén với các chiêu trò Marketing "lùa gà".' }
     ]
   },
   "c2-history": {
     items: [
-      { bcg: 'Ngôi sao (Star)', sbu: 'Đơn hàng Zalo trực tiếp & Cơm B2B', rev: '137 tr', target: '450 tr', rationale: 'Tăng trưởng cực nhanh, sinh lời cao nhất, cần dồn toàn bộ nguồn lực.' },
-      { bcg: 'Bò sữa (Cash Cow)', sbu: 'Đơn hàng App (Grab/Shopee)', rev: '548 tr', target: '400 tr', rationale: 'Chỉ vắt sữa (Lấy traffic), không đầu tư thêm thức ăn (Ngân sách Ads).' },
-      { bcg: 'Dấu hỏi (Question)', sbu: 'Dine-in (Ăn tối tại quán)', rev: '0 tr', target: '120 tr', rationale: 'Tiềm năng lớn nhưng chưa chứng minh được product-market fit, cần thử nghiệm mâm gia đình.' }
+      { bcg: 'Ngôi sao (Star)', sbu: 'Phân khúc B2B Catering (Cơm công ty)', rev: '1.2 tỷ', target: '4.5 tỷ', rationale: 'Tăng trưởng cực nhanh (MoM > 30%), sinh lời cao do tối ưu được chi phí giao hàng sỉ. Lệnh từ C-Level: Dồn toàn bộ nguồn lực Sales vào thị trường này.' },
+      { bcg: 'Bò sữa (Cash Cow)', sbu: 'Bán lẻ qua App (GrabFood, ShopeeFood)', rev: '6.5 tỷ', target: '3.0 tỷ', rationale: 'Chiến lược "Vắt sữa" (Harvesting). Tận dụng lượng Traffic khổng lồ để lấy dòng tiền ngắn hạn và thu thập Data khách hàng, không ném thêm tiền vào Ads.' },
+      { bcg: 'Dấu hỏi (Question)', sbu: 'Phục vụ tại chỗ buổi tối (Dine-in)', rev: '0 tỷ', target: '2.5 tỷ', rationale: 'Tiềm năng biên lợi nhuận cao nhưng chưa có Product-Market Fit. Nguy cơ vắng khách. Yêu cầu test thử nghiệm A/B với "Mâm Cơm Gia Đình".' },
+      { bcg: 'Chó mực (Dog)', sbu: 'Các món chiên/xào lẻ, nước ngọt', rev: '0.45 tỷ', target: '0 tỷ', rationale: 'Đi ngược lại định vị "Healthy & Sạch". Lợi nhuận biên thấp, phá vỡ cấu trúc chuỗi cung ứng nguyên liệu. Yêu cầu cắt bỏ.' }
     ]
   },
   "c3-issues": {
     items: [
-      { sbu: 'Vận hành Bếp Giờ Trưa', market: 'Rất đông đúc', comp: 'Cloud Kitchen', issue: 'Đóng gói chậm, hay nhầm. Cần chia rõ Line nhặt đồ: 1 cho App, 1 cho Zalo.', rationale: 'Trải nghiệm của khách Zalo (Loyal) không được phép bị ảnh hưởng bởi sự hỗn loạn của khách App.' },
-      { sbu: 'Marketing Nội Bộ', market: 'Thiếu nhân sự', comp: 'Chuỗi In-house MKT', issue: 'Bài đăng lộn xộn. Cần bộ Template Canva thiết kế sẵn.', rationale: 'Standardize (Tiêu chuẩn hóa) quy trình MKT giúp thu ngân/bảo vệ cũng có thể đăng bài chuẩn.' },
-      { sbu: 'Định giá trên App', market: 'Nhạy cảm giá', comp: 'Cơm bình dân 35k', issue: 'Bán giá gốc trên App sẽ lỗ. Phải tạo Combo riêng cho App.', rationale: 'Giá bán (Pricing Strategy) trên nền tảng trung gian bắt buộc phải gánh được 25% hoa hồng.' }
+      { sbu: 'Nút thắt Vận hành Bếp (Bottle-neck)', market: 'Đơn hàng dồn cục lúc 11:30 - 12:15', comp: 'Cloud Kitchen', issue: 'Đóng gói chậm, hay nhầm món, mất trung bình 8 phút/đơn. Tài xế (Shipper) hủy chuyến, đánh giá 1 sao.', rationale: 'Tái cấu trúc luồng di chuyển trong bếp (Kitchen Layout). Chia rõ 2 Line nhặt đồ độc lập: Line 1 cho App, Line 2 (Ưu tiên) cho Zalo/B2B.' },
+      { sbu: 'Quản trị Dữ liệu KH', market: 'Sở hữu bằng 0', comp: 'Chuỗi F&B lớn (CRM)', issue: 'Không có công cụ lưu trữ lịch sử mua hàng, phụ thuộc 100% vào trí nhớ của thu ngân. Dẫn đến tỷ lệ giữ chân (Retention) thấp dưới 30%.', rationale: 'Chuyển đổi số (Digital Transformation) là bắt buộc. Tích hợp giải pháp Zalo ZNS API và hệ thống POS POS365 để tự động gửi tin nhắn chăm sóc.' },
+      { sbu: 'Chiến lược Giá (Pricing Model)', market: 'Khách hàng cực kỳ nhạy cảm về giá', comp: 'Cơm bình dân 35k', issue: 'Bán giá gốc trên App sẽ lỗ nặng do 25% phí hoa hồng. Tăng giá bán thì mất khách.', rationale: 'Kỹ thuật Menu Engineering: Tạo ra các "Combo" riêng biệt chỉ bán trên App (Giá cao hơn nhưng kèm nước/Canh) để che giấu giá gốc, đảm bảo tỷ suất lợi nhuận.' }
     ]
   },
   "c4-dashboard": {
