@@ -57,14 +57,14 @@ export default function PageA1Mission() {
   // Hàm helper cập nhật Field
   const handleFieldChange = (field: string, value: string) => {
     userHasEdited.current = true;
-    setLocalData(prev => ({ ...prev, [field]: value }));
+    setLocalData((prev: any) => ({ ...prev, [field]: value }));
   };
 
   const handleDirectionChange = (idx: number, type: string, text: string) => {
     userHasEdited.current = true;
     const newArr = [...localData.directions];
     newArr[idx] = { ...newArr[idx], type, text };
-    setLocalData(prev => ({ ...prev, directions: newArr }));
+    setLocalData((prev: any) => ({ ...prev, directions: newArr }));
   };
 
   return (
@@ -157,7 +157,7 @@ export default function PageA1Mission() {
                <p className="text-sm text-linear-text-muted mb-5 relative z-10">Những việc sẽ làm, có thể làm, và những ranh giới không bao giờ vượt qua.</p>
                
                <div className="space-y-3 relative z-10">
-                 {(localData.directions || []).map((dir, idx) => (
+                 {(localData.directions || []).map((dir: any, idx: number) => (
                    <div key={idx} className="flex items-start space-x-3">
                      <select 
                        className={clsx(
@@ -187,8 +187,8 @@ export default function PageA1Mission() {
                        )}
                        <button onClick={() => {
                           userHasEdited.current = true;
-                          const newArr = localData.directions.filter((_, i) => i !== idx);
-                          setLocalData(prev => ({...prev, directions: newArr}));
+                          const newArr = localData.directions.filter((_: any, i: number) => i !== idx);
+                          setLocalData((prev: any) => ({...prev, directions: newArr}));
                        }} className="p-2.5 text-linear-text-muted hover:text-rose-500 hover:bg-rose-50 dark:bg-rose-500/10 rounded-lg transition-colors">
                          <Trash2 className="w-4 h-4" />
                        </button>
@@ -199,7 +199,7 @@ export default function PageA1Mission() {
                  <button onClick={() => {
                     userHasEdited.current = true;
                     const newArr = [...localData.directions, { type: 'will_do', text: '' }];
-                    setLocalData(prev => ({...prev, directions: newArr}));
+                    setLocalData((prev: any) => ({...prev, directions: newArr}));
                  }} className="mt-4 flex items-center px-4 py-2.5 text-sm font-semibold text-cyan-400 border border-dashed border-cyan-500/30 bg-cyan-500/10/50 rounded-lg hover:bg-cyan-500/10 transition-colors w-full justify-center">
                     <Plus className="w-4 h-4 mr-1.5" /> Thêm định hướng
                  </button>
