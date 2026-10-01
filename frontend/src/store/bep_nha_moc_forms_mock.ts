@@ -1,191 +1,168 @@
 export const BEP_NHA_MOC_FORMS_MOCK: Record<string, any> = {
   "a1-mission": {
-    role: "Tiên phong kiến tạo không gian 'Mindful Dining' (Ẩm thực chánh niệm) chuẩn mực giữa lòng Sài Gòn phồn hoa, thiết lập tiêu chuẩn mới cho F&B cao cấp.",
-    business_def: "Vượt lên trên một mô hình nhà hàng vật lý truyền thống, Bếp Nhà Mộc cung cấp 'Therapeutic Dining Experience' (Trải nghiệm trị liệu qua ẩm thực). Khách hàng không chỉ mua một bữa ăn, mà họ đang trả tiền cho sự bình yên, không gian hoài niệm và khả năng tái tạo năng lượng sau chuỗi ngày Burnout.",
-    purpose: "Thơm Khói Bếp - Ấm Tình Nhà: Chữa lành những tâm hồn thị dân kiệt sức bằng hương vị nguyên bản của quê hương, nơi thời gian như ngừng trôi sau cánh cửa gỗ.",
-    competency: "Sở hữu hệ sinh thái khép kín Farm-to-Table 100% Organic, công thức di sản 3 đời không bột ngọt (No MSG), và một kiến trúc nhà cổ Bắc Bộ nguyên bản tạo ra VRIO (Value, Rare, Inimitable, Organized) không thể sao chép bằng tiền.",
+    role: "Thương hiệu cơm gia đình và văn phòng đáng tin cậy tại Hà Nội, cung cấp bữa ăn sạch, chuẩn vị truyền thống.",
+    business_def: "Bếp Nhà Mộc không chạy đua theo mô hình cơm bình dân giá rẻ hay thức ăn nhanh, mà định vị là 'Bếp nhà của người bận rộn'. Chúng tôi phục vụ những bữa ăn không ngập dầu mỡ, không lạm dụng gia vị, mang lại cảm giác thân thuộc và an tâm cho khách hàng.",
+    purpose: "Giải quyết nỗi lo bữa trưa công nghiệp của dân văn phòng và nỗi vất vả nấu nướng của các gia đình nhỏ, thông qua những suất cơm 'sạch, tiện, và đáng tin' với giá cả hợp lý.",
+    competency: "Kinh nghiệm nấu ăn chuẩn vị gia đình, nguồn nguyên liệu ổn định, dịch vụ chăm sóc khách hàng cá nhân hóa qua Zalo và năng lực vận hành song song cả Dine-in lẫn Delivery với 2 chi nhánh tại Cầu Giấy và Hà Đông.",
     directions: [
-      { type: 'will_do', text: 'Ứng dụng Scarcity Marketing: Giới hạn tối đa 50 khách/tối để bảo toàn tính độc quyền (Exclusivity) và sự tĩnh lặng của không gian chữa lành.' },
-      { type: 'will_do', text: 'Triển khai mạnh mẽ O2O (Online-to-Offline) Loyalty thông qua Zalo Mini App nhằm tối đa hóa Customer Lifetime Value (LTV).' },
-      { type: 'will_do', text: 'Chuẩn hóa quy trình vận hành (SOPs) đạt tiêu chuẩn Hospitality 5 sao nhằm chuẩn bị cho việc Scale-up chuỗi.' },
-      { type: 'never_do', text: 'Tuyệt đối không áp dụng chiến lược Deep Discounting (Giảm giá sâu) hay gia nhập các cuộc chiến giá trên nền tảng Cloud Kitchen để bảo vệ Brand Equity.' },
-      { type: 'never_do', text: 'Không sử dụng nguyên liệu công nghiệp, phụ gia thực phẩm, chất bảo quản dưới mọi hình thức để cam kết tính Authentic.' },
-      { type: 'might_do', text: 'Thương mại hóa hệ sinh thái sản phẩm Organic đóng gói (trà an thần, gạo lứt hữu cơ, gia vị mộc) dưới dạng quà tặng doanh nghiệp (B2B).' },
-      { type: 'might_do', text: 'Phát triển Sub-brand "Bếp Nhà Mộc Express" với suất ăn trưa Eco-friendly giao tận nơi cho giới C-Level tại Quận 1, Quận 3.' }
+      { type: 'will_do', text: 'Tập trung chuyển đổi khách hàng từ các nền tảng giao đồ ăn (GrabFood, ShopeeFood) sang kênh đặt trực tiếp (Zalo/Hotline) để tối ưu biên lợi nhuận.' },
+      { type: 'will_do', text: 'Chuẩn hóa 3-5 món chủ lực (Signature dishes) để tăng độ nhận diện thương hiệu, thoát khỏi cái mác "quán cơm sạch vô danh".' },
+      { type: 'will_do', text: 'Phát triển các gói cơm văn phòng theo tháng (Subscription) cho tệp khách hàng doanh nghiệp SME quanh khu vực.' },
+      { type: 'never_do', text: 'Tuyệt đối không tham gia các cuộc chiến giảm giá sâu (Deep Discount) hay Flash Sale ảo để bảo vệ định vị chất lượng.' },
+      { type: 'never_do', text: 'Không mở rộng ồ ạt nếu quy trình bếp và chất lượng đồng đều giữa các chi nhánh chưa được chuẩn hóa hoàn toàn.' }
     ]
   },
   "a2-performance": {
     items: [
-      { metric: 'Doanh thu thuần (Net Rev)', y3: '0.8 tỷ', y2: '1.2 tỷ', y1: '1.2 tỷ (Đi ngang)', reason: 'Stagnant (Đi ngang 18 tháng qua) do phụ thuộc tệp khách cũ >45 tuổi, chưa tiếp cận Gen Z/Y.' },
-      { metric: 'Biên lợi nhuận gộp (Gross Margin)', y3: '35%', y2: '28%', y1: '21% (Báo động)', reason: 'Thấp hơn mức trung bình ngành F&B (25-30%) do đứt gãy chuỗi cung ứng hữu cơ và lãng phí nguyên liệu (Waste).' },
-      { metric: 'Biên lợi nhuận ròng (Net Margin)', y3: '15%', y2: '8%', y1: '2% (Rủi ro)', reason: 'Chi phí khấu hao tài sản cố định (kiến trúc) lớn, trong khi tỷ lệ lấp đầy bàn (Occupancy) chưa đạt 40%.' },
-      { metric: 'Tỷ lệ khách quay lại (Retention)', y3: '12%', y2: '14%', y1: '15% (Chậm)', reason: 'Thiếu hệ sinh thái CRM (Zalo/Mini App) để remarketing tự động. Khách đến 1 lần rồi quên.' },
-      { metric: 'Chi phí có 1 khách mới (CAC)', y3: '180,000đ', y2: '220,000đ', y1: '250,000đ (Quá cao)', reason: 'Đốt tiền vào các kênh Performance Ads truyền thống nhưng content mờ nhạt, thiếu Brand Story dẫn đến CTR thấp.' },
-      { metric: 'Giá trị vòng đời KH (LTV)', y3: '650,000đ', y2: '580,000đ', y1: '450,000đ (Giảm)', reason: 'Mất khách hàng VIP do trải nghiệm không đồng nhất trong những giờ cao điểm.' },
-      { metric: 'Năng suất nhân sự (Rev/FTE)', y3: '12tr/ng', y2: '15tr/ng', y1: '13tr/ng (Thấp)', reason: 'Thiếu phần mềm quản lý POS đồng bộ, dẫn đến lãng phí thời gian thao tác thủ công, thừa nhân sự giờ Off-peak.' }
+      { metric: 'Doanh thu trung bình/tháng', y3: '450 triệu', y2: '580 triệu', y1: '685 triệu', reason: 'Tăng trưởng nhờ mở thêm chi nhánh Hà Đông nhưng tốc độ chững lại do cạnh tranh khốc liệt trên app.' },
+      { metric: 'Biên lợi nhuận ròng (Net Margin)', y3: '15%', y2: '12%', y1: '9% (Báo động)', reason: 'Chiết khấu nền tảng giao đồ ăn (Grab/Shopee) quá cao (lên tới 25%) cắn sâu vào lợi nhuận cuối.' },
+      { metric: 'Tỷ lệ khách đặt qua App / Direct', y3: '60/40', y2: '75/25', y1: '80/20 (Rủi ro)', reason: 'Phụ thuộc quá lớn vào traffic của App. Khách hàng lười đặt qua Zalo vì thiếu ưu đãi và thói quen.' },
+      { metric: 'Tỷ lệ khách hàng quay lại (Retention)', y3: '35%', y2: '30%', y1: '25%', reason: 'Nhiều đối thủ cạnh tranh mới liên tục tung combo khuyến mãi. Bếp Nhà Mộc thiếu các chương trình chăm sóc khách quen.' },
+      { metric: 'Điểm đánh giá Google Maps', y3: '4.2/5', y2: '4.5/5', y1: '4.1/5', reason: 'Thời gian giao hàng (TAT) giờ cao điểm trưa bị chậm, dẫn đến feedback tiêu cực chưa được xử lý triệt để.' }
     ]
   },
   "a3-revenue": {
     items: [
-      { metric: 'Doanh Thu Thuần Dine-in', t0: '9.4 tỷ', t1: '14.5 tỷ', t2: '19.0 tỷ', t3: '24.0 tỷ', source: 'Tối đa hóa tỷ lệ lấp đầy cuối tuần (75%) qua Booking system & Upsell rượu vang organic.' },
-      { metric: 'Doanh Thu Corporate Lunch', t0: '2.0 tỷ', t1: '4.1 tỷ', t2: '6.0 tỷ', t3: '7.5 tỷ', source: 'Ký kết hợp đồng cung cấp suất ăn định kỳ (Subscription) cho các tòa nhà văn phòng hạng A (B2B).' },
-      { metric: 'Doanh Thu Bán lẻ (FMCG)', t0: '0.0 tỷ', t1: '1.0 tỷ', t2: '1.5 tỷ', t3: '2.0 tỷ', source: 'Bán chéo (Cross-sell) các dòng sản phẩm đóng gói (Trà an thần, gia vị ướp) tại điểm bán.' },
-      { metric: 'Tổng Doanh Thu (Gross Rev)', t0: '11.4 tỷ', t1: '19.6 tỷ', t2: '26.5 tỷ', t3: '33.5 tỷ', source: 'Tổng hợp từ cả 3 luồng doanh thu chiến lược (Tăng trưởng kép CAGR ~35%).' },
-      { metric: 'Chi Phí Giá Vốn (COGS)', t0: '3.5 tỷ', t1: '5.5 tỷ', t2: '7.0 tỷ', t3: '8.4 tỷ', source: 'Kiểm soát Food Cost (FC) ở mức lý tưởng 25%-28% thông qua tối ưu Waste Management và khóa hợp đồng Farm.' },
-      { metric: 'Lợi Nhuận Gộp (Gross Profit)', t0: '7.9 tỷ', t1: '14.1 tỷ', t2: '19.5 tỷ', t3: '25.1 tỷ', source: 'Biên lợi nhuận gộp duy trì ổn định ở mức 70%-75%.' },
-      { metric: 'EBITDA (Lợi nhuận HĐ)', t0: '1.5 tỷ', t1: '4.2 tỷ', t2: '6.8 tỷ', t3: '9.5 tỷ', source: 'Lợi nhuận hoạt động bùng nổ khi Sunk Cost đã được khấu hao xong và tối ưu OPEX.' }
+      { metric: 'Doanh thu App Giao hàng', t0: '548 triệu', t1: '520 triệu', t2: '480 triệu', t3: '400 triệu', source: 'Kế hoạch chủ động giảm tỷ trọng doanh thu từ App để giảm chi phí hoa hồng (Commission).' },
+      { metric: 'Doanh thu Đặt trực tiếp (Zalo)', t0: '137 triệu', t1: '215 triệu', t2: '320 triệu', t3: '450 triệu', source: 'Chiến dịch Remarketing, tặng mã freeship và tích điểm khi khách đặt qua Zalo OA.' },
+      { metric: 'Doanh thu Dine-in (Tại quán)', t0: '0 triệu', t1: '50 triệu', t2: '80 triệu', t3: '120 triệu', source: 'Kích cầu ăn tối tại quán với không gian ấm cúng, dành cho khách hàng gia đình.' },
+      { metric: 'Gói Cơm Doanh nghiệp (B2B)', t0: '0 triệu', t1: '45 triệu', t2: '90 triệu', t3: '150 triệu', source: 'Khai thác tệp công ty SME, cung cấp suất ăn trưa định kỳ thanh toán theo tuần/tháng.' },
+      { metric: 'Tổng Doanh Thu (Gross Rev)', t0: '685 triệu', t1: '830 triệu', t2: '970 triệu', t3: '1.12 tỷ', source: 'Mục tiêu tăng trưởng bền vững 15-20%/năm bằng việc tối ưu hóa kênh Direct.' }
     ]
   },
   "a4-market": {
     items: [
-      { role: 'Urban Healers (Gen Z, 22-28T)', pain_points: 'Burnout vì KPI/Deadline, ám ảnh thực phẩm bẩn, thiếu không gian trốn áp lực mạng xã hội.', decision_drivers: 'Kiến trúc Cinematic/Aesthetic dễ làm content chữa lành, cam kết 100% Organic, Storytelling chân thật.', opportunism_risk: 'Đến 1 lần chụp hình lấy KPI rồi không quay lại nếu không có chương trình Loyalty phù hợp.', icon: "Zap", color: 'indigo' },
-      { role: 'Mindful Professionals (Gen Y, 29-38T)', pain_points: 'Chán ngán Fastfood công nghiệp mặn chát, cần nơi tiếp đối tác hoặc ăn trưa lịch sự, yên tĩnh.', decision_drivers: 'Chất lượng nguyên liệu chuẩn vị nhà nấu (No MSG), phục vụ chuyên nghiệp, bao bì Eco-friendly.', opportunism_risk: 'Rất nhạy cảm với thời gian lên món (TAT - Turnaround Time) vào buổi trưa. Sẵn sàng rate 1 sao nếu trễ 5 phút.', icon: "Briefcase", color: 'emerald' },
-      { role: 'Modern Families (35-50T)', pain_points: 'Khó tìm nhà hàng an toàn vệ sinh 100% cho trẻ nhỏ, muốn tìm lại hương vị ký ức tuổi thơ.', decision_drivers: 'Công thức di sản 3 đời, không gian hoài niệm Nostalgia, dịch vụ ân cần (Caregiver).', opportunism_risk: 'Nếu quán quá đông đúc ồn ào sẽ lập tức phàn nàn và rời đi vĩnh viễn, ảnh hưởng Brand Reputation.', icon: "Users", color: 'amber' },
-      { role: 'Corporate HR (B2B Buyers)', pain_points: 'Cần tìm giải pháp bữa trưa chất lượng làm phúc lợi nhân viên, ngân sách tối ưu, hóa đơn minh bạch.', decision_drivers: 'Gói Subscription linh hoạt, chiết khấu tốt, đảm bảo ATVSTP, có app quản lý suất ăn dễ dàng.', opportunism_risk: 'Chu kỳ đàm phán kéo dài, thanh toán công nợ 30-45 ngày gây áp lực dòng tiền.', icon: "Building", color: 'cyan' },
-      { role: 'Expat & Tourists (Khách du lịch)', pain_points: 'Tìm kiếm trải nghiệm ẩm thực bản địa (Authentic Local Food) nhưng lo ngại vấn đề vệ sinh đường phố.', decision_drivers: 'Không gian văn hóa đậm chất Việt Nam, menu song ngữ, review tốt trên TripAdvisor/Google Maps.', opportunism_risk: 'Tính thời vụ cao (Seasonality), phụ thuộc vào chu kỳ du lịch, ít trung thành.', icon: "Globe", color: 'pink' }
+      { role: 'Minh - Người Tối Ưu Ngày Thường', pain_points: 'Cần bữa trưa nhanh, tiện, đủ no để kịp làm việc. Sợ quán đông đúc, chờ lâu.', decision_drivers: 'Tốc độ giao hàng, giá cả hợp lý (40-55k), phần cơm đầy đặn.', opportunism_risk: 'Dễ dàng chuyển sang quán khác nếu có mã freeship hoặc giảm giá sâu trên app.', icon: "Zap", color: 'indigo' },
+      { role: 'Lan - Người Tổ Chức Chu Đáo', pain_points: 'Áp lực khi phải đặt cơm trưa cho cả phòng ban. Sợ đồ ăn kém vệ sinh, sai order.', decision_drivers: 'Đóng gói sạch sẽ, giao đúng giờ, có xuất hóa đơn, dịch vụ hỗ trợ (Zalo) phản hồi nhanh.', opportunism_risk: 'Nếu quán quên món hoặc giao trễ làm ảnh hưởng uy tín của cô ấy với sếp, sẽ không bao giờ đặt lại.', icon: "Users", color: 'amber' },
+      { role: 'Thảo - Người Sống Lành Mạnh', pain_points: 'Chán ngấy cơm văn phòng ngập dầu mỡ, nhiều bột ngọt (MSG). Cần đồ ăn thanh đạm.', decision_drivers: 'Hình ảnh thực đơn có rau xanh tươi, cảm giác "như nhà nấu", nguyên liệu rõ ràng.', opportunism_risk: 'Khó tính với chất lượng món ăn, sẵn sàng review 1 sao nếu thấy đồ ăn cũ hoặc nhiều mỡ.', icon: "Leaf", color: 'emerald' }
     ]
   },
   "a5-swot": {
     items: [
-      { ksf: 'Kiến trúc Nhà Gỗ Di Sản & Aesthetic', weight: '25%', our_score: 9, comp_score: 6, issue: 'Điểm VRIO lõi: Cần có quy định nghiêm ngặt về "Không gian tĩnh" để bảo vệ trải nghiệm (Limit Noise).' },
-      { ksf: 'Chất lượng Nguyên liệu (100% Organic)', weight: '25%', our_score: 9, comp_score: 7, issue: 'Thiếu truyền thông minh bạch (Traceability) - Cần series video Farm-to-Table để educate khách hàng.' },
-      { ksf: 'Độ nhận diện thương hiệu (Brand Awareness)', weight: '15%', our_score: 4, comp_score: 8, issue: 'Tử huyệt: Định vị mờ nhạt, bị đánh đồng với "quán cơm bình dân". Cần Rebranding toàn diện gấp.' },
-      { ksf: 'Hệ thống CRM & Customer Retention', weight: '15%', our_score: 3, comp_score: 7, issue: 'Tử huyệt: Đang rò rỉ (Churn) 85% khách hàng sau lần đầu. Phải build Zalo Mini App ngay lập tức.' },
-      { ksf: 'Tối ưu Vận hành (Operational Efficiency)', weight: '10%', our_score: 5, comp_score: 8, issue: 'Thời gian lên món (TAT) giờ cao điểm chậm. Cần số hóa POS và Kitchen Display System (KDS).' },
-      { ksf: 'Đa dạng hóa Luồng Doanh Thu', weight: '10%', our_score: 4, comp_score: 7, issue: 'Phụ thuộc 100% vào Dine-in buổi tối. Cần khai thác mỏ vàng Corporate Lunch giờ Off-peak.' }
+      { ksf: 'Chất lượng đồ ăn (Vị nhà nấu, ít dầu mỡ)', weight: '30%', our_score: 8, comp_score: 6, issue: 'Điểm mạnh lõi nhưng chưa truyền thông đúng mức. Khách chỉ nhận ra sau khi đã ăn thử.' },
+      { ksf: 'Nhận diện thương hiệu & Định vị', weight: '20%', our_score: 4, comp_score: 7, issue: 'Điểm yếu lớn (Tử huyệt): Khách chỉ nhớ là "quán cơm sạch ở Cầu Giấy" thay vì tên Bếp Nhà Mộc.' },
+      { ksf: 'Tối ưu Vận hành Kênh Giao hàng', weight: '25%', our_score: 7, comp_score: 8, issue: 'Chi phí nền tảng ăn mòn lợi nhuận. Cần gấp rút dịch chuyển khách hàng sang kênh sở hữu (Zalo).' },
+      { ksf: 'Đa dạng hóa Luồng Doanh Thu', weight: '15%', our_score: 3, comp_score: 6, issue: 'Quá tập trung vào buổi trưa. Khung giờ tối và cuối tuần lãng phí mặt bằng và nhân sự.' },
+      { ksf: 'Chăm sóc Khách hàng (CRM)', weight: '10%', our_score: 5, comp_score: 6, issue: 'Chăm sóc Zalo thủ công khá tốt, nhưng chưa hệ thống hóa thành chương trình Khách hàng thân thiết rõ ràng.' }
     ]
   },
   "a6-portfolio": {
     items: [
-      { segment: 'Cơm Niêu Đặc Sản & Món Mặn', attr: 'Rất Cao (Cash Cow)', pos: 'Mạnh', decision: 'Duy trì công thức lõi, tăng giá trị cộng thêm qua cách phục vụ (Theatrical serving) để upsell lên 15%.' },
-      { segment: 'Trà Thảo Mộc Trị Liệu (Organic)', attr: 'Cao (Star)', pos: 'Mạnh', decision: 'Đẩy mạnh truyền thông công dụng an thần, thiết kế bao bì mang về (Take-away) chuẩn Eco-friendly.' },
-      { segment: 'Combo Trưa Bã Mía (Eco Lunch)', attr: 'Rất Cao (Question Mark)', pos: 'Trượt', decision: 'Bơm mạnh ngân sách Marketing để chiếm lĩnh tệp dân văn phòng, chuyển đổi thành Star trong 2 Quý tới.' },
-      { segment: 'Gói Quà Tặng Doanh Nghiệp (B2B)', attr: 'Trung bình (Question Mark)', pos: 'Mới', decision: 'Pilot test vào các dịp Lễ Tết, đóng gói Premium Box để tăng Brand Equity.' },
-      { segment: 'Các món xào/chiên ngập dầu', attr: 'Thấp (Dog)', pos: 'Yếu', decision: 'Loại bỏ hoàn toàn khỏi Menu để nhất quán với định vị "Ẩm thực Chữa lành - Healthy".' }
+      { segment: 'Cơm Văn Phòng (Đĩa/Hộp)', attr: 'Rất Cao (Cash Cow)', pos: 'Mạnh', decision: 'Duy trì chất lượng. Chèn tờ rơi (Flyer) vào hộp cơm App để mời khách qua Zalo nhận ưu đãi lần sau.' },
+      { segment: 'Món Chủ Lực (Signature Dishes)', attr: 'Cao (Star)', pos: 'Trung bình', decision: 'Lựa chọn 3 món ngon nhất (VD: Thịt kho tàu niêu đất) để đẩy mạnh quảng cáo, tạo Top of Mind.' },
+      { segment: 'Catering Doanh Nghiệp (Subscription)', attr: 'Trung bình (Question Mark)', pos: 'Mới', decision: 'Đóng gói quy trình, làm menu riêng. Giao sales tiếp cận trực tiếp HR/Admin các công ty quanh bán kính 2km.' },
+      { segment: 'Các món chiên/xào dầu mỡ cao', attr: 'Thấp (Dog)', pos: 'Yếu', decision: 'Loại bỏ khỏi thực đơn để nhất quán với định vị "Cơm sạch, healthy, như nhà nấu".' }
     ]
   },
   "a7-assumptions": {
     items: [
-      { core: 'Xu hướng "Mindful Dining & Eat Clean" tăng trưởng 45% YoY.', logic: 'Gen Y/Z thành thị sẵn sàng chi trả Premium (cao hơn 20%) cho thực phẩm minh bạch nguồn gốc và không gian trị liệu để chống lại Burnout.', action: 'Tái định vị thương hiệu thành "Điểm trú ẩn tâm lý", tăng giá bán 15% để tái đầu tư vào chất lượng dịch vụ.' },
-      { core: 'Chi phí mặt bằng Q1/Q3 không biến động quá 10% trong 3 năm.', logic: 'Đã ký hợp đồng thuê dài hạn 5 năm (Lock-in price) với điều khoản trượt giá cố định 5%.', action: 'Dồn toàn lực ngân sách (OPEX) vào Marketing O2O và Digital Transformation thay vì phòng ngừa rủi ro mặt bằng.' },
-      { core: 'Mạng lưới cung ứng Farm Organic duy trì năng lực cấp hàng ổn định.', logic: 'Ký kết độc quyền bao tiêu với 3 Hợp tác xã Nông nghiệp chuẩn VietGAP/GlobalGAP.', action: 'Xây dựng Buffer Stock (Kho dự trữ) cho các loại gia vị khô và có kế hoạch Plan B sourcing từ đối tác thứ 3.' },
-      { core: 'Sự bùng nổ của Zalo như một Super App tại VN.', logic: 'Zalo đạt 75 triệu MAU, thói quen sử dụng Mini App tích điểm đang trở thành chuẩn mực mới.', action: 'Chuyển dịch 100% Loyalty Program sang Zalo Mini App, không xây dựng Native App để tối ưu chi phí.' }
+      { core: 'Khách hàng văn phòng sẵn sàng đặt qua Zalo nếu được lợi ích tương đương App.', logic: 'Mã giảm giá App bị cắt giảm dần. Nếu Zalo có Freeship và giao nhanh, khách sẽ chuyển dịch do thói quen nhắn tin hàng ngày.', action: 'Xây dựng Zalo OA chuyên nghiệp, có chatbot hỗ trợ chọn món và chốt đơn nhanh.' },
+      { core: 'Ngân sách Marketing cực kỳ hạn hẹp (<5% doanh thu).', logic: 'Biên lợi nhuận ròng chỉ 8-12%, không cho phép vung tiền chạy Ads Facebook ồ ạt hay thuê KOLs đắt đỏ.', action: 'Tập trung 100% vào Marketing 0 đồng (Content Organic), Remarketing tệp khách cũ và Local SEO (Google Maps).' },
+      { core: 'Vận hành bếp có thể chịu tải thêm 30% vào giờ trưa.', logic: 'Hệ thống bếp tại Cầu Giấy và Hà Đông vẫn còn dư công suất (Idle capacity) nếu quy trình chuẩn bị sơ chế làm tốt từ sáng.', action: 'Chỉ triển khai chiến dịch đẩy sale mạnh khi đã chuẩn bị xong nhân sự đóng gói, tránh vỡ trận giờ cao điểm (11h-12h30).' }
     ]
   },
   "a8-strategies": {
     items: [
-      { level: 'Total Revenue (Doanh thu tổng)', past: '14.4 tỷ', now: '21.6 tỷ', target: '28.0 tỷ', note: 'Mục tiêu sau 12 tháng Rebranding (Tăng 50% YoY)' },
-      { level: 'Customer Acquisition Cost (CAC)', past: '250,000đ', now: '120,000đ', target: '40,000đ', note: 'Tối ưu hóa bằng Viral Content Tiktok và Referral (Word-of-mouth)' },
-      { level: 'Retention Rate (Khách quay lại)', past: '15%', now: '35%', target: '50%', note: 'Khởi chạy hệ sinh thái Loyalty Zalo Mini App (Tích hạt gạo)' },
-      { level: 'Tỷ trọng Gen Z & Y (Urban Healers)', past: '20%', now: '55%', target: '70%', note: 'Dịch chuyển tệp khách hàng sang phân khúc High-Value Customers' },
-      { level: 'Food Cost (Giá vốn nguyên liệu)', past: '32%', now: '28%', target: '25%', note: 'Tối ưu hóa Waste Management và chốt Farming Contract khối lượng lớn' },
-      { level: 'Tỷ lệ Lấp đầy (Off-peak Occupancy)', past: '22%', now: '45%', target: '65%', note: 'Push mạnh gói Corporate Lunch Combo vào khung 11h-14h' }
+      { level: 'Total Revenue (Doanh thu)', past: '685 triệu', now: '685 triệu', target: '900 triệu', note: 'Mục tiêu tăng 30% sau 12 tháng bằng cách đẩy mạnh kênh Zalo & Catering' },
+      { level: 'Net Profit Margin (Biên LN Ròng)', past: '9%', now: '9%', target: '15%', note: 'Cắt giảm 30% lượng đơn phụ thuộc App (Grab/Shopee) để tiết kiệm hoa hồng' },
+      { level: 'Zalo Direct Orders (Tỷ trọng đơn Zalo)', past: '20%', now: '20%', target: '45%', note: 'Sử dụng Zalo ZNS và Miniapp để remarketing' },
+      { level: 'Google Maps Rating', past: '4.1', now: '4.1', target: '4.6', note: 'Chủ động xin review và xử lý complain theo quy tắc 3 bước' }
     ],
     campaign_phasing: [
-      { phase: 'GĐ1: Nhen Lửa (Brand Revamp & Teasing)', description: 'Tung Cinematic Brand Film "Về Nhà Ăn Cơm". Tái thiết kế toàn bộ Visual Identity, POSM, và Uniform. Phủ sóng Short-video ASMR (Âm thanh chữa lành) trên TikTok/Reels.', time: 'Tháng 1 - Tháng 2' },
-      { phase: 'GĐ2: Bùng Vị (Traffic Gen & Word of Mouth)', description: 'Chiến dịch Earned Media: Mời 30+ Micro-Influencers Lifestyle/Foodie đến trải nghiệm thực tế. Chạy Performance Ads hướng đến Lead Gen đặt bàn trước (Booking) tặng kèm món Tráng miệng độc quyền.', time: 'Tháng 3 - Tháng 4' },
-      { phase: 'GĐ3: Giữ Lửa (Loyalty & O2O Optimization)', description: 'Ra mắt siêu ứng dụng thu nhỏ Zalo Mini App "Hạt Gạo" (Tích điểm, Đặt bàn Real-time, E-Voucher). Tung mạnh gói Corporate Eco Lunch thâm nhập các tòa nhà văn phòng hạng A.', time: 'Tháng 5 - Tháng 8' },
-      { phase: 'GĐ4: Khẳng Định (Market Expansion & B2B)', description: 'Khởi chạy chiến dịch B2B Corporate Gifting cho dịp Lễ/Tết. Thiết lập chuỗi cung ứng nhượng quyền (Franchise Preparation) thông qua việc đóng gói bộ Standard Operating Procedures (SOPs).', time: 'Tháng 9 - Tháng 12' }
+      { phase: 'GĐ1: Củng Cố Móng (Tối ưu Local & Zalo)', description: 'Thiết lập chuẩn hóa hình ảnh món ăn (chụp ánh sáng tự nhiên). Cập nhật Google Maps. Xây dựng Zalo OA và in Flyer/Sticker dán hộp cơm để kéo khách từ App về Zalo.', time: 'Tháng 1 - Tháng 2' },
+      { phase: 'GĐ2: Nhận Diện Món Lõi (Hero Product)', description: 'Ra mắt 3 món Signature. Triển khai nội dung Storytelling về nguồn gốc nguyên liệu, cách nấu. Bắt đầu đăng bài đều đặn trên Fanpage/Zalo lúc 10h sáng hàng ngày.', time: 'Tháng 3 - Tháng 4' },
+      { phase: 'GĐ3: Mở Rộng B2B (Catering Office)', description: 'Khởi chạy gói Cơm Tháng cho Doanh nghiệp SME. Phát tờ rơi tại các sảnh văn phòng Cầu Giấy. Chạy chiến dịch "Bữa Cơm Cuối Năm, Đừng Để Bếp Nhà Lạnh".', time: 'Tháng 5 - Tháng 8' }
     ]
   },
   "a9-budget": {
     items: [
-      { item: 'Doanh thu thuần (Net Rev)', t0: '1.20', t1: '1.80', t2: '2.50', t3: '3.20' },
-      { item: 'Chi phí giá vốn (COGS - 28%)', t0: '0.33', t1: '0.50', t2: '0.70', t3: '0.89' },
-      { item: 'Lợi nhuận gộp (Gross Profit)', t0: '0.87', t1: '1.30', t2: '1.80', t3: '2.31' },
-      { item: 'Chi phí Vận hành (OPEX - Fixed)', t0: '0.30', t1: '0.35', t2: '0.40', t3: '0.45' },
-      { item: 'Marketing Budget (Max 15%)', t0: '0.18', t1: '0.27', t2: '0.37', t3: '0.48' },
-      { item: 'R&D và Công nghệ (CRM/App)', t0: '0.05', t1: '0.08', t2: '0.10', t3: '0.12' },
-      { item: 'Lợi nhuận ròng (Net Profit)', t0: '0.34', t1: '0.60', t2: '0.93', t3: '1.26' }
+      { item: 'Doanh thu thuần mục tiêu', t0: '685 tr', t1: '750 tr', t2: '820 tr', t3: '900 tr' },
+      { item: 'Phí hoa hồng App (Giảm dần)', t0: '137 tr', t1: '110 tr', t2: '85 tr', t3: '65 tr' },
+      { item: 'Chi phí NVL (Food Cost - 35%)', t0: '239 tr', t1: '262 tr', t2: '287 tr', t3: '315 tr' },
+      { item: 'Chi phí Vận hành (Mặt bằng, Lương)', t0: '215 tr', t1: '215 tr', t2: '220 tr', t3: '225 tr' },
+      { item: 'Ngân sách Marketing (Khoảng 4%)', t0: '27 tr', t1: '30 tr', t2: '32 tr', t3: '36 tr' },
+      { item: 'Lợi Nhuận Ròng (Net Profit)', t0: '67 tr', t1: '133 tr', t2: '196 tr', t3: '259 tr' }
     ]
   },
   "b1-objectives": {
     items: [
-      { pair: 'Ẩm thực Trị liệu / Urban Gen Z', vol: '15,000 pax', margin: '68%', strategy: 'Đẩy mạnh viral video Tiktok (ASMR) & Storytelling "Trốn deadline", kết hợp KOLs Lifestyle.', budget: '220' },
-      { pair: 'Eco Lunch / Mindful Professionals', vol: '25,000 pax', margin: '45%', strategy: 'Sampling dùng thử tại các Office building hạng A & Zalo ZNS remarketing tự động.', budget: '150' },
-      { pair: 'Gia đình Cuối tuần / Modern Family', vol: '8,000 pax', margin: '72%', strategy: 'Gói Family Set Menu cao cấp, đẩy mạnh quảng cáo Facebook khu vực bán kính 5km.', budget: '90' },
-      { pair: 'B2B Gifting / Corporate HR', vol: '5,000 hộp', margin: '55%', strategy: 'Direct Sales qua LinkedIn & Email Marketing nhắm tới C-Level, HR Managers.', budget: '40' }
+      { pair: 'Dân VP tối ưu chi phí / Zalo OA', vol: '150 đơn/ngày', margin: '45%', strategy: 'Kẹp tờ rơi vào đơn Grab/Shopee tặng mã giảm 15% cho lần đặt tiếp theo qua Zalo.', budget: '5 tr' },
+      { pair: 'Nhân sự Admin/HR / Gói Cơm Tháng', vol: '10 Hợp đồng', margin: '35%', strategy: 'Direct sales, phát hộp cơm ăn thử (Sampling) cho HR các công ty quy mô 20-50 người.', budget: '8 tr' },
+      { pair: 'Khách gia đình lười nấu / Ăn tối', vol: '30 bàn/tuần', margin: '55%', strategy: 'Đăng Facebook/Zalo bài viết kể chuyện ẩm thực gia đình, combo 3-4 người.', budget: '7 tr' }
     ]
   },
   "b2-action": {
     items: [
-      { obj: 'Tái định vị (Brand Equity)', tactic: 'Sản xuất Cinematic Brand Film 90s: "Về nhà ăn cơm". Tối ưu định dạng dọc (Vertical) cho Reels/TikTok.', owner: 'Creative Dir', deadline: 'Tuần 2, Tháng 1', cost: '50,000,000' },
-      { obj: 'O2O Traffic Generation', tactic: 'KOLs/KOCs Campaign: Booking 30+ Nano & Micro Influencers (Lifestyle/Food) review không gian tĩnh lặng.', owner: 'PR & Media', deadline: 'Tuần 1, Tháng 2', cost: '100,000,000' },
-      { obj: 'Customer Retention (LTV)', tactic: 'Triển khai Zalo Mini App Booking & Loyalty (Tích "Hạt Gạo", Tặng quà sinh nhật tự động bằng ZNS).', owner: 'Tech Lead', deadline: 'Tuần 3, Tháng 2', cost: '65,000,000' },
-      { obj: 'Off-peak Revenue', tactic: 'Corporate Lunch Activation: Phát Sampling dùng thử (Bento bã mía) tại 5 tòa nhà văn phòng lớn.', owner: 'Growth Hacker', deadline: 'Tuần 4, Tháng 2', cost: '30,000,000' },
-      { obj: 'Lead Conversion', tactic: 'Thiết lập phễu Omni-channel Retargeting System bằng Facebook Pixel & GTM bám đuổi tập khách hàng.', owner: 'Performance Lead', deadline: 'Tuần 1, Tháng 3', cost: '45,000,000' },
-      { obj: 'B2B Expansion', tactic: 'Xây dựng Pitch Deck và Sales Kit B2B cho gói Quà Tết Doanh Nghiệp (Premium Organic Box).', owner: 'B2B Sales Head', deadline: 'Tuần 2, Tháng 8', cost: '20,000,000' }
+      { obj: 'Chuyển đổi App -> Zalo', tactic: 'Thiết kế & in 5000 tờ rơi, sticker dán kèm hộp cơm có mã QR kết nối Zalo OA. Tặng Freeship/Nước ép.', owner: 'Quản lý cửa hàng', deadline: 'Tuần 1, Tháng 1', cost: '3,500,000' },
+      { obj: 'Content Hàng Ngày', tactic: 'Lên lịch đăng bài Facebook/Zalo lúc 10h00 sáng. Chuẩn hóa hình ảnh (ánh sáng tự nhiên, nền mây/gỗ). Không dùng ảnh AI.', owner: 'Admin/Thu ngân', deadline: 'Hàng ngày', cost: '0' },
+      { obj: 'Cải thiện Google Maps', tactic: 'Nhân viên mời khách ăn tại quán review Google Maps để nhận mã giảm giá. Phản hồi 100% review trong 48h.', owner: 'Quản lý cửa hàng', deadline: 'Hàng tuần', cost: '1,000,000' },
+      { obj: 'B2B Cơm Văn Phòng', tactic: 'Lập danh sách 50 công ty quanh bán kính 2km. Gọi điện và gửi 20 suất ăn dùng thử (Sampling).', owner: 'Chủ cửa hàng', deadline: 'Tuần 2, Tháng 3', cost: '5,000,000' },
+      { obj: 'Chiến dịch Tết: Bữa Cơm Cuối Năm', tactic: 'Bán Set lẩu/Mâm cơm tất niên cho công ty nhỏ không tổ chức tiệc lớn. Thiết kế menu riêng, nhận Pre-order.', owner: 'Bếp trưởng', deadline: 'Tuần 3, Tháng 12', cost: '8,000,000' }
     ]
   },
   "b3-budget": {
     items: [
-      { item: 'Quảng cáo Performance (Fb/TikTok Lead Gen)', past: '50 triệu', now: '90 triệu', next: '120 triệu' },
-      { item: 'KOL/KOC & Booking PR (Earned Media)', past: '10 triệu', now: '100 triệu', next: '150 triệu' },
-      { item: 'Sản xuất Content (Brand Film, Photo, ASMR)', past: '15 triệu', now: '80 triệu', next: '95 triệu' },
-      { item: 'Phát triển Công nghệ & Martech (Zalo, CRM)', past: '0 triệu', now: '65 triệu', next: '85 triệu' },
-      { item: 'Trade Marketing (Sampling, POSM, Packaging)', past: '25 triệu', now: '45 triệu', next: '60 triệu' }
+      { item: 'In ấn Trade MKT (Tờ rơi, Sticker, Menu)', past: '1 tr', now: '5 tr', next: '6 tr' },
+      { item: 'Chi phí Sampling (Mời ăn thử B2B, HR)', past: '0 tr', now: '4 tr', next: '6 tr' },
+      { item: 'Quảng cáo Facebook Ads (Bán kính 3km)', past: '15 tr', now: '10 tr', next: '12 tr' },
+      { item: 'Quản lý Zalo OA & SMS Chăm sóc KH', past: '0 tr', now: '2 tr', next: '3 tr' },
+      { item: 'Gói chụp ảnh sản phẩm (Nhiếp ảnh gia Freelance)', past: '0 tr', now: '5 tr', next: '0 tr' }
     ]
   },
   "b4-contingency": {
     items: [
-      { risk: 'Trend "Chữa Lành" bị bão hòa, copycat', level: 'Cao', impact: 'Giảm 25% lượng khách New User đến vì tò mò.', trigger: 'Lượt Booking New User từ Ads giảm 2 tuần liên tiếp.', action: 'Bổ sung giá trị gia tăng độc quyền: Khởi chạy chuỗi Workshop cuối tuần (Gốm, Trà đạo, Cắm hoa) để tạo điểm nhấn mới.' },
-      { risk: 'Khủng hoảng vận hành do quá tải (Overload)', level: 'Nghiêm trọng', impact: 'Trải nghiệm khách hàng sụp đổ, bóc phốt trên MXH.', trigger: 'TAT (Thời gian lên món) vượt ngưỡng 25 phút.', action: 'Kích hoạt Scarcity Mode: Chỉ nhận khách Booking trước qua Zalo, ngưng nhận khách Walk-in giờ cao điểm. Tặng voucher xin lỗi ngay lập tức.' },
-      { risk: 'Đứt gãy nguồn cung Organic', level: 'Trung bình', impact: 'Không đủ nguyên liệu chuẩn, phải dùng hàng thường làm hỏng Brand Trust.', trigger: 'Nhà cung cấp báo thiếu hụt >30% sản lượng.', action: 'Kích hoạt Hợp đồng dự phòng (Plan B) với 2 Farm Backup. Tạm thời out-of-stock các món bị ảnh hưởng thay vì đánh tráo nguyên liệu.' },
-      { risk: 'Thuật toán Facebook/TikTok thay đổi', level: 'Trung bình', impact: 'CPA tăng vọt, Reach tự nhiên giảm mạnh.', trigger: 'CPA tăng >50% so với Benchmark trong 7 ngày.', action: 'Dịch chuyển ngân sách sang Kênh Earned Media (PR, KOLs) và khai thác sâu tập Database Zalo ZNS hiện có.' }
+      { risk: 'Quá tải giờ trưa (11:30 - 12:30)', level: 'Cao', impact: 'Giao trễ, khách complain, tài xế Grab hủy đơn, rate 1 sao.', trigger: 'Số đơn dồn ứ > 50 đơn cùng lúc tại bếp.', action: 'Dừng nhận đơn App ngay lập tức. Ưu tiên xử lý đơn Zalo và đơn khách quen. Báo trước khách thời gian chờ.' },
+      { risk: 'Khách phàn nàn đồ ăn (Sâu rau, nguội)', level: 'Trung bình', impact: 'Mất khách vĩnh viễn nếu xử lý tồi.', trigger: 'Khách nhắn tin Zalo hoặc review mắng quán.', action: 'Áp dụng quy tắc 3 bước: Nhận lỗi (không biện hộ) -> Chuyển qua kênh riêng -> Đền hoàn tiền hoặc tặng voucher.' },
+      { risk: 'Khách không quét mã QR Zalo', level: 'Trung bình', impact: 'Tỷ lệ chuyển đổi thấp, lãng phí chi phí in ấn.', trigger: 'Sau 2 tuần, lượng follow Zalo OA tăng < 5%.', action: 'Thay đổi offer trên tờ rơi (Từ tặng món phụ sang Giảm trực tiếp 15k). Yêu cầu NV giao hàng nhắc trực tiếp.' }
     ]
   },
   "b5-pnl": {
     items: [
-      { item: 'Doanh thu thuần mục tiêu (Q1-Q2)', val: '12.4', ratio: '100%' },
-      { item: 'Chi phí Giá vốn (Food Cost - 26%)', val: '3.22', ratio: '26.0%' },
-      { item: 'Biên LN Gộp (Gross Margin - 74%)', val: '9.18', ratio: '74.0%' },
-      { item: 'Chi phí Marketing & Sales (CAC & Ads)', val: '1.45', ratio: '11.7% (Được kiểm soát)' },
-      { item: 'Chi phí Vận hành, Mặt bằng & Nhân sự', val: '4.10', ratio: '33.0%' },
-      { item: 'Lợi nhuận hoạt động dự phóng (EBIT)', val: '3.63', ratio: '29.3% (Xuất sắc)' }
+      { item: 'Doanh thu trung bình/Tháng (Current)', val: '685 tr', ratio: '100%' },
+      { item: 'Chi phí Giá vốn (Food Cost - 35%)', val: '239 tr', ratio: '35.0%' },
+      { item: 'Chiết khấu App (TB 15% trên tổng DT)', val: '102 tr', ratio: '15.0% (Pain point)' },
+      { item: 'Chi phí Vận hành (Mặt bằng, Lương, Điện)', val: '250 tr', ratio: '36.5%' },
+      { item: 'Chi phí Marketing', val: '27 tr', ratio: '3.9%' },
+      { item: 'Lợi Nhuận Ròng Trước Thuế', val: '67 tr', ratio: '9.8% (Cần cải thiện)' }
     ]
   },
   "b6-gantt": {
     items: [
-      { name: 'Sản xuất Brand Film & Rebranding Identity', t8: true, t9: false, t10: false, t11: false, t12: false },
-      { name: 'Phát triển Zalo Mini App (Core CRM)', t8: true, t9: true, t10: false, t11: false, t12: false },
-      { name: 'KOLs/KOCs Campaign "Taste the Memories"', t8: false, t9: true, t10: true, t11: false, t12: false },
-      { name: 'Performance Ads (Booking Lead Gen)', t8: false, t9: true, t10: true, t11: true, t12: true },
-      { name: 'Khởi chạy Gói Corporate Lunch (B2B)', t8: false, t9: false, t10: true, t11: true, t12: true },
-      { name: 'Mở rộng: Pilot B2B Corporate Gifting', t8: false, t9: false, t10: false, t11: true, t12: true }
+      { name: 'Chuẩn hóa Menu ảnh & Set up Zalo OA', t8: true, t9: false, t10: false, t11: false, t12: false },
+      { name: 'Kẹp tờ rơi chuyển đổi App -> Zalo', t8: true, t9: true, t10: true, t11: true, t12: true },
+      { name: 'Content Thực Đơn Hàng Ngày (10h Sáng)', t8: true, t9: true, t10: true, t11: true, t12: true },
+      { name: 'Sampling Cơm Văn Phòng (B2B Sales)', t8: false, t9: true, t10: true, t11: false, t12: false },
+      { name: 'Chiến dịch Tết "Bữa Cơm Cuối Năm"', t8: false, t9: false, t10: false, t11: true, t12: true }
     ]
   },
   "c1-direction": {
     items: [
-      { item: 'North Star Metric (Chỉ số cốt lõi)', content: 'Tối đa hóa Customer Lifetime Value (LTV) và Tỷ lệ Lấp đầy Bàn (Occupancy Rate) thông qua định vị phân khúc "Mindful Dining" cao cấp.' },
-      { item: 'Lợi thế Cạnh tranh Bền vững (MOAT)', content: 'Khóa chặt nguồn cung nguyên liệu (Exclusive Farming Contracts) kết hợp Kiến trúc di sản không thể sao chép bằng vốn đơn thuần. Xây dựng rào cản từ cộng đồng Loyalty Zalo.' },
-      { item: 'Chiến lược Rút lui / Mở rộng (Exit/Scale)', content: 'Đóng gói quy trình (SOPs) chuẩn hóa hoàn toàn trong 18 tháng để tiến tới Nhượng quyền (Franchise) mô hình hoặc gọi vốn chuỗi (Series A) định giá $10M.' },
-      { item: 'Định vị Thương hiệu Số (Digital Persona)', content: 'Phát ngôn trên MXH như một "Người chữa lành" (The Caregiver): Lắng nghe, thấu cảm, không bao giờ dùng ngôn từ chói gắt hay chiêu trò câu view (Clickbait).' }
+      { item: 'Định vị Kênh (Channel Strategy)', content: 'Biến Zalo thành trụ cột mang lại lợi nhuận cốt lõi (Core Profit Engine). Các App giao đồ ăn chỉ đóng vai trò kênh thu hút khách hàng mới (Acquisition Channel).' },
+      { item: 'Lợi thế Khác biệt (Differentiator)', content: 'Sự tỉ mỉ, cá nhân hóa. Nhớ khẩu vị khách quen (VD: Không hành, ít cơm). Định vị là nhà hàng có dịch vụ chu đáo chứ không phải xưởng nấu công nghiệp.' },
+      { item: 'Quy tắc Content', content: 'Chụp ảnh thật, ánh sáng tự nhiên. Font chữ đơn giản (Playfair Display). Tuyệt đối không dùng từ phóng đại (Ngon nhất, rẻ nhất), không áp lực giả (Flash sale).' }
     ]
   },
   "c2-history": {
     items: [
-      { bcg: 'Ngôi sao (Star)', sbu: 'Trà Thảo Mộc Trị Liệu & Combo Trưa Eco', rev: '0.8 tỷ', target: '6.5 tỷ' },
-      { bcg: 'Bò sữa (Cash Cow)', sbu: 'Cơm Niêu Gia Đình & Món Ký Ức', rev: '14.4 tỷ', target: '21.5 tỷ' },
-      { bcg: 'Dấu hỏi (Question)', sbu: 'Dịch vụ Đặt tiệc riêng tư (Private Dining)', rev: '0.5 tỷ', target: '3.5 tỷ' },
-      { bcg: 'Chó mực (Dog)', sbu: 'Các món xào/chiên ngập dầu (Cắt bỏ)', rev: '1.2 tỷ', target: '0 tỷ' }
+      { bcg: 'Ngôi sao (Star)', sbu: 'Đơn hàng Zalo trực tiếp & Cơm B2B', rev: '137 tr', target: '450 tr' },
+      { bcg: 'Bò sữa (Cash Cow)', sbu: 'Đơn hàng App (Grab/Shopee)', rev: '548 tr', target: '400 tr' },
+      { bcg: 'Dấu hỏi (Question)', sbu: 'Dine-in (Ăn tối tại quán)', rev: '0 tr', target: '120 tr' }
     ]
   },
   "c3-issues": {
     items: [
-      { sbu: 'Cơm Niêu (Core Product)', market: 'Ngách Casual Dining đang bùng nổ 25% YoY', comp: 'Ít đối thủ có câu chuyện đủ sâu', issue: 'Nút thắt cổ chai Vận Hành (Bottleneck): Tốc độ bếp cực hạn (Capacity) chỉ 120 pax/ca. Nguy cơ phật lòng khách VIP. Cần giải pháp công nghệ KDS (Kitchen Display System) điều phối ngay.' },
-      { sbu: 'Combo Trưa Eco (Growth Engine)', market: 'Quy mô đại trà, TAM cực lớn (Dân VP)', comp: 'Đại dương đỏ (Red Ocean) Cloud Kitchen bám đuổi giá', issue: 'Bài toán Đơn giá (Unit Economics): Phải đàm phán giảm 15% giá bao bì bã mía số lượng lớn để giữ biên lợi nhuận > 40% mà không tăng giá bán.' },
-      { sbu: 'Trà Thảo Mộc (Cross-sell)', market: 'Nhu cầu Detox & Healthy Drink tăng 40%', comp: 'Chuỗi Cafe lớn (Highlands, TCH) đang lấn sân', issue: 'Packaging hiện tại chưa đủ chuẩn Premium để mang đi làm quà tặng. Khó scale lên mảng FMCG nếu không tái thiết kế bao bì.' },
-      { sbu: 'Private Dining (New)', market: 'Nhu cầu tiếp khách VIP kín đáo của giới Doanh nhân', comp: 'Nhà hàng Fine-dining truyền thống', issue: 'Thiếu nhân sự phục vụ chuẩn 5 sao. Việc setup phòng VIP đang ảnh hưởng đến luồng giao thông của khách vãng lai.' }
+      { sbu: 'Vận hành Bếp Giờ Trưa', market: 'Rất đông đúc', comp: 'Cloud Kitchen tốc độ nhanh', issue: 'Đóng gói chậm, hay nhầm món khi vội. Cần chia rõ Line nhặt đồ: 1 cho App, 1 cho Zalo.' },
+      { sbu: 'Marketing Nội Bộ', market: 'Không có nhân sự chuyên MKT', comp: 'Các chuỗi có MKT In-house', issue: 'Bài đăng Fanpage lộn xộn, hay quên đăng. Cần bộ Template Canva thiết kế sẵn và đặt lịch tự động hóa.' },
+      { sbu: 'Định giá trên App', market: 'Nhạy cảm về giá', comp: 'Cơm bình dân 35k', issue: 'Bán giá gốc trên App sẽ lỗ do phí 25%. Phải tạo Combo riêng cho App (Tăng giá bán + Tặng kèm nước) để bù đắp.' }
     ]
   },
   "c4-dashboard": {
     items: [
-      { sbu: 'Bếp Nhà Mộc (Master)', kpi: 'Tỷ lệ lấp đầy bàn (Occupancy Rate)', now: '35% (Rất thấp)', next: '85% (Optimal)' },
-      { sbu: 'Bếp Nhà Mộc (Master)', kpi: 'Tỷ lệ khách quay lại sau 30 ngày (D30 Retention)', now: '15%', next: '45% (Qua Zalo Mini App)' },
-      { sbu: 'Bếp Nhà Mộc (Master)', kpi: 'Lợi nhuận ròng (Net Profit Margin)', now: '2% (Rủi ro)', next: '18% (Chuẩn ngành)' },
-      { sbu: 'Eco Lunch Combo', kpi: 'Tốc độ tăng trưởng Đơn/Ngày (Velocity)', now: '30 đơn/ngày', next: '250 đơn/ngày' },
-      { sbu: 'Performance Marketing', kpi: 'Chi phí thu hút 1 Booking (CAC)', now: '250,000đ', next: '< 40,000đ' },
-      { sbu: 'Brand Awareness', kpi: 'Social Media Engagement (Tương tác)', now: '15K/tháng', next: '150K/tháng' }
+      { sbu: 'Hiệu quả Chuyển đổi', kpi: 'Tỷ trọng Doanh thu Zalo / Tổng DT', now: '20%', next: '45%' },
+      { sbu: 'Vận hành Bếp', kpi: 'Tỷ lệ đơn trễ / Phàn nàn', now: '5%', next: '< 1%' },
+      { sbu: 'Tài chính', kpi: 'Biên Lợi Nhuận Ròng (Net Margin)', now: '9.8%', next: '15.0%' },
+      { sbu: 'Khách hàng', kpi: 'Tỷ lệ khách quay lại lần 2 (Retention)', now: '25%', next: '45%' },
+      { sbu: 'Thương hiệu', kpi: 'Lượt đánh giá 5 sao Google Maps/Tháng', now: '10 review', next: '50 review' }
     ]
   }
 };
