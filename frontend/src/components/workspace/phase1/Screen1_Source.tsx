@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UploadCloud, Link as LinkIcon, FileText, CheckCircle2, Globe, Share2, Plus, X, ShieldCheck, Lock, Server, Loader2, AlertCircle, ChevronDown, ChevronUp, MessageSquarePlus, CheckCircle, XCircle, HelpCircle, Eye, FileDigit } from 'lucide-react';
+import { UploadCloud, Link as LinkIcon, FileText, CheckCircle2, Globe, Share2, Plus, X, ShieldCheck, Lock, Server, Loader2, AlertCircle, ChevronDown, ChevronUp, MessageSquarePlus, CheckCircle, XCircle, HelpCircle, Eye, FileDigit, Sparkles, PieChart, BrainCircuit } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFormStore } from '@/store/useFormStore';
 import { clsx, type ClassValue } from 'clsx';
