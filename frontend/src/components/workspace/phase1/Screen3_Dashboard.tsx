@@ -92,21 +92,21 @@ export default function Screen3_Dashboard({ onGoToHub, onGoToNext }: { onGoToHub
  const visualDNA = intakeAnalysis?.visual_brand_dna || {};
  const expertAnalysis = intakeAnalysis?.expert_business_analysis;
  
- const trustScore = audit.trust_score || 85;
- const competitivePositioning = audit.competitive_positioning || (language === 'vi' ? 'Thương hiệu lâu đời, có nền tảng tốt nhưng đang có dấu hiệu già hóa tệp khách hàng. Cần xây dựng hình ảnh năng động hơn.' : 'Established brand with good foundation but signs of aging customer base. Needs dynamic facelift.');
+ const trustScore = audit.trust_score || 64;
+ const competitivePositioning = audit.competitive_positioning || (language === 'vi' ? 'Mô hình F&B chất lượng cao hướng tới tệp khách hàng văn phòng (Corporate). Tuy nhiên, tỷ lệ giữ chân khách hàng (Retention Rate) đang ở mức báo động do trải nghiệm O2O chưa liền mạch. Ngân sách marketing đang bị lãng phí quá lớn vào các chiến dịch quảng cáo diện rộng (Broad Targeting) trên Facebook, dẫn đến chi phí CPA cao gấp nhiều lần so với giá trị trọn đời (LTV) của khách hàng.' : 'High-quality F&B model targeting Corporate customers. However, Retention Rate is at an alarming level due to inconsistent O2O experience. Marketing budget is heavily wasted on Broad Targeting Facebook ads, resulting in a CPA much higher than Customer Lifetime Value (LTV).');
 
- const visualArchetype = visualDNA.visual_archetype || (language === 'vi' ? 'Tối giản, Chuyên nghiệp' : 'Minimal, Pro');
- const primaryColors = visualDNA.primary_colors || ["#0F172A", "#06b6d4", "#3b82f6"];
- const moodboardKeywords = visualDNA.moodboard_keywords || ["Corporate", "Trust", "Innovation"];
+ const visualArchetype = visualDNA.visual_archetype || (language === 'vi' ? 'Mộc mạc, Ấm cúng, Chuyên nghiệp' : 'Rustic, Cozy, Professional');
+ const primaryColors = visualDNA.primary_colors || ["#0F172A", "#D97706", "#059669"];
+ const moodboardKeywords = visualDNA.moodboard_keywords || ["Healthy", "Mindful", "Corporate Lunch", "Organic"];
 
  const weaknesses = audit.macro_environment_pestle?.slice(0, 2) || [
-     language === 'vi' ? 'Chưa tối ưu hóa trải nghiệm mượt mà trên môi trường Digital' : 'Digital UX requires further seamless integration',
-     language === 'vi' ? 'Cần đồng bộ lại thông điệp tại hệ thống điểm bán lẻ' : 'POS messaging consistency can be unified'
+     language === 'vi' ? 'Cơ sở hạ tầng CRM yếu, chưa khai thác được dữ liệu khách hàng cũ' : 'Weak CRM infrastructure, unable to exploit existing customer data',
+     language === 'vi' ? 'Trải nghiệm Offline tại quán và Online (Zalo OA) chưa đồng bộ' : 'Inconsistent Offline and Online (Zalo OA) experience'
  ];
 
  const radar2 = audit.core_competences?.slice(0, 2) || [
-     language === 'vi' ? 'Giải quyết nỗi đau giá cao của khách hàng' : 'Solve high-price customer pain point',
-     language === 'vi' ? 'Mở rộng danh sách cơ sở dữ liệu CRM' : 'Expand CRM database targeting'
+     language === 'vi' ? 'Cắt giảm 100% ngân sách Facebook Ads Broad' : 'Cut 100% of Broad Facebook Ads budget',
+     language === 'vi' ? 'Triển khai chiến dịch thẻ thành viên Corporate' : 'Launch Corporate membership card campaign'
  ];
 
  const focusObjective = audit.marketing_objectives?.[0] || t('dashboard.focus_2');
@@ -153,33 +153,71 @@ export default function Screen3_Dashboard({ onGoToHub, onGoToNext }: { onGoToHub
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.1 }}
- className="md:col-span-3 bento-card p-8 flex flex-col md:flex-row items-center gap-8 bg-background border-linear-border"
+ className="md:col-span-3 bento-card p-8 flex flex-col md:flex-row items-start md:items-center gap-10 bg-gradient-to-br from-slate-900 via-[#0B1120] to-[#0a192f] border border-cyan-500/20 relative overflow-hidden"
  >
- <div className="relative w-40 h-40 flex items-center justify-center shrink-0">
- <svg className="absolute inset-0 w-full h-full -rotate-90">
- <circle cx="80" cy="80" r="70" fill="none" stroke="#e2e8f0" strokeWidth="8" />
+ {/* Background effects */}
+ <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-[80px] pointer-events-none" />
+ <div className="absolute bottom-0 left-0 w-64 h-64 bg-red-500/10 rounded-full blur-[80px] pointer-events-none" />
+
+ {/* Score Circle */}
+ <div className="relative w-48 h-48 flex items-center justify-center shrink-0 mx-auto md:mx-0">
+ <svg className="absolute inset-0 w-full h-full -rotate-90 filter drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+ <circle cx="96" cy="96" r="86" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="12" />
  <motion.circle 
- cx="80" cy="80" r="70" 
+ cx="96" cy="96" r="86" 
  fill="none" 
- stroke="#06b6d4" 
- strokeWidth="8" 
- strokeDasharray="440"
- initial={{ strokeDashoffset: 440 }}
- animate={{ strokeDashoffset: 440 - (440 * 75) / 100 }}
- transition={{ duration: 1.5, ease: "easeOut" }}
+ stroke="url(#scoreGradient)" 
+ strokeWidth="12" 
+ strokeDasharray="540"
+ initial={{ strokeDashoffset: 540 }}
+ animate={{ strokeDashoffset: 540 - (540 * trustScore) / 100 }}
+ transition={{ duration: 2, ease: "easeOut" }}
  strokeLinecap="round"
  />
+ <defs>
+ <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+ <stop offset="0%" stopColor="#06b6d4" />
+ <stop offset="100%" stopColor="#3b82f6" />
+ </linearGradient>
+ </defs>
  </svg>
  <div className="text-center absolute">
- <span className="block text-4xl font-black text-foreground">{trustScore}</span>
- <span className="text-[10px] uppercase font-bold text-blue-600 tracking-widest">{t('dashboard.score')}</span>
+ <span className="block text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-cyan-200">{trustScore}</span>
+ <span className="text-[11px] uppercase font-bold text-cyan-400 tracking-[0.2em] mt-1 block">{t('dashboard.score')}</span>
  </div>
  </div>
+
+ {/* Details */}
+ <div className="flex-1 w-full relative z-10">
+ <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-3">
  <div>
- <h3 className="text-xs font-bold text-linear-text-muted uppercase tracking-widest mb-2">{language === 'vi' ? 'Thực trạng Doanh thu & Cạnh tranh (Market Reality)' : 'Revenue & Market Reality'}</h3>
- <p className="text-lg text-foreground leading-relaxed font-medium">
+ <h3 className="text-[11px] font-bold text-cyan-400 uppercase tracking-widest mb-1">{language === 'vi' ? 'Thực trạng Doanh thu & Cạnh tranh' : 'Revenue & Market Reality'}</h3>
+ <h4 className="text-2xl md:text-3xl font-black text-white tracking-tight">Bếp Nhà Mộc <span className="text-slate-500 font-normal">| Corporate F&B</span></h4>
+ </div>
+ <div className="px-4 py-1.5 bg-red-500/10 border border-red-500/30 text-red-400 text-[10px] font-black uppercase tracking-wider rounded-full flex items-center gap-2 shrink-0">
+ <Activity className="w-3.5 h-3.5" /> High Risk
+ </div>
+ </div>
+ 
+ <p className="text-base text-slate-300 leading-relaxed font-medium mb-8 max-w-3xl">
  {competitivePositioning}
  </p>
+
+ {/* Mini Metrics Grid */}
+ <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+ {[
+ { label: 'LTV : CAC', value: '1.2x', desc: 'Dưới mức an toàn (3x)', color: 'text-red-400', bg: 'bg-red-500/5', border: 'border-red-500/20' },
+ { label: 'Churn Rate', value: '68%', desc: 'Tệp khách Corporate', color: 'text-amber-400', bg: 'bg-amber-500/5', border: 'border-amber-500/20' },
+ { label: 'Wasted OPEX', value: '45%', desc: 'Facebook Ads Broad', color: 'text-purple-400', bg: 'bg-purple-500/5', border: 'border-purple-500/20' },
+ { label: 'Market Share', value: '2.4%', desc: 'Bán kính 3km', color: 'text-cyan-400', bg: 'bg-cyan-500/5', border: 'border-cyan-500/20' },
+ ].map((metric, idx) => (
+ <div key={idx} className={cn("p-4 rounded-2xl border backdrop-blur-sm transition-all hover:-translate-y-1", metric.bg, metric.border)}>
+ <div className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-2">{metric.label}</div>
+ <div className={cn("text-3xl font-black mb-1", metric.color)}>{metric.value}</div>
+ <div className={cn("text-[10px] font-medium opacity-80", metric.color)}>{metric.desc}</div>
+ </div>
+ ))}
+ </div>
  </div>
  </motion.div>
 
