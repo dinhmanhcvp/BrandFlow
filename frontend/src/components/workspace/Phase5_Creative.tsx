@@ -51,6 +51,24 @@ export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void
         </div>
       </div>
 
+      {/* ── Overview Alert Banner ── */}
+      <motion.div initial={{opacity:0, y:-10}} animate={{opacity:1, y:0}} className="mb-6 bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 flex items-center justify-between">
+        <div className="flex items-center text-blue-300 text-sm">
+          <Wand2 className="w-5 h-5 mr-3 text-blue-400 shrink-0" />
+          <span>
+            <strong>Bản xem trước (Overview):</strong> Đây là giao diện tổng quan về quá trình tự động sinh nội dung và thiết kế. Để chỉnh sửa chuyên sâu, vui lòng truy cập các phân hệ chuyên biệt.
+          </span>
+        </div>
+        <div className="flex gap-3 ml-4 shrink-0">
+          <button onClick={() => window.location.href='/content-lab'} className="px-4 py-1.5 bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/30 text-blue-300 text-xs font-bold rounded-lg transition-colors flex items-center">
+            <FileText className="w-3.5 h-3.5 mr-1.5" /> Content Lab
+          </button>
+          <button onClick={() => window.location.href='/design-studio'} className="px-4 py-1.5 bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/30 text-purple-300 text-xs font-bold rounded-lg transition-colors flex items-center">
+            <Palette className="w-3.5 h-3.5 mr-1.5" /> Design Studio
+          </button>
+        </div>
+      </motion.div>
+
       <div className="flex-1 grid grid-cols-12 gap-6">
         {/* Left: Copywriting Lab */}
         <div className="col-span-5 bg-slate-900/50 border border-slate-700/50 rounded-2xl p-6 backdrop-blur-sm flex flex-col">

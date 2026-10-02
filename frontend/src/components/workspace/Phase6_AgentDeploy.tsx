@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, CheckCircle, Database, Shield, Zap, Terminal, Cpu, Network, Lock, MessageSquare, ArrowRight, Activity, Server, FileJson, Layers, RefreshCw } from 'lucide-react';
+import { Bot, CheckCircle, Database, Shield, Zap, Terminal, Cpu, Network, Lock, MessageSquare, ArrowRight, Activity, Server, FileJson, Layers, RefreshCw, Layout } from 'lucide-react';
 import { useFormStore } from '@/store/useFormStore';
 
 export default function Phase6_AgentDeploy({ onNext, onBack }: { onNext: () => void, onBack?: () => void }) {
@@ -78,6 +78,24 @@ export default function Phase6_AgentDeploy({ onNext, onBack }: { onNext: () => v
           </button>
         </div>
       </div>
+
+      {/* ── Overview Alert Banner ── */}
+      <motion.div initial={{opacity:0, y:-10}} animate={{opacity:1, y:0}} className="mb-6 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 flex items-center justify-between">
+        <div className="flex items-center text-emerald-300 text-sm">
+          <Bot className="w-5 h-5 mr-3 text-emerald-400 shrink-0" />
+          <span>
+            <strong>Bản xem trước (Overview):</strong> Đây là giao diện tổng quan về quá trình đóng gói AI. Để cấu hình chi tiết, vui lòng chuyển đến trang Builder hoặc Planning.
+          </span>
+        </div>
+        <div className="flex gap-3 ml-4 shrink-0">
+          <button onClick={() => window.location.href='/agent-builder'} className="px-4 py-1.5 bg-emerald-600/20 hover:bg-emerald-600/40 border border-emerald-500/30 text-emerald-300 text-xs font-bold rounded-lg transition-colors flex items-center">
+            <Cpu className="w-3.5 h-3.5 mr-1.5" /> Agent Builder
+          </button>
+          <button onClick={() => window.location.href='/planning/d0-report'} className="px-4 py-1.5 bg-teal-600/20 hover:bg-teal-600/40 border border-teal-500/30 text-teal-300 text-xs font-bold rounded-lg transition-colors flex items-center">
+            <Layout className="w-3.5 h-3.5 mr-1.5" /> Go to Planning
+          </button>
+        </div>
+      </motion.div>
 
       {/* ── Main Layout ── */}
       <div className="flex-1 grid grid-cols-1 xl:grid-cols-12 gap-8">
