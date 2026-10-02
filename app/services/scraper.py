@@ -35,7 +35,7 @@ class ContentScraper:
         return match.group(1) if match else None
 
     @staticmethod
-    async def transcribe_youtube_audio(video_id: str) -> str:
+    async def transcribe_audio_from_url(video_url: str, video_id: str) -> str:
         import os
         import glob
         import asyncio
@@ -45,7 +45,6 @@ class ContentScraper:
         output_dir = "temp_uploads"
         os.makedirs(output_dir, exist_ok=True)
         
-        url = f"https://www.youtube.com/watch?v={video_id}"
         outtmpl = os.path.join(output_dir, f"{video_id}.%(ext)s")
         
         ydl_opts = {
@@ -59,7 +58,7 @@ class ContentScraper:
         
         def download_audio():
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(url, download=True)
+                info = ydl.extract_info(video_url, download=True)
                 return ydl.prepare_filename(info)
                 
         loop = asyncio.get_event_loop()
@@ -186,7 +185,8 @@ class ContentScraper:
         except Exception as e:
             print(f"Không thể lấy transcript tự động từ Youtube API: {e}. Thử phương án dự phòng (tải audio & chép lời bằng Gemini 1.5)...")
             try:
-                transcript_text = await ContentScraper.transcribe_youtube_audio(video_id)
+                youtube_url = f"https://www.youtube.com/watch?v={video_id}"
+                transcript_text = await ContentScraper.transcribe_audio_from_url(youtube_url, video_id)
                 data["content"] = transcript_text
                 print("Lấy transcript thành công qua phương án dự phòng!")
             except Exception as fallback_err:
@@ -383,9 +383,18 @@ class ContentScraper:
                 if data['description']:
                     content_parts.append(f"Mô tả video / Hashtags: {data['description']}")
                 
-                # Mocking deep extraction cho TikTok
+                # Try to download and transcribe audio using yt-dlp & Gemini
+                import hashlib
+                tiktok_id = hashlib.md5(url.encode()).hexdigest()
                 content_parts.append("\n--- PHỤ ĐỀ (TRANSCRIPT) ---")
-                content_parts.append("(Nội dung video ngắn tập trung vào hook thu hút sự chú ý trong 3 giây đầu, nhịp điệu nhanh và sử dụng text overlay. Các từ khóa quan trọng được nhấn mạnh qua âm thanh trending.)")
+                try:
+                    print(f"Đang tiến hành tải và bóc băng video TikTok: {url}...")
+                    transcript = await ContentScraper.transcribe_audio_from_url(url, f"tiktok_{tiktok_id}")
+                    content_parts.append(transcript)
+                    content_parts.append("\n(Đã bóc băng thành công qua Audio)")
+                except Exception as ex:
+                    print(f"Lỗi khi bóc băng TikTok: {ex}")
+                    content_parts.append("(Lỗi khi trích xuất phụ đề video TikTok, có thể video private hoặc bị chặn tải.)")
                 
                 content_parts.append("\n--- PHẢN HỒI BÌNH LUẬN (COMMENTS) ---")
                 content_parts.append("- Bình luận 1: Quan tâm đến giá sản phẩm và địa chỉ mua hàng (Sentiment: Tích cực)")
