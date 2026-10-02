@@ -144,9 +144,9 @@ export default function DesignStudioPage() {
       if (isBepNhaMoc) {
         await new Promise(r => setTimeout(r, 2500));
         const bnmAssets = {
-          logo_url: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=500&q=80",
-          banner_url: "https://images.unsplash.com/photo-1498837167922-41c54b310a08?auto=format&fit=crop&w=1200&q=80",
-          avatar_url: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=80",
+          logo_url: "/assets/bep-nha-moc/logo.jpg",
+          banner_url: "/assets/bep-nha-moc/banner.jpg",
+          avatar_url: "/assets/bep-nha-moc/avatar.jpg",
           color_palette: [
             { hex: "#064E3B", name: "Deep Forest (Chính)" },
             { hex: "#B45309", name: "Amber Wood (Nhấn)" },
