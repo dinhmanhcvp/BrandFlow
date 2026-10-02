@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Target, Zap, Shield, ChevronRight, Activity, ArrowUpRight, Check } from 'lucide-react';
+import { Target, Zap, Shield, ChevronRight, Activity, ArrowUpRight, Check, AlertTriangle, AlertCircle, EyeOff, Lightbulb, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -367,37 +367,91 @@ export default function Screen3_Dashboard({ onGoToHub, onGoToNext }: { onGoToHub
      initial={{ opacity: 0, y: 20 }}
      animate={{ opacity: 1, y: 0 }}
      transition={{ delay: 0.45 }}
-     className="md:col-span-3 bento-card p-8 border-linear-border bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-900 dark:to-[#0B1120] text-white relative overflow-hidden shadow-lg mt-2"
+     className="md:col-span-3 bento-card p-6 md:p-8 border-linear-border bg-gradient-to-br from-slate-900 to-[#0F172A] text-white relative overflow-hidden shadow-2xl mt-4 rounded-3xl"
    >
-     <div className="absolute top-0 right-0 p-8 opacity-10">
-       <Activity className="w-40 h-40 text-cyan-400" />
+     <div className="absolute top-0 right-0 p-8 opacity-5">
+       <Activity className="w-64 h-64 text-cyan-400 -translate-y-10 translate-x-10" />
      </div>
-     <h3 className="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-6 flex items-center">
-       <Zap className="w-4 h-4 mr-2" />
-       {language === 'vi' ? 'Đánh giá Chuyên gia (Expert Analysis)' : 'Expert Business Analysis'}
-     </h3>
-     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-       <div className="space-y-6">
-         <div>
-           <h4 className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider mb-2 flex items-center"><span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mr-2"></span>{language === 'vi' ? 'Sức khỏe Tài chính' : 'Financial Health'}</h4>
-           <p className="text-sm text-slate-300 leading-relaxed">{expertAnalysis.financial_health}</p>
-         </div>
-         <div>
-           <h4 className="text-[10px] text-amber-400 font-bold uppercase tracking-wider mb-2 flex items-center"><span className="w-1.5 h-1.5 rounded-full bg-amber-400 mr-2"></span>{language === 'vi' ? 'Nút thắt Vận hành' : 'Operational Bottlenecks'}</h4>
-           <p className="text-sm text-slate-300 leading-relaxed">{expertAnalysis.operational_bottlenecks}</p>
+     
+     <div className="flex items-center justify-between mb-8 relative z-10 border-b border-slate-700/50 pb-4">
+       <h3 className="text-lg font-black text-white flex items-center">
+         <Zap className="w-6 h-6 mr-3 text-cyan-400" />
+         {language === 'vi' ? 'Báo cáo Cấp bách từ Ban Chiến lược' : 'Expert Business Analysis'}
+       </h3>
+       <span className="px-3 py-1 bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-bold uppercase tracking-widest rounded-full animate-pulse">High Priority</span>
+     </div>
+
+     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10 mb-8">
+       
+       {/* Financial Health */}
+       <div className="bg-slate-800/40 p-5 rounded-2xl border border-rose-500/20 hover:bg-slate-800/60 transition-colors group shadow-lg">
+         <h4 className="text-xs text-rose-400 font-bold uppercase tracking-widest mb-3 flex items-center">
+           <AlertTriangle className="w-4 h-4 mr-2" /> {language === 'vi' ? 'Sức khỏe Tài chính' : 'Financial Health'}
+         </h4>
+         <div className="text-sm text-slate-300 leading-relaxed">
+           {expertAnalysis.financial_health.includes(':') ? (
+             <>
+               <strong className="text-white block mb-2 text-base group-hover:text-rose-300 transition-colors">{expertAnalysis.financial_health.split(':')[0]}</strong>
+               <span className="opacity-90">{expertAnalysis.financial_health.split(':').slice(1).join(':').trim()}</span>
+             </>
+           ) : expertAnalysis.financial_health}
          </div>
        </div>
-       <div className="space-y-6">
-         <div>
-           <h4 className="text-[10px] text-purple-400 font-bold uppercase tracking-wider mb-2 flex items-center"><span className="w-1.5 h-1.5 rounded-full bg-purple-400 mr-2"></span>{language === 'vi' ? 'Định giá Thương hiệu' : 'Brand Equity'}</h4>
-           <p className="text-sm text-slate-300 leading-relaxed">{expertAnalysis.brand_equity_assessment}</p>
+
+       {/* Operational Bottlenecks */}
+       <div className="bg-slate-800/40 p-5 rounded-2xl border border-amber-500/20 hover:bg-slate-800/60 transition-colors group shadow-lg">
+         <h4 className="text-xs text-amber-400 font-bold uppercase tracking-widest mb-3 flex items-center">
+           <AlertCircle className="w-4 h-4 mr-2" /> {language === 'vi' ? 'Nút thắt Vận hành' : 'Operational Bottlenecks'}
+         </h4>
+         <div className="text-sm text-slate-300 leading-relaxed">
+           {expertAnalysis.operational_bottlenecks.includes(':') ? (
+             <>
+               <strong className="text-white block mb-2 text-base group-hover:text-amber-300 transition-colors">{expertAnalysis.operational_bottlenecks.split(':')[0]}</strong>
+               <span className="opacity-90">{expertAnalysis.operational_bottlenecks.split(':').slice(1).join(':').trim()}</span>
+             </>
+           ) : expertAnalysis.operational_bottlenecks}
          </div>
-         <div className="p-5 bg-blue-900/30 rounded-xl border border-blue-500/30 backdrop-blur-sm shadow-inner">
-           <h4 className="text-[10px] text-blue-300 font-bold uppercase tracking-wider mb-2">{language === 'vi' ? 'Đề xuất Chiến lược' : 'Strategic Recommendation'}</h4>
-           <p className="text-sm text-blue-50 font-medium leading-relaxed">{expertAnalysis.strategic_recommendation}</p>
+       </div>
+
+       {/* Brand Equity */}
+       <div className="bg-slate-800/40 p-5 rounded-2xl border border-purple-500/20 hover:bg-slate-800/60 transition-colors md:col-span-2 lg:col-span-1 group shadow-lg">
+         <h4 className="text-xs text-purple-400 font-bold uppercase tracking-widest mb-3 flex items-center">
+           <EyeOff className="w-4 h-4 mr-2" /> {language === 'vi' ? 'Định vị Thương hiệu' : 'Brand Equity'}
+         </h4>
+         <div className="text-sm text-slate-300 leading-relaxed">
+           {expertAnalysis.brand_equity_assessment.includes(':') ? (
+             <>
+               <strong className="text-white block mb-2 text-base group-hover:text-purple-300 transition-colors">{expertAnalysis.brand_equity_assessment.split(':')[0]}</strong>
+               <span className="opacity-90">{expertAnalysis.brand_equity_assessment.split(':').slice(1).join(':').trim()}</span>
+             </>
+           ) : expertAnalysis.brand_equity_assessment}
          </div>
        </div>
      </div>
+
+     {/* Strategic Recommendation - Full Width */}
+     <div className="p-6 bg-gradient-to-r from-blue-900/40 to-cyan-900/20 rounded-2xl border border-cyan-500/30 backdrop-blur-sm shadow-xl relative z-10">
+       <h4 className="text-sm text-cyan-300 font-bold uppercase tracking-widest mb-4 flex items-center">
+         <Lightbulb className="w-5 h-5 mr-2 text-cyan-400" /> {language === 'vi' ? 'Đề xuất Chiến lược Cấp bách' : 'Strategic Recommendation'}
+       </h4>
+       
+       {expertAnalysis.strategic_recommendation.match(/(?=\d+\))/) ? (
+         <div className="space-y-4">
+           <strong className="text-white block text-sm opacity-90">{expertAnalysis.strategic_recommendation.split(/(?=\d+\))/)[0]}</strong>
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+             {expertAnalysis.strategic_recommendation.split(/(?=\d+\))/).slice(1).map((item, idx) => (
+               <div key={idx} className="flex items-start text-sm text-cyan-50 bg-cyan-950/50 p-4 rounded-xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all hover:-translate-y-1 shadow-md">
+                 <CheckCircle2 className="w-6 h-6 text-cyan-400 mr-3 shrink-0 mt-0.5" />
+                 <span className="leading-relaxed font-medium">{item.replace(/^\d+\)\s*/, '')}</span>
+               </div>
+             ))}
+           </div>
+         </div>
+       ) : (
+         <p className="text-sm text-blue-50 font-medium leading-relaxed">{expertAnalysis.strategic_recommendation}</p>
+       )}
+     </div>
+
    </motion.div>
  )}
 
