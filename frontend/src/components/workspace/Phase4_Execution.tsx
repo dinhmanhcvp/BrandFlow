@@ -10,8 +10,21 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsToolti
 export default function Phase4_Execution({ onBack, onNext }: { onBack: () => void, onNext?: () => void }) {
   const { language } = useLanguage();
   const [step, setStep] = useState(0); 
-  const { brandDNA, wizardAnswers } = useFormStore();
+  const { brandDNA, wizardAnswers, businessIntent } = useFormStore();
   const isBepNhaMoc = brandDNA?.brand_name?.includes('Nhà Mộc') || wizardAnswers?.company_name?.includes('Nhà Mộc');
+
+  let totalBudget = 500000000; 
+  if (businessIntent?.mode === 'budget_first' && businessIntent?.budget) {
+    totalBudget = businessIntent.budget;
+  } else if (businessIntent?.mode === 'idea_first') {
+    totalBudget = 300000000; 
+  }
+
+  const formatCurrency = (val: number) => {
+    if (val >= 1000000000) return (val / 1000000000).toFixed(1) + ' Tỷ';
+    if (val >= 1000000) return (val / 1000000).toFixed(0) + 'M';
+    return val.toLocaleString() + 'đ';
+  };
 
   const chartData = [
     { week: 'W1', reach: 50, conversion: 2, cpa: 45 },
@@ -43,7 +56,7 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
       title: "Awareness & Teasing",
       duration: "Tuần 1 - 2",
       budget: "30% Ngân sách",
-      budgetVal: "150M VNĐ",
+      budgetVal: `${formatCurrency(totalBudget * 0.3)} VNĐ`,
       color: "from-blue-500 to-cyan-400",
       bgLight: "bg-blue-500/10",
       borderLight: "border-blue-500/20",
@@ -62,7 +75,7 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
       title: "Performance & Conversion",
       duration: "Tuần 3 - 6",
       budget: "50% Ngân sách",
-      budgetVal: "250M VNĐ",
+      budgetVal: `${formatCurrency(totalBudget * 0.5)} VNĐ`,
       color: "from-amber-500 to-orange-500",
       bgLight: "bg-amber-500/10",
       borderLight: "border-amber-500/20",
@@ -81,7 +94,7 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
       title: "Retention & Loyalty",
       duration: "Tuần 7 - 8",
       budget: "20% Ngân sách",
-      budgetVal: "100M VNĐ",
+      budgetVal: `${formatCurrency(totalBudget * 0.2)} VNĐ`,
       color: "from-emerald-500 to-teal-400",
       bgLight: "bg-emerald-500/10",
       borderLight: "border-emerald-500/20",
@@ -110,7 +123,12 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
           </h2>
           <p className="text-linear-text-muted mt-2 text-sm md:text-base max-w-2xl">
             Chiến dịch: <strong className="text-cyan-400 font-semibold">{isBepNhaMoc ? "Trạm Sạc Chữa Lành - Nạp Năng Lượng" : "Tăng Trưởng Đột Phá 2026"}</strong><br/>
-            Kế hoạch phân bổ ngân sách, chiến thuật đa kênh và bộ KPI cam kết chi tiết. Dành cho C-Level Marketing duyệt.
+            {businessIntent?.mode === 'idea_first' ? (
+              <span className="text-emerald-400 font-medium">Đề xuất ngân sách tối ưu: {formatCurrency(totalBudget)} VNĐ dựa trên năng lực tài chính và Idea cung cấp.</span>
+            ) : (
+              <span className="text-blue-400 font-medium">Ngân sách triển khai: {formatCurrency(totalBudget)} VNĐ (Phân bổ tự động theo mục tiêu doanh nghiệp).</span>
+            )}
+            <br/>Kế hoạch phân bổ ngân sách, chiến thuật đa kênh và bộ KPI cam kết chi tiết. Dành cho C-Level Marketing duyệt.
           </p>
         </div>
         <div className="flex gap-3">

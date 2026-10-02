@@ -12,8 +12,21 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasGenerated, setHasGenerated] = useState<Record<number, boolean>>({});
 
-  const { brandDNA, wizardAnswers } = useFormStore();
+  const { brandDNA, wizardAnswers, businessIntent } = useFormStore();
   const isBepNhaMoc = brandDNA?.brand_name?.includes('Nhà Mộc') || wizardAnswers?.company_name?.includes('Nhà Mộc');
+
+  let totalBudget = 500000000; 
+  if (businessIntent?.mode === 'budget_first' && businessIntent?.budget) {
+    totalBudget = businessIntent.budget;
+  } else if (businessIntent?.mode === 'idea_first') {
+    totalBudget = 300000000; 
+  }
+
+  const formatCurrency = (val: number) => {
+    if (val >= 1000000000) return (val / 1000000000).toFixed(1) + ' Tỷ';
+    if (val >= 1000000) return (val / 1000000).toFixed(0) + 'M';
+    return val.toLocaleString() + 'đ';
+  };
 
   const contentMock = isBepNhaMoc ? {
     pillars: [
@@ -98,7 +111,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
       name: "Tích hợp Zalo Mini App (Loyalty & Retention)", 
       phase: "Tháng 1-2", 
       lead: "Performance Lead", 
-      budget: "65,000,000 VNĐ", 
+      budget: `${formatCurrency(totalBudget * 0.15)} VNĐ`, 
       status: "Executing",
       kpis: "Giảm Churn Rate 20% | Đạt 5,000 users",
       details: "Xây dựng hệ thống Zalo Mini App dành riêng cho Bếp Nhà Mộc. Tích hợp tính năng đặt cơm nhóm, tự động hóa tin nhắn ZNS nhắc lịch ăn trưa, tặng voucher sinh nhật và lưu trữ lịch sử đơn hàng để phân tích sở thích."
@@ -108,7 +121,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
       name: "Chiến dịch Hero Video: 'Trạm Sạc Chữa Lành'", 
       phase: "Tháng 1", 
       lead: "Creative Director", 
-      budget: "50,000,000 VNĐ", 
+      budget: `${formatCurrency(totalBudget * 0.35)} VNĐ`, 
       status: "Planning",
       kpis: "1M Views | 5% CTR | 200 Booking",
       details: "Sản xuất Cinematic Video khai thác câu chuyện 'Food Coma' chốn công sở và giải pháp từ Bếp Nhà Mộc. Phân phối tập trung trên TikTok (định dạng dọc) và Facebook Reels với ngân sách Ads mồi 15tr."
@@ -118,7 +131,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
       name: "Booking 30 Lifestyle Micro-KOLs (Office/Food)", 
       phase: "Tháng 2-3", 
       lead: "Content Strategist", 
-      budget: "100,000,000 VNĐ", 
+      budget: `${formatCurrency(totalBudget * 0.40)} VNĐ`, 
       status: "Ready",
       kpis: "Reach 2M | 150 UGC | Tương tác 50K",
       details: "Tổ chức chiến dịch Review chân thực thông qua tệp Micro-KOLs là dân văn phòng thực thụ. Mục tiêu tạo hiệu ứng truyền miệng (Word of Mouth) tại các toà nhà văn phòng lớn (Bitexco, Landmark, Keangnam). Cung cấp mã giảm giá riêng cho từng KOL để đo lường chuyển đổi."
@@ -128,7 +141,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
       name: "B2B Corporate Lunch Activation (Direct Sales)", 
       phase: "Tháng 3-4", 
       lead: "B2B Growth", 
-      budget: "30,000,000 VNĐ", 
+      budget: `${formatCurrency(totalBudget * 0.10)} VNĐ`, 
       status: "Queued",
       kpis: "Ký kết 15 Hợp đồng | LTV tăng 35%",
       details: "Chạy chiến dịch LinkedIn InMail kết hợp Tele-sales tiếp cận trực tiếp phòng Nhân sự/Công đoàn của các doanh nghiệp quy mô 50+ nhân sự. Cung cấp gói ăn trưa định kỳ (Corporate Subscription) kèm buổi ăn thử (Sampling) miễn phí tận văn phòng."
@@ -168,7 +181,12 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
             Tactical Execution Hub
           </h2>
           <p className="text-linear-text-muted mt-2 font-medium text-sm md:text-base max-w-2xl">
-            Kế hoạch chiến thuật chi tiết được xây dựng tự động bởi tổ hợp AI (AI Swarm) dựa trên kết quả Debate và Brand DNA.
+            Kế hoạch chiến thuật chi tiết được xây dựng tự động bởi tổ hợp AI (AI Swarm) dựa trên kết quả Debate và Brand DNA.<br/>
+            {businessIntent?.mode === 'idea_first' ? (
+              <span className="text-emerald-400 font-medium">Ngân sách đề xuất: {formatCurrency(totalBudget)} VNĐ dựa trên ý tưởng và quy mô công ty.</span>
+            ) : (
+              <span className="text-blue-400 font-medium">Phân bổ ngân sách: {formatCurrency(totalBudget)} VNĐ (Căn cứ trên nguồn vốn đã cấp).</span>
+            )}
           </p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
