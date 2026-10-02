@@ -156,7 +156,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
       const timer = setTimeout(() => {
         setIsGenerating(false);
         setHasGenerated(prev => ({...prev, [activePanel]: true}));
-      }, 1000);
+      }, 2500); // Tăng delay để có cảm giác thật hơn
       return () => clearTimeout(timer);
     }
   }, [activePanel]);
@@ -169,9 +169,9 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
   ];
 
   return (
-    <div className="h-full w-full flex flex-col p-4 md:p-8 max-w-[1600px] mx-auto z-10 relative overflow-hidden">
+    <div className="w-full flex flex-col p-4 md:p-8 max-w-[1600px] mx-auto z-10 relative">
       {/* ── Header ── */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 shrink-0 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <div className="inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 mb-3 shadow-[0_0_15px_rgba(59,130,246,0.15)]">
             <Zap className="w-4 h-4 text-blue-400 animate-pulse mr-2" />
@@ -208,7 +208,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
       </div>
 
       {/* ── Tabs Navigation ── */}
-      <div className="flex space-x-2 md:space-x-4 mb-6 shrink-0 overflow-x-auto no-scrollbar pb-2">
+      <div className="flex space-x-2 md:space-x-4 mb-6 overflow-x-auto no-scrollbar pb-2">
         {tabs.map((tab) => {
           const isActive = activePanel === tab.id;
           return (
@@ -230,7 +230,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
       </div>
 
       {/* ── Dynamic Content Area ── */}
-      <div className="flex-1 bg-linear-surface/40 backdrop-blur-md rounded-3xl p-6 md:p-10 overflow-y-auto no-scrollbar relative flex flex-col border border-linear-border/30 shadow-2xl">
+      <div className="bg-linear-surface/40 backdrop-blur-md rounded-3xl p-6 md:p-10 relative flex flex-col border border-linear-border/30 shadow-2xl min-h-[600px]">
         <AnimatePresence mode="wait">
           
           {/* TAB 0: CONTENT MATRIX */}
@@ -361,7 +361,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
 
           {/* TAB 2: AGENT SWARM */}
           {activePanel === 2 && (
-            <motion.div key="p2" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-20}} className="h-full flex flex-col relative gap-8">
+            <motion.div key="p2" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-20}} className="flex flex-col relative gap-8">
               <div className="flex items-center justify-between">
                 <h3 className="text-2xl font-black text-foreground">Biệt Đội AI Triển Khai (AI Agent Swarm)</h3>
                 <div className="flex items-center text-blue-400/80 text-xs font-bold tracking-widest uppercase bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">
@@ -377,18 +377,25 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {agentsMock.map((agent, i) => (
-                    <div key={i} className="bg-background/60 border border-linear-border rounded-2xl p-6 flex gap-6 hover:border-blue-500/30 transition-colors shadow-lg">
+                    <div 
+                      key={i} 
+                      className="bg-background/60 border border-linear-border rounded-2xl p-6 flex gap-6 hover:border-blue-500/30 transition-all shadow-lg cursor-pointer hover:-translate-y-1 group relative overflow-hidden"
+                      onClick={() => window.location.href = `/agent-builder`}
+                    >
                       <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 ${agent.avatar}/10 border border-${agent.avatar.replace('bg-', '')}/30`}>
                         <Bot className={`w-8 h-8 text-${agent.avatar.replace('bg-', '')}`} />
                       </div>
-                      <div>
-                        <div className="flex items-center gap-3 mb-2">
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
                           <h4 className="text-lg font-black text-foreground">{agent.role}</h4>
                           <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center">
                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse" /> {agent.status}
                           </span>
                         </div>
-                        <p className="text-sm text-linear-text-muted leading-relaxed">{agent.description}</p>
+                        <p className="text-sm text-linear-text-muted leading-relaxed mb-3">{agent.description}</p>
+                        <div className="text-[10px] text-blue-400 font-bold uppercase tracking-widest flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          Xem chi tiết cấu hình Agent <ArrowRight className="w-3 h-3 ml-1" />
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -399,7 +406,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
 
           {/* TAB 3: ACTION PLAN */}
           {activePanel === 3 && (
-            <motion.div key="p3" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-20}} className="h-full flex flex-col relative gap-6">
+            <motion.div key="p3" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-20}} className="flex flex-col relative gap-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-2xl font-black text-foreground">Kế Hoạch Hành Động (Action Plan)</h3>
                 <div className="flex items-center text-emerald-400/80 text-xs font-bold tracking-widest uppercase bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">
@@ -413,7 +420,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
                   <p className="text-emerald-400 font-bold tracking-widest uppercase text-sm animate-pulse">Scheduling Tasks & KPIs...</p>
                 </div>
               ) : (
-                <div className="flex-1 overflow-y-auto pr-2 no-scrollbar space-y-4">
+                <div className="flex-1 pr-2 space-y-4">
                   {planMock.map((task, i) => (
                     <div key={i} className="bg-background/60 border border-linear-border rounded-2xl p-5 hover:border-emerald-500/30 transition-all group shadow-md flex flex-col lg:flex-row gap-6 items-start lg:items-center">
                       

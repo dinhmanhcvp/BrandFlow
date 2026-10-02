@@ -52,6 +52,23 @@ function BudgetCutHighlight({ text }: { text: string }) {
   return <>{parts}</>;
 }
 
+function TypewriterEffect({ text }: { text: string }) {
+  const [displayedText, setDisplayedText] = useState("");
+
+  useEffect(() => {
+    setDisplayedText("");
+    let i = 0;
+    const interval = setInterval(() => {
+      setDisplayedText(text.slice(0, i + 1));
+      i++;
+      if (i >= text.length) clearInterval(interval);
+    }, 15);
+    return () => clearInterval(interval);
+  }, [text]);
+
+  return <BudgetCutHighlight text={displayedText} />;
+}
+
 export default function Phase2_Debate({ onNext, onBack }: { onNext: () => void, onBack: () => void }) {
   const { t } = useLanguage();
   const { debateLogs, runDebateAndPlanning } = useFormStore();
@@ -78,7 +95,7 @@ export default function Phase2_Debate({ onNext, onBack }: { onNext: () => void, 
 
     let i = 0;
     const isDemo = typeof window !== 'undefined' && (window as any).__DEMO_MODE__;
-    const intervalTime = isDemo ? 500 : 1800;
+    const intervalTime = isDemo ? 500 : 3500;
     const lockDelay = isDemo ? 1000 : 1500;
 
     const interval = setInterval(() => {
@@ -228,7 +245,7 @@ export default function Phase2_Debate({ onNext, onBack }: { onNext: () => void, 
                     
                     <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
                       <div className={`text-lg md:text-xl font-medium leading-relaxed text-foreground whitespace-pre-wrap ${currentMsg.type === 'budget_cut' ? 'text-amber-100' : ''}`}>
-                        <BudgetCutHighlight text={currentMsg.text} />
+                        <TypewriterEffect text={currentMsg.text} />
                       </div>
                     </div>
                   </motion.div>
