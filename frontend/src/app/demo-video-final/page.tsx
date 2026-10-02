@@ -7,7 +7,8 @@ import { Space_Grotesk, Inter } from 'next/font/google';
 import { 
   FileText, ShieldCheck, UploadCloud, BrainCircuit, LineChart, 
   CheckCircle2, Wand2, BarChart3, Clock, LayoutDashboard, 
-  Target, PenTool, Calendar, Settings, Bell, Search, Heart, MessageCircle, Share2
+  Target, PenTool, Calendar, Settings, Bell, Search, Heart, MessageCircle, Share2,
+  Link as LinkIcon, Lock, Server, CheckCircle, Eye, X, AlertCircle
 } from 'lucide-react';
 
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space' });
@@ -25,7 +26,6 @@ const SCENES = [
   // BODY
   { id: 'body-onboarding', type: 'body-onboarding', subtitle: "1. UPLOAD DỮ LIỆU DOANH NGHIỆP." },
   { id: 'body-debate', type: 'body-debate', subtitle: "2. TRANH BIỆN BẢO VỆ NGÂN SÁCH." },
-  // SCENE MỚI: TẬP TRUNG VÀO SWIPE ĐIỆN THOẠI ĐA NỀN TẢNG
   { id: 'body-content-daily', type: 'body-content-daily', subtitle: "3. AUTO-GEN CONTENT ĐA NỀN TẢNG." },
   { id: 'body-finance', type: 'body-finance', subtitle: "4. KIỂM SOÁT NGÂN SÁCH CHẶT CHẼ." },
 
@@ -65,11 +65,9 @@ export default function EpicVideoComposer() {
     </span>
   );
 
-  // MOCK APP SHELL - Giao diện giả lập của web app thực tế để làm nền
   const MockAppShell = ({ activeMenu, children }: { activeMenu: string, children: React.ReactNode }) => (
-    <div className="absolute inset-0 flex bg-[#0f172a] text-slate-300 font-inter text-sm z-10">
-      {/* Sidebar */}
-      <div className="w-64 bg-[#020617] border-r border-slate-800 flex flex-col">
+    <div className="absolute inset-0 flex bg-[#020617] text-slate-300 font-inter text-sm z-10">
+      <div className="w-64 bg-[#020617] border-r border-slate-800 flex flex-col z-20">
         <div className="p-6 flex items-center gap-3">
           <BrandFlowLogo className="w-8 h-8 text-cyan-400" />
           <span className="font-space font-bold text-lg text-white">BrandFlow</span>
@@ -82,7 +80,7 @@ export default function EpicVideoComposer() {
             { id: 'content', icon: PenTool, label: 'Content Lab' },
             { id: 'planning', icon: Calendar, label: 'Gantt & Finance' }
           ].map(menu => (
-            <div key={menu.id} className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${activeMenu === menu.id ? 'bg-cyan-500/20 text-cyan-400 font-bold border border-cyan-500/30' : 'hover:bg-slate-800/50 text-slate-400'}`}>
+            <div key={menu.id} className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${activeMenu === menu.id ? 'bg-cyan-500/10 text-cyan-400 font-bold border border-cyan-500/20' : 'text-slate-400'}`}>
               <menu.icon className="w-5 h-5" />
               {menu.label}
             </div>
@@ -99,10 +97,8 @@ export default function EpicVideoComposer() {
         </div>
       </div>
       
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col relative overflow-hidden">
-        {/* Header */}
-        <div className="h-16 border-b border-slate-800 flex items-center justify-between px-8 bg-[#0f172a]/80 backdrop-blur-md z-10">
+      <div className="flex-1 flex flex-col relative overflow-hidden bg-[#070B14]">
+        <div className="h-16 border-b border-slate-800 flex items-center justify-between px-8 bg-[#020617]/50 backdrop-blur-md z-20">
           <div className="flex items-center gap-4 text-slate-400">
             <Search className="w-4 h-4" />
             <span>Search anything... (Press 'Cmd + K')</span>
@@ -116,8 +112,7 @@ export default function EpicVideoComposer() {
           </div>
         </div>
         
-        {/* Page Content */}
-        <div className="flex-1 p-8 relative">
+        <div className="flex-1 overflow-y-auto relative z-10">
           {children}
         </div>
       </div>
@@ -130,8 +125,6 @@ export default function EpicVideoComposer() {
       onClick={() => setStep(s => Math.min(s + 1, SCENES.length - 1))}
       style={{ perspective: '2500px' }}
     >
-      
-      {/* GLOBAL AMBIENT LAYER cho INTRO */}
       {(step <= 5 || step === SCENES.length - 1) && (
         <motion.div 
           initial={{ opacity: 0 }} animate={{ opacity: 0.4, scale: [1, 1.1, 1] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
@@ -144,9 +137,7 @@ export default function EpicVideoComposer() {
 
       <AnimatePresence mode="wait">
         
-        {/* =========================================
-            INTRO SCENES
-            ========================================= */}
+        {/* INTRO */}
         {currentScene.type === 'system-intro' && (
           <motion.div key={currentScene.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 3, filter: 'blur(30px)' }} className="absolute inset-0 flex items-center justify-center bg-[#070B14] z-50">
             <motion.div initial={{ filter: 'blur(15px)', scale: 0.95, opacity: 0 }} animate={{ filter: 'blur(0px)', scale: 1, opacity: 1 }} transition={{ duration: 2.5 }}>
@@ -190,70 +181,140 @@ export default function EpicVideoComposer() {
         )}
 
         {/* =========================================
-            BODY: ONBOARDING (MockAppShell as Base)
+            BODY: ONBOARDING - EXACT REPLICA OF Screen1_Source
             ========================================= */}
         {currentScene.type === 'body-onboarding' && (
           <motion.div 
             key={currentScene.id} 
             className="absolute inset-0 z-20"
-            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }} transition={{ duration: 0.5 }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }} transition={{ duration: 0.5 }}
           >
             <MockAppShell activeMenu="onboarding">
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="absolute top-[2%] w-full text-center z-30 drop-shadow-2xl">
+              <div className="flex flex-col items-center p-8 max-w-5xl mx-auto w-full min-h-full">
+                
+                {/* TITLE OVERLAY FOR DEMO PURPOSE ONLY */}
+                <div className="absolute top-[2%] w-full text-center z-30 drop-shadow-2xl pointer-events-none">
                   <motion.h2 initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-4xl font-black text-white tracking-tighter uppercase font-space">{currentScene.subtitle}</motion.h2>
                 </div>
 
-                {/* Base UI (The Real Web App Page look) */}
-                <motion.div 
-                  className="mt-12 w-full max-w-[800px] bg-slate-900 border border-slate-700/50 rounded-3xl p-8 shadow-2xl relative"
-                  initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5, duration: 0.8 }}
-                >
-                  <div className="text-center mb-8">
-                    <h2 className="text-2xl font-black text-white mb-2">Khởi tạo <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Brand DNA</span></h2>
-                    <p className="text-slate-400 text-sm">Nạp dữ liệu thô của doanh nghiệp để AI học hỏi</p>
-                  </div>
+                {/* --- EXACT UI REPLICA --- */}
+                <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8 }} className="w-full mt-12">
                   
-                  <div className="w-full border-2 border-dashed border-cyan-500/50 bg-cyan-900/10 rounded-3xl p-8 flex flex-col items-center justify-center mb-6 relative overflow-hidden">
-                    <UploadCloud className="w-12 h-12 text-cyan-400 mb-3" />
-                    <p className="text-white font-bold mb-1">Thả file vào đây...</p>
-                    <p className="text-xs text-slate-400">Hỗ trợ: PDF, DOCX, TXT — tối đa 100MB/file</p>
+                  {/* Header */}
+                  <div className="text-center mb-10 shrink-0 relative z-10">
+                    <div className="inline-flex items-center px-4 py-2 rounded-full border border-slate-700 bg-slate-800/50 backdrop-blur-sm mb-4 shadow-sm">
+                      <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse mr-3 shrink-0" />
+                      <span className="text-xs font-semibold text-slate-300 tracking-wide uppercase">Stage 1: Ingestion</span>
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
+                      Khởi tạo <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Brand DNA</span>
+                    </h2>
+                    <p className="text-slate-400 max-w-2xl mx-auto text-base">Nạp dữ liệu thô của doanh nghiệp để AI học hỏi và định hình chiến lược.</p>
                   </div>
-                  
-                  {/* File Uploading Animation OVERLAY */}
-                  <motion.div 
-                    className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
-                  >
-                     <motion.div 
-                      className="bg-slate-800/90 border border-cyan-500 shadow-[0_0_50px_rgba(34,211,238,0.2)] rounded-2xl p-4 flex items-center gap-4 backdrop-blur-md"
-                      initial={{ scale: 0, y: 100 }} animate={{ scale: 1.2, y: -50 }} transition={{ type: "spring", bounce: 0.5 }}
-                    >
-                      <FileText className="w-10 h-10 text-blue-400" />
-                      <div>
-                        <p className="text-white font-bold font-mono">BepNhaMoc_BrandFlow.docx</p>
-                        <div className="w-48 h-2 bg-slate-700 rounded-full mt-2 overflow-hidden">
-                          <motion.div className="h-full bg-cyan-400" initial={{ width: "0%" }} animate={{ width: "100%" }} transition={{ delay: 1.5, duration: 2 }} />
+
+                  {/* 3 Source Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-8 shrink-0">
+                    {/* Card 1 (Active) */}
+                    <div className="relative group flex flex-col p-6 rounded-3xl transition-all duration-500 border backdrop-blur-xl shadow-sm overflow-hidden bg-cyan-500/10 border-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.15)] scale-[1.02]">
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors z-10 bg-cyan-500/20 border border-cyan-500/30">
+                        <UploadCloud className="w-6 h-6 text-cyan-400" />
+                      </div>
+                      <h3 className="text-lg font-bold text-white mb-2">Tải lên Tệp dữ liệu</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">PDF, Word, Excel, CSV, Audio, Video chứa tài liệu nội bộ, báo cáo kinh doanh, brand guideline.</p>
+                      <div className="absolute top-4 right-4 text-cyan-400"><CheckCircle2 className="w-5 h-5 animate-in fade-in" /></div>
+                      <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 to-transparent pointer-events-none" />
+                    </div>
+
+                    {/* Card 2 */}
+                    <div className="relative group flex flex-col p-6 rounded-3xl transition-all duration-500 border backdrop-blur-xl shadow-sm overflow-hidden bg-slate-800/50 border-slate-700">
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors z-10 bg-slate-800 border border-slate-700">
+                        <LinkIcon className="w-6 h-6 text-slate-400" />
+                      </div>
+                      <h3 className="text-lg font-bold text-white mb-2">Quét Website / Mạng xã hội</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">Dán link Fanpage, Tiktok, Website. AI sẽ tự động cào dữ liệu và phân tích ngôn ngữ thương hiệu hiện tại.</p>
+                    </div>
+
+                    {/* Card 3 */}
+                    <div className="relative group flex flex-col p-6 rounded-3xl transition-all duration-500 border backdrop-blur-xl shadow-sm overflow-hidden bg-slate-800/50 border-slate-700">
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors z-10 bg-slate-800 border border-slate-700">
+                        <FileText className="w-6 h-6 text-slate-400" />
+                      </div>
+                      <h3 className="text-lg font-bold text-white mb-2">Trả lời Câu hỏi trực tiếp</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">Không có sẵn tài liệu? Hãy trả lời 5-10 câu hỏi phỏng vấn chuyên sâu từ AI để tạo khung sườn.</p>
+                    </div>
+                  </div>
+
+                  {/* Upload Zone */}
+                  <div className="w-full flex-1 flex flex-col items-center">
+                    <div className="w-full mb-6 overflow-hidden">
+                      <div className="w-full border-2 border-dashed rounded-3xl p-8 flex flex-col items-center justify-center transition-all duration-300 min-h-48 backdrop-blur-md relative overflow-hidden bg-slate-800/50 border-slate-700">
+                        <UploadCloud className="w-10 h-10 mb-3 text-slate-400" />
+                        <p className="text-white font-bold mb-1">Thả file vào đây...</p>
+                        <p className="text-xs text-slate-400">Hỗ trợ: PDF, DOCX, TXT, MD, CSV, XLSX, XLS, HTML — tối đa 100MB/file</p>
+                        <p className="text-xs text-cyan-500/70 mt-2 font-medium">hoặc nhấp để chọn file</p>
+                        
+                        {/* ANIMATED DRAG & DROP FAKE ACTION */}
+                        <motion.div 
+                          className="absolute inset-0 bg-cyan-500/10 border-2 border-cyan-400 rounded-3xl"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: [0, 1, 0] }}
+                          transition={{ delay: 2, duration: 1, times: [0, 0.5, 1] }}
+                        />
+                      </div>
+
+                      {/* File rows (Animations) */}
+                      <motion.div className="mt-4 space-y-2" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.5 }}>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">1 tài liệu đã chọn</p>
+
+                        <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/70 border border-slate-700">
+                          <div className="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0">
+                            <span className="text-[9px] font-black text-cyan-400">DOCX</span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-white truncate">BepNhaMoc_BrandFlow.docx</p>
+                            <p className="text-xs text-slate-400 flex items-center gap-2">
+                              18.4 KB <span className="opacity-100 text-cyan-400 flex items-center gap-1"><Eye className="w-3 h-3" /> Preview</span>
+                            </p>
+                          </div>
+                          <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0 }} transition={{ delay: 3.5, duration: 0.1 }}>
+                            <X className="w-4 h-4 text-slate-400" />
+                          </motion.div>
+                          <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 3.5, duration: 0.3 }} className="absolute right-3">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                          </motion.div>
+                        </div>
+
+                        {/* Status Message (After upload) */}
+                        <motion.div 
+                          initial={{ opacity: 0, y: -5, height: 0 }} animate={{ opacity: 1, y: 0, height: 'auto' }} transition={{ delay: 4 }}
+                          className="flex items-start gap-2 p-3 rounded-xl text-sm font-medium mt-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
+                        >
+                          <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
+                          <span className="whitespace-pre-line">
+                            ✅ BepNhaMoc_BrandFlow.docx · 18.4k ký tự [AI Extraction]{'\n'}
+                            ⚡ Math Engine & Cross-Validation: Hoàn tất (0.8s)
+                          </span>
+                        </motion.div>
+                      </motion.div>
+
+                      {/* Enterprise Security Badge */}
+                      <div className="mt-6 px-6 py-5 rounded-2xl border border-cyan-500/20 bg-gradient-to-b from-cyan-500/5 to-transparent shadow-sm w-full relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+                        <p className="text-[13px] leading-relaxed text-slate-400 mb-5 text-center relative z-10">
+                          <Lock className="w-3.5 h-3.5 inline-block mr-1.5 text-slate-400 mb-0.5" />
+                          <span>Tài liệu nội bộ được bảo vệ bởi chuẩn <b>Mã hóa Đầu cuối</b>. Nhằm đảm bảo tuyệt mật, hệ thống sẽ <b>tiêu hủy file gốc vĩnh viễn</b> khỏi máy chủ ngay sau khi phân tích. Trí tuệ Nhân tạo tuyệt đối không sử dụng Dữ liệu của bạn để tự huấn luyện.</span>
+                        </p>
+                        <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest relative z-10">
+                          <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-cyan-500" /> Enterprise Privacy</span>
+                          <span className="flex items-center gap-1.5"><Lock className="w-4 h-4 text-cyan-500" /> AES-256 Encrypted</span>
+                          <span className="flex items-center gap-1.5"><Server className="w-4 h-4 text-cyan-500" /> Zero Retention</span>
                         </div>
                       </div>
-                      <ShieldCheck className="w-8 h-8 text-emerald-400 ml-4" />
-                    </motion.div>
-                  </motion.div>
 
-                  {/* Extraction Results */}
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 3.5 }}
-                    className="mt-6 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-sm font-medium"
-                  >
-                    <div className="flex items-center gap-2 text-cyan-400 mb-2">
-                      <CheckCircle2 className="w-5 h-5 shrink-0" /> <span className="font-bold uppercase tracking-wider">AI Đã Trích Xuất: Bếp Nhà Mộc</span>
                     </div>
-                    <ul className="text-slate-300 text-xs space-y-1 ml-7">
-                      <li><span className="text-cyan-300">Doanh thu:</span> 600–770 triệu/tháng | <span className="text-cyan-300">Margin:</span> 8–12%</li>
-                      <li><span className="text-cyan-300">Vấn đề:</span> Phụ thuộc App Giao đồ ăn làm giảm biên lợi nhuận</li>
-                    </ul>
-                  </motion.div>
+                  </div>
                 </motion.div>
+
               </div>
             </MockAppShell>
           </motion.div>
@@ -332,7 +393,6 @@ export default function EpicVideoComposer() {
           >
             <MockAppShell activeMenu="content">
               
-              {/* Nền giả lập Web App (Sẽ bị làm mờ/thu phóng khi điện thoại bay vào) */}
               <motion.div 
                 className="absolute inset-0 bg-slate-900 p-8 flex flex-col gap-6 origin-center"
                 initial={{ scale: 1, filter: 'blur(0px)', opacity: 1 }}
@@ -343,7 +403,6 @@ export default function EpicVideoComposer() {
                   <h2 className="text-2xl font-bold text-white">Content Calendar</h2>
                   <div className="px-4 py-2 bg-cyan-600 text-white rounded-lg">Auto Generate All</div>
                 </div>
-                {/* Lưới giả */}
                 <div className="grid grid-cols-4 gap-4 flex-1">
                   {[1,2,3,4,5,6,7,8].map(i => (
                     <div key={i} className="bg-slate-800 rounded-xl border border-slate-700 p-4">
@@ -355,10 +414,7 @@ export default function EpicVideoComposer() {
                 </div>
               </motion.div>
 
-              {/* LỚP OVERLAY ĐIỆN THOẠI & ANIMATION */}
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                
-                {/* Tiêu đề bay ra trên lớp mờ */}
                 <motion.div 
                   className="absolute top-[8%] w-full text-center z-50 drop-shadow-2xl"
                   initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1.8 }}
@@ -367,45 +423,27 @@ export default function EpicVideoComposer() {
                   <p className="text-cyan-400 font-mono mt-2 text-xl font-bold">1 Click. Tối ưu định dạng cho mọi nền tảng.</p>
                 </motion.div>
 
-                {/* KHUNG ĐIỆN THOẠI (Mobile Frame) */}
                 <motion.div
                   className="relative w-[360px] h-[720px] bg-black border-[12px] border-slate-800 rounded-[3rem] shadow-[0_0_80px_rgba(6,182,212,0.4)] overflow-hidden z-40 mt-12"
                   initial={{ y: 800, scale: 0.5, rotateZ: -10 }}
                   animate={{ y: 0, scale: 1, rotateZ: 0 }}
                   transition={{ delay: 1.8, type: "spring", bounce: 0.3, duration: 1.2 }}
                 >
-                  {/* Dynamic Island Giả */}
                   <div className="absolute top-0 inset-x-0 h-6 flex justify-center z-50">
                     <div className="w-32 h-6 bg-black rounded-b-xl" />
                   </div>
 
-                  {/* VÙNG SWIPE (Chứa 3 nền tảng nằm ngang) */}
                   <motion.div 
                     className="flex w-[300%]"
-                    initial={{ x: "0%" }}
-                    animate={{ x: ["0%", "-33.33%", "-66.66%"] }} // Facebook -> Zalo -> TikTok
-                    transition={{ 
-                      duration: 8, 
-                      times: [0, 0.45, 0.9], // Giữ ở mỗi màn hình 1 lúc rồi swipe sang trái
-                      ease: "easeInOut",
-                      delay: 3 // Đợi đt bay lên rồi mới lướt
-                    }}
+                    initial={{ x: "0%" }} animate={{ x: ["0%", "-33.33%", "-66.66%"] }} 
+                    transition={{ duration: 8, times: [0, 0.45, 0.9], ease: "easeInOut", delay: 3 }}
                   >
                     
-                    {/* --- MÀN 1: FACEBOOK --- */}
                     <div className="w-1/3 h-full bg-white relative">
-                      {/* FB Header */}
                       <div className="bg-white border-b border-gray-200 h-16 pt-6 px-4 flex items-center">
                         <span className="text-blue-600 font-bold text-xl">facebook</span>
                       </div>
-                      
-                      {/* FB Post Scroll Animation */}
-                      <motion.div 
-                        className="flex flex-col gap-2 p-2 bg-gray-200 h-full"
-                        initial={{ y: 0 }}
-                        animate={{ y: -150 }} // Tự động cuộn xuống
-                        transition={{ delay: 3.5, duration: 2, ease: "linear" }}
-                      >
+                      <motion.div className="flex flex-col gap-2 p-2 bg-gray-200 h-full" initial={{ y: 0 }} animate={{ y: -150 }} transition={{ delay: 3.5, duration: 2, ease: "linear" }}>
                         <div className="bg-white p-3 rounded-lg shadow-sm">
                           <div className="flex items-center gap-2 mb-3">
                             <div className="w-10 h-10 rounded-full bg-blue-500" />
@@ -427,19 +465,12 @@ export default function EpicVideoComposer() {
                       </motion.div>
                     </div>
 
-                    {/* --- MÀN 2: ZALO OA --- */}
                     <div className="w-1/3 h-full bg-slate-100 relative">
-                      {/* Zalo Header */}
                       <div className="bg-blue-500 h-16 pt-6 px-4 flex items-center text-white font-bold gap-2">
                         <div className="w-6 h-6 rounded-full bg-white text-blue-500 flex items-center justify-center text-xs">M</div>
                         Bếp Nhà Mộc (OA)
                       </div>
-                      
-                      {/* Zalo Content Scroll */}
-                      <motion.div 
-                        className="p-4"
-                        initial={{ y: 0 }} animate={{ y: -100 }} transition={{ delay: 6.5, duration: 2, ease: "linear" }}
-                      >
+                      <motion.div className="p-4" initial={{ y: 0 }} animate={{ y: -100 }} transition={{ delay: 6.5, duration: 2, ease: "linear" }}>
                         <div className="bg-white p-4 rounded-2xl shadow-md border border-gray-100">
                           <p className="text-blue-600 font-bold mb-2">🌿 ƯU ĐÃI RIÊNG CHO ZALO</p>
                           <p className="text-sm text-gray-700 mb-3">Nhắn "ĐẶT BÀN" để nhận ngay Voucher 20% + Miễn phí Trà thảo mộc. Áp dụng đến cuối tuần.</p>
@@ -452,23 +483,18 @@ export default function EpicVideoComposer() {
                       </motion.div>
                     </div>
 
-                    {/* --- MÀN 3: TIKTOK (Dark mode / Vertical Video) --- */}
                     <div className="w-1/3 h-full bg-black relative text-white">
                       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80')] bg-cover bg-center opacity-60" />
-                      
-                      {/* Video overlay UI */}
                       <div className="absolute top-8 left-0 right-0 flex justify-center gap-4 text-lg font-bold drop-shadow-md">
                         <span className="opacity-50">Dành cho bạn</span>
                         <span>Đang Follow</span>
                       </div>
-
                       <div className="absolute right-4 bottom-32 flex flex-col gap-6 items-center drop-shadow-lg">
                         <div className="w-10 h-10 rounded-full bg-white border-2 border-white" />
                         <div className="flex flex-col items-center"><Heart className="w-8 h-8 text-white"/><span className="text-xs">45K</span></div>
                         <div className="flex flex-col items-center"><MessageCircle className="w-8 h-8 text-white"/><span className="text-xs">1.2K</span></div>
                         <div className="flex flex-col items-center"><Share2 className="w-8 h-8 text-white"/><span className="text-xs">Chia sẻ</span></div>
                       </div>
-
                       <div className="absolute bottom-8 left-4 right-16 drop-shadow-lg">
                         <p className="font-bold mb-2">@bepnhamoc</p>
                         <p className="text-sm">Bí mật nấu cơm ngon như mẹ làm. Xem ngay! 🤫🔥 #bepnhamoc #comnha #amthuc</p>
