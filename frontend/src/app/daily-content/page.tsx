@@ -51,16 +51,112 @@ export default function DailyContentPage() {
       
       if (isBepNhaMoc) {
         if (platform === 'Zalo') {
-          finalContent = `[GÓC HỎI ĐÁP] TRƯA NAY ANH CHỊ ĂN GÌ? 🍱\n\nNắng nóng hoặc mưa rào thế này, bước ra ngoài mua cơm là một cực hình. Để Bếp Nhà Mộc giao tận bàn cho anh chị nhé!\n\n🌟 Hôm nay Bếp có:\n- Thịt kho niêu đất mềm tan (Must-try)\n- Cá bống kho tiêu đậm đà\n- Canh chua cá lóc giải nhiệt\n\n✅ Tặng ngay mã FREESHIP_T5 cho đơn từ 2 phần.\n✅ Hộp bã mía 100% an toàn sức khỏe.\n\n👇 Nhấn nút Mua Ngay bên dưới để xem menu hôm nay ạ!`;
+          finalContent = `[ZALO OA - BẾP NHÀ MỘC] 🍱 TRƯA NAY TEAM MÌNH ĂN GÌ? - ĐẶT SỚM GIẢM SÂU, GIAO TẬN BÀN!
+
+Mưa rào hay nắng gắt, bước ra ngoài ăn trưa luôn là nỗi ám ảnh của dân văn phòng. Đừng để thời tiết làm hỏng tâm trạng và bữa trưa của bạn! Để Bếp Nhà Mộc lo trọn gói từ A-Z với menu "Chữa lành" mỗi ngày.
+
+🌟 [MENU THỨ 5 - NẠP NĂNG LƯỢNG CUỐI TUẦN]
+🥢 Thịt Kho Niêu Đất: Ba rọi rút sườn kho rệu trong 4 tiếng, mềm tan trên đầu lưỡi. (Must-try!)
+🥢 Cá Bống Kho Tiêu Xanh: Đậm đà đưa cơm, chuẩn vị cơm nhà mẹ nấu.
+🥢 Gà Nướng Sốt Teriyaki Mộc: Tươi mọng, healthy, 100% thịt đùi góc tư.
+🥗 Tặng kèm: Canh cua rau đay thanh mát & Cà pháo giòn rụm.
+
+✨ TẠI SAO TEAM NÊN CHỌN BẾP NHÀ MỘC?
+🌱 An toàn sức khỏe: Sử dụng hộp bã mía 100% phân huỷ sinh học, tuyệt đối không dùng hộp xốp độc hại.
+🔥 Luôn nóng hổi: Đóng gói túi giữ nhiệt cao cấp, cơm canh đến tay vẫn bốc khói.
+🛵 Freeship toà nhà: Miễn phí giao hàng bán kính 5km cho đơn từ 4 phần.
+
+🎁 [ƯU ĐÃI ĐỘC QUYỀN TRÊN ZALO]
+💥 Nhập mã TEAMMOC20 giảm ngay 20% cho nhóm đặt từ 5 phần.
+💥 Tặng thêm Trà Gạo Lứt Đậu Đen Detox cho mỗi phần ăn.
+
+👇 Gửi ngay bài viết này vào nhóm chat công ty và Nhấn nút [ĐẶT HÀNG NGAY] bên dưới! Hệ thống Zalo Mini App của Bếp sẽ tự động lên đơn trong 3 giây.
+#BepNhaMoc #ComVanPhong #ZaloMiniApp #GiaoTanNoi`;
         } else if (platform === 'LinkedIn') {
-          finalContent = `CORPORATE LUNCH: KHÔNG CHỈ LÀ BỮA ĂN, MÀ LÀ PHÚC LỢI NHÂN SỰ 💼\n\nBạn có biết: Một bữa trưa dinh dưỡng, sạch sẽ giúp tăng 30% hiệu suất làm việc buổi chiều của nhân sự?\n\nTại Bếp Nhà Mộc, chúng tôi cung cấp giải pháp B2B Corporate Catering được thiết kế riêng cho dân văn phòng:\n\n✔️ Cân bằng dinh dưỡng, không gây "Food Coma" (buồn ngủ).\n✔️ 100% nguyên liệu tươi mới, không chất bảo quản.\n✔️ Hóa đơn VAT đầy đủ, quy trình chuẩn chỉnh.\n\nInbox ngay để nhận mẫu ăn thử (Sampling) miễn phí cho công ty của bạn hôm nay. Bếp Nhà Mộc đồng hành cùng sự phát triển của Doanh nghiệp.`;
+          finalContent = `CORPORATE CATERING: BỮA TRƯA CỦA NHÂN SỰ LÀ KHOẢN ĐẦU TƯ, KHÔNG PHẢI CHI PHÍ 💼📊
+
+Kính gửi các anh chị HR Manager & Business Leaders,
+
+Anh/chị có bao giờ nhận thấy văn phòng thường chìm trong sự uể oải, mất tập trung vào khung giờ 2:00 - 3:00 chiều? Đó là hiện tượng "Food Coma" - hệ quả của những bữa trưa thừa tinh bột, nhiều dầu mỡ công nghiệp và thiếu hụt vi chất. 
+
+Tại Bếp Nhà Mộc, chúng tôi không bán cơm hộp. Chúng tôi cung cấp [GIẢI PHÁP DINH DƯỠNG B2B] giúp tái tạo năng lượng và tăng 30% hiệu suất làm việc buổi chiều cho đội ngũ của bạn.
+
+Triết lý "Mindful Dining" của Bếp Nhà Mộc mang đến giá trị thực cho Doanh nghiệp:
+✅ Cân Bằng Dinh Dưỡng (Nutrition Balance): Thực đơn thiết kế bởi chuyên gia, chuẩn macro, loại bỏ hoàn toàn bột ngọt hoá học. Nhân sự ăn ngon, nhẹ bụng, tỉnh táo.
+✅ Trách Nhiệm Xã Hội (CSR & ESG): 100% bao bì sử dụng hộp bã mía phân huỷ sinh học. Đồng hành cùng doanh nghiệp kiến tạo môi trường làm việc "Xanh".
+✅ Tối Ưu Quy Trình (Operations): Cung cấp hoá đơn VAT hợp lệ 100%, hợp đồng công nợ linh hoạt tháng/quý. Báo cáo minh bạch.
+✅ Gắn Kết Đội Ngũ (Team Bonding): Bữa trưa chất lượng là "phúc lợi vô hình" giữ chân nhân tài hiệu quả nhất.
+
+🤝 [CHƯƠNG TRÌNH TRẢI NGHIỆM - SAMPLING DAY]
+Bếp Nhà Mộc dành tặng 10 suất ăn thử (Full set Menu) MIỄN PHÍ đến tận văn phòng dành riêng cho cấp Quản lý/HR để đánh giá chất lượng thực tế. 
+
+📩 Inbox trực tiếp hoặc liên hệ Hotline: 090.xxxx.xxx (Mr. Đỉnh) để đăng ký lịch Trải nghiệm Corporate Catering ngay hôm nay. 
+
+Đầu tư vào sức khoẻ nhân sự chính là đầu tư vào tương lai của doanh nghiệp!
+
+#B2B #CorporateCatering #HR #EmployeeWellbeing #MindfulDining #BepNhaMoc #ESG`;
         } else if (platform === 'TikTok') {
-          finalContent = `pov: 11h30 trưa sếp dí deadline rớt nước mắt nhưng bụng thì kêu réo rắt 😭\n\nĐừng lo mấy ní ơi, lưu ngay cứu tinh Bếp Nhà Mộc nha!\n✨ Cơm hộp bã mía sạch sẽ\n✨ Đóng gói 2 lớp giữ nhiệt nóng hổi\n✨ Vị nhà làm ăn bao dính\n\nLink trong giỏ hàng nha mí bồ 🛒 Chốt đơn lẹ không hết phần ngon! #bepnhamoc #comvanphong #anngonmoingay`;
+          finalContent = `[Trending Nhạc Nền ASMR + Lofi Chill]
+
+POV: 11h30 trưa, sếp vừa dí thêm 3 cái deadline rớt nước mắt... nhưng bụng thì réo rắt đình công 😭 
+
+Làm văn phòng khổ lắm mấy ní ơi, chạy KPI mệt bở hơi tai mà trưa còn phải lội nắng đi kiếm đồ ăn thì đúng là "trầm cảm". Ngồi xuống, hít một hơi thật sâu, để Bếp Nhà Mộc "chữa lành" cho mấy bà nha! 🌿✨
+
+📦 [Unbox cùng tui nè] 
+Trời ơi mở cái nắp ra là mùi thơm nức mũi! Hộp bã mía xịn xò 100% không lo hạt nhựa vi sinh nha. Cầm trên tay vẫn còn nóng hổi luôn.
+✨ Nay tui gọi Cơm Sườn Chua Ngọt Signature: Sườn sụn giòn sần sật, sốt chua ngọt bóng bẩy ăn kèm cơm dẻo ST25. Ta nói nó dính gì đâu á! 🤤
+✨ Rau củ luộc xanh mướt, canh chua ngọt thanh đúng kiểu nhà làm. 
+
+Ăn xong nhẹ bụng, không hề bị "Căng da bụng chùng da mắt" xíu nào luôn. Đầu giờ chiều làm việc bao tỉnh táo, chốt ngàn đơn cho sếp xem! 😌
+
+🔥 Mấy ní nhanh tay bấm vào giỏ hàng góc trái màn hình 🛒. Đang có Flash Sale Freeship cho 50 bạn nhanh tay nhất nè! Nhớ rủ cả phòng đặt chung để áp mã giảm 30K nha!
+
+#BepNhaMoc #ComVanPhong #WhatIEatInADay #VlogNhanVienVanPhong #ChuaLanh #FoodReview`;
         } else if (platform === 'Instagram') {
-          finalContent = `Một chút bình yên giữa guồng quay hối hả của thành phố 🌿\n\nBữa cơm trưa không chỉ để no bụng, mà còn là khoảnh khắc để bạn dừng lại, "thở" và nạp lại năng lượng.\n\nBếp Nhà Mộc nâng niu từng nguyên liệu, chọn lọc từng hạt gạo mềm dẻo để mang đến cho bạn hương vị vẹn nguyên của bữa cơm nhà mẹ nấu.\n\nVuốt sang trái để xem quá trình chúng tôi chuẩn bị món Thịt kho niêu Signature sáng nay nhé! ✨\n\n#BepNhaMoc #MindfulDining #ThucDonChuaLanh #HealthyLifestyle`;
+          finalContent = `Dừng lại một nhịp. Thở sâu. Và thưởng thức. 🌿🍂
+
+Giữa guồng quay hối hả của những bản báo cáo, những cuộc họp liên miên và tiếng gõ bàn phím không ngớt... Bạn có đang bỏ quên chính mình?
+
+Một bữa trưa không chỉ đơn thuần là nạp năng lượng vật lý. Đó là khoảnh khắc hiếm hoi trong ngày để bạn thực hành "Mindful Dining" - Ăn trong chánh niệm. 
+
+Tại Bếp Nhà Mộc, chúng tôi tin rằng thức ăn ngon nhất là thức ăn được nấu bằng sự tĩnh lặng và thấu cảm. 
+Từng mớ rau dền được nhặt tay tỉ mỉ, từng miếng đậu hũ rim nhỏ lửa riu riu, từng hạt gạo ST25 được vo 3 lần nước để giữ trọn vẹn lớp cám ngọt lành. 
+
+Chúng tôi đặt tất cả sự tỉ mỉ đó vào chiếc hộp bã mía mộc mạc, thắt thêm chiếc đai giấy Kraft mang thông điệp yêu thương, chỉ để khi bạn mở ra... mọi áp lực (burn-out) đều tan biến, nhường chỗ cho cảm giác bình yên như đang dùng bữa tại chính căn bếp nhà mình. 🤎
+
+Vuốt sang trái 👈 để ngắm nhìn những dải nắng chiều hoàng hôn đậu trên mâm cơm bento của Bếp hôm nay. Đẹp đẽ và tĩnh lặng.
+
+Nhấp vào Link in Bio để tự thưởng cho mình một bữa trưa "chữa lành" trọn vẹn nhé!
+
+#BepNhaMoc #MindfulDining #SlowLiving #HealthyLunch #ThucDonChuaLanh #FoodAesthetics #EcoFriendly`;
         } else {
           // Facebook
-          finalContent = `🔥 [ĐỘC QUYỀN TRÊN APP] COMBO CHỮA LÀNH DÀNH CHO DÂN VĂN PHÒNG BURN-OUT 🔥\n\nBạn cảm thấy uể oải, cạn kiệt năng lượng sau phiên họp sáng?\n\nChỉ với 65K, Bếp Nhà Mộc mang đến giải pháp nạp năng lượng chuẩn chỉnh:\n👉 1 Phần Cơm Niêu Gạo ST25 dẻo thơm.\n👉 1 Món chính tự chọn (Sườn chua ngọt/Thịt kho trứng).\n👉 Tặng kèm Canh rau theo mùa thanh mát.\n\n🎯 3 CAM KẾT TỪ BẾP NHÀ MỘC:\n1️⃣ Không sử dụng bột ngọt hóa học.\n2️⃣ Hộp bã mía thân thiện môi trường, an toàn khi quay lò vi sóng.\n3️⃣ Giao hàng trong 30 phút, luôn nóng hổi.\n\n🎁 Đặc biệt: Giảm ngay 15% khi nhập mã MOC15 qua Inbox Zalo.\n💬 Inbox m.me/bepnhamoc hoặc Zalo OA để đặt ngay!`;
+          finalContent = `🔥 [CẢNH BÁO "BURN-OUT"] - GIẢI PHÁP CHỮA LÀNH TỪ BÊN TRONG DÀNH CHO DÂN VĂN PHÒNG! 🔥
+
+Khảo sát cho thấy 70% dân văn phòng tại các thành phố lớn đang gặp tình trạng kiệt sức (Burn-out). Bạn uể oải, cạn kiệt năng lượng sau phiên họp sáng? Bạn chán ngán những hộp cơm xốp công nghiệp đầy dầu mỡ?
+
+Đã đến lúc nâng cấp bữa trưa của bạn với [COMBO CHỮA LÀNH] ĐỘC QUYỀN TỪ BẾP NHÀ MỘC! 🌱
+
+Chỉ với 65K, Bếp mang đến cho bạn không chỉ là thức ăn, mà là một trải nghiệm Tái tạo năng lượng chuẩn chỉnh:
+🍱 1 Phần Cơm Niêu Gạo ST25 chuẩn xuất khẩu: Dẻo, thơm, nhai kỹ thấy vị ngọt thanh.
+🍖 1 Món chính tự chọn thay đổi mỗi ngày: Sườn chua ngọt kẹo dẻo / Thịt kho trứng cút đậm đà / Cá lóc kho tộ sánh quyện.
+🍲 Tặng kèm Canh rau theo mùa & Đồ chua nhà muối.
+🥤 [QUÀ TẶNG ĐẶC BIỆT]: Tặng 1 chai Nước Ép Chanh Dây Mật Ong Detox thanh lọc cơ thể (Số lượng có hạn).
+
+🎯 3 CAM KẾT VÀNG CHỈ CÓ TẠI BẾP NHÀ MỘC:
+1️⃣ NÓI KHÔNG với Bột Ngọt: Vị ngọt 100% từ xương hầm và củ quả tươi.
+2️⃣ BAO BÌ "XANH": Hộp bã mía cao cấp, an toàn tuyệt đối khi quay lò vi sóng, bảo vệ sức khỏe và môi trường.
+3️⃣ GIAO HÀNG HỎA TỐC: Cam kết giao trong 30 phút, cơm canh đến tay vẫn còn nóng hổi bốc khói.
+
+💬 [GÓC REVIEW] "Từ ngày team mình đổi sang Bếp Nhà Mộc, buổi chiều ai cũng tỉnh táo làm việc, không còn lờ đờ buồn ngủ nữa. Cơm cực kỳ chất lượng!" - Chị Mai Nguyễn, HR Techcombank.
+
+🎁 ƯU ĐÃI CHỚP NHOÁNG TRONG TUẦN:
+✨ Giảm ngay 15% khi nhập mã MOC15 qua Zalo OA.
+✨ Miễn phí vận chuyển cho đơn hàng nhóm từ 4 người trở lên.
+
+👉 Đừng chần chừ, hãy để Bếp Nhà Mộc chăm sóc bữa trưa của bạn! 
+💬 Inbox m.me/bepnhamoc hoặc Zalo OA (Link dưới bình luận) để đặt ngay Menu Nóng Hổi hôm nay!
+#BepNhaMoc #ComVanPhongCaoCap #MindfulDining #ChuaLanh #HealthyFood`;
         }
       } else {
         finalContent = `${topic.toUpperCase()}\n\nBạn đang gặp vấn đề với việc quản trị doanh nghiệp?\n\nTại ${brandName}, chúng tôi tin rằng lợi thế: "${coreUsps[0]}" chính là giải pháp tối ưu dành cho bạn.\n\nHãy bắt đầu xây dựng hệ thống tự vận hành ngay hôm nay!\n\n#${brandName.replace(/\s+/g, '')} #SME`;
@@ -78,7 +174,7 @@ export default function DailyContentPage() {
 
     const ProfilePic = ({ size = 10 }: { size?: number }) => (
       <div className={`w-${size} h-${size} rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center shrink-0 border border-slate-300 dark:border-slate-600 overflow-hidden`}>
-        <span className="font-bold text-slate-500 dark:text-slate-400 text-[10px]">{brandName.substring(0,2)}</span>
+        {isBepNhaMoc ? <img src="/assets/bep-nha-moc/avatar.jpg" className="w-full h-full object-cover" alt="Avatar" /> : <span className="font-bold text-slate-500 dark:text-slate-400 text-[10px]">{brandName.substring(0,2)}</span>}
       </div>
     );
 
@@ -115,8 +211,8 @@ export default function DailyContentPage() {
                 <div className="px-4 py-1 text-[14px] text-black dark:text-[#E4E6EB] whitespace-pre-wrap leading-snug">
                   {generatedContent}
                 </div>
-                <div className="w-full aspect-video bg-slate-100 dark:bg-[#18191A] flex items-center justify-center mt-2 border-y border-slate-200 dark:border-slate-800">
-                  <ImageIcon className="w-8 h-8 text-slate-300 dark:text-slate-700" />
+                <div className="w-full aspect-video bg-slate-100 dark:bg-[#18191A] flex items-center justify-center mt-2 border-y border-slate-200 dark:border-slate-800 overflow-hidden relative">
+                  {isBepNhaMoc ? <img src="/assets/bep-nha-moc/banner.jpg" className="w-full h-full object-cover" alt="Post content" /> : <ImageIcon className="w-8 h-8 text-slate-300 dark:text-slate-700" />}
                 </div>
                 <div className="px-4 py-2">
                   <div className="flex justify-between items-center text-[13px] text-[#65676B] dark:text-[#B0B3B8] border-b border-slate-200 dark:border-slate-700 pb-2">
@@ -153,8 +249,8 @@ export default function DailyContentPage() {
               </div>
               <MoreHorizontal className="w-5 h-5 text-black dark:text-white" />
             </div>
-            <div className="w-full aspect-square bg-slate-100 dark:bg-slate-900 flex items-center justify-center shrink-0">
-              <ImageIcon className="w-10 h-10 text-slate-300 dark:text-slate-700" />
+            <div className="w-full aspect-square bg-slate-100 dark:bg-slate-900 flex items-center justify-center shrink-0 overflow-hidden relative">
+              {isBepNhaMoc ? <img src="/assets/bep-nha-moc/banner.jpg" className="w-full h-full object-cover" alt="Post content" /> : <ImageIcon className="w-10 h-10 text-slate-300 dark:text-slate-700" />}
             </div>
             <div className="flex-1 flex flex-col pt-2 bg-white dark:bg-black">
               <div className="px-3 py-1 flex justify-between items-center text-black dark:text-white shrink-0">
@@ -188,8 +284,9 @@ export default function DailyContentPage() {
             </div>
             
             {/* Full Screen Video area */}
-            <div className="absolute inset-0 bg-[#121212] flex items-center justify-center">
-              <Play className="w-16 h-16 text-white/20 fill-white/20" />
+            <div className="absolute inset-0 bg-[#121212] flex items-center justify-center overflow-hidden">
+              {isBepNhaMoc && <img src="/assets/bep-nha-moc/banner.jpg" className="absolute inset-0 w-full h-full object-cover opacity-60" alt="Video background" />}
+              <Play className="w-16 h-16 text-white/20 fill-white/20 relative z-10" />
             </div>
 
             <div className="absolute right-3 bottom-[90px] flex flex-col items-center gap-5 z-20">
@@ -255,6 +352,9 @@ export default function DailyContentPage() {
               </div>
               <div className="px-4 py-1 text-[14px] text-black dark:text-[#e9e9e9] whitespace-pre-wrap flex-1 overflow-y-auto no-scrollbar leading-relaxed">
                 {generatedContent}
+              </div>
+              <div className="w-full aspect-video bg-slate-100 dark:bg-slate-800 mt-2 overflow-hidden relative shrink-0">
+                {isBepNhaMoc ? <img src="/assets/bep-nha-moc/banner.jpg" className="w-full h-full object-cover" alt="Post content" /> : <div className="w-full h-full flex items-center justify-center"><ImageIcon className="w-8 h-8 text-slate-300" /></div>}
               </div>
               <div className="px-4 py-2 shrink-0">
                 <div className="flex justify-between items-center text-[12px] text-[#666666] dark:text-[#E9E5DF] border-b border-slate-200 dark:border-slate-800 pb-2">
