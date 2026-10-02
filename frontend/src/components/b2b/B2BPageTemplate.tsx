@@ -7,6 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import SaveIndicator from './SaveIndicator';
 import ExecutiveReport from '../workspace/ExecutiveReport';
 import GlobalMarqueeAnnotator from '../GlobalMarqueeAnnotator';
+import AmbientParticles from '@/components/AmbientParticles';
 
 interface PageTemplateProps {
   title: string;
@@ -62,7 +63,8 @@ export default function B2BPageTemplate({ title, description, children, saveStat
         <>
           <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none z-0" />
           <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none z-0" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('/grid-pattern.svg')] opacity-[0.03] pointer-events-none z-0" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('/img/grid.svg')] opacity-[0.03] pointer-events-none z-0" />
+          <AmbientParticles />
         </>
       )}
 

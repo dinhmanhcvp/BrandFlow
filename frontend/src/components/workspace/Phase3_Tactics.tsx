@@ -353,8 +353,10 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
           {activePanel === 1 && (
             <motion.div key="p1" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-20}} className="h-full flex flex-col relative gap-8">
               <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-black text-foreground">Bộ nhận diện Cốt lõi (Visual DNA)</h3>
-                <div className="flex items-center text-purple-400/80 text-xs font-bold tracking-widest uppercase bg-purple-500/10 px-3 py-1.5 rounded-lg border border-purple-500/20">
+                <h3 className="text-2xl font-black text-foreground flex items-center">
+                  <Palette className="w-6 h-6 mr-3 text-purple-400" /> Bộ nhận diện Cốt lõi (Visual DNA)
+                </h3>
+                <div className="flex items-center text-purple-400/80 text-xs font-bold tracking-widest uppercase bg-purple-500/10 px-3 py-1.5 rounded-lg border border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.15)]">
                   <Palette className="w-3 h-3 mr-2" /> Creative Director Active
                 </div>
               </div>
@@ -362,37 +364,47 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
               {isGenerating ? (
                 <div className="flex-1 flex flex-col items-center justify-center py-20">
                   <RefreshCw className="w-10 h-10 text-purple-500 animate-spin mb-4" />
-                  <p className="text-purple-400 font-bold tracking-widest uppercase text-sm animate-pulse">Thiết lập Brand Guidelines...</p>
+                  <p className="text-purple-400 font-bold tracking-widest uppercase text-sm animate-pulse">Thiết lập Brand Guidelines & Moodboard...</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                   {/* Left: Colors & Typography */}
                   <div className="lg:col-span-5 flex flex-col gap-6">
-                    <div className="bg-background/60 border border-linear-border rounded-2xl p-6">
-                      <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Color Palette</h4>
-                      <div className="space-y-4">
+                    <div className="bg-background/40 backdrop-blur-md border border-linear-border/50 rounded-3xl p-7 shadow-xl hover:border-purple-500/30 transition-all duration-300 relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center">
+                        <Palette className="w-3.5 h-3.5 mr-2 text-purple-400" /> Color Palette
+                      </h4>
+                      <div className="space-y-5 relative z-10">
                         {designMock.colors.map(c => (
-                          <div key={c.hex} className="flex items-center gap-4">
-                            <div className="w-14 h-14 rounded-xl shadow-inner border border-black/10 shrink-0" style={{backgroundColor: c.hex}} />
+                          <div key={c.hex} className="flex items-center gap-5 group/color">
+                            <div className="w-16 h-16 rounded-2xl shadow-inner border border-white/10 shrink-0 transform group-hover/color:scale-110 transition-transform duration-300 relative" style={{backgroundColor: c.hex}}>
+                              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover/color:opacity-100 transition-opacity rounded-2xl"></div>
+                            </div>
                             <div>
-                              <div className="font-bold text-foreground text-sm">{c.name}</div>
-                              <div className="text-xs text-linear-text-muted font-mono mt-1">{c.hex} • {c.usage}</div>
+                              <div className="font-black text-foreground text-base mb-1">{c.name}</div>
+                              <div className="text-[11px] text-slate-400 font-mono flex items-center gap-2">
+                                <span className="bg-slate-800/80 px-2 py-0.5 rounded text-purple-300">{c.hex}</span>
+                                <span>{c.usage}</span>
+                              </div>
                             </div>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    <div className="bg-background/60 border border-linear-border rounded-2xl p-6">
-                      <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Typography</h4>
-                      <div className="space-y-4">
+                    <div className="bg-background/40 backdrop-blur-md border border-linear-border/50 rounded-3xl p-7 shadow-xl hover:border-purple-500/30 transition-all duration-300 relative overflow-hidden">
+                      <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center">
+                        <Type className="w-3.5 h-3.5 mr-2 text-purple-400" /> Typography
+                      </h4>
+                      <div className="space-y-6 relative z-10">
                         <div>
-                          <div className="text-xs text-purple-400 font-bold mb-1">Heading Font</div>
-                          <div className="text-sm text-foreground font-medium">{designMock.typography.heading}</div>
+                          <div className="text-[10px] text-purple-400 uppercase tracking-widest font-black mb-2">Heading Font</div>
+                          <div className="text-base text-foreground font-medium bg-slate-800/30 p-4 rounded-xl border border-slate-700/50">{designMock.typography.heading}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-purple-400 font-bold mb-1">Body Font</div>
-                          <div className="text-sm text-foreground font-medium">{designMock.typography.body}</div>
+                          <div className="text-[10px] text-purple-400 uppercase tracking-widest font-black mb-2">Body Font</div>
+                          <div className="text-base text-foreground font-medium bg-slate-800/30 p-4 rounded-xl border border-slate-700/50">{designMock.typography.body}</div>
                         </div>
                       </div>
                     </div>
@@ -400,25 +412,35 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
 
                   {/* Right: Moodboard & Rules */}
                   <div className="lg:col-span-7 flex flex-col gap-6">
-                    <div className="bg-background/60 border border-linear-border rounded-2xl p-6 h-full flex flex-col">
-                      <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Art Direction & Photography</h4>
-                      <div className="w-full aspect-video rounded-xl overflow-hidden mb-6 relative group border border-linear-border">
+                    <div className="bg-background/40 backdrop-blur-md border border-linear-border/50 rounded-3xl p-7 shadow-xl h-full flex flex-col hover:border-purple-500/30 transition-all duration-300">
+                      <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center">
+                        <Box className="w-3.5 h-3.5 mr-2 text-purple-400" /> Art Direction & Photography
+                      </h4>
+                      <div className="w-full aspect-video rounded-2xl overflow-hidden mb-8 relative group border border-slate-700 shadow-2xl">
                         {isBepNhaMoc ? (
-                          <img src="/assets/bep-nha-moc/banner.jpg" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Moodboard" />
+                          <img src="/assets/bep-nha-moc/banner.jpg" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Moodboard" />
                         ) : (
-                          <div className="w-full h-full bg-slate-800 flex items-center justify-center text-slate-500">Placeholder Image</div>
+                          <div className="w-full h-full bg-slate-800 flex items-center justify-center text-slate-500 font-mono text-sm">Waiting for generation...</div>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-4">
-                          <span className="text-white font-bold text-sm tracking-wide">Cinematic Sunset Lighting Concept</span>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-6">
+                          <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span className="px-2 py-1 bg-purple-500/20 text-purple-300 text-[10px] font-black uppercase tracking-widest rounded mb-3 inline-block border border-purple-500/30 backdrop-blur-md">Concept</span>
+                            <h5 className="text-white font-black text-xl tracking-wide">Cinematic Sunset Lighting</h5>
+                            <p className="text-slate-300 text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">Khắc hoạ không gian ấm cúng, chữa lành với tông màu vàng nắng chiều.</p>
+                          </div>
                         </div>
                       </div>
                       
-                      <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">Creative Guidelines</h4>
-                      <ul className="space-y-3">
+                      <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center">
+                        <CheckSquare className="w-3.5 h-3.5 mr-2 text-purple-400" /> Creative Guidelines
+                      </h4>
+                      <ul className="space-y-3 flex-1">
                         {designMock.guidelines.map((rule, i) => (
-                          <li key={i} className="flex items-start gap-3 text-sm text-foreground bg-slate-800/30 p-3 rounded-lg border border-slate-700/30">
-                            <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
-                            {rule}
+                          <li key={i} className="flex items-start gap-4 text-[14px] text-slate-300 bg-slate-800/40 p-4 rounded-xl border border-slate-700/50 hover:bg-slate-800/60 transition-colors">
+                            <div className="w-6 h-6 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-purple-400" />
+                            </div>
+                            <span className="leading-relaxed">{rule}</span>
                           </li>
                         ))}
                       </ul>
@@ -433,8 +455,10 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
           {activePanel === 2 && (
             <motion.div key="p2" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-20}} className="flex flex-col relative gap-8">
               <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-black text-foreground">Biệt Đội AI Triển Khai (AI Agent Swarm)</h3>
-                <div className="flex items-center text-blue-400/80 text-xs font-bold tracking-widest uppercase bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">
+                <h3 className="text-2xl font-black text-foreground flex items-center">
+                  <Network className="w-6 h-6 mr-3 text-blue-400" /> Biệt Đội AI Triển Khai (AI Agent Swarm)
+                </h3>
+                <div className="flex items-center text-blue-400/80 text-xs font-bold tracking-widest uppercase bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.15)]">
                   <Network className="w-3 h-3 mr-2" /> System Orchestrator Active
                 </div>
               </div>
@@ -442,33 +466,50 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
               {isGenerating ? (
                 <div className="flex-1 flex flex-col items-center justify-center py-20">
                   <RefreshCw className="w-10 h-10 text-blue-500 animate-spin mb-4" />
-                  <p className="text-blue-400 font-bold tracking-widest uppercase text-sm animate-pulse">Deploying Agent Swarm...</p>
+                  <p className="text-blue-400 font-bold tracking-widest uppercase text-sm animate-pulse">Deploying Agent Swarm & Assigning Tasks...</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {agentsMock.map((agent, i) => (
-                    <div 
-                      key={i} 
-                      className="bg-background/60 border border-linear-border rounded-2xl p-6 flex gap-6 hover:border-blue-500/30 transition-all shadow-lg cursor-pointer hover:-translate-y-1 group relative overflow-hidden"
-                      onClick={() => window.location.href = `/agent-builder`}
-                    >
-                      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 ${agent.avatar}/10 border border-${agent.avatar.replace('bg-', '')}/30`}>
-                        <Bot className={`w-8 h-8 text-${agent.avatar.replace('bg-', '')}`} />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="text-lg font-black text-foreground">{agent.role}</h4>
-                          <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse" /> {agent.status}
-                          </span>
+                  {agentsMock.map((agent, i) => {
+                    const colorName = agent.avatar.replace('bg-', '');
+                    return (
+                      <div 
+                        key={i} 
+                        className={`bg-background/40 backdrop-blur-md border border-linear-border/50 rounded-3xl p-6 flex flex-col md:flex-row gap-6 hover:border-${colorName}/40 transition-all duration-300 shadow-xl hover:shadow-${colorName}/10 cursor-pointer group relative overflow-hidden`}
+                        onClick={() => window.location.href = `/agent-builder`}
+                      >
+                        {/* Interactive Glow */}
+                        <div className={`absolute -top-20 -right-20 w-40 h-40 bg-${colorName}/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+
+                        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 bg-${colorName}/10 border border-${colorName}/30 shadow-inner group-hover:scale-110 transition-transform duration-300 relative`}>
+                          <Bot className={`w-8 h-8 text-${colorName}`} />
+                          <div className={`absolute inset-0 rounded-2xl bg-${colorName}/20 opacity-0 group-hover:opacity-100 animate-pulse`}></div>
                         </div>
-                        <p className="text-sm text-linear-text-muted leading-relaxed mb-3">{agent.description}</p>
-                        <div className="text-[10px] text-blue-400 font-bold uppercase tracking-widest flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          Xem chi tiết cấu hình Agent <ArrowRight className="w-3 h-3 ml-1" />
+
+                        <div className="flex-1 flex flex-col justify-center">
+                          <div className="flex items-center justify-between mb-3">
+                            <h4 className="text-lg font-black text-foreground group-hover:text-white transition-colors">{agent.role}</h4>
+                            <span className="px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center shrink-0">
+                              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse shadow-[0_0_5px_rgba(16,185,129,0.5)]" /> {agent.status}
+                            </span>
+                          </div>
+                          
+                          <p className="text-[13px] text-slate-400 leading-relaxed mb-4">{agent.description}</p>
+                          
+                          <div className="flex items-center justify-between mt-auto">
+                            <div className="flex gap-2">
+                              <span className="w-6 h-1 rounded-full bg-slate-700/50"></span>
+                              <span className="w-2 h-1 rounded-full bg-slate-700/50"></span>
+                              <span className="w-2 h-1 rounded-full bg-slate-700/50"></span>
+                            </div>
+                            <div className={`text-[10px] text-${colorName} font-black uppercase tracking-widest flex items-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0`}>
+                              Config <ArrowRight className="w-3 h-3 ml-1.5" />
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </motion.div>
