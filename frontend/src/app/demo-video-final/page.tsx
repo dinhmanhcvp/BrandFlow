@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BrandFlowLogo } from '@/components/brand/BrandFlowLogo';
 import { Space_Grotesk, Inter } from 'next/font/google';
