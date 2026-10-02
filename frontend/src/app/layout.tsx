@@ -31,7 +31,7 @@ export default function RootLayout({
  className={`${inter.variable} ${spaceGrotesk.variable}`}
  suppressHydrationWarning
  >
- <body className="antialiased font-sans min-h-screen overflow-x-hidden transition-colors duration-300">
+  <body className="antialiased font-sans min-h-screen overflow-x-hidden transition-colors duration-300">
  <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
  <LanguageProvider>
  <LayoutWrapper>
