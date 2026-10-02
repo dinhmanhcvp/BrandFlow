@@ -17,10 +17,9 @@ const SCENES = [
 
   // Scene 2: Apple-style Kinetic Text Slam
   { id: 'hook2', type: 'kinetic-text', text: 'AUTOMATED.' },
-  { id: 'hook3', type: 'kinetic-text', text: 'REIMAGINED.' },
   
-  // Scene 3: Apple Shimmer Text (Vệt sáng lướt qua)
-  { id: 'shimmer', type: 'shimmer-text', text: 'TAKE YOUR BRAND EVERYWHERE.' },
+  // Scene 3: Apple Shimmer Text (Vệt sáng lướt qua áp dụng cho REIMAGINED)
+  { id: 'hook3', type: 'shimmer-text', text: 'REIMAGINED.' },
 
   // Scene 4: The Staggered "Mask Reveal" Phrase
   { id: 'phrase', type: 'staggered-text', words: ['BEYOND', 'HUMAN', 'LIMITS.'] },
