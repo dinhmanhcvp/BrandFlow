@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BrandFlowLogo } from '@/components/brand/BrandFlowLogo';
 import { Space_Grotesk, Inter } from 'next/font/google';
+import AmbientParticles from '@/components/AmbientParticles';
 import { 
   FileText, ShieldCheck, UploadCloud, BrainCircuit, LineChart, 
   CheckCircle2, Wand2, BarChart3, Clock, LayoutDashboard, 
@@ -202,23 +203,21 @@ export default function EpicVideoComposer() {
           >
             {/* Ambient Background for Onboarding Phase 1 */}
             <div className="absolute inset-0 pointer-events-none z-0">
-              <div className="absolute inset-0 bg-[url('/img/grid.svg')] opacity-[0.05]" />
-              <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px]" />
-              <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px]" />
+              <AmbientParticles />
             </div>
 
             <div className="flex flex-col items-center p-8 max-w-5xl mx-auto w-full min-h-full relative z-10 pt-20">
               
               {/* EXACT UI REPLICA OF Screen1_Source */}
               <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10 shrink-0 relative z-10 w-full">
-                <div className="inline-flex items-center px-4 py-2 rounded-full border border-slate-700 bg-slate-800/50 backdrop-blur-sm mb-4 shadow-sm">
+                <div className="inline-flex items-center px-4 py-2 rounded-full border border-linear-border bg-linear-surface/50 backdrop-blur-sm mb-4 shadow-sm">
                   <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse mr-3 shrink-0" />
-                  <span className="text-xs font-semibold text-slate-300 tracking-wide uppercase">Stage 1: Ingestion</span>
+                  <span className="text-xs font-semibold text-foreground tracking-wide uppercase">Stage 1: Ingestion</span>
                 </div>
-                <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
+                <h2 className="text-4xl md:text-5xl font-black text-foreground tracking-tight mb-4">
                   Khởi tạo <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Brand DNA</span>
                 </h2>
-                <p className="text-slate-400 max-w-2xl mx-auto text-base">Nạp dữ liệu thô của doanh nghiệp để AI học hỏi và định hình chiến lược.</p>
+                <p className="text-linear-text-muted max-w-2xl mx-auto text-base">Nạp dữ liệu thô của doanh nghiệp để AI học hỏi và định hình chiến lược.</p>
               </motion.div>
 
               {/* 3 Source Cards */}
@@ -227,24 +226,24 @@ export default function EpicVideoComposer() {
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors z-10 bg-cyan-500/20 border border-cyan-500/30">
                     <UploadCloud className="w-6 h-6 text-cyan-400" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">Tải lên Tệp dữ liệu</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">PDF, Word, Excel, CSV, Audio, Video chứa tài liệu nội bộ, báo cáo kinh doanh.</p>
+                  <h3 className="text-lg font-bold text-foreground mb-2">Tải lên Tệp dữ liệu</h3>
+                  <p className="text-xs text-linear-text-muted leading-relaxed">PDF, Word, Excel, CSV, Audio, Video chứa tài liệu nội bộ, báo cáo kinh doanh.</p>
                   <div className="absolute top-4 right-4 text-cyan-400"><CheckCircle2 className="w-5 h-5" /></div>
                   <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 to-transparent pointer-events-none" />
                 </motion.div>
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="relative group flex flex-col p-6 rounded-3xl transition-all duration-500 border backdrop-blur-xl shadow-sm overflow-hidden bg-slate-800/50 border-slate-700">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors z-10 bg-slate-800 border border-slate-700">
-                    <LinkIcon className="w-6 h-6 text-slate-400" />
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="relative group flex flex-col p-6 rounded-3xl transition-all duration-500 border backdrop-blur-xl shadow-sm overflow-hidden bg-linear-surface hover:bg-linear-surface/80 border-linear-border hover:border-cyan-500/30">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors z-10 bg-linear-surface/50 border border-linear-border group-hover:border-cyan-500/30">
+                    <LinkIcon className="w-6 h-6 text-linear-text-muted group-hover:text-cyan-500/70" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">Quét Website / Mạng xã hội</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">Dán link Fanpage, Tiktok, Website. AI sẽ tự động cào dữ liệu và phân tích.</p>
+                  <h3 className="text-lg font-bold text-foreground mb-2">Quét Website / Mạng xã hội</h3>
+                  <p className="text-xs text-linear-text-muted leading-relaxed">Dán link Fanpage, Tiktok, Website. AI sẽ tự động cào dữ liệu và phân tích.</p>
                 </motion.div>
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="relative group flex flex-col p-6 rounded-3xl transition-all duration-500 border backdrop-blur-xl shadow-sm overflow-hidden bg-slate-800/50 border-slate-700">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors z-10 bg-slate-800 border border-slate-700">
-                    <FileText className="w-6 h-6 text-slate-400" />
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="relative group flex flex-col p-6 rounded-3xl transition-all duration-500 border backdrop-blur-xl shadow-sm overflow-hidden bg-linear-surface hover:bg-linear-surface/80 border-linear-border hover:border-cyan-500/30">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors z-10 bg-linear-surface/50 border border-linear-border group-hover:border-cyan-500/30">
+                    <FileText className="w-6 h-6 text-linear-text-muted group-hover:text-cyan-500/70" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">Trả lời Câu hỏi trực tiếp</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">Không có sẵn tài liệu? Hãy trả lời 5-10 câu hỏi phỏng vấn chuyên sâu từ AI.</p>
+                  <h3 className="text-lg font-bold text-foreground mb-2">Trả lời Câu hỏi trực tiếp</h3>
+                  <p className="text-xs text-linear-text-muted leading-relaxed">Không có sẵn tài liệu? Hãy trả lời 5-10 câu hỏi phỏng vấn chuyên sâu từ AI.</p>
                 </motion.div>
               </div>
 
@@ -260,38 +259,38 @@ export default function EpicVideoComposer() {
                     transition={{ delay: 1, duration: 1.2, ease: "anticipate" }}
                     style={{ left: '50%', marginLeft: '-40px' }}
                   >
-                    <div className="w-20 h-28 bg-blue-500/20 border-2 border-blue-400 rounded-xl flex items-center justify-center shadow-[0_0_50px_rgba(59,130,246,0.6)] backdrop-blur-md">
-                      <FileText className="w-10 h-10 text-white" />
+                    <div className="w-20 h-28 bg-cyan-500/20 border-2 border-cyan-400 rounded-xl flex items-center justify-center shadow-[0_0_50px_rgba(6,182,212,0.6)] backdrop-blur-md">
+                      <FileText className="w-10 h-10 text-cyan-100" />
                     </div>
                   </motion.div>
 
                   {/* Dropzone Container */}
                   <motion.div 
-                    className="w-full border-2 border-dashed rounded-3xl p-8 flex flex-col items-center justify-center min-h-48 backdrop-blur-md relative overflow-hidden bg-slate-800/50"
+                    className="w-full border-2 border-dashed rounded-3xl p-8 flex flex-col items-center justify-center min-h-48 backdrop-blur-md relative overflow-hidden bg-linear-surface/50 border-linear-border"
                     animate={{
-                      borderColor: ["#334155", "#06b6d4", "#334155"], // slate-700 -> cyan-500 -> slate-700
-                      backgroundColor: ["rgba(30,41,59,0.5)", "rgba(6,182,212,0.15)", "rgba(30,41,59,0.5)"],
+                      borderColor: ["#334155", "#06b6d4", "#334155"],
+                      backgroundColor: ["rgba(0,0,0,0)", "rgba(6,182,212,0.1)", "rgba(0,0,0,0)"],
                       scale: [1, 1.02, 1]
                     }}
                     transition={{ delay: 1.8, duration: 0.5 }}
                   >
-                    <UploadCloud className="w-10 h-10 mb-3 text-slate-400" />
-                    <p className="text-white font-bold mb-1">Thả file vào đây...</p>
-                    <p className="text-xs text-slate-400">Hỗ trợ: PDF, DOCX, TXT, MD, CSV, XLSX, XLS, HTML — tối đa 100MB/file</p>
+                    <UploadCloud className="w-10 h-10 mb-3 text-linear-text-muted" />
+                    <p className="text-foreground font-bold mb-1">Thả file vào đây...</p>
+                    <p className="text-xs text-linear-text-muted">Hỗ trợ: PDF, DOCX, TXT, MD, CSV, XLSX, XLS, HTML — tối đa 100MB/file</p>
                     <p className="text-xs text-cyan-500/70 mt-2 font-medium">hoặc nhấp để chọn file</p>
                   </motion.div>
 
                   {/* Result File Row */}
                   <motion.div className="mt-4 space-y-2" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} transition={{ delay: 2.2 }}>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">1 tài liệu đã chọn</p>
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/70 border border-slate-700">
-                      <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
-                        <span className="text-[9px] font-black text-blue-400">DOCX</span>
+                    <p className="text-xs font-bold text-linear-text-muted uppercase tracking-wider mb-3">1 tài liệu đã chọn</p>
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-linear-surface/70 border border-linear-border hover:border-cyan-500/30 transition-all group">
+                      <div className="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0">
+                        <span className="text-[9px] font-black text-cyan-400">DOCX</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white truncate">BepNhaMoc_BrandFlow.docx</p>
-                        <p className="text-xs text-slate-400 flex items-center gap-2">
-                          18.4 KB <span className="text-cyan-400 flex items-center gap-1"><Eye className="w-3 h-3" /> Preview</span>
+                        <p className="text-sm font-medium text-foreground truncate">BepNhaMoc_BrandFlow.docx</p>
+                        <p className="text-xs text-linear-text-muted flex items-center gap-2">
+                          18.4 KB <span className="opacity-0 group-hover:opacity-100 transition-opacity text-cyan-400 flex items-center gap-1"><Eye className="w-3 h-3" /> Preview</span>
                         </p>
                       </div>
                       <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -312,11 +311,11 @@ export default function EpicVideoComposer() {
                   {/* Enterprise Security Badge */}
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-6 px-6 py-5 rounded-2xl border border-cyan-500/20 bg-gradient-to-b from-cyan-500/5 to-transparent shadow-sm w-full relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
-                    <p className="text-[13px] leading-relaxed text-slate-400 mb-5 text-center relative z-10">
-                      <Lock className="w-3.5 h-3.5 inline-block mr-1.5 text-slate-400 mb-0.5" />
+                    <p className="text-[13px] leading-relaxed text-linear-text-muted mb-5 text-center relative z-10">
+                      <Lock className="w-3.5 h-3.5 inline-block mr-1.5 text-linear-text-muted mb-0.5" />
                       <span>Tài liệu nội bộ được bảo vệ bởi chuẩn <b>Mã hóa Đầu cuối</b>. Nhằm đảm bảo tuyệt mật, hệ thống sẽ <b>tiêu hủy file gốc vĩnh viễn</b> khỏi máy chủ ngay sau khi phân tích. Trí tuệ Nhân tạo tuyệt đối không sử dụng Dữ liệu của bạn để tự huấn luyện.</span>
                     </p>
-                    <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest relative z-10">
+                    <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[10px] font-bold text-linear-text-muted uppercase tracking-widest relative z-10">
                       <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-cyan-500" /> Enterprise Privacy</span>
                       <span className="flex items-center gap-1.5"><Lock className="w-4 h-4 text-cyan-500" /> AES-256 Encrypted</span>
                       <span className="flex items-center gap-1.5"><Server className="w-4 h-4 text-cyan-500" /> Zero Retention</span>
