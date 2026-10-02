@@ -10,30 +10,26 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 const SCENES = [
   // ======================
-  // INTRO SEQUENCE
+  // INTRO SEQUENCE (VIETNAMESE SCRIPT)
   // ======================
-  // 1. Lên hình tĩnh mờ mờ, màn hình chờ
+  // 1. Màn hình chờ (Logo cách điệu)
   { id: 'start', type: 'system-intro' },
 
-  // 2. Chữ đổi font chớp nhoáng
-  { id: 'hook1', type: 'font-roulette', text: 'MARKETING.' },
+  // Shot 1 (0:00 - 0:03)
+  { id: 'hook1', type: 'kinetic-text', text: '60% NGÂN SÁCH...' },
+  { id: 'hook2', type: 'glitch-text', text: '...BỊ LÃNG PHÍ.' },
 
-  // 3. Chữ dập khổng lồ
-  { id: 'hook2', type: 'kinetic-text', text: 'AUTOMATED.' },
-  
-  // 4. Chữ chạy vệt sáng ngang
-  { id: 'hook3', type: 'shimmer-text', text: 'REIMAGINED.' },
+  // Shot 2 (0:03 - 0:07)
+  { id: 'hook3', type: 'snappy-cut', text: 'THUÊ AGENCY? QUÁ ĐẮT.' },
+  { id: 'hook4', type: 'snappy-cut', text: 'DÙNG CHATGPT? THIẾU THỰC TẾ.' },
 
-  // 5. Cú nổ lộ diện (Mask Reveal)
-  { id: 'phrase', type: 'staggered-text', words: ['BEYOND', 'HUMAN', 'LIMITS.'] },
-
-  // 6. Siêu sáng rực rỡ bừng lên (Đỉnh điểm Intro)
+  // Chốt Intro bằng Logo bừng sáng
   { id: 'logo-reveal', type: 'epic-logo' },
 
   // ======================
-  // BODY (Sẽ thiết kế sau theo ý User)
+  // BODY
   // ======================
-  { id: 'body-placeholder', type: 'placeholder', text: 'BODY SECTION (TO BE CONTINUED...)' },
+  { id: 'body-placeholder', type: 'placeholder', text: 'PHẦN THÂN (SẼ CẬP NHẬT SAU...)' },
 
   // ======================
   // OUTRO SEQUENCE
@@ -60,38 +56,6 @@ export default function EpicVideoComposer() {
 
   const currentScene = SCENES[step];
 
-  // Component Font Roulette siêu gắt
-  const FontRouletteText = ({ text }: { text: string }) => {
-    const fonts = ['font-sans', 'font-serif', 'font-mono', 'font-space', 'italic font-serif'];
-    const [fontIdx, setFontIdx] = useState(0);
-
-    useEffect(() => {
-      let count = 0;
-      const interval = setInterval(() => {
-        if (count > 15) {
-          clearInterval(interval);
-          setFontIdx(3);
-        } else {
-          setFontIdx(Math.floor(Math.random() * fonts.length));
-          count++;
-        }
-      }, 50);
-      return () => clearInterval(interval);
-    }, []);
-
-    return (
-      <motion.h1 
-        initial={{ scale: 0.9, opacity: 0, letterSpacing: '0.2em' }}
-        animate={{ scale: 1, opacity: 1, letterSpacing: '-0.05em' }}
-        exit={{ scale: 1.5, opacity: 0, filter: 'blur(15px)' }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className={`text-[80px] sm:text-[150px] md:text-[200px] text-white uppercase transition-all duration-75 ${fonts[fontIdx]} drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]`}
-      >
-        {text}
-      </motion.h1>
-    );
-  };
-
   // Hàm render chữ Cursive Signature đặc trưng của hệ thống
   const renderSignature = (sizeClass: string, isGlowing = false) => (
     <span 
@@ -113,20 +77,24 @@ export default function EpicVideoComposer() {
       style={{ perspective: '2500px' }}
     >
       
-      {/* GLOBAL AMBIENT LAYER (Luôn chạy ngầm, thở nhịp nhàng) */}
-      <motion.div 
-        className="absolute inset-0 pointer-events-none opacity-40 mix-blend-screen"
-        animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <div className="absolute top-[-10%] left-[10%] w-[50vw] h-[50vw] bg-cyan-600/20 rounded-full blur-[140px]" />
-        <div className="absolute bottom-[-10%] right-[10%] w-[60vw] h-[60vw] bg-blue-700/15 rounded-full blur-[150px]" />
-      </motion.div>
+      {/* GLOBAL AMBIENT LAYER */}
+      {/* Tắt nền glow khi ở các Scene đầu để đảm bảo Visual Pitch Black (Nền đen tuyền) */}
+      {(step > 4) && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.4, scale: [1, 1.1, 1] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute inset-0 pointer-events-none mix-blend-screen"
+        >
+          <div className="absolute top-[-10%] left-[10%] w-[50vw] h-[50vw] bg-cyan-600/20 rounded-full blur-[140px]" />
+          <div className="absolute bottom-[-10%] right-[10%] w-[60vw] h-[60vw] bg-blue-700/15 rounded-full blur-[150px]" />
+        </motion.div>
+      )}
 
       <AnimatePresence mode="wait">
         
         {/* =========================================
-            SCENE 0: SYSTEM INTRO (Chữ mờ ảo, deep không gian)
+            SCENE 0: SYSTEM INTRO
             ========================================= */}
         {currentScene.type === 'system-intro' && (
           <motion.div
@@ -161,82 +129,104 @@ export default function EpicVideoComposer() {
         )}
 
         {/* =========================================
-            SCENE 1: FONT ROULETTE (Chớp nhoáng)
-            ========================================= */}
-        {currentScene.type === 'font-roulette' && (
-          <motion.div key={currentScene.id} className="absolute inset-0 flex items-center justify-center z-20">
-            <FontRouletteText text={currentScene.text || ''} />
-          </motion.div>
-        )}
-
-        {/* =========================================
-            SCENE 2: KINETIC TEXT (Dập ầm ầm vào màn hình)
+            SHOT 1A: KINETIC TEXT (60% NGÂN SÁCH...)
             ========================================= */}
         {currentScene.type === 'kinetic-text' && (
           <motion.div
             key={currentScene.id}
-            initial={{ opacity: 0, scale: 4, filter: 'blur(40px)' }}
+            initial={{ opacity: 0, scale: 5, filter: 'blur(50px)' }}
             animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, scale: 0.5, filter: 'blur(15px)', transition: { duration: 0.2 } }}
-            transition={{ duration: 0.5, type: "spring", bounce: 0.3 }}
-            className="absolute inset-0 flex items-center justify-center"
+            exit={{ opacity: 0, scale: 0.5, filter: 'blur(20px)', transition: { duration: 0.15 } }}
+            transition={{ duration: 0.4, type: "spring", bounce: 0.2 }} // Fast ease-in
+            className="absolute inset-0 flex items-center justify-center bg-black"
           >
-            <h1 className="text-[90px] sm:text-[160px] md:text-[220px] font-black text-white tracking-tighter uppercase font-space leading-none text-center drop-shadow-2xl">
+            <h1 className="text-[70px] sm:text-[130px] md:text-[160px] font-black text-white tracking-tighter uppercase font-space leading-none text-center drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
               {currentScene.text}
             </h1>
           </motion.div>
         )}
 
         {/* =========================================
-            SCENE 3: SHIMMER TEXT (Vệt sáng kim loại)
+            SHOT 1B: GLITCH TEXT (...BỊ LÃNG PHÍ.)
             ========================================= */}
-        {currentScene.type === 'shimmer-text' && (
+        {currentScene.type === 'glitch-text' && (
           <motion.div
             key={currentScene.id}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.1, filter: 'blur(15px)' }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 flex items-center justify-center z-20 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, filter: 'blur(10px)', transition: { duration: 0.2 } }}
+            className="absolute inset-0 flex items-center justify-center bg-black z-20"
           >
-            <h1 className="text-[70px] sm:text-[140px] md:text-[180px] font-black tracking-tighter uppercase font-space relative leading-none">
-              <span className="text-slate-800 absolute inset-0">{currentScene.text}</span>
-              <span 
-                className="relative text-transparent bg-clip-text animate-[shimmer_2.5s_infinite_ease-in-out]"
-                style={{
-                  backgroundImage: 'linear-gradient(110deg, rgba(255,255,255,0) 0%, rgba(34,211,238,0.2) 30%, rgba(255,255,255,1) 50%, rgba(34,211,238,0.2) 70%, rgba(255,255,255,0) 100%)',
-                  backgroundSize: '200% auto',
-                }}
-              >
-                {currentScene.text}
-              </span>
+            <h1 
+              className="text-[80px] sm:text-[150px] md:text-[200px] font-black tracking-tighter uppercase font-space leading-none text-center text-red-500 glitch"
+              data-text={currentScene.text}
+            >
+              {currentScene.text}
             </h1>
+
+            {/* CSS Glitch Animation */}
+            <style dangerouslySetInnerHTML={{__html: `
+              .glitch {
+                position: relative;
+                color: white;
+              }
+              .glitch::before, .glitch::after {
+                content: attr(data-text);
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: black;
+              }
+              .glitch::before {
+                left: 6px;
+                text-shadow: -4px 0 red;
+                clip: rect(44px, 450px, 56px, 0);
+                animation: glitch-anim 2s infinite linear alternate-reverse;
+              }
+              .glitch::after {
+                left: -6px;
+                text-shadow: -4px 0 cyan;
+                clip: rect(44px, 450px, 56px, 0);
+                animation: glitch-anim2 1.5s infinite linear alternate-reverse;
+              }
+              @keyframes glitch-anim {
+                0% { clip: rect(10px, 9999px, 83px, 0); transform: skew(0.6deg); }
+                5% { clip: rect(61px, 9999px, 12px, 0); transform: skew(0.3deg); }
+                10% { clip: rect(11px, 9999px, 5px, 0); transform: skew(0.1deg); }
+                15% { clip: rect(111px, 9999px, 50px, 0); transform: skew(0.8deg); }
+                20% { clip: rect(21px, 9999px, 80px, 0); transform: skew(0.5deg); }
+                25% { clip: rect(10px, 9999px, 83px, 0); transform: skew(0.1deg); }
+                30% { clip: rect(40px, 9999px, 100px, 0); transform: skew(0.7deg); }
+                100% { clip: rect(20px, 9999px, 90px, 0); transform: skew(0deg); }
+              }
+              @keyframes glitch-anim2 {
+                0% { clip: rect(65px, 9999px, 100px, 0); transform: skew(0.2deg); }
+                10% { clip: rect(10px, 9999px, 20px, 0); transform: skew(0.8deg); }
+                20% { clip: rect(45px, 9999px, 80px, 0); transform: skew(0.3deg); }
+                30% { clip: rect(15px, 9999px, 50px, 0); transform: skew(0.6deg); }
+                100% { clip: rect(80px, 9999px, 30px, 0); transform: skew(0deg); }
+              }
+            `}} />
           </motion.div>
         )}
 
         {/* =========================================
-            SCENE 4: MASK REVEAL STAGGERED
+            SHOT 2: SNAPPY CUTS
             ========================================= */}
-        {currentScene.type === 'staggered-text' && currentScene.words && (
+        {currentScene.type === 'snappy-cut' && (
           <motion.div
             key={currentScene.id}
-            exit={{ opacity: 0, filter: 'blur(20px)', scale: 0.9, transition: { duration: 0.5 } }}
-            className="absolute inset-0 flex items-center justify-center"
+            initial={{ opacity: 1, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.05, transition: { duration: 0.05 } }} // Siêu tốc (0.05s) tắt lịm đi
+            transition={{ duration: 0.1, ease: "easeOut" }} // Siêu tốc hiện ra
+            className="absolute inset-0 flex items-center justify-center bg-black"
           >
-            <div className="flex gap-4 sm:gap-6 md:gap-10 flex-wrap justify-center overflow-hidden p-10">
-              {currentScene.words.map((word, index) => (
-                <motion.div key={index} className="overflow-hidden pb-4">
-                  <motion.h1
-                    initial={{ y: "150%", rotateZ: 5, opacity: 0 }}
-                    animate={{ y: "0%", rotateZ: 0, opacity: 1 }}
-                    transition={{ delay: index * 0.12, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-[60px] sm:text-[100px] md:text-[140px] font-black text-white tracking-tighter uppercase font-space leading-none"
-                  >
-                    {word}
-                  </motion.h1>
-                </motion.div>
-              ))}
-            </div>
+            <h1 className="text-[50px] sm:text-[90px] md:text-[120px] font-black text-white tracking-tighter uppercase font-space leading-none text-center">
+              {currentScene.text}
+            </h1>
           </motion.div>
         )}
 
@@ -250,7 +240,7 @@ export default function EpicVideoComposer() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 2, filter: 'blur(40px)', transition: { duration: 1.5, ease: "easeIn" } }}
             transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 flex items-center justify-center flex-col gap-6 z-10"
+            className="absolute inset-0 flex items-center justify-center flex-col gap-6 z-10 bg-[#020617]"
           >
             <motion.div 
               initial={{ rotate: -180, scale: 0, filter: 'blur(20px)' }}
@@ -290,7 +280,7 @@ export default function EpicVideoComposer() {
               <div className="w-24 h-24 border-t-4 border-cyan-400 border-solid rounded-full" />
             </motion.div>
             <h2 className="text-3xl font-space font-bold text-cyan-300 tracking-widest">{currentScene.text}</h2>
-            <p className="text-slate-500 font-mono mt-4">Waiting for your brilliant UI/UX body concepts...</p>
+            <p className="text-slate-500 font-mono mt-4">Đợi bạn ra lệnh kịch bản cho phần thân...</p>
           </motion.div>
         )}
 
@@ -347,7 +337,7 @@ export default function EpicVideoComposer() {
 
       </AnimatePresence>
 
-      {/* Progress Dots (Tinh tế hơn) */}
+      {/* Progress Dots */}
       <div className="absolute bottom-10 right-10 flex gap-2 z-50">
         {SCENES.map((_, i) => (
           <div key={i} className={`h-1.5 rounded-full transition-all duration-700 ${i === step ? 'w-10 bg-white shadow-[0_0_10px_rgba(255,255,255,1)]' : 'w-1.5 bg-white/20'}`} />
