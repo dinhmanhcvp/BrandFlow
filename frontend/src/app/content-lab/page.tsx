@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFormStore } from '@/store/useFormStore';
-import { Loader2, Plus, PlaySquare, Globe, MessageSquare, PieChart, Send, Sparkles, BrainCircuit, Search, ChevronRight, Trash2, RefreshCw } from 'lucide-react';
+import { Loader2, Plus, PlaySquare, Globe, MessageSquare, PieChart, Send, Sparkles, BrainCircuit, Search, ChevronRight, Trash2, RefreshCw, MessageCircle, FileText, Share2 } from 'lucide-react';
 import DNAContextBanner from '@/components/shared/DNAContextBanner';
 
 export default function ContentLabPage() {
@@ -117,6 +117,15 @@ export default function ContentLabPage() {
             'Thử nghiệm chuỗi Video ASMR âm thanh nấu ăn mộc mạc trên TikTok.',
             'Ra mắt chuyên mục "Câu chuyện Thực Khách" trên Fanpage.',
             'Thiết kế lại Menu theo phong cách viết tay truyền thống.'
+          ],
+          community_feedback: {
+            sentiment: "Tích cực & Xúc động",
+            key_themes: ["Nhớ nhà/nhớ quê", "Hỏi địa chỉ/giá", "Khen hình ảnh mộc mạc"],
+            audience_quotes: ["Xem video xong muốn về quê ăn cơm mẹ nấu quá", "Quán ở đâu vậy ạ? Nhìn chill quá!"]
+          },
+          deep_transcript_analysis: [
+            "Giọng đọc trầm ấm, nhịp điệu chậm (ASMR) tạo cảm giác healing.",
+            "Không dùng từ ngữ giật tít, thay vào đó là lối kể chuyện rỉ rả tâm tình."
           ]
         };
         setSources((prev) => {
@@ -220,7 +229,7 @@ export default function ContentLabPage() {
           <form onSubmit={handleIngest} className="flex flex-col gap-3">
             <input 
               type="url"
-              placeholder="Paste Youtube or Website URL..."
+              placeholder="Paste Youtube, TikTok, Facebook, Website URL..."
               className="w-full px-4 py-2.5 text-sm bg-background/50 border border-linear-border/50 rounded-xl text-foreground placeholder:text-linear-text-muted focus:outline-none focus:ring-2 focus:ring-cyan-500/50 backdrop-blur-sm transition-all"
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
@@ -276,7 +285,7 @@ export default function ContentLabPage() {
                   )}
                   <div className="flex-1 min-w-0 py-0.5">
                     <div className="flex items-center gap-1.5 text-[10px] font-bold text-linear-text-muted mb-1 tracking-wider uppercase">
-                      {src.platform === 'youtube' ? <PlaySquare className="w-3.5 h-3.5 text-red-500" /> : <Globe className="w-3.5 h-3.5 text-blue-500" />}
+                      {src.platform === 'youtube' ? <PlaySquare className="w-3.5 h-3.5 text-red-500" /> : src.platform === 'tiktok' ? <Share2 className="w-3.5 h-3.5 text-pink-500" /> : src.platform === 'facebook' ? <MessageSquare className="w-3.5 h-3.5 text-blue-500" /> : <Globe className="w-3.5 h-3.5 text-emerald-500" />}
                       <span>{src.platform}</span>
                     </div>
                     <h4 className="text-sm font-semibold text-foreground truncate group-hover:text-cyan-400 transition-colors pr-6">{src.title || "Untitled Document"}</h4>
@@ -461,6 +470,60 @@ export default function ContentLabPage() {
                         )}
                       </div>
                     </div>
+                  </div>
+ 
+                  {/* Phân tích Sâu: Community & Transcript */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                    {/* Community Feedback */}
+                    {(currentReport.community_feedback || activeSource?.platform === 'tiktok' || activeSource?.platform === 'facebook' || activeSource?.platform === 'youtube') && (
+                    <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-purple-500/30 hover:shadow-purple-500/5 transition-all duration-300 flex flex-col">
+                      <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><MessageCircle className="w-20 h-20" /></div>
+                      <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
+                        <span className="w-2 h-2 rounded-full bg-purple-500 mr-2 shadow-[0_0_8px_rgba(168,85,247,0.8)]"></span> Phản Hồi Cộng Đồng (Comments)
+                      </h3>
+                      <div className="relative z-10 flex-1 flex flex-col gap-3">
+                        {currentReport.community_feedback ? (
+                          <>
+                            <p className="text-sm font-semibold text-purple-400 flex items-center">Sentiment: {currentReport.community_feedback.sentiment}</p>
+                            <div className="flex flex-wrap gap-2">
+                              {currentReport.community_feedback.key_themes?.map((theme: string, i: number) => (
+                                <span key={i} className="px-2.5 py-1 rounded-md bg-purple-500/10 border border-purple-500/30 text-[11px] text-purple-300 font-semibold tracking-wider">{theme}</span>
+                              ))}
+                            </div>
+                            <div className="h-px w-full bg-linear-border/30 my-1"></div>
+                            <ul className="space-y-2">
+                              {currentReport.community_feedback.audience_quotes?.map((quote: string, i: number) => (
+                                <li key={i} className="text-sm text-foreground/90 italic border-l-2 border-purple-500/30 pl-3 py-1">"{quote}"</li>
+                              ))}
+                            </ul>
+                          </>
+                        ) : (
+                          <p className="text-sm text-linear-text-muted italic">Đang thu thập dữ liệu bình luận từ người dùng trên {activeSource?.platform}...</p>
+                        )}
+                      </div>
+                    </div>
+                    )}
+                    
+                    {/* Deep Transcript Analysis */}
+                    {(currentReport.deep_transcript_analysis || activeSource?.platform === 'youtube' || activeSource?.platform === 'tiktok') && (
+                    <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-teal-500/30 hover:shadow-teal-500/5 transition-all duration-300 flex flex-col">
+                      <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><FileText className="w-20 h-20" /></div>
+                      <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
+                        <span className="w-2 h-2 rounded-full bg-teal-500 mr-2 shadow-[0_0_8px_rgba(20,184,166,0.8)]"></span> Kịch Bản & Lời Thoại (Transcript)
+                      </h3>
+                      <div className="relative z-10 flex-1 flex flex-col gap-3">
+                        {currentReport.deep_transcript_analysis ? (
+                          <ul className="space-y-3">
+                            {currentReport.deep_transcript_analysis.map((insight: string, i: number) => (
+                              <li key={i} className="flex items-start text-sm text-foreground/90 bg-linear-surface/40 p-2.5 rounded-lg border border-linear-border/30"><span className="text-teal-400 mr-2.5">▪</span> <span className="leading-relaxed">{insight}</span></li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-sm text-linear-text-muted italic">Đang bóc tách và phân tích sâu lời thoại / sub của video...</p>
+                        )}
+                      </div>
+                    </div>
+                    )}
                   </div>
  
                   <div className="relative p-8 bg-gradient-to-br from-linear-surface to-background border border-linear-border/60 rounded-2xl shadow-xl mt-8 overflow-hidden group">

@@ -56,6 +56,15 @@ HÃY TRẢ VỀ ĐỊNH DẠNG JSON:
         "Segment 1: Demographics + Psychographics + JTBD",
         "Segment 2: Demographics + Psychographics + JTBD"
     ],
+    "community_feedback": {
+        "sentiment": "Tích cực/Tiêu cực/Trung lập",
+        "key_themes": ["Chủ đề 1 được bàn luận nhiều", "Chủ đề 2"],
+        "audience_quotes": ["Trích dẫn ấn tượng 1", "Trích dẫn 2"]
+    },
+    "deep_transcript_analysis": [
+        "Insight 1 từ Subtitle/Video",
+        "Insight 2 từ Subtitle/Video"
+    ],
     "learning_actions": [
         "ACTION 1: [Làm gì] → [Kết quả mong đợi] → [Timeline] — Dựa trên insight cụ thể từ phân tích",
         "ACTION 2: [Làm gì] → [KPI đo lường] → [Budget estimate] — Áp dụng vào thực tiễn DN",
