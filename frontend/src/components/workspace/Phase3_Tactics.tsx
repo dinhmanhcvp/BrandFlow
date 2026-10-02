@@ -2,16 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, PenSquare, Palette, Share2, Calculator, CheckCircle2, Zap, ArrowRight, Activity, Smartphone, Hash, Heart, MessageCircle, RefreshCw } from 'lucide-react';
+import { Bot, PenSquare, Palette, Share2, Calculator, CheckCircle2, Zap, ArrowRight, Activity, Smartphone, Hash, Heart, MessageCircle, RefreshCw, LayoutTemplate, Type, Box, Network, Users } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFormStore } from '@/store/useFormStore';
-
-const mockDelays = {
-  content: 1500,
-  design: 1200,
-  agent: 1800,
-  tactics: 2000
-};
 
 export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNext: () => void, onBack: () => void, globalBudget: string }) {
   const { language } = useLanguage();
@@ -23,121 +16,160 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
   const isBepNhaMoc = brandDNA?.brand_name?.includes('Nhà Mộc') || wizardAnswers?.company_name?.includes('Nhà Mộc');
 
   const contentMock = isBepNhaMoc ? {
-    headline: "CÓ NHỮNG NGÀY CHỈ THÈM MỘT BÁT CANH CUA RAU ĐAY...",
-    body: "Thành phố dạo này hay đổ mưa chiều. Những lúc kẹt xe giữa dòng người hối hả, bạn có chợt thấy sống mũi cay cay khi nhớ về mùi khói bếp thân thuộc?\n\nỞ Bếp Nhà Mộc, chúng tôi không có những món sơn hào hải vị xa hoa. Chúng tôi chỉ có:\n✨ Nồi cá lóc kho tộ keo sệt, đậm đà vị mắm nhỉ.\n✨ Bát canh cua đồng nấu rau đay mồng tơi ngọt thanh, mát ruột.\n✨ Niêu cơm gạo lứt dẻo bùi, ủ ấm trong lớp lá chuối.",
-    hashtags: "#BepNhaMoc #Comnha #ChuaLanh"
+    pillars: [
+      {
+        title: "Pillar 1: Trạm Sạc Chữa Lành (Mindful Dining)",
+        angle: "Cơm trưa không chỉ để no bụng, mà là khoảnh khắc 'ngắt kết nối' để xoa dịu áp lực (burn-out) chốn công sở.",
+        formats: ["Cinematic Video", "ASMR Reels", "Photo Quotes"],
+        channels: ["TikTok", "Instagram", "Facebook"],
+        example: "POV: 11h30 trưa sếp dí 3 cái deadline... nhưng bụng thì réo rắt. Ngồi xuống hít một hơi thật sâu, mở hộp cơm bã mía bốc khói, cảm nhận hương vị thân thuộc của mâm cơm nhà mẹ nấu. Mọi muộn phiền tan biến."
+      },
+      {
+        title: "Pillar 2: Corporate Wellness (B2B Approach)",
+        angle: "Bữa trưa dinh dưỡng là phúc lợi thiết thực nhất, giúp tăng 30% hiệu suất làm việc buổi chiều của nhân sự, hạn chế Food Coma.",
+        formats: ["Infographic", "PR Article", "LinkedIn Carousel"],
+        channels: ["LinkedIn", "Zalo OA", "PR"],
+        example: "HR Managers có biết: 70% nhân sự thừa nhận họ bị buồn ngủ và mất tập trung vào lúc 2h chiều do bữa trưa nhiều tinh bột và bột ngọt? Khám phá giải pháp Corporate Catering từ Bếp Nhà Mộc."
+      },
+      {
+        title: "Pillar 3: Xanh & Bền Vững (Eco-friendly)",
+        angle: "100% sử dụng hộp bã mía phân huỷ sinh học, không dùng hộp xốp nhựa. Ăn ngon nhưng vẫn phải có trách nhiệm với môi trường.",
+        formats: ["Behind the scenes", "Minigame", "UGC Reviews"],
+        channels: ["Facebook Group", "Zalo Mini App"],
+        example: "Thử thách 7 ngày ăn trưa không rác thải nhựa cùng Bếp Nhà Mộc! Chụp ảnh hộp bã mía sau khi dùng xong để nhận ngay mã FREESHIP cho tuần tới."
+      }
+    ]
   } : {
-    headline: "GIẢI PHÁP TỐI ƯU CHO DOANH NGHIỆP CỦA BẠN",
-    body: "Khám phá cách dịch vụ của chúng tôi có thể giúp bạn tiết kiệm 40% chi phí vận hành trong khi vẫn duy trì chất lượng vượt trội.\n\nSứ mệnh của chúng tôi là mang lại giá trị bền vững cho khách hàng.",
-    hashtags: "#BusinessGrowth #Optimize"
+    pillars: [
+      { title: "Pillar 1: Core Value", angle: "Optimize business performance", formats: ["Blog", "Video"], channels: ["LinkedIn", "FB"], example: "How to save 40% cost." }
+    ]
   };
 
   const designMock = isBepNhaMoc ? {
-    primaryColors: ["#4A5D23", "#8B4513", "#F5DEB3"],
-    archetype: "The Caregiver & The Innocent",
-    keywords: ["Mộc mạc", "Ấm áp", "Chữa lành", "Di sản", "Xanh"]
+    colors: [
+      { hex: "#064E3B", name: "Deep Forest", usage: "Primary Brand, Logo, CTA" },
+      { hex: "#B45309", name: "Amber Wood", usage: "Accents, Highlights" },
+      { hex: "#FEF3C7", name: "Warm Cream", usage: "Backgrounds, Canvas" },
+      { hex: "#166534", name: "Fresh Leaf", usage: "Icons, Secondary" }
+    ],
+    typography: {
+      heading: "Playfair Display (Serif) - Sang trọng, chậm rãi, mang tính di sản.",
+      body: "Inter (Sans-serif) - Rõ ràng, hiện đại, tối ưu đọc trên app Zalo/Mobile."
+    },
+    guidelines: [
+      "Luôn sử dụng ánh sáng vàng ấm (Warm sunset/Golden hour) trong nhiếp ảnh.",
+      "Food styling phải tự nhiên, mộc mạc, không dùng đạo cụ nhựa.",
+      "Khoảng trắng (White space) chiếm tối thiểu 40% layout để tạo cảm giác 'thở'."
+    ]
   } : {
-    primaryColors: ["#0EA5E9", "#1E293B", "#F8FAFC"],
-    archetype: "The Innovator & The Sage",
-    keywords: ["Hiện đại", "Tối giản", "Công nghệ", "Đột phá", "Tốc độ"]
+    colors: [{ hex: "#000", name: "Black", usage: "Primary" }], typography: { heading: "Arial", body: "Arial" }, guidelines: ["Minimalism"]
   };
+
+  const agentsMock = [
+    {
+      role: "Content Strategist Agent",
+      avatar: "bg-pink-500",
+      description: "Phân tích tâm lý dân văn phòng, lập ma trận nội dung đa nền tảng. Viết kịch bản ASMR TikTok và bài PR chuyên sâu trên LinkedIn.",
+      status: "Active"
+    },
+    {
+      role: "Creative Director Agent",
+      avatar: "bg-purple-500",
+      description: "Quản lý Visual DNA. Đảm bảo mọi ấn phẩm thiết kế, packaging (hộp bã mía) và photography (chụp ảnh món ăn) tuân thủ đúng mood & tone 'Chữa lành'.",
+      status: "Active"
+    },
+    {
+      role: "Performance Lead Agent",
+      avatar: "bg-blue-500",
+      description: "Tối ưu ngân sách chạy Ads. Setup phễu chuyển đổi (Conversion Funnel) từ Facebook/Zalo Ads đổ về Zalo Mini App. Theo dõi CPA và ROAS.",
+      status: "Active"
+    },
+    {
+      role: "B2B Growth Agent",
+      avatar: "bg-emerald-500",
+      description: "Crawl data và tiếp cận HR Managers của các doanh nghiệp lớn. Xây dựng chương trình dùng thử (Sampling) và chiết khấu Corporate Catering.",
+      status: "Active"
+    }
+  ];
 
   const planMock = isBepNhaMoc ? [
     { 
       id: "TSK-01",
-      name: "Zalo Mini App (Loyalty & Retention)", 
+      name: "Tích hợp Zalo Mini App (Loyalty & Retention)", 
       phase: "Tháng 1-2", 
-      lead: "@TechLead", 
-      budget: "65,000,000đ", 
-      status: "Ready",
+      lead: "Performance Lead", 
+      budget: "65,000,000 VNĐ", 
+      status: "Executing",
       kpis: "Giảm Churn Rate 20% | Đạt 5,000 users",
-      roi: "150%",
-      details: "Xây dựng hệ thống tích điểm Zalo Mini App dành riêng cho khách hàng Corporate. Tự động hóa tin nhắn nhắc lịch ăn trưa, tặng voucher sinh nhật và ưu đãi nhóm."
+      details: "Xây dựng hệ thống Zalo Mini App dành riêng cho Bếp Nhà Mộc. Tích hợp tính năng đặt cơm nhóm, tự động hóa tin nhắn ZNS nhắc lịch ăn trưa, tặng voucher sinh nhật và lưu trữ lịch sử đơn hàng để phân tích sở thích."
     },
     { 
       id: "TSK-02",
-      name: "Hero Video Campaign: Mùi Khói Bếp", 
+      name: "Chiến dịch Hero Video: 'Trạm Sạc Chữa Lành'", 
       phase: "Tháng 1", 
-      lead: "@CreativeDir", 
-      budget: "50,000,000đ", 
-      status: "Drafting",
+      lead: "Creative Director", 
+      budget: "50,000,000 VNĐ", 
+      status: "Planning",
       kpis: "1M Views | 5% CTR | 200 Booking",
-      roi: "210%",
-      details: "Sản xuất Cinematic Video khai thác câu chuyện 'Bữa cơm nhà' giữa lòng thành phố nhộn nhịp. Phân phối tập trung trên TikTok và Facebook Reels."
+      details: "Sản xuất Cinematic Video khai thác câu chuyện 'Food Coma' chốn công sở và giải pháp từ Bếp Nhà Mộc. Phân phối tập trung trên TikTok (định dạng dọc) và Facebook Reels với ngân sách Ads mồi 15tr."
     },
     { 
       id: "TSK-03",
-      name: "30 Lifestyle Micro-KOLs (Food & Office)", 
+      name: "Booking 30 Lifestyle Micro-KOLs (Office/Food)", 
       phase: "Tháng 2-3", 
-      lead: "@PRManager", 
-      budget: "100,000,000đ", 
-      status: "Planning",
-      kpis: "Reach 2M | 150 UGC",
-      roi: "180%",
-      details: "Tổ chức chiến dịch Review chân thực thông qua tệp Micro-KOLs là dân văn phòng (Office workers). Mục tiêu tạo hiệu ứng truyền miệng (Word of Mouth) tại các toà nhà văn phòng lớn."
+      lead: "Content Strategist", 
+      budget: "100,000,000 VNĐ", 
+      status: "Ready",
+      kpis: "Reach 2M | 150 UGC | Tương tác 50K",
+      details: "Tổ chức chiến dịch Review chân thực thông qua tệp Micro-KOLs là dân văn phòng thực thụ. Mục tiêu tạo hiệu ứng truyền miệng (Word of Mouth) tại các toà nhà văn phòng lớn (Bitexco, Landmark, Keangnam). Cung cấp mã giảm giá riêng cho từng KOL để đo lường chuyển đổi."
     },
     { 
       id: "TSK-04",
-      name: "B2B Corporate Lunch Activation", 
+      name: "B2B Corporate Lunch Activation (Direct Sales)", 
       phase: "Tháng 3-4", 
-      lead: "@GrowthHacker", 
-      budget: "30,000,000đ", 
+      lead: "B2B Growth", 
+      budget: "30,000,000 VNĐ", 
       status: "Queued",
-      kpis: "Ký kết 10 Hợp đồng | LTV tăng 35%",
-      roi: "300%",
-      details: "Tiếp cận trực tiếp phòng Nhân sự/Công đoàn của các doanh nghiệp lớn bán kính 5km. Cung cấp gói ăn trưa định kỳ (Corporate Subscription) với chiết khấu 15%."
-    },
-    { 
-      id: "TSK-05",
-      name: "Omni-channel Retargeting System", 
-      phase: "Tháng 2-4", 
-      lead: "@PerformanceLead", 
-      budget: "45,000,000đ", 
-      status: "Planning",
-      kpis: "Giảm CPA 40% | CVR 3.5%",
-      roi: "250%",
-      details: "Cài đặt Facebook Pixel & GTM. Thu thập data từ website và Zalo, chạy chiến dịch Retargeting động với thông điệp 'Menu thay đổi mỗi ngày' bám đuổi tập khách đã tương tác."
+      kpis: "Ký kết 15 Hợp đồng | LTV tăng 35%",
+      details: "Chạy chiến dịch LinkedIn InMail kết hợp Tele-sales tiếp cận trực tiếp phòng Nhân sự/Công đoàn của các doanh nghiệp quy mô 50+ nhân sự. Cung cấp gói ăn trưa định kỳ (Corporate Subscription) kèm buổi ăn thử (Sampling) miễn phí tận văn phòng."
     }
   ] : [
-    { id: "TSK-01", name: "Setup Omni-channel Hub", phase: "Month 1", lead: "@TechLead", budget: "30%", status: "Ready", kpis: "100% Integration", roi: "120%", details: "Set up the core data infrastructure and connect all marketing channels." },
-    { id: "TSK-02", name: "Produce Hero Video", phase: "Month 2", lead: "@CreativeDir", budget: "40%", status: "Drafting", kpis: "500k Views", roi: "180%", details: "High-end production video focusing on brand story." },
-    { id: "TSK-03", name: "PR Articles Deployment", phase: "Month 3", lead: "@PRManager", budget: "30%", status: "Planning", kpis: "10 Tier-1 Articles", roi: "150%", details: "Publish PR articles on top tier business magazines to build trust." }
+    { id: "TSK-01", name: "Setup Hub", phase: "M1", lead: "Tech", budget: "30M", status: "Ready", kpis: "Done", details: "Core setup." }
   ];
 
   useEffect(() => {
     if (!hasGenerated[activePanel]) {
       setIsGenerating(true);
-      const delay = activePanel === 0 ? mockDelays.content : activePanel === 1 ? mockDelays.design : activePanel === 2 ? mockDelays.agent : mockDelays.tactics;
-      
       const timer = setTimeout(() => {
         setIsGenerating(false);
         setHasGenerated(prev => ({...prev, [activePanel]: true}));
-      }, delay);
-      
+      }, 1000);
       return () => clearTimeout(timer);
     }
   }, [activePanel]);
 
   const tabs = [
-    { id: 0, title: "Content Lab", icon: PenSquare, color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/30" },
-    { id: 1, title: "Design Studio", icon: Palette, color: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/30" },
-    { id: 2, title: "Agent Persona", icon: Bot, color: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/30" },
+    { id: 0, title: "Content Matrix", icon: PenSquare, color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/30" },
+    { id: 1, title: "Visual DNA", icon: Palette, color: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/30" },
+    { id: 2, title: "AI Swarm", icon: Network, color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/30" },
     { id: 3, title: "Action Plan", icon: Activity, color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/30" }
   ];
 
   return (
-    <div className="h-full w-full flex flex-col p-4 md:p-6 max-w-7xl mx-auto z-10 relative overflow-hidden">
+    <div className="h-full w-full flex flex-col p-4 md:p-8 max-w-[1600px] mx-auto z-10 relative overflow-hidden">
       {/* ── Header ── */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 shrink-0 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 shrink-0 gap-4">
         <div>
           <div className="inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 mb-3 shadow-[0_0_15px_rgba(59,130,246,0.15)]">
             <Zap className="w-4 h-4 text-blue-400 animate-pulse mr-2" />
             <span className="text-xs font-bold text-blue-400 tracking-widest uppercase">Multi-Agent Engine</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 font-heading tracking-tight drop-shadow-sm">
+          <h2 className="text-3xl md:text-5xl font-black text-foreground tracking-tight">
             Tactical Execution Hub
           </h2>
-          <p className="text-linear-text-muted mt-2 font-medium">Chiến thuật chi tiết được tự động xây dựng dựa trên kết quả Debate</p>
+          <p className="text-linear-text-muted mt-2 font-medium text-sm md:text-base max-w-2xl">
+            Kế hoạch chiến thuật chi tiết được xây dựng tự động bởi tổ hợp AI (AI Swarm) dựa trên kết quả Debate và Brand DNA.
+          </p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
           <button 
@@ -147,11 +179,9 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
             <ArrowRight className="w-4 h-4 mr-2 rotate-180" /> Quay lại
           </button>
           <button 
-            id="btn-next-phase3" 
             onClick={onNext} 
-            className="group relative px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] overflow-hidden flex-1 md:flex-none flex items-center justify-center"
+            className="group relative px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold transition-all shadow-lg shadow-cyan-500/20 overflow-hidden flex-1 md:flex-none flex items-center justify-center"
           >
-            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
             <span className="relative z-10 flex items-center">
               Chuyển sang Execution <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </span>
@@ -168,143 +198,142 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
               key={tab.id}
               onClick={() => setActivePanel(tab.id)}
               className={`
-                flex items-center px-5 py-3 rounded-xl transition-all duration-300 whitespace-nowrap shrink-0 border
-                ${isActive ? `glassbox-card ${tab.border} shadow-lg scale-105` : 'bg-linear-surface/30 border-transparent hover:bg-linear-surface/50 opacity-60 hover:opacity-100'}
+                flex items-center px-6 py-3.5 rounded-2xl transition-all duration-300 whitespace-nowrap shrink-0 border
+                ${isActive ? `bg-linear-surface/80 ${tab.border} shadow-xl scale-105` : 'bg-linear-surface/30 border-transparent hover:bg-linear-surface/50 opacity-70 hover:opacity-100'}
               `}
             >
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center mr-3 ${isActive ? tab.bg : 'bg-slate-800/50'}`}>
-                <tab.icon className={`w-4 h-4 ${isActive ? tab.color : 'text-slate-400'}`} />
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center mr-3 ${isActive ? tab.bg : 'bg-slate-800/50'}`}>
+                <tab.icon className={`w-5 h-5 ${isActive ? tab.color : 'text-slate-400'}`} />
               </div>
-              <span className={`font-bold ${isActive ? 'text-foreground' : 'text-slate-400'}`}>{tab.title}</span>
+              <span className={`font-black text-sm uppercase tracking-wide ${isActive ? 'text-foreground' : 'text-slate-400'}`}>{tab.title}</span>
             </button>
           );
         })}
       </div>
 
       {/* ── Dynamic Content Area ── */}
-      <div className="flex-1 glassbox-card p-6 overflow-hidden relative flex flex-col border border-linear-border/30 bg-slate-900/40">
+      <div className="flex-1 bg-linear-surface/40 backdrop-blur-md rounded-3xl p-6 md:p-10 overflow-y-auto no-scrollbar relative flex flex-col border border-linear-border/30 shadow-2xl">
         <AnimatePresence mode="wait">
           
-          {/* TAB 0: CONTENT LAB */}
+          {/* TAB 0: CONTENT MATRIX */}
           {activePanel === 0 && (
-            <motion.div key="p0" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="h-full flex flex-col relative">
-              <div className="absolute top-0 right-0 flex items-center text-pink-400/80 text-xs font-bold tracking-widest uppercase bg-pink-500/10 px-3 py-1.5 rounded-lg border border-pink-500/20 z-10">
-                <PenSquare className="w-3 h-3 mr-2" /> ContentStrategist Active
+            <motion.div key="p0" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-20}} className="h-full flex flex-col relative gap-8">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-black text-foreground">Ma Trận Nội Dung (Content Matrix)</h3>
+                <div className="flex items-center text-pink-400/80 text-xs font-bold tracking-widest uppercase bg-pink-500/10 px-3 py-1.5 rounded-lg border border-pink-500/20">
+                  <PenSquare className="w-3 h-3 mr-2" /> Content Strategist Active
+                </div>
               </div>
               
               {isGenerating ? (
-                <div className="flex-1 flex flex-col items-center justify-center">
-                  <RefreshCw className="w-8 h-8 text-pink-500 animate-spin mb-4" />
-                  <p className="text-pink-400 font-bold tracking-widest uppercase text-sm animate-pulse">Generating Social Copy...</p>
+                <div className="flex-1 flex flex-col items-center justify-center py-20">
+                  <RefreshCw className="w-10 h-10 text-pink-500 animate-spin mb-4" />
+                  <p className="text-pink-400 font-bold tracking-widest uppercase text-sm animate-pulse">Phân tích Insight & Tạo Ma Trận...</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full pt-8">
-                  {/* Left: AI Generation View */}
-                  <div className="flex flex-col gap-4">
-                    <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-pink-500" /> AI Draft
-                    </h3>
-                    <div className="glassbox-card !p-6 flex-1 bg-slate-900/60 border-pink-500/20 shadow-lg shadow-pink-500/5">
-                      <h4 className="text-xl font-bold text-white mb-4 leading-snug">{contentMock.headline}</h4>
-                      <div className="text-slate-300 whitespace-pre-wrap leading-relaxed text-sm">{contentMock.body}</div>
-                      <div className="mt-4 text-pink-400 font-medium text-sm">{contentMock.hashtags}</div>
-                    </div>
-                  </div>
-
-                  {/* Right: Social Mockup */}
-                  <div className="flex flex-col gap-4 items-center justify-center h-full">
-                    <div className="w-full max-w-sm rounded-3xl bg-white overflow-hidden shadow-2xl border border-slate-200 flex flex-col">
-                      <div className="p-4 border-b flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden relative">
-                           {brandDNA?.logo_url && <img src={brandDNA.logo_url} className="w-full h-full object-cover" alt="Logo" />}
-                        </div>
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                  {contentMock.pillars.map((pillar, i) => (
+                    <div key={i} className="bg-background/60 border border-linear-border rounded-2xl p-6 flex flex-col shadow-lg hover:border-pink-500/30 transition-colors">
+                      <div className="w-12 h-12 bg-pink-500/10 rounded-xl flex items-center justify-center mb-6 border border-pink-500/20">
+                        <Type className="w-6 h-6 text-pink-400" />
+                      </div>
+                      <h4 className="text-xl font-black text-foreground mb-3">{pillar.title}</h4>
+                      <p className="text-sm text-linear-text-muted mb-6 leading-relaxed flex-1">{pillar.angle}</p>
+                      
+                      <div className="space-y-4 pt-4 border-t border-linear-border/50">
                         <div>
-                          <p className="text-slate-900 font-bold text-sm">{isBepNhaMoc ? 'Bếp Nhà Mộc' : 'Brand Name'}</p>
-                          <p className="text-slate-500 text-xs">Sponsored</p>
+                          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Định dạng & Kênh</div>
+                          <div className="flex flex-wrap gap-2">
+                            {pillar.formats.concat(pillar.channels).map(tag => (
+                              <span key={tag} className="px-2 py-1 bg-slate-800 text-slate-300 text-[10px] font-bold rounded-md">{tag}</span>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                      <div className="p-4 text-slate-800 text-sm whitespace-pre-wrap">
-                        <span className="font-bold">{contentMock.headline}</span>{"\n\n"}
-                        {contentMock.body.length > 100 ? contentMock.body.substring(0, 100) + '...' : contentMock.body}
-                        <span className="text-blue-600 block mt-1">{contentMock.hashtags}</span>
-                      </div>
-                      <div className="w-full aspect-video bg-slate-100 flex items-center justify-center border-y">
-                        <Palette className="w-10 h-10 text-slate-300" />
-                      </div>
-                      <div className="p-3 flex justify-between items-center bg-slate-50">
-                        <div className="flex gap-4">
-                          <Heart className="w-5 h-5 text-slate-600" />
-                          <MessageCircle className="w-5 h-5 text-slate-600" />
-                          <Share2 className="w-5 h-5 text-slate-600" />
+                        <div className="bg-pink-500/5 border border-pink-500/10 rounded-xl p-4">
+                          <div className="text-[10px] font-bold text-pink-400 uppercase tracking-widest mb-1">Ví dụ Copywriting</div>
+                          <p className="text-xs text-foreground italic leading-relaxed">"{pillar.example}"</p>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
               )}
             </motion.div>
           )}
 
-          {/* TAB 1: DESIGN STUDIO */}
+          {/* TAB 1: VISUAL DNA */}
           {activePanel === 1 && (
-            <motion.div key="p1" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="h-full flex flex-col relative">
-              <div className="absolute top-0 right-0 flex items-center text-purple-400/80 text-xs font-bold tracking-widest uppercase bg-purple-500/10 px-3 py-1.5 rounded-lg border border-purple-500/20 z-10">
-                <Palette className="w-3 h-3 mr-2" /> BrandDesigner Active
+            <motion.div key="p1" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-20}} className="h-full flex flex-col relative gap-8">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-black text-foreground">Bộ nhận diện Cốt lõi (Visual DNA)</h3>
+                <div className="flex items-center text-purple-400/80 text-xs font-bold tracking-widest uppercase bg-purple-500/10 px-3 py-1.5 rounded-lg border border-purple-500/20">
+                  <Palette className="w-3 h-3 mr-2" /> Creative Director Active
+                </div>
               </div>
-              
+
               {isGenerating ? (
-                 <div className="flex-1 flex flex-col items-center justify-center">
-                   <RefreshCw className="w-8 h-8 text-purple-500 animate-spin mb-4" />
-                   <p className="text-purple-400 font-bold tracking-widest uppercase text-sm animate-pulse">Extracting Brand DNA...</p>
-                 </div>
+                <div className="flex-1 flex flex-col items-center justify-center py-20">
+                  <RefreshCw className="w-10 h-10 text-purple-500 animate-spin mb-4" />
+                  <p className="text-purple-400 font-bold tracking-widest uppercase text-sm animate-pulse">Thiết lập Brand Guidelines...</p>
+                </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full pt-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                   {/* Left: Colors & Typography */}
-                  <div className="flex flex-col gap-6">
-                    <div className="glassbox-card !p-6 flex-1 bg-slate-900/60 border-purple-500/20 shadow-lg shadow-purple-500/5">
-                      <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-purple-500" /> Brand Palette
-                      </h3>
-                      <div className="flex gap-4">
-                        {designMock.primaryColors.map((color, i) => (
-                          <motion.div 
-                            key={i} initial={{y: 20, opacity: 0}} animate={{y: 0, opacity: 1}} transition={{delay: i * 0.1}}
-                            className="flex-1 flex flex-col group"
-                          >
-                            <div 
-                              className="w-full aspect-square rounded-2xl shadow-lg border border-white/10 transition-transform group-hover:-translate-y-2 relative overflow-hidden" 
-                              style={{backgroundColor: color}}
-                            >
-                              <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent" />
+                  <div className="lg:col-span-5 flex flex-col gap-6">
+                    <div className="bg-background/60 border border-linear-border rounded-2xl p-6">
+                      <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Color Palette</h4>
+                      <div className="space-y-4">
+                        {designMock.colors.map(c => (
+                          <div key={c.hex} className="flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-xl shadow-inner border border-black/10 shrink-0" style={{backgroundColor: c.hex}} />
+                            <div>
+                              <div className="font-bold text-foreground text-sm">{c.name}</div>
+                              <div className="text-xs text-linear-text-muted font-mono mt-1">{c.hex} • {c.usage}</div>
                             </div>
-                            <span className="text-xs font-bold mt-3 text-slate-300 text-center uppercase tracking-wider">{color}</span>
-                          </motion.div>
+                          </div>
                         ))}
                       </div>
                     </div>
-                    
-                    <div className="glassbox-card !p-6 flex-1 flex flex-col justify-center items-center text-center bg-slate-900/60 border-purple-500/20">
-                      <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Archetype DNA</h3>
-                      <div className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-heading">
-                        {designMock.archetype}
+
+                    <div className="bg-background/60 border border-linear-border rounded-2xl p-6">
+                      <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Typography</h4>
+                      <div className="space-y-4">
+                        <div>
+                          <div className="text-xs text-purple-400 font-bold mb-1">Heading Font</div>
+                          <div className="text-sm text-foreground font-medium">{designMock.typography.heading}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-purple-400 font-bold mb-1">Body Font</div>
+                          <div className="text-sm text-foreground font-medium">{designMock.typography.body}</div>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Right: Moodboard Keywords */}
-                  <div className="glassbox-card !p-6 h-full flex flex-col bg-slate-900/60 border-purple-500/20">
-                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-pink-500" /> Vibe & Keywords
-                    </h3>
-                    <div className="flex flex-wrap gap-3 content-start">
-                      {designMock.keywords.map((kw, i) => (
-                        <motion.span 
-                          key={i} initial={{scale: 0.8, opacity: 0}} animate={{scale: 1, opacity: 1}} transition={{delay: i * 0.05}}
-                          className="px-5 py-2.5 bg-slate-800 rounded-xl text-sm font-bold text-slate-200 border border-slate-700 shadow-sm hover:border-purple-500/50 transition-colors"
-                        >
-                          #{kw}
-                        </motion.span>
-                      ))}
+                  {/* Right: Moodboard & Rules */}
+                  <div className="lg:col-span-7 flex flex-col gap-6">
+                    <div className="bg-background/60 border border-linear-border rounded-2xl p-6 h-full flex flex-col">
+                      <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Art Direction & Photography</h4>
+                      <div className="w-full aspect-video rounded-xl overflow-hidden mb-6 relative group border border-linear-border">
+                        {isBepNhaMoc ? (
+                          <img src="/assets/bep-nha-moc/banner.jpg" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Moodboard" />
+                        ) : (
+                          <div className="w-full h-full bg-slate-800 flex items-center justify-center text-slate-500">Placeholder Image</div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-4">
+                          <span className="text-white font-bold text-sm tracking-wide">Cinematic Sunset Lighting Concept</span>
+                        </div>
+                      </div>
+                      
+                      <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">Creative Guidelines</h4>
+                      <ul className="space-y-3">
+                        {designMock.guidelines.map((rule, i) => (
+                          <li key={i} className="flex items-start gap-3 text-sm text-foreground bg-slate-800/30 p-3 rounded-lg border border-slate-700/30">
+                            <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0" />
+                            {rule}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
                 </div>
@@ -312,111 +341,90 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
             </motion.div>
           )}
 
-          {/* TAB 2: AGENT PERSONA */}
+          {/* TAB 2: AGENT SWARM */}
           {activePanel === 2 && (
-            <motion.div key="p2" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="h-full flex flex-col items-center justify-center relative">
+            <motion.div key="p2" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-20}} className="h-full flex flex-col relative gap-8">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-black text-foreground">Biệt Đội AI Triển Khai (AI Agent Swarm)</h3>
+                <div className="flex items-center text-blue-400/80 text-xs font-bold tracking-widest uppercase bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">
+                  <Network className="w-3 h-3 mr-2" /> System Orchestrator Active
+                </div>
+              </div>
+
               {isGenerating ? (
-                 <div className="flex-1 flex flex-col items-center justify-center w-full h-full">
-                   <div className="w-24 h-24 relative mb-6">
-                      <div className="absolute inset-0 border-t-2 border-cyan-500 rounded-full animate-spin"></div>
-                      <Bot className="w-12 h-12 text-cyan-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse" />
-                   </div>
-                   <div className="w-64 bg-slate-800 rounded-full h-2 mb-2 overflow-hidden">
-                      <motion.div initial={{width: "0%"}} animate={{width: "100%"}} transition={{duration: mockDelays.agent/1000, ease: "linear"}} className="h-full bg-cyan-500"></motion.div>
-                   </div>
-                   <p className="text-cyan-400 font-bold tracking-widest uppercase text-sm">Injecting Brand Persona...</p>
-                 </div>
+                <div className="flex-1 flex flex-col items-center justify-center py-20">
+                  <RefreshCw className="w-10 h-10 text-blue-500 animate-spin mb-4" />
+                  <p className="text-blue-400 font-bold tracking-widest uppercase text-sm animate-pulse">Deploying Agent Swarm...</p>
+                </div>
               ) : (
-                <>
-                 <div className="relative w-48 h-48 mb-10">
-                   <div className="absolute inset-0 bg-cyan-500/10 rounded-full blur-[40px] animate-pulse" />
-                   <motion.div animate={{rotate:360}} transition={{duration:20, repeat:Infinity, ease:"linear"}} className="absolute inset-0 border border-dashed border-cyan-500/40 rounded-full" />
-                   <motion.div animate={{rotate:-360}} transition={{duration:30, repeat:Infinity, ease:"linear"}} className="absolute inset-4 border border-blue-400/20 rounded-full" />
-                   <div className="absolute inset-8 bg-gradient-to-br from-slate-800 to-slate-900 border border-cyan-500/50 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(6,182,212,0.3)]">
-                     <Bot className="w-12 h-12 text-cyan-400" />
-                   </div>
-                 </div>
-                 
-                 <h3 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 mb-6 font-heading text-center">
-                   {isBepNhaMoc ? "Bếp Nhà Mộc Agent Activated" : "Brand Agent Activated"}
-                 </h3>
-                 
-                 <div className="glassbox-card !p-6 max-w-xl text-center bg-slate-900/60 border-cyan-500/20 shadow-lg shadow-cyan-500/10">
-                   <p className="text-slate-300 leading-relaxed font-medium">
-                     {isBepNhaMoc 
-                       ? "Persona injected. Tone & Manner: \"Tâm tình, thủ thỉ, chân thành, dùng từ ngữ mang đậm chất văn học và hoài niệm.\" Ready for tasks." 
-                       : "Persona injected. Tone & Manner configured. Ready for tasks."}
-                   </p>
-                 </div>
-                </>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {agentsMock.map((agent, i) => (
+                    <div key={i} className="bg-background/60 border border-linear-border rounded-2xl p-6 flex gap-6 hover:border-blue-500/30 transition-colors shadow-lg">
+                      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 ${agent.avatar}/10 border border-${agent.avatar.replace('bg-', '')}/30`}>
+                        <Bot className={`w-8 h-8 text-${agent.avatar.replace('bg-', '')}`} />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-3 mb-2">
+                          <h4 className="text-lg font-black text-foreground">{agent.role}</h4>
+                          <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse" /> {agent.status}
+                          </span>
+                        </div>
+                        <p className="text-sm text-linear-text-muted leading-relaxed">{agent.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
             </motion.div>
           )}
 
           {/* TAB 3: ACTION PLAN */}
           {activePanel === 3 && (
-            <motion.div key="p3" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="h-full flex flex-col relative">
-              <div className="absolute top-0 right-0 flex items-center text-emerald-400/80 text-xs font-bold tracking-widest uppercase bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20 z-10">
-                <Activity className="w-3 h-3 mr-2" /> Task Engine Active
+            <motion.div key="p3" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-20}} className="h-full flex flex-col relative gap-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-black text-foreground">Kế Hoạch Hành Động (Action Plan)</h3>
+                <div className="flex items-center text-emerald-400/80 text-xs font-bold tracking-widest uppercase bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">
+                  <Activity className="w-3 h-3 mr-2" /> Planner Active
+                </div>
               </div>
-              
+
               {isGenerating ? (
-                 <div className="flex-1 flex flex-col items-center justify-center">
-                   <RefreshCw className="w-8 h-8 text-emerald-500 animate-spin mb-4" />
-                   <p className="text-emerald-400 font-bold tracking-widest uppercase text-sm animate-pulse">Compiling Tactical Plan...</p>
-                 </div>
+                <div className="flex-1 flex flex-col items-center justify-center py-20">
+                  <RefreshCw className="w-10 h-10 text-emerald-500 animate-spin mb-4" />
+                  <p className="text-emerald-400 font-bold tracking-widest uppercase text-sm animate-pulse">Scheduling Tasks & KPIs...</p>
+                </div>
               ) : (
-                <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 mt-8">
-                  <div className="space-y-4">
-                    {planMock.map((task, i) => (
-                      <motion.div 
-                        initial={{x: -20, opacity: 0}} animate={{x: 0, opacity: 1}} transition={{delay: i * 0.1}}
-                        key={i} className="glassbox-card !p-5 hover:border-emerald-500/40 transition-all group bg-slate-900/60 flex flex-col gap-4 relative overflow-hidden"
-                      >
-                        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-cyan-500 opacity-70" />
-                        
-                        {/* Top Row: Title and Badges */}
-                        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <span className="text-[10px] font-black px-2 py-1 rounded bg-slate-800 text-emerald-400 border border-emerald-500/20">{task.id}</span>
-                              <h4 className="font-bold text-slate-100 text-lg">{task.name}</h4>
-                            </div>
-                            <p className="text-sm text-slate-400 max-w-3xl leading-relaxed">{task.details}</p>
-                          </div>
-                          
-                          <div className="flex md:flex-col items-center md:items-end gap-3 shrink-0">
-                            <div className={`px-4 py-1.5 text-xs font-bold rounded-full border shadow-sm ${task.status === 'Ready' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : task.status === 'Drafting' ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' : 'bg-slate-800 text-slate-400 border-slate-700'}`}>
-                              {task.status}
-                            </div>
-                            <div className="text-right">
-                               <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Allocated Budget</div>
-                               <div className="font-black text-emerald-400 text-lg">{task.budget}</div>
-                            </div>
-                          </div>
+                <div className="flex-1 overflow-y-auto pr-2 no-scrollbar space-y-4">
+                  {planMock.map((task, i) => (
+                    <div key={i} className="bg-background/60 border border-linear-border rounded-2xl p-5 hover:border-emerald-500/30 transition-all group shadow-md flex flex-col lg:flex-row gap-6 items-start lg:items-center">
+                      
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <span className="px-2 py-1 bg-slate-800 text-slate-300 text-[10px] font-bold rounded font-mono">{task.id}</span>
+                          <span className="px-2 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold rounded uppercase tracking-wider border border-emerald-500/20">{task.phase}</span>
                         </div>
-                        
-                        {/* Bottom Row: Metrics & Assignment */}
-                        <div className="pt-4 border-t border-slate-700/50 flex flex-wrap items-center justify-between gap-4">
-                          <div className="flex items-center gap-8">
-                            <div>
-                              <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Activity className="w-3 h-3 text-blue-400" /> Expected KPIs</div>
-                              <div className="text-xs font-bold text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20">{task.kpis}</div>
-                            </div>
-                            <div>
-                              <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Activity className="w-3 h-3 text-emerald-400" /> Proj. ROI</div>
-                              <div className="text-sm font-black text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg border border-emerald-500/20">{task.roi}</div>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-center gap-3 text-xs text-slate-300 font-medium ml-auto md:ml-0 mt-2 md:mt-0">
-                            <span className="flex items-center bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-lg"><Activity className="w-3.5 h-3.5 mr-2 text-cyan-400" /> {task.phase}</span>
-                            <span className="flex items-center bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-lg"><Bot className="w-3.5 h-3.5 mr-2 text-purple-400" /> {task.lead}</span>
-                          </div>
+                        <h4 className="text-lg font-black text-foreground mb-2">{task.name}</h4>
+                        <p className="text-sm text-linear-text-muted leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">{task.details}</p>
+                      </div>
+
+                      <div className="w-full lg:w-auto grid grid-cols-2 lg:flex lg:flex-row gap-4 lg:gap-8 shrink-0 border-t lg:border-t-0 lg:border-l border-linear-border/50 pt-4 lg:pt-0 lg:pl-8">
+                        <div>
+                          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Assignee</div>
+                          <div className="flex items-center text-sm font-bold text-cyan-400"><Bot className="w-3.5 h-3.5 mr-1.5" /> {task.lead}</div>
                         </div>
-                      </motion.div>
-                    ))}
-                  </div>
+                        <div>
+                          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Ngân sách</div>
+                          <div className="text-sm font-bold text-foreground">{task.budget}</div>
+                        </div>
+                        <div className="col-span-2 lg:col-span-1">
+                          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">KPI Cam kết</div>
+                          <div className="text-sm font-bold text-amber-400 bg-amber-500/10 px-2 py-1 rounded inline-block">{task.kpis}</div>
+                        </div>
+                      </div>
+
+                    </div>
+                  ))}
                 </div>
               )}
             </motion.div>
