@@ -9,7 +9,7 @@ import {
   FileText, ShieldCheck, UploadCloud, BrainCircuit, LineChart, 
   CheckCircle2, Wand2, BarChart3, Clock, LayoutDashboard, 
   Target, PenTool, Calendar, Settings, Bell, Search, Heart, MessageCircle, Share2,
-  Link as LinkIcon, Lock, Server, Eye, X, AlertCircle
+  Link as LinkIcon, Lock, Server, Eye, X, AlertCircle, Bot, TrendingDown, AlertTriangle, Scissors, Activity, ArrowLeft, Cpu, XCircle
 } from 'lucide-react';
 
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space' });
@@ -33,6 +33,213 @@ const SCENES = [
   // OUTRO
   { id: 'outro', type: 'outro' },
 ];
+
+function BudgetCutHighlight({ text }: { text: string }) {
+  const cutPattern = /(Cắt hẳn|Ép giá|cut|reduce|cắt|giảm):\s*(.+?)(?:\s*\(-?([\d,.]+)\s*VND\))/gi;
+  const matches = [...text.matchAll(cutPattern)];
+  if (matches.length === 0) return <span>{text}</span>;
+
+  let lastIndex = 0;
+  const parts: React.ReactNode[] = [];
+  matches.forEach((match, idx) => {
+    const beforeText = text.slice(lastIndex, match.index);
+    if (beforeText) parts.push(<span key={`before-${idx}`}>{beforeText}</span>);
+
+    const action = match[1];
+    const itemName = match[2];
+    const amount = match[3];
+    const isCut = action.toLowerCase().includes('cắt') || action.toLowerCase().includes('cut');
+
+    parts.push(
+      <span key={`cut-${idx}`} className="relative inline-flex items-center group cursor-help mx-1">
+        <motion.span initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-semibold ${isCut ? 'bg-red-500/15 text-red-400 border border-red-500/20' : 'bg-orange-500/15 text-orange-400 border border-orange-500/20'}`}>
+          {isCut ? <XCircle className="w-3 h-3" /> : <Scissors className="w-3 h-3" />}
+          <span className={isCut ? 'line-through decoration-red-500/80' : ''}>{itemName.trim()}</span>
+          <span className="font-mono opacity-70">-{amount}đ</span>
+        </motion.span>
+      </span>
+    );
+    lastIndex = (match.index || 0) + match[0].length;
+  });
+  const remaining = text.slice(lastIndex);
+  if (remaining) parts.push(<span key="remaining">{remaining}</span>);
+  return <>{parts}</>;
+}
+
+function TypewriterEffect({ text }: { text: string }) {
+  const [displayedText, setDisplayedText] = useState("");
+  useEffect(() => {
+    setDisplayedText("");
+    let i = 0;
+    const interval = setInterval(() => {
+      setDisplayedText(text.slice(0, i + 1));
+      i++;
+      if (i >= text.length) clearInterval(interval);
+    }, 15);
+    return () => clearInterval(interval);
+  }, [text]);
+  return <BudgetCutHighlight text={displayedText} />;
+}
+
+const CinematicDebateMock = ({ onNext }: { onNext: () => void }) => {
+  const [messages, setMessages] = useState<any[]>([]);
+  const [isLocked, setIsLocked] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const MOCK_DEBATE = [
+    { id: 0, agent: 'CMO', type: 'proposal', text: 'Đề xuất chi 15,000,000 VND (60% ngân sách) chạy Facebook Ads nhắm khách hàng khu vực Hà Đông để tăng độ nhận diện dịp Tết.' },
+    { id: 1, agent: 'CFO', type: 'budget_cut', text: '❌ Cảnh báo Cắt hẳn: Facebook Ads (-15,000,000 VND). Ngân sách tổng chỉ 25 triệu/tháng. Đốt 15 triệu vào Ads với biên lợi nhuận 8-12% sẽ không đủ bù vốn. Chuyển sang Zalo Broadcast Promo kéo khách từ App giao đồ ăn!' },
+    { id: 2, agent: 'SYSTEM', type: 'approved', text: 'Chiến lược đã được xác nhận. Ngân sách sẽ được phân bổ ưu tiên cho kênh Zalo Broadcast và App Promo nội bộ.' }
+  ];
+
+  useEffect(() => {
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < MOCK_DEBATE.length) {
+        setMessages(prev => [...prev, MOCK_DEBATE[i]]);
+        i++;
+      } else {
+        clearInterval(interval);
+        setTimeout(() => setIsLocked(true), 1500);
+      }
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [messages.length]);
+
+  const getAgentTheme = (agent: string, type: string) => {
+    if (type === 'budget_cut') return { bg: 'bg-amber-500/5', border: 'border-amber-500/20', text: 'text-amber-400', iconBg: 'bg-amber-500/20', icon: Scissors };
+    if (agent === 'CMO') return { bg: 'bg-blue-500/5', border: 'border-blue-500/20', text: 'text-blue-400', iconBg: 'bg-blue-500/20', icon: Bot };
+    if (agent === 'CFO') return { bg: 'bg-orange-500/5', border: 'border-orange-500/20', text: 'text-orange-400', iconBg: 'bg-orange-500/20', icon: TrendingDown };
+    return { bg: 'bg-slate-800/20', border: 'border-slate-700', text: 'text-white', iconBg: 'bg-slate-800/50 border border-slate-700', icon: ShieldCheck };
+  };
+
+  const getStatusBadge = (type: string) => {
+    if (type === 'budget_cut') return <span className="flex items-center text-[9px] uppercase font-bold text-amber-400 bg-amber-900/30 px-1.5 py-0.5 rounded ml-2 border border-amber-800/50"><Scissors className="w-2.5 h-2.5 mr-1" /> CUT</span>;
+    if (type === 'approved') return <span className="flex items-center text-[9px] uppercase font-bold text-cyan-400 bg-cyan-900/30 px-1.5 py-0.5 rounded ml-2 border border-cyan-800/50"><CheckCircle2 className="w-2.5 h-2.5 mr-1" /> APPROVED</span>;
+    return null;
+  };
+
+  const currentMsg = messages.length > 0 ? messages[messages.length - 1] : null;
+  const historyMsgs = messages.slice(0, -1);
+
+  return (
+    <div className="w-full h-[800px] flex flex-col relative bg-transparent overflow-hidden">
+      <div className="flex-none p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full z-10 pt-16">
+        <div className="flex items-center justify-between mb-4">
+          <div className="text-slate-400 flex items-center text-sm font-semibold border border-slate-800 bg-slate-900/50 py-2 px-4 rounded-lg shadow-sm">
+            <ArrowLeft className="w-4 h-4 mr-2" /> <span>Back</span>
+          </div>
+          <div className="flex items-center space-x-2 bg-slate-900/50 border border-slate-700/50 backdrop-blur-md px-4 py-1.5 rounded-full shadow-lg">
+            <Activity className="w-4 h-4 text-cyan-500 animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-wider text-cyan-400">Agent Network Active</span>
+          </div>
+        </div>
+        <div className="text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 font-space tracking-tight">Debate Kernel (Stage 2)</h2>
+          <p className="text-slate-400 text-sm md:text-base font-medium max-w-2xl mx-auto">AI Agents đang phản biện chéo để tìm ra chiến lược tối ưu nhất.</p>
+        </div>
+      </div>
+
+      <div className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pb-8 flex flex-col lg:flex-row gap-6 min-h-0">
+        <div className="w-full lg:w-3/5 h-full flex flex-col relative">
+          <div className="flex-1 border border-slate-700/50 relative overflow-hidden flex flex-col bg-slate-900/40 shadow-2xl rounded-2xl">
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+              <div className="absolute top-[-20%] left-[-10%] w-3/4 h-3/4 bg-cyan-500/10 blur-[100px] rounded-full"></div>
+              <div className="absolute bottom-[-20%] right-[-10%] w-1/2 h-1/2 bg-blue-500/10 blur-[80px] rounded-full"></div>
+            </div>
+
+            <div className="p-4 border-b border-slate-700/40 bg-slate-900/60 flex items-center justify-between z-10">
+              <div className="flex items-center gap-2">
+                <Cpu className="w-4 h-4 text-cyan-500" />
+                <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">Live Analysis Node</span>
+              </div>
+              <div className="flex gap-1">
+                <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
+                <div className="w-2 h-2 rounded-full bg-amber-500/50"></div>
+                <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
+              </div>
+            </div>
+
+            <div className="flex-1 p-6 md:p-8 flex flex-col justify-center relative z-10">
+              {!currentMsg && !isLocked ? (
+                <div className="flex flex-col items-center justify-center space-y-4">
+                  <div className="w-16 h-16 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center shadow-lg relative overflow-hidden">
+                    <motion.div animate={{ rotate: 360 }} transition={{ duration: 3, repeat: Infinity, ease: "linear" }} className="absolute inset-0 border-2 border-transparent border-t-cyan-500 rounded-2xl"></motion.div>
+                    <Activity className="w-8 h-8 text-cyan-500 animate-pulse" />
+                  </div>
+                  <div className="text-sm font-bold text-cyan-500 tracking-widest uppercase animate-pulse">Initializing Sub-Agents...</div>
+                </div>
+              ) : currentMsg && !isLocked ? (
+                <AnimatePresence mode="wait">
+                  <motion.div key={currentMsg.id} initial={{ opacity: 0, scale: 0.95, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }} transition={{ duration: 0.4 }} className="flex flex-col h-full">
+                    <div className="flex items-center mb-6">
+                      <div className={`w-14 h-14 rounded-2xl ${getAgentTheme(currentMsg.agent, currentMsg.type).iconBg} flex items-center justify-center border border-white/10 shadow-lg relative`}>
+                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900 animate-pulse"></div>
+                        {React.createElement(getAgentTheme(currentMsg.agent, currentMsg.type).icon, { className: `w-7 h-7 ${getAgentTheme(currentMsg.agent, currentMsg.type).text}` })}
+                      </div>
+                      <div className="ml-4">
+                        <div className="flex items-center">
+                          <h3 className={`text-xl font-black uppercase tracking-wider ${getAgentTheme(currentMsg.agent, currentMsg.type).text}`}>{currentMsg.agent} Agent</h3>
+                          {getStatusBadge(currentMsg.type)}
+                        </div>
+                        <p className="text-xs font-mono text-slate-500">Executing evaluation protocol...</p>
+                      </div>
+                    </div>
+                    <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
+                      <div className={`text-lg md:text-xl font-medium leading-relaxed text-white whitespace-pre-wrap ${currentMsg.type === 'budget_cut' ? 'text-amber-100' : ''}`}>
+                        <TypewriterEffect text={currentMsg.text} />
+                      </div>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              ) : isLocked ? (
+                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center text-center h-full">
+                  <div className="w-20 h-20 rounded-full bg-cyan-500/20 border border-cyan-500/50 flex items-center justify-center mb-6">
+                    <CheckCircle2 className="w-10 h-10 text-cyan-400" />
+                  </div>
+                  <h3 className="text-2xl font-black text-white mb-2">Debate Concluded</h3>
+                  <p className="text-slate-400 mb-8 max-w-sm">All sub-agents have reached consensus. The strategic plan is ready for final review.</p>
+                </motion.div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full lg:w-2/5 h-64 lg:h-full flex flex-col bg-slate-900/30 border border-slate-700/40 rounded-2xl overflow-hidden backdrop-blur-sm">
+          <div className="p-3 border-b border-slate-700/30 bg-slate-900/50 flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Communication Log</span>
+            <span className="text-[10px] font-mono text-slate-500">{historyMsgs.length} Entries</span>
+          </div>
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+            <AnimatePresence initial={false}>
+              {historyMsgs.map((msg) => {
+                const theme = getAgentTheme(msg.agent, msg.type);
+                return (
+                  <motion.div key={msg.id} initial={{ opacity: 0, x: -20, height: 0 }} animate={{ opacity: 1, x: 0, height: 'auto' }} className={`p-3 rounded-xl border ${theme.border} ${theme.bg} flex gap-3 opacity-60 hover:opacity-100 transition-opacity`}>
+                    <div className={`w-8 h-8 rounded-lg ${theme.iconBg} flex items-center justify-center shrink-0`}>
+                      {React.createElement(theme.icon, { className: `w-4 h-4 ${theme.text}` })}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className={`text-[10px] font-bold uppercase ${theme.text}`}>{msg.agent}</span>
+                        <span className="text-[9px] font-mono text-slate-600">Archived</span>
+                      </div>
+                      <div className="text-xs text-slate-300 line-clamp-3 leading-relaxed">{msg.text}</div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default function EpicVideoComposer() {
   const [step, setStep] = useState(0);
@@ -338,51 +545,7 @@ export default function EpicVideoComposer() {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }}
           >
             <MockAppShell activeMenu="strategy">
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="absolute top-[2%] w-full text-center z-30">
-                  <motion.h2 initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-4xl font-black text-white tracking-tighter uppercase font-space">{currentScene.subtitle}</motion.h2>
-                </div>
-
-                <motion.div 
-                  className="mt-12 w-full max-w-[1000px] h-[600px] bg-slate-900 border border-slate-700/50 rounded-3xl p-8 shadow-2xl relative overflow-hidden"
-                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
-                >
-                  <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
-                    <h2 className="text-xl font-bold text-white">AI Strategy Optimizer</h2>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-                      <span className="font-mono text-xs text-cyan-400">Debate Kernel V2.0 Active</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-6">
-                    <motion.div className="flex items-start gap-4" initial={{ x: -100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.8, type: "spring" }}>
-                      <div className="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center border border-cyan-500/40">
-                        <BrainCircuit className="text-cyan-400 w-6 h-6" />
-                      </div>
-                      <div className="bg-slate-800 p-5 rounded-2xl rounded-tl-none border border-slate-700 w-[80%]">
-                        <p className="text-cyan-400 font-bold mb-1 font-space">CMO Agent</p>
-                        <p className="text-slate-200 text-lg">Đề xuất chi <span className="font-bold text-white">15 triệu (60% ngân sách)</span> chạy Facebook Ads nhắm khách hàng khu vực Hà Đông để tăng độ nhận diện dịp Tết.</p>
-                      </div>
-                    </motion.div>
-
-                    <motion.div className="flex items-start gap-4 flex-row-reverse" initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 2.5, type: "spring" }}>
-                      <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center border border-red-500/40 shadow-[0_0_30px_rgba(239,68,68,0.3)]">
-                        <LineChart className="text-red-400 w-6 h-6" />
-                      </div>
-                      <div className="bg-red-950/40 p-5 rounded-2xl rounded-tr-none border border-red-900/50 w-[85%] text-right">
-                        <p className="text-red-400 font-bold mb-1 font-space">Math Engine Kernel</p>
-                        <p className="text-slate-200 text-lg">
-                          <span className="text-red-400 font-black tracking-widest uppercase bg-red-500/20 px-2 py-1 rounded mr-2">❌ Phủ quyết</span> 
-                          Ngân sách tổng chỉ <b className="text-white">25 triệu/tháng</b>. Đốt 15 triệu vào Ads với <b className="text-white">biên lợi nhuận 8-12%</b> sẽ không đủ bù vốn. 
-                          <br/><br/>
-                          Chuyển sang <b className="text-cyan-300">Zalo Broadcast Promo (ROI cao hơn)</b> kéo khách từ App giao đồ ăn sang đặt trực tiếp!
-                        </p>
-                      </div>
-                    </motion.div>
-                  </div>
-                </motion.div>
-              </div>
+                <CinematicDebateMock onNext={() => {}} />
             </MockAppShell>
           </motion.div>
         )}
