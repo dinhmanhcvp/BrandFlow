@@ -185,7 +185,7 @@ function PArrow() {
 
 /* ═══════════════════════════════════════════════════════════════
    ★ PRINT CANVAS — STANDEE  (80×200cm ratio)
-   Professional Design: Oversized typography, SVG vectors, asymmetric layout
+   Professional Design: Centered, symmetric layout with floating nodes
    ═══════════════════════════════════════════════════════════════ */
 function PrintStandee() {
   const { w, h } = PRINT.standee;
@@ -195,10 +195,12 @@ function PrintStandee() {
       fontFamily: 'var(--font-inter), sans-serif', color: '#fff', overflow: 'hidden',
       position: 'relative',
     }}>
+      <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet" />
+
       {/* ── BACKGROUND SCIFI NETWORK (Floating nodes) ── */}
       <div style={{
         position: 'absolute', inset: 0,
-        backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(6,182,212,0.1) 0%, transparent 60%), radial-gradient(circle at 100% 100%, rgba(59,130,246,0.1) 0%, transparent 60%)',
+        backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(6,182,212,0.1) 0%, transparent 60%), radial-gradient(circle at 50% 100%, rgba(59,130,246,0.1) 0%, transparent 60%)',
         zIndex: 0
       }} />
 
@@ -231,35 +233,38 @@ function PrintStandee() {
         })}
 
         {/* Subtle geometric shards at the corners */}
-        <polygon points="0,0 400,0 600,200 600,450 0,650" fill="url(#neonPurple)" opacity="0.2" />
-        <polygon points="0,1800 800,1600 800,2000 0,2000" fill="url(#neonCyan)" opacity="0.15" />
+        <polygon points="0,0 400,0 600,200 600,450 0,650" fill="url(#neonPurple)" opacity="0.15" />
+        <polygon points="0,1800 800,1600 800,2000 0,2000" fill="url(#neonCyan)" opacity="0.1" />
       </svg>
 
       {/* ── FOREGROUND CONTENT ── */}
-      <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%' }}>
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 80 }}>
         
-        {/* HEADER (170-200cm) => top: 60px */}
-        <div style={{ position: 'absolute', top: 60, left: 60, right: 60, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <div>
-            <Logo size={120} />
-            <div style={{ marginTop: 20, fontSize: 20, color: '#00F0FF', letterSpacing: '0.3em', textTransform: 'uppercase', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ display: 'inline-block', width: 40, height: 2, background: '#00F0FF' }}></span>
-              AI Multi-Agent OS
+        {/* 1. LOGO & TAGLINE */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Logo size={80} showText={false} />
+            <div style={{ 
+              fontFamily: "'Dancing Script', 'Brush Script MT', 'Great Vibes', 'Playfair Display', cursive",
+              fontSize: 75, fontWeight: 700, color: '#fff',
+              textShadow: '0 4px 20px rgba(255,255,255,0.2)',
+              lineHeight: 1, marginTop: -5
+            }}>
+              BrandFlow
             </div>
           </div>
-          <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-end', marginTop: 20 }}>
-            <div style={{ display: 'flex', gap: 6 }}>
-              {[1, 2, 3].map(i => <div key={i} style={{ width: 16, height: 4, background: '#00F0FF', opacity: i === 3 ? 0.3 : 1 }} />)}
-            </div>
-            <div style={{ display: 'flex', gap: 6 }}>
-              {[1, 2, 3, 4, 5].map(i => <div key={i} style={{ width: 6, height: 6, background: '#64748b' }} />)}
-            </div>
+          <div style={{ 
+            fontSize: 20, color: '#00F0FF', letterSpacing: '0.3em', textTransform: 'uppercase', fontWeight: 800,
+            borderBottom: '2px solid rgba(0,240,255,0.4)', paddingBottom: 8, paddingLeft: 10, paddingRight: 10,
+            textShadow: '0 0 10px rgba(0,240,255,0.3)'
+          }}>
+            AI MULTI-AGENT OS
           </div>
         </div>
 
-        {/* TITLE (130-170cm) => top: 300px */}
-        <div style={{ position: 'absolute', top: 300, left: 60, maxWidth: '85%' }}>
-          <h1 style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontWeight: 900, fontSize: 80, lineHeight: 1.2, letterSpacing: '-0.02em', textTransform: 'uppercase', margin: 0 }}>
+        {/* 2. TITLE */}
+        <div style={{ textAlign: 'center', marginTop: 70, maxWidth: '90%' }}>
+          <h1 style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontWeight: 900, fontSize: 75, lineHeight: 1.2, letterSpacing: '-0.02em', textTransform: 'uppercase', margin: 0 }}>
             <span style={{ color: '#fff', textShadow: '0 0 20px rgba(255,255,255,0.4)' }}>Từ Brief Đến Chiến Lược.</span><br/>
             <span style={{ 
               background: 'linear-gradient(to right, #00F0FF, #a855f7)', 
@@ -267,71 +272,135 @@ function PrintStandee() {
               filter: 'drop-shadow(0 0 20px rgba(0,240,255,0.3))'
             }}>Không Cần Agency.</span>
           </h1>
-          <p style={{ fontSize: 32, color: '#f8fafc', marginTop: 30, maxWidth: 650, lineHeight: 1.5, fontWeight: 400 }}>
-            5 AI Agents tranh luận, CFO AI giữ ngân sách, bạn nhận Blueprint PDF sẵn sàng thuyết trình.
+          <p style={{ fontSize: 30, color: '#cbd5e1', marginTop: 25, maxWidth: 680, lineHeight: 1.5, fontWeight: 400, marginInline: 'auto' }}>
+            5 AI Agents tranh luận, CFO AI giữ ngân sách,<br/>
+            bạn nhận Blueprint PDF sẵn sàng thuyết trình.
           </p>
         </div>
 
-        {/* SCHEMA (100-130cm) => top: 700px */}
-        <div style={{ position: 'absolute', top: 700, left: 60, right: 60 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div style={{ width: 85, height: 85, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 14, fontWeight: 800, boxShadow: '0 0 15px rgba(0,240,255,0.2)' }}>Intake</div>
-              <div style={{ width: 40, height: 3, background: 'rgba(0,240,255,0.4)' }} />
-              <div style={{ width: 85, height: 85, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 14, fontWeight: 800 }}>Strategy</div>
-              <div style={{ width: 40, height: 3, background: 'rgba(0,240,255,0.4)' }} />
-              <div style={{ width: 110, height: 110, borderRadius: '50%', background: 'rgba(0,240,255,0.1)', border: '3px solid #00F0FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 22, fontWeight: 900, boxShadow: '0 0 30px rgba(0,240,255,0.6)', textShadow: '0 0 10px rgba(0,240,255,0.5)' }}>CFO AI</div>
-              <div style={{ width: 40, height: 3, background: 'rgba(0,240,255,0.4)' }} />
-              <div style={{ width: 85, height: 85, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 14, fontWeight: 800 }}>Design</div>
-              <div style={{ width: 40, height: 3, background: 'rgba(0,240,255,0.4)' }} />
-              <div style={{ width: 85, height: 85, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 14, fontWeight: 800 }}>Content</div>
-            </div>
+        {/* 3. SCHEMA (100-130cm) */}
+        <div style={{ position: 'relative', marginTop: 70, width: '100%', height: 400, display: 'flex', justifyContent: 'center' }}>
+          
+          {/* Dashboard faded background placeholder */}
+          <div style={{ 
+            position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)',
+            width: 420, height: 220, background: 'linear-gradient(180deg, rgba(15,23,42,0.8) 0%, rgba(15,23,42,0) 100%)',
+            border: '1px solid rgba(0,240,255,0.15)', borderRadius: 20, zIndex: 0,
+            boxShadow: '0 0 50px rgba(0,240,255,0.1)', overflow: 'hidden'
+          }}>
+             {/* Fake dashboard elements */}
+             <div style={{ display: 'flex', gap: 8, padding: 12, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+               <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(255,255,255,0.2)' }} />
+               <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(255,255,255,0.2)' }} />
+               <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(255,255,255,0.2)' }} />
+             </div>
+             <div style={{ display: 'flex', gap: 20, padding: 20 }}>
+               <div style={{ width: 80, height: 80, borderRadius: '50%', border: '12px solid rgba(0,240,255,0.15)', borderTopColor: 'rgba(0,240,255,0.5)' }} />
+               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                 <div style={{ width: '100%', height: 30, background: 'rgba(255,255,255,0.05)', borderRadius: 6 }} />
+                 <div style={{ width: '70%', height: 30, background: 'rgba(255,255,255,0.05)', borderRadius: 6 }} />
+               </div>
+             </div>
           </div>
+
+          <svg style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'visible' }}>
+            {/* Outer ring */}
+            <line x1={180} y1={100} x2={260} y2={300} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.4} />
+            <line x1={260} y1={300} x2={540} y2={300} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.4} />
+            <line x1={540} y1={300} x2={620} y2={100} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.4} />
+            <line x1={620} y1={100} x2={180} y2={100} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.4} />
+            
+            {/* Spokes to center */}
+            <line x1={180} y1={100} x2={400} y2={200} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
+            <line x1={260} y1={300} x2={400} y2={200} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
+            <line x1={540} y1={300} x2={400} y2={200} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
+            <line x1={620} y1={100} x2={400} y2={200} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
+          </svg>
+
+          {/* Node helper */}
+          {(() => {
+            const nodes = [
+              { label: 'Creative', icon: PenTool, x: 180, y: 100, size: 70 },
+              { label: 'Strategy', icon: Target, x: 260, y: 300, size: 70 },
+              { label: 'CFO AI', icon: BrainCircuit, x: 400, y: 200, size: 120, highlight: true },
+              { label: 'Media', icon: Monitor, x: 540, y: 300, size: 70 },
+              { label: 'Research', icon: FileText, x: 620, y: 100, size: 70 },
+            ];
+
+            return (
+              <div style={{ position: 'relative', width: '100%', height: '100%', zIndex: 2 }}>
+                {nodes.map((n, i) => (
+                  <div key={i} style={{
+                    position: 'absolute', top: n.y, left: n.x, transform: 'translate(-50%, -50%)',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8
+                  }}>
+                    <div style={{
+                      width: n.size, height: n.size, borderRadius: '50%',
+                      background: n.highlight ? 'rgba(15,23,42,0.9)' : 'rgba(15,23,42,0.8)',
+                      border: n.highlight ? '3px solid #00F0FF' : '2px solid rgba(0,240,255,0.4)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      boxShadow: n.highlight ? '0 0 40px rgba(0,240,255,0.6)' : '0 0 15px rgba(0,240,255,0.2)',
+                    }}>
+                      <n.icon size={n.highlight ? 50 : 30} color={n.highlight ? '#fff' : '#00F0FF'} />
+                    </div>
+                    <div style={{
+                      fontFamily: 'var(--font-space-grotesk), sans-serif',
+                      fontSize: n.highlight ? 22 : 16,
+                      fontWeight: 800,
+                      color: n.highlight ? '#fff' : '#cbd5e1',
+                      textShadow: n.highlight ? '0 0 10px rgba(0,0,0,0.8)' : 'none'
+                    }}>
+                      {n.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
         </div>
 
-        {/* QR & CTA (60-100cm) => top: 980px */}
-        <div style={{ position: 'absolute', top: 980, left: 60, right: 60 }}>
-          <div style={{ display: 'flex', gap: 40, background: 'rgba(15,23,42,0.6)', padding: '40px', borderRadius: 32, border: '1px solid rgba(0,240,255,0.3)', backdropFilter: 'blur(10px)', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
-            <div style={{ width: 220, height: 220, background: '#fff', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, boxShadow: '0 0 40px rgba(0,240,255,0.4)' }}>
+        {/* 4. QR & CTA (60-100cm) */}
+        <div style={{ marginTop: 50 }}>
+          <div style={{ 
+            display: 'flex', alignItems: 'center', gap: 30, background: 'rgba(15,23,42,0.7)', 
+            padding: '24px 35px', borderRadius: 24, border: '1px solid rgba(0,240,255,0.3)', 
+            backdropFilter: 'blur(12px)', boxShadow: '0 20px 40px rgba(0,0,0,0.4), inset 0 0 30px rgba(0,240,255,0.05)',
+            width: 700
+          }}>
+            <div style={{ width: 170, height: 170, background: '#fff', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 12, boxShadow: '0 0 40px rgba(0,240,255,0.4)' }}>
               <QRCodeSVG value="https://brand-flow-hust.vercel.app/" style={{ width: '100%', height: '100%', color: '#020617' }} />
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
-              <div style={{ fontSize: 24, color: '#00F0FF', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>
-                Quét mã để nhận Demo
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div style={{ fontSize: 32, fontWeight: 900, color: '#fff', lineHeight: 1.3, marginBottom: 12, letterSpacing: '-0.02em' }}>
+                Quét mã, nhận<br/>Blueprint mẫu
               </div>
-              <div style={{ fontSize: 38, fontWeight: 900, color: '#fff', lineHeight: 1.3, marginBottom: 25, letterSpacing: '-0.02em' }}>
-                Nhận Blueprint mẫu cho thương hiệu của bạn
-              </div>
-              <div style={{ display: 'flex', gap: 20, fontSize: 22, color: '#cbd5e1', fontWeight: 600 }}>
-                <span style={{ background: 'rgba(0,240,255,0.1)', padding: '12px 24px', borderRadius: 16, border: '1px solid rgba(0,240,255,0.2)' }}>🌐 brand-flow-hust.vercel.app</span>
+              <div style={{ fontSize: 26, color: '#00F0FF', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                brandflow.ai
               </div>
             </div>
           </div>
         </div>
 
-        {/* CARDS (25-60cm) => top: 1380px */}
-        <div style={{ position: 'absolute', top: 1380, left: 60, right: 60, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        {/* 5. CARDS / FEATURES (25-60cm) */}
+        <div style={{ marginTop: 60, display: 'flex', flexDirection: 'column', gap: 20, width: 700 }}>
           {[
-            { title: '5 Agents phản biện chéo như một team agency thật.', icon: Network },
-            { title: 'CFO AI dự báo tài chính, đặt KPI, chặn kế hoạch rủi ro.', icon: Shield, highlight: true },
-            { title: 'Xuất Blueprint PDF thuyết trình B2B trong vài phút.', icon: FileText },
+            { title: '5 Agents phản biện chéo như team agency thật', icon: Network },
+            { title: 'CFO AI đặt KPI, chặn kế hoạch rủi ro', icon: Shield },
+            { title: 'Blueprint PDF thuyết trình B2B trong vài phút', icon: FileText },
           ].map((f, i) => (
             <div key={i} style={{ 
-              display: 'flex', gap: 24, alignItems: 'center', padding: '28px 30px', 
-              background: f.highlight ? 'rgba(0,240,255,0.1)' : 'rgba(15,23,42,0.8)', 
-              border: f.highlight ? '2px solid #00F0FF' : '1px solid rgba(0,240,255,0.2)', 
-              borderRadius: 24, backdropFilter: 'blur(10px)',
-              boxShadow: f.highlight ? '0 0 30px rgba(0,240,255,0.2)' : 'none'
+              display: 'flex', gap: 24, alignItems: 'center', padding: '16px 20px', 
             }}>
               <div style={{
-                width: 65, height: 65, borderRadius: 16, flexShrink: 0,
-                background: f.highlight ? 'linear-gradient(135deg, rgba(0,240,255,0.4), rgba(112,0,255,0.4))' : 'rgba(0,240,255,0.1)', 
-                border: f.highlight ? 'none' : '1px solid rgba(0,240,255,0.3)', 
+                width: 50, height: 50, borderRadius: 12, flexShrink: 0,
+                background: 'rgba(0,240,255,0.1)', 
+                border: '1px solid rgba(0,240,255,0.4)', 
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 0 20px rgba(0,240,255,0.1)'
               }}>
-                <f.icon size={32} color={f.highlight ? '#fff' : '#00F0FF'} />
+                <f.icon size={26} color="#00F0FF" />
               </div>
-              <div style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontSize: 30, fontWeight: 700, color: f.highlight ? '#fff' : '#cbd5e1' }}>
+              <div style={{ fontFamily: 'var(--font-inter), sans-serif', fontSize: 26, fontWeight: 400, color: '#cbd5e1' }}>
                 {f.title}
               </div>
             </div>
