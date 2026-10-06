@@ -25,7 +25,7 @@ const B = {
    We render at a fixed px size, then html2canvas scales ×3 for 300dpi
    ═══════════════════════════════════════════════════════════════ */
 const PRINT = {
-  standee:     { w: 800, h: 2000, label: 'Standee 80×200cm', pdfW: 800, pdfH: 2000 },
+  standee:     { w: 700, h: 1200, label: 'Standee 70×120cm', pdfW: 700, pdfH: 1200 },
   infographic: { w: 842, h: 1191, label: 'Infographic A3',   pdfW: 842, pdfH: 1191 },
   onepager:    { w: 595, h: 842,  label: 'One Pager A4',     pdfW: 595, pdfH: 842  },
   logo:        { w: 842, h: 595,  label: 'Logo Guide A4-L',  pdfW: 842, pdfH: 595  },
@@ -217,36 +217,36 @@ function PrintStandee() {
         </defs>
         
         {/* Floating nodes network for aesthetic background */}
-        {Array.from({ length: 45 }).map((_, i) => {
+        {Array.from({ length: 30 }).map((_, i) => {
           const x = (i * 137 + 50) % w;
           const y = (i * 283 + 100) % h;
-          const r = (i % 3 === 0) ? 4 : 2;
+          const r = (i % 3 === 0) ? 3 : 1.5;
           const nextX = ((i + 1) * 137 + 50) % w;
           const nextY = ((i + 1) * 283 + 100) % h;
           return (
             <g key={`bg-node-${i}`}>
               <circle cx={x} cy={y} r={r} fill="#00F0FF" opacity="0.3" />
               {i % 2 === 0 && <line x1={x} y1={y} x2={nextX} y2={nextY} stroke="#00F0FF" strokeOpacity="0.1" strokeWidth="1" />}
-              {i % 5 === 0 && <circle cx={x} cy={y} r={r * 5} fill="none" stroke="#7000FF" strokeOpacity="0.2" strokeWidth="1" />}
+              {i % 5 === 0 && <circle cx={x} cy={y} r={r * 4} fill="none" stroke="#7000FF" strokeOpacity="0.2" strokeWidth="1" />}
             </g>
           );
         })}
 
         {/* Subtle geometric shards at the corners */}
-        <polygon points="0,0 400,0 600,200 600,450 0,650" fill="url(#neonPurple)" opacity="0.15" />
-        <polygon points="0,1800 800,1600 800,2000 0,2000" fill="url(#neonCyan)" opacity="0.1" />
+        <polygon points="0,0 300,0 500,150 500,300 0,500" fill="url(#neonPurple)" opacity="0.1" />
+        <polygon points="0,900 600,800 600,1200 0,1200" fill="url(#neonCyan)" opacity="0.1" />
       </svg>
 
       {/* ── FOREGROUND CONTENT ── */}
-      <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 60 }}>
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 40 }}>
         
         {/* 1. LOGO & TAGLINE */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <Logo size={80} showText={false} />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <Logo size={60} showText={false} />
             <div style={{ 
               fontFamily: "'Dancing Script', 'Brush Script MT', 'Great Vibes', 'Playfair Display', cursive",
-              fontSize: 75, fontWeight: 700, color: '#fff',
+              fontSize: 60, fontWeight: 700, color: '#fff',
               textShadow: '0 4px 20px rgba(255,255,255,0.2)',
               lineHeight: 1, marginTop: -5
             }}>
@@ -254,120 +254,57 @@ function PrintStandee() {
             </div>
           </div>
           <div style={{ 
-            fontSize: 18, color: '#00F0FF', letterSpacing: '0.3em', textTransform: 'uppercase', fontWeight: 800,
-            borderBottom: '2px solid rgba(0,240,255,0.4)', paddingBottom: 8, paddingLeft: 10, paddingRight: 10,
+            fontSize: 14, color: '#00F0FF', letterSpacing: '0.3em', textTransform: 'uppercase', fontWeight: 800,
+            borderBottom: '2px solid rgba(0,240,255,0.4)', paddingBottom: 6, paddingLeft: 8, paddingRight: 8,
             textShadow: '0 0 10px rgba(0,240,255,0.3)'
           }}>
             AI MULTI-AGENT OS
           </div>
         </div>
 
-        {/* 2. TITLE (Fixed wrapping & Diverse typography) */}
-        <div style={{ textAlign: 'center', marginTop: 50, width: 760 }}>
-          <h1 style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontWeight: 900, fontSize: 58, lineHeight: 1.1, letterSpacing: '-0.02em', textTransform: 'uppercase', margin: 0 }}>
+        {/* 2. TITLE */}
+        <div style={{ textAlign: 'center', marginTop: 30, width: 660 }}>
+          <h1 style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontWeight: 900, fontSize: 44, lineHeight: 1.1, letterSpacing: '-0.02em', textTransform: 'uppercase', margin: 0 }}>
             <span style={{ color: '#fff', textShadow: '0 0 20px rgba(255,255,255,0.4)' }}>Từ Brief Đến Chiến Lược.</span>
           </h1>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontStyle: 'italic', fontSize: 68, lineHeight: 1.2, margin: '5px 0 0 0' }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontStyle: 'italic', fontSize: 50, lineHeight: 1.2, margin: '5px 0 0 0' }}>
             <span style={{ 
               background: 'linear-gradient(to right, #00F0FF, #a855f7)', 
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
               filter: 'drop-shadow(0 0 20px rgba(0,240,255,0.3))'
             }}>Không Cần Agency.</span>
           </h2>
-          <p style={{ fontSize: 22, color: '#cbd5e1', marginTop: 20, width: '100%', lineHeight: 1.6, fontWeight: 400, marginInline: 'auto', whiteSpace: 'nowrap' }}>
+          <p style={{ fontSize: 18, color: '#cbd5e1', marginTop: 16, width: '100%', lineHeight: 1.5, fontWeight: 400, marginInline: 'auto', whiteSpace: 'nowrap' }}>
             Hệ thống duy nhất mô phỏng <span style={{ color: '#00F0FF', fontWeight: 700 }}>phòng Marketing thực thụ</span>.<br/>
             Biến mọi ý tưởng thành chiến lược B2B hoàn chỉnh ngay lập tức.
           </p>
         </div>
 
-        {/* 3. SCHEMA - 5 AGENTS ASSET BLOCK */}
-        <div style={{ position: 'relative', marginTop: 60, width: 640, height: 420, marginInline: 'auto' }}>
+        {/* 3. SCHEMA - PURE 5 AGENTS NETWORK */}
+        <div style={{ position: 'relative', marginTop: 40, width: 500, height: 320, marginInline: 'auto' }}>
           
-          {/* High-Tech HUD Dashboard Background */}
-          <div style={{ 
-            position: 'absolute', top: '45%', left: '50%', transform: 'translate(-50%, -50%)',
-            width: 480, height: 260, 
-            background: 'linear-gradient(135deg, rgba(15,23,42,0.8) 0%, rgba(2,6,23,0.9) 100%)',
-            border: '1px solid rgba(0,240,255,0.2)', borderRadius: 16, zIndex: 0,
-            boxShadow: '0 20px 60px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,240,255,0.05)',
-            display: 'flex', flexDirection: 'column', overflow: 'hidden'
-          }}>
-            {/* Top Bar */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px', borderBottom: '1px solid rgba(0,240,255,0.15)', background: 'rgba(0,240,255,0.03)' }}>
-              <div style={{ display: 'flex', gap: 6 }}>
-                <div style={{ width: 10, height: 10, borderRadius: '50%', border: '1px solid rgba(0,240,255,0.5)' }} />
-                <div style={{ width: 10, height: 10, borderRadius: '50%', border: '1px solid rgba(0,240,255,0.5)', background: 'rgba(0,240,255,0.5)' }} />
-                <div style={{ width: 10, height: 10, borderRadius: '50%', border: '1px solid rgba(0,240,255,0.5)' }} />
-              </div>
-              <div style={{ fontSize: 10, fontFamily: 'monospace', color: 'rgba(0,240,255,0.6)', letterSpacing: '0.1em' }}>AGENT_WORKSPACE_V2</div>
-            </div>
-
-            <div style={{ display: 'flex', flex: 1, padding: '24px 20px', gap: 24 }}>
-              {/* Donut Chart Block */}
-              <div style={{ width: 130, display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', letterSpacing: '0.05em', fontFamily: 'var(--font-inter), sans-serif' }}>PERFORMANCE</div>
-                <div style={{ position: 'relative', width: 100, height: 100 }}>
-                  <svg viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)', overflow: 'visible' }}>
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(0,240,255,0.1)" strokeWidth="12" />
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="url(#neonCyan)" strokeWidth="12" strokeDasharray="180 251" strokeLinecap="round" />
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="url(#neonPurple)" strokeWidth="12" strokeDasharray="40 251" strokeDashoffset="-200" strokeLinecap="round" />
-                  </svg>
-                  <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: 18, fontWeight: 900, color: '#fff', fontFamily: 'var(--font-space-grotesk), sans-serif' }}>98</span>
-                    <span style={{ fontSize: 8, color: '#00F0FF', fontFamily: 'var(--font-inter), sans-serif' }}>SCORE</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Data Visualization Block */}
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
-                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', height: 60, borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: 6 }}>
-                    {[30, 50, 45, 85, 60, 95, 70].map((val, idx) => (
-                      <div key={idx} style={{ 
-                        width: 14, height: `${val}%`, 
-                        background: idx === 5 ? '#00F0FF' : 'rgba(0,240,255,0.15)', 
-                        borderRadius: '3px 3px 0 0',
-                        boxShadow: idx === 5 ? '0 0 10px rgba(0,240,255,0.4)' : 'none'
-                      }} />
-                    ))}
-                 </div>
-                 
-                 <div style={{ flex: 1, position: 'relative' }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', marginBottom: 8, letterSpacing: '0.05em', fontFamily: 'var(--font-inter), sans-serif' }}>FORECAST METRICS</div>
-                    <svg viewBox="0 0 200 40" preserveAspectRatio="none" style={{ width: '100%', height: 35, overflow: 'visible' }}>
-                      <path d="M0,35 L40,15 L80,25 L120,5 L160,20 L200,0" fill="none" stroke="#00F0FF" strokeWidth="2.5" filter="drop-shadow(0 4px 6px rgba(0,240,255,0.4))" />
-                      <path d="M0,40 L40,20 L80,30 L120,10 L160,25 L200,5" fill="none" stroke="rgba(168,85,247,0.5)" strokeWidth="1.5" strokeDasharray="4 4" />
-                    </svg>
-                 </div>
-              </div>
-            </div>
-            
-            {/* Scanline Overlay */}
-            <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,240,255,0.03) 2px, rgba(0,240,255,0.03) 4px)', pointerEvents: 'none' }} />
-          </div>
-
-          <svg width={640} height={420} style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'visible' }}>
+          <svg width={500} height={320} style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'visible' }}>
             {/* Outer ring */}
-            <line x1={100} y1={90} x2={160} y2={330} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.3} />
-            <line x1={160} y1={330} x2={480} y2={330} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.3} />
-            <line x1={480} y1={330} x2={540} y2={90} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.3} />
-            <line x1={540} y1={90} x2={100} y2={90} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.3} />
+            <line x1={80} y1={70} x2={120} y2={250} stroke="#00F0FF" strokeWidth={1.5} strokeOpacity={0.3} />
+            <line x1={120} y1={250} x2={380} y2={250} stroke="#00F0FF" strokeWidth={1.5} strokeOpacity={0.3} />
+            <line x1={380} y1={250} x2={420} y2={70} stroke="#00F0FF" strokeWidth={1.5} strokeOpacity={0.3} />
+            <line x1={420} y1={70} x2={80} y2={70} stroke="#00F0FF" strokeWidth={1.5} strokeOpacity={0.3} />
             
             {/* Spokes to center */}
-            <line x1={100} y1={90} x2={320} y2={210} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
-            <line x1={160} y1={330} x2={320} y2={210} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
-            <line x1={480} y1={330} x2={320} y2={210} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
-            <line x1={540} y1={90} x2={320} y2={210} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
+            <line x1={80} y1={70} x2={250} y2={160} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
+            <line x1={120} y1={250} x2={250} y2={160} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
+            <line x1={380} y1={250} x2={250} y2={160} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
+            <line x1={420} y1={70} x2={250} y2={160} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
           </svg>
 
           {/* Nodes */}
           {(() => {
             const nodes = [
-              { label: 'Creative', icon: PenTool, x: 100, y: 90, size: 75 },
-              { label: 'Strategy', icon: Target, x: 160, y: 330, size: 75 },
-              { label: 'CFO AI', icon: BrainCircuit, x: 320, y: 210, size: 130, highlight: true },
-              { label: 'Media', icon: Monitor, x: 480, y: 330, size: 75 },
-              { label: 'Research', icon: FileText, x: 540, y: 90, size: 75 },
+              { label: 'Creative', icon: PenTool, x: 80, y: 70, size: 60 },
+              { label: 'Strategy', icon: Target, x: 120, y: 250, size: 60 },
+              { label: 'CFO AI', icon: BrainCircuit, x: 250, y: 160, size: 100, highlight: true },
+              { label: 'Media', icon: Monitor, x: 380, y: 250, size: 60 },
+              { label: 'Research', icon: FileText, x: 420, y: 70, size: 60 },
             ];
 
             return (
@@ -375,24 +312,24 @@ function PrintStandee() {
                 {nodes.map((n, i) => (
                   <div key={i} style={{
                     position: 'absolute', top: n.y, left: n.x, transform: 'translate(-50%, -50%)',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8
                   }}>
                     <div style={{
                       width: n.size, height: n.size, borderRadius: '50%',
                       background: n.highlight ? 'linear-gradient(135deg, rgba(15,23,42,1), rgba(30,41,59,1))' : 'rgba(15,23,42,0.95)',
                       border: n.highlight ? '3px solid #00F0FF' : '2px solid rgba(0,240,255,0.5)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      boxShadow: n.highlight ? '0 0 50px rgba(0,240,255,0.7), inset 0 0 20px rgba(0,240,255,0.3)' : '0 0 20px rgba(0,240,255,0.3)',
+                      boxShadow: n.highlight ? '0 0 40px rgba(0,240,255,0.7), inset 0 0 15px rgba(0,240,255,0.3)' : '0 0 15px rgba(0,240,255,0.3)',
                     }}>
-                      <n.icon size={n.highlight ? 55 : 32} color={n.highlight ? '#fff' : '#00F0FF'} />
+                      <n.icon size={n.highlight ? 45 : 26} color={n.highlight ? '#fff' : '#00F0FF'} />
                     </div>
                     <div style={{
                       fontFamily: 'var(--font-space-grotesk), sans-serif',
-                      fontSize: n.highlight ? 26 : 18,
+                      fontSize: n.highlight ? 20 : 14,
                       fontWeight: 900,
                       color: n.highlight ? '#fff' : '#00F0FF',
-                      textShadow: n.highlight ? '0 0 15px rgba(0,0,0,1)' : '0 2px 4px rgba(0,0,0,0.8)',
-                      background: 'rgba(2,6,23,0.7)', padding: '6px 14px', borderRadius: 20, border: '1px solid rgba(0,240,255,0.2)',
+                      textShadow: n.highlight ? '0 0 10px rgba(0,0,0,1)' : '0 2px 4px rgba(0,0,0,0.8)',
+                      background: 'rgba(2,6,23,0.7)', padding: '4px 10px', borderRadius: 20, border: '1px solid rgba(0,240,255,0.2)',
                       letterSpacing: '0.05em', textTransform: 'uppercase'
                     }}>
                       {n.label}
@@ -405,22 +342,22 @@ function PrintStandee() {
         </div>
 
         {/* 4. QR & CTA BLOCK */}
-        <div style={{ marginTop: 60 }}>
+        <div style={{ marginTop: 40 }}>
           <div style={{ 
-            display: 'flex', alignItems: 'center', gap: 35, background: 'linear-gradient(90deg, rgba(15,23,42,0.9), rgba(15,23,42,0.6))', 
-            padding: '24px 35px', borderRadius: 30, border: '1px solid rgba(0,240,255,0.4)', 
-            backdropFilter: 'blur(16px)', boxShadow: '0 30px 60px rgba(0,0,0,0.6), inset 0 0 40px rgba(0,240,255,0.1)',
-            width: 720
+            display: 'flex', alignItems: 'center', gap: 24, background: 'linear-gradient(90deg, rgba(15,23,42,0.9), rgba(15,23,42,0.6))', 
+            padding: '16px 24px', borderRadius: 24, border: '1px solid rgba(0,240,255,0.4)', 
+            backdropFilter: 'blur(16px)', boxShadow: '0 20px 40px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,240,255,0.1)',
+            width: 600
           }}>
-            <div style={{ width: 170, height: 170, background: '#fff', borderRadius: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 12, boxShadow: '0 0 50px rgba(0,240,255,0.5)' }}>
+            <div style={{ width: 120, height: 120, background: '#fff', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8, boxShadow: '0 0 40px rgba(0,240,255,0.5)' }}>
               <QRCodeSVG value="https://brand-flow-hust.vercel.app/" style={{ width: '100%', height: '100%', color: '#020617' }} />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <div style={{ fontSize: 32, fontWeight: 900, color: '#fff', lineHeight: 1.3, marginBottom: 16, letterSpacing: '-0.02em', fontFamily: 'var(--font-space-grotesk), sans-serif', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: 24, fontWeight: 900, color: '#fff', lineHeight: 1.3, marginBottom: 12, letterSpacing: '-0.02em', fontFamily: 'var(--font-space-grotesk), sans-serif', textTransform: 'uppercase' }}>
                 QUÉT MÃ ĐỂ NHẬN<br/>
                 <span style={{ color: '#00F0FF' }}>BLUEPRINT MẪU</span>
               </div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontSize: 24, color: '#e2e8f0', fontWeight: 700, background: 'rgba(0,0,0,0.4)', padding: '10px 20px', borderRadius: 100, border: '1px solid rgba(255,255,255,0.1)', width: 'fit-content' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 18, color: '#e2e8f0', fontWeight: 700, background: 'rgba(0,0,0,0.4)', padding: '8px 16px', borderRadius: 100, border: '1px solid rgba(255,255,255,0.1)', width: 'fit-content' }}>
                 <span style={{ color: '#00F0FF' }}>●</span> brandflow.ai
               </div>
             </div>
@@ -428,32 +365,32 @@ function PrintStandee() {
         </div>
 
         {/* 5. PERSUASIVE FEATURES */}
-        <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 16, width: 720 }}>
+        <div style={{ marginTop: 30, display: 'flex', flexDirection: 'column', gap: 12, width: 620 }}>
           {[
-            { title: 'ĐỘI NGŨ 5 AI AGENTS CHUYÊN BIỆT', desc: 'Giả lập chuẩn xác workflow agency, phản biện và tối ưu liên tục.', icon: Network },
-            { title: 'TỰ ĐỘNG NGHIÊN CỨU THỊ TRƯỜNG', desc: 'Cào dữ liệu, phân tích đối thủ & tệp khách hàng hoàn toàn tự động.', icon: Globe },
-            { title: 'CFO AI KIỂM SOÁT TÀI CHÍNH', desc: 'Tự động phân bổ ngân sách, đặt KPI & chặn ngay rủi ro lãng phí.', icon: Shield },
-            { title: 'XUẤT BLUEPRINT B2B THẦN TỐC', desc: 'Chỉ mất vài phút để nhận bản thuyết trình chiến lược hoàn chỉnh.', icon: FileText },
+            { title: 'ĐỘI NGŨ 5 AI AGENTS CHUYÊN BIỆT', desc: 'Giả lập chuẩn xác workflow agency, phản biện và tối ưu.', icon: Network },
+            { title: 'TỰ ĐỘNG NGHIÊN CỨU THỊ TRƯỜNG', desc: 'Cào dữ liệu, phân tích đối thủ & tệp khách hàng tự động.', icon: Globe },
+            { title: 'CFO AI KIỂM SOÁT TÀI CHÍNH', desc: 'Tự động phân bổ ngân sách, đặt KPI & chặn ngay rủi ro.', icon: Shield },
+            { title: 'XUẤT BLUEPRINT B2B THẦN TỐC', desc: 'Chỉ mất vài phút để nhận bản thuyết trình chiến lược.', icon: FileText },
           ].map((f, i) => (
             <div key={i} style={{ 
-              display: 'flex', gap: 24, alignItems: 'center', padding: '14px 20px', 
+              display: 'flex', gap: 16, alignItems: 'center', padding: '12px 16px', 
               background: 'linear-gradient(90deg, rgba(15,23,42,0.6) 0%, rgba(15,23,42,0) 100%)',
-              borderLeft: '4px solid #00F0FF', borderRadius: '0 24px 24px 0'
+              borderLeft: '4px solid #00F0FF', borderRadius: '0 20px 20px 0'
             }}>
               <div style={{
-                width: 50, height: 50, borderRadius: 14, flexShrink: 0,
+                width: 40, height: 40, borderRadius: 10, flexShrink: 0,
                 background: 'rgba(0,240,255,0.1)', 
                 border: '1px solid rgba(0,240,255,0.4)', 
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 0 20px rgba(0,240,255,0.1)'
+                boxShadow: '0 0 15px rgba(0,240,255,0.1)'
               }}>
-                <f.icon size={26} color="#00F0FF" />
+                <f.icon size={20} color="#00F0FF" />
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontSize: 24, fontWeight: 900, color: '#fff', letterSpacing: '0.02em' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <div style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontSize: 18, fontWeight: 900, color: '#fff', letterSpacing: '0.02em' }}>
                   {f.title}
                 </div>
-                <div style={{ fontFamily: 'var(--font-inter), sans-serif', fontSize: 18, fontWeight: 400, color: '#cbd5e1' }}>
+                <div style={{ fontFamily: 'var(--font-inter), sans-serif', fontSize: 14, fontWeight: 400, color: '#cbd5e1' }}>
                   {f.desc}
                 </div>
               </div>
