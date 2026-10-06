@@ -207,7 +207,7 @@ function PrintStandee() {
         backgroundSize: '80px 80px', backgroundPosition: 'center center', zIndex: 0
       }} />
 
-      {/* Cyberpunk Angles & Glowing Orbs */}
+      {/* Cyberpunk Angles - Adjusted to not intersect text */}
       <svg width={w} height={h} style={{ position: 'absolute', top: 0, left: 0, zIndex: 0 }} viewBox={`0 0 ${w} ${h}`}>
         <defs>
           <linearGradient id="neonCyan" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -218,48 +218,16 @@ function PrintStandee() {
             <stop offset="0%" stopColor="#7000FF" stopOpacity="0.5" />
             <stop offset="100%" stopColor="#0F172A" stopOpacity="0" />
           </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="15" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
         </defs>
-        
-        {/* Massive geometric shards */}
-        <polygon points="0,0 600,0 800,200 800,450 0,650" fill="url(#neonPurple)" opacity="0.4" />
-        <polygon points="0,550 800,350 800,380 0,580" fill="url(#neonCyan)" />
-        <polygon points="100,750 800,550 800,552 100,752" fill="#00F0FF" opacity="0.6" />
-
-        {/* Floating tech nodes */}
-        <circle cx="650" cy="350" r="100" fill="url(#neonCyan)" filter="url(#glow)" opacity="0.3" />
-        <circle cx="650" cy="350" r="5" fill="#FFF" />
-        <circle cx="650" cy="350" r="40" fill="none" stroke="#00F0FF" strokeWidth="2" strokeDasharray="6 6" />
-        <circle cx="650" cy="350" r="80" fill="none" stroke="#7000FF" strokeWidth="1" strokeDasharray="2 8" />
-
-        <g transform="translate(100, 1600) scale(1.5)">
-          <circle cx="0" cy="0" r="50" fill="url(#neonCyan)" filter="url(#glow)" opacity="0.2" />
-          <polygon points="0,-15 13,7 -13,7" fill="#00F0FF" />
-          <circle cx="0" cy="0" r="30" fill="none" stroke="#00F0FF" strokeWidth="1" strokeDasharray="4 4" />
-        </g>
+        <polygon points="0,0 400,0 600,200 600,450 0,650" fill="url(#neonPurple)" opacity="0.3" />
+        <polygon points="0,1800 800,1600 800,2000 0,2000" fill="url(#neonCyan)" opacity="0.15" />
       </svg>
 
-      {/* Cyberpunk Tech Markings */}
-      <div style={{
-        position: 'absolute', right: -60, top: '50%', transform: 'rotate(-90deg) translateY(-50%)',
-        fontFamily: 'var(--font-space-grotesk), sans-serif', fontSize: 200, fontWeight: 900,
-        color: 'transparent', WebkitTextStroke: '2px rgba(0,240,255,0.06)', letterSpacing: '0.15em',
-        whiteSpace: 'nowrap', zIndex: 0
-      }}>
-        OS.V2
-      </div>
-
       {/* ── FOREGROUND CONTENT ── */}
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', height: '100%', padding: '60px' }}>
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%' }}>
         
-        {/* HEADER */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        {/* HEADER (170-200cm) => top: 60px */}
+        <div style={{ position: 'absolute', top: 60, left: 60, right: 60, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
             <Logo size={120} />
             <div style={{ marginTop: 20, fontSize: 20, color: '#00F0FF', letterSpacing: '0.3em', textTransform: 'uppercase', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -267,95 +235,99 @@ function PrintStandee() {
               AI Multi-Agent OS
             </div>
           </div>
-          <div style={{ textAlign: 'right', fontSize: 12, color: '#64748b', fontFamily: 'monospace', lineHeight: 1.6 }}>
-            SYS.STATUS: <span style={{ color: '#00F0FF' }}>ONLINE</span><br/>
-            VER: 2.0.4-BETA<br/>
-            CORE: LLaMA-70B
+          <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-end', marginTop: 20 }}>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {[1, 2, 3].map(i => <div key={i} style={{ width: 16, height: 4, background: '#00F0FF', opacity: i === 3 ? 0.3 : 1 }} />)}
+            </div>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {[1, 2, 3, 4, 5].map(i => <div key={i} style={{ width: 6, height: 6, background: '#64748b' }} />)}
+            </div>
           </div>
         </div>
 
-        {/* HERO TYPOGRAPHY */}
-        <div style={{ marginTop: 140 }}>
-          <h1 style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontWeight: 900, fontSize: 75, lineHeight: 1.1, letterSpacing: '-0.03em', textTransform: 'uppercase' }}>
-            <span style={{ color: '#fff', textShadow: '0 0 20px rgba(255,255,255,0.4)' }}>Hệ Sinh Thái</span><br/>
+        {/* TITLE (130-170cm) => top: 350px */}
+        <div style={{ position: 'absolute', top: 350, left: 60, maxWidth: '85%' }}>
+          <h1 style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontWeight: 900, fontSize: 80, lineHeight: 1.2, letterSpacing: '-0.02em', textTransform: 'uppercase', margin: 0 }}>
+            <span style={{ color: '#fff', textShadow: '0 0 20px rgba(255,255,255,0.4)' }}>Từ Brief Đến Chiến Lược.</span><br/>
             <span style={{ 
-              background: 'linear-gradient(to right, #00F0FF, #7000FF)', 
+              background: 'linear-gradient(to right, #00F0FF, #a855f7)', 
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
               filter: 'drop-shadow(0 0 20px rgba(0,240,255,0.3))'
-            }}>Marketing AI</span>
+            }}>Không Cần Agency.</span>
           </h1>
-          <div style={{ width: 150, height: 6, background: 'linear-gradient(90deg, #00F0FF, #7000FF)', marginTop: 40, marginBottom: 40, boxShadow: '0 0 15px rgba(0,240,255,0.5)' }} />
-          <p style={{ fontSize: 26, color: '#cbd5e1', maxWidth: 550, lineHeight: 1.5, fontWeight: 300 }}>
-            Thay thế toàn bộ nhân sự cấp trung bằng đội ngũ <strong>5 AI Agents</strong> chuyên biệt. Thẩm định chiến lược chéo, chống rủi ro ngân sách bằng <strong style={{ color: '#00F0FF' }}>Math Engine.</strong>
+          <p style={{ fontSize: 32, color: '#f8fafc', marginTop: 30, maxWidth: 650, lineHeight: 1.5, fontWeight: 400 }}>
+            5 AI Agents tranh luận, CFO AI giữ ngân sách, bạn nhận Blueprint PDF sẵn sàng thuyết trình.
           </p>
         </div>
 
-        {/* FEATURES GRID - Glassmorphism Hexagons */}
-        <div style={{ marginTop: 80, display: 'flex', flexDirection: 'column', gap: 35 }}>
+        {/* SCHEMA (100-130cm) => top: 750px */}
+        <div style={{ position: 'absolute', top: 750, left: 60, right: 60 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ width: 90, height: 90, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 16, fontWeight: 800, boxShadow: '0 0 15px rgba(0,240,255,0.2)' }}>Intake</div>
+              <div style={{ width: 45, height: 3, background: 'rgba(0,240,255,0.4)' }} />
+              <div style={{ width: 90, height: 90, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 16, fontWeight: 800 }}>Strategy</div>
+              <div style={{ width: 45, height: 3, background: 'rgba(0,240,255,0.4)' }} />
+              <div style={{ width: 120, height: 120, borderRadius: '50%', background: 'rgba(0,240,255,0.1)', border: '3px solid #00F0FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 24, fontWeight: 900, boxShadow: '0 0 30px rgba(0,240,255,0.6)', textShadow: '0 0 10px rgba(0,240,255,0.5)' }}>CFO AI</div>
+              <div style={{ width: 45, height: 3, background: 'rgba(0,240,255,0.4)' }} />
+              <div style={{ width: 90, height: 90, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 16, fontWeight: 800 }}>Design</div>
+              <div style={{ width: 45, height: 3, background: 'rgba(0,240,255,0.4)' }} />
+              <div style={{ width: 90, height: 90, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 16, fontWeight: 800 }}>Content</div>
+            </div>
+          </div>
+        </div>
+
+        {/* QR & CTA (60-100cm) => top: 1050px */}
+        <div style={{ position: 'absolute', top: 1050, left: 60, right: 60 }}>
+          <div style={{ display: 'flex', gap: 40, background: 'rgba(15,23,42,0.6)', padding: '40px', borderRadius: 32, border: '1px solid rgba(0,240,255,0.3)', backdropFilter: 'blur(10px)', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
+            <div style={{ width: 220, height: 220, background: '#fff', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, boxShadow: '0 0 40px rgba(0,240,255,0.4)' }}>
+              <QRCodeSVG value="https://brandflow.ai/demo?utm_source=expo&utm_medium=standee" style={{ width: '100%', height: '100%', color: '#020617' }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
+              <div style={{ fontSize: 24, color: '#00F0FF', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>
+                Quét mã để nhận Demo
+              </div>
+              <div style={{ fontSize: 38, fontWeight: 900, color: '#fff', lineHeight: 1.3, marginBottom: 25, letterSpacing: '-0.02em' }}>
+                Nhận Blueprint mẫu cho thương hiệu của bạn
+              </div>
+              <div style={{ display: 'flex', gap: 20, fontSize: 22, color: '#cbd5e1', fontWeight: 600 }}>
+                <span style={{ background: 'rgba(0,240,255,0.1)', padding: '12px 24px', borderRadius: 16, border: '1px solid rgba(0,240,255,0.2)' }}>📍 Gian hàng A12</span>
+                <span style={{ background: 'rgba(0,240,255,0.1)', padding: '12px 24px', borderRadius: 16, border: '1px solid rgba(0,240,255,0.2)' }}>🌐 brandflow.ai</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CARDS (25-60cm) => top: 1450px */}
+        <div style={{ position: 'absolute', top: 1450, left: 60, right: 60, display: 'flex', flexDirection: 'column', gap: 24 }}>
           {[
-            { num: '01', title: 'Đội Ngũ 5 AI Agents', desc: 'Giao tiếp, phản biện nội bộ như một team Marketing Agency.', icon: '⚡' },
-            { num: '02', title: 'CFO AI Kiểm Soát ROI', desc: 'Dự báo tài chính, ép KPI và phủ quyết ngân sách rủi ro.', icon: '🛡️' },
-            { num: '03', title: 'Xuất Bản Blueprint PDF', desc: 'Render chiến lược triệu đô thành File thuyết trình B2B cực nhanh.', icon: '📄' },
+            { title: '5 Agents phản biện chéo như một team agency thật.', icon: '⚡' },
+            { title: 'CFO AI dự báo tài chính, đặt KPI, chặn kế hoạch rủi ro.', icon: '🛡️', highlight: true },
+            { title: 'Xuất Blueprint PDF thuyết trình B2B trong vài phút.', icon: '📄' },
           ].map((f, i) => (
             <div key={i} style={{ 
-              display: 'flex', gap: 30, alignItems: 'center', padding: '24px 30px', 
-              background: 'rgba(15,23,42,0.7)', border: '1px solid rgba(0,240,255,0.2)', 
+              display: 'flex', gap: 24, alignItems: 'center', padding: '28px 30px', 
+              background: f.highlight ? 'rgba(0,240,255,0.1)' : 'rgba(15,23,42,0.8)', 
+              border: f.highlight ? '2px solid #00F0FF' : '1px solid rgba(0,240,255,0.2)', 
               borderRadius: 24, backdropFilter: 'blur(10px)',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,240,255,0.05)'
+              boxShadow: f.highlight ? '0 0 30px rgba(0,240,255,0.2)' : 'none'
             }}>
               <div style={{
-                width: 70, height: 70, borderRadius: 16, flexShrink: 0,
-                background: 'linear-gradient(135deg, rgba(0,240,255,0.2), rgba(112,0,255,0.2))', 
-                border: '1px solid #00F0FF', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontFamily: 'var(--font-space-grotesk), sans-serif', fontWeight: 900, fontSize: 28, color: '#00F0FF',
-                boxShadow: '0 0 15px rgba(0,240,255,0.3)'
+                width: 65, height: 65, borderRadius: 16, flexShrink: 0,
+                background: f.highlight ? 'linear-gradient(135deg, rgba(0,240,255,0.4), rgba(112,0,255,0.4))' : 'rgba(0,240,255,0.1)', 
+                border: f.highlight ? 'none' : '1px solid rgba(0,240,255,0.3)', 
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 32
               }}>
-                {f.num}
+                {f.icon}
               </div>
-              <div>
-                <h3 style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.02em' }}>
-                  {f.title}
-                </h3>
-                <p style={{ fontSize: 20, color: '#94a3b8', lineHeight: 1.5, maxWidth: 500 }}>{f.desc}</p>
+              <div style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontSize: 30, fontWeight: 700, color: f.highlight ? '#fff' : '#cbd5e1' }}>
+                {f.title}
               </div>
             </div>
           ))}
         </div>
-
-        {/* HIGHLIGHT METRICS - NEON GLOW */}
-        <div style={{ marginTop: 80, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40 }}>
-          <div style={{ position: 'relative', padding: '50px 30px', background: 'rgba(0,240,255,0.03)', borderRadius: 32, border: '1px solid rgba(0,240,255,0.2)', textAlign: 'center', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translate(-50%, -50%)', width: 200, height: 200, background: '#00F0FF', filter: 'blur(80px)', opacity: 0.15 }} />
-            <div style={{ fontSize: 16, fontWeight: 800, color: '#00F0FF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 16 }}>Conversion Rate</div>
-            <div style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontSize: 110, fontWeight: 900, color: '#fff', lineHeight: 1, textShadow: '0 0 30px rgba(0,240,255,0.5)' }}>
-              10<span style={{ fontSize: 60, opacity: 0.8 }}>%</span>
-            </div>
-            <div style={{ fontSize: 18, color: '#94a3b8', marginTop: 16 }}>Tỷ lệ chuyển đổi trung bình</div>
-          </div>
-
-          <div style={{ position: 'relative', padding: '50px 30px', background: 'rgba(112,0,255,0.03)', borderRadius: 32, border: '1px solid rgba(112,0,255,0.2)', textAlign: 'center', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translate(-50%, 50%)', width: 200, height: 200, background: '#7000FF', filter: 'blur(80px)', opacity: 0.15 }} />
-            <div style={{ fontSize: 16, fontWeight: 800, color: '#c084fc', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 16 }}>Time Saved</div>
-            <div style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontSize: 110, fontWeight: 900, color: '#fff', lineHeight: 1, textShadow: '0 0 30px rgba(112,0,255,0.5)' }}>
-              85<span style={{ fontSize: 60, opacity: 0.8 }}>%</span>
-            </div>
-            <div style={{ fontSize: 18, color: '#94a3b8', marginTop: 16 }}>Tiết kiệm chi phí vận hành</div>
-          </div>
-        </div>
-
-        {/* FOOTER */}
-        <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderTop: '1px solid rgba(0,240,255,0.2)', paddingTop: 40 }}>
-          <div style={{ display: 'flex', gap: 30 }}>
-            <div style={{ width: 150, height: 150, background: '#fff', borderRadius: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 12, boxShadow: '0 0 30px rgba(0,240,255,0.3)' }}>
-              <QRCodeSVG value="http://brandflowhust.vercel.app" style={{ width: '100%', height: '100%', color: '#020617' }} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 10 }}>
-              <div style={{ fontSize: 36, fontWeight: 900, color: '#fff', letterSpacing: '-0.02em' }}>brandflow.ai</div>
-              <div style={{ fontSize: 20, color: '#00F0FF', fontWeight: 600 }}>Quét để nhận Demo</div>
-              <div style={{ fontSize: 16, color: '#64748b', marginTop: 10 }}>[ TECH EXPO EXCLUSIVE ]</div>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </div>
   );
