@@ -263,7 +263,7 @@ function PrintStandee() {
         </div>
 
         {/* 2. TITLE (Fixed wrapping & Diverse typography) */}
-        <div style={{ textAlign: 'center', marginTop: 50, maxWidth: '90%' }}>
+        <div style={{ textAlign: 'center', marginTop: 50, width: 760 }}>
           <h1 style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontWeight: 900, fontSize: 58, lineHeight: 1.1, letterSpacing: '-0.02em', textTransform: 'uppercase', margin: 0 }}>
             <span style={{ color: '#fff', textShadow: '0 0 20px rgba(255,255,255,0.4)' }}>Từ Brief Đến Chiến Lược.</span>
           </h1>
@@ -274,7 +274,7 @@ function PrintStandee() {
               filter: 'drop-shadow(0 0 20px rgba(0,240,255,0.3))'
             }}>Không Cần Agency.</span>
           </h2>
-          <p style={{ fontSize: 26, color: '#cbd5e1', marginTop: 20, maxWidth: 650, lineHeight: 1.5, fontWeight: 400, marginInline: 'auto' }}>
+          <p style={{ fontSize: 22, color: '#cbd5e1', marginTop: 20, width: '100%', lineHeight: 1.6, fontWeight: 400, marginInline: 'auto', whiteSpace: 'nowrap' }}>
             Hệ thống duy nhất mô phỏng <span style={{ color: '#00F0FF', fontWeight: 700 }}>phòng Marketing thực thụ</span>.<br/>
             Biến mọi ý tưởng thành chiến lược B2B hoàn chỉnh ngay lập tức.
           </p>
