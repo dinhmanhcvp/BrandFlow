@@ -195,19 +195,13 @@ function PrintStandee() {
       fontFamily: 'var(--font-inter), sans-serif', color: '#fff', overflow: 'hidden',
       position: 'relative',
     }}>
-      {/* ── BACKGROUND SCIFI GRAPHICS ── */}
+      {/* ── BACKGROUND SCIFI NETWORK (Floating nodes) ── */}
       <div style={{
         position: 'absolute', inset: 0,
-        backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(6,182,212,0.2) 0%, transparent 60%), radial-gradient(circle at 100% 100%, rgba(59,130,246,0.2) 0%, transparent 60%)',
+        backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(6,182,212,0.1) 0%, transparent 60%), radial-gradient(circle at 100% 100%, rgba(59,130,246,0.1) 0%, transparent 60%)',
         zIndex: 0
       }} />
-      <div style={{
-        position: 'absolute', inset: 0,
-        backgroundImage: 'linear-gradient(rgba(6,182,212,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.05) 1px, transparent 1px)',
-        backgroundSize: '80px 80px', backgroundPosition: 'center center', zIndex: 0
-      }} />
 
-      {/* Cyberpunk Angles - Adjusted to not intersect text */}
       <svg width={w} height={h} style={{ position: 'absolute', top: 0, left: 0, zIndex: 0 }} viewBox={`0 0 ${w} ${h}`}>
         <defs>
           <linearGradient id="neonCyan" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -219,7 +213,25 @@ function PrintStandee() {
             <stop offset="100%" stopColor="#0F172A" stopOpacity="0" />
           </linearGradient>
         </defs>
-        <polygon points="0,0 400,0 600,200 600,450 0,650" fill="url(#neonPurple)" opacity="0.3" />
+        
+        {/* Floating nodes network for aesthetic background */}
+        {Array.from({ length: 45 }).map((_, i) => {
+          const x = (i * 137 + 50) % w;
+          const y = (i * 283 + 100) % h;
+          const r = (i % 3 === 0) ? 4 : 2;
+          const nextX = ((i + 1) * 137 + 50) % w;
+          const nextY = ((i + 1) * 283 + 100) % h;
+          return (
+            <g key={`bg-node-${i}`}>
+              <circle cx={x} cy={y} r={r} fill="#00F0FF" opacity="0.3" />
+              {i % 2 === 0 && <line x1={x} y1={y} x2={nextX} y2={nextY} stroke="#00F0FF" strokeOpacity="0.1" strokeWidth="1" />}
+              {i % 5 === 0 && <circle cx={x} cy={y} r={r * 5} fill="none" stroke="#7000FF" strokeOpacity="0.2" strokeWidth="1" />}
+            </g>
+          );
+        })}
+
+        {/* Subtle geometric shards at the corners */}
+        <polygon points="0,0 400,0 600,200 600,450 0,650" fill="url(#neonPurple)" opacity="0.2" />
         <polygon points="0,1800 800,1600 800,2000 0,2000" fill="url(#neonCyan)" opacity="0.15" />
       </svg>
 
@@ -245,8 +257,8 @@ function PrintStandee() {
           </div>
         </div>
 
-        {/* TITLE (130-170cm) => top: 350px */}
-        <div style={{ position: 'absolute', top: 350, left: 60, maxWidth: '85%' }}>
+        {/* TITLE (130-170cm) => top: 300px */}
+        <div style={{ position: 'absolute', top: 300, left: 60, maxWidth: '85%' }}>
           <h1 style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontWeight: 900, fontSize: 80, lineHeight: 1.2, letterSpacing: '-0.02em', textTransform: 'uppercase', margin: 0 }}>
             <span style={{ color: '#fff', textShadow: '0 0 20px rgba(255,255,255,0.4)' }}>Từ Brief Đến Chiến Lược.</span><br/>
             <span style={{ 
@@ -260,28 +272,28 @@ function PrintStandee() {
           </p>
         </div>
 
-        {/* SCHEMA (100-130cm) => top: 750px */}
-        <div style={{ position: 'absolute', top: 750, left: 60, right: 60 }}>
+        {/* SCHEMA (100-130cm) => top: 700px */}
+        <div style={{ position: 'absolute', top: 700, left: 60, right: 60 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div style={{ width: 90, height: 90, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 16, fontWeight: 800, boxShadow: '0 0 15px rgba(0,240,255,0.2)' }}>Intake</div>
-              <div style={{ width: 45, height: 3, background: 'rgba(0,240,255,0.4)' }} />
-              <div style={{ width: 90, height: 90, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 16, fontWeight: 800 }}>Strategy</div>
-              <div style={{ width: 45, height: 3, background: 'rgba(0,240,255,0.4)' }} />
-              <div style={{ width: 120, height: 120, borderRadius: '50%', background: 'rgba(0,240,255,0.1)', border: '3px solid #00F0FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 24, fontWeight: 900, boxShadow: '0 0 30px rgba(0,240,255,0.6)', textShadow: '0 0 10px rgba(0,240,255,0.5)' }}>CFO AI</div>
-              <div style={{ width: 45, height: 3, background: 'rgba(0,240,255,0.4)' }} />
-              <div style={{ width: 90, height: 90, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 16, fontWeight: 800 }}>Design</div>
-              <div style={{ width: 45, height: 3, background: 'rgba(0,240,255,0.4)' }} />
-              <div style={{ width: 90, height: 90, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 16, fontWeight: 800 }}>Content</div>
+              <div style={{ width: 85, height: 85, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 14, fontWeight: 800, boxShadow: '0 0 15px rgba(0,240,255,0.2)' }}>Intake</div>
+              <div style={{ width: 40, height: 3, background: 'rgba(0,240,255,0.4)' }} />
+              <div style={{ width: 85, height: 85, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 14, fontWeight: 800 }}>Strategy</div>
+              <div style={{ width: 40, height: 3, background: 'rgba(0,240,255,0.4)' }} />
+              <div style={{ width: 110, height: 110, borderRadius: '50%', background: 'rgba(0,240,255,0.1)', border: '3px solid #00F0FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 22, fontWeight: 900, boxShadow: '0 0 30px rgba(0,240,255,0.6)', textShadow: '0 0 10px rgba(0,240,255,0.5)' }}>CFO AI</div>
+              <div style={{ width: 40, height: 3, background: 'rgba(0,240,255,0.4)' }} />
+              <div style={{ width: 85, height: 85, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 14, fontWeight: 800 }}>Design</div>
+              <div style={{ width: 40, height: 3, background: 'rgba(0,240,255,0.4)' }} />
+              <div style={{ width: 85, height: 85, borderRadius: '50%', background: 'rgba(15,23,42,0.8)', border: '2px solid rgba(0,240,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00F0FF', fontSize: 14, fontWeight: 800 }}>Content</div>
             </div>
           </div>
         </div>
 
-        {/* QR & CTA (60-100cm) => top: 1050px */}
-        <div style={{ position: 'absolute', top: 1050, left: 60, right: 60 }}>
+        {/* QR & CTA (60-100cm) => top: 980px */}
+        <div style={{ position: 'absolute', top: 980, left: 60, right: 60 }}>
           <div style={{ display: 'flex', gap: 40, background: 'rgba(15,23,42,0.6)', padding: '40px', borderRadius: 32, border: '1px solid rgba(0,240,255,0.3)', backdropFilter: 'blur(10px)', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
             <div style={{ width: 220, height: 220, background: '#fff', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, boxShadow: '0 0 40px rgba(0,240,255,0.4)' }}>
-              <QRCodeSVG value="https://brandflow.ai/demo?utm_source=expo&utm_medium=standee" style={{ width: '100%', height: '100%', color: '#020617' }} />
+              <QRCodeSVG value="https://brand-flow-hust.vercel.app/" style={{ width: '100%', height: '100%', color: '#020617' }} />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
               <div style={{ fontSize: 24, color: '#00F0FF', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 12 }}>
@@ -291,19 +303,18 @@ function PrintStandee() {
                 Nhận Blueprint mẫu cho thương hiệu của bạn
               </div>
               <div style={{ display: 'flex', gap: 20, fontSize: 22, color: '#cbd5e1', fontWeight: 600 }}>
-                <span style={{ background: 'rgba(0,240,255,0.1)', padding: '12px 24px', borderRadius: 16, border: '1px solid rgba(0,240,255,0.2)' }}>📍 Gian hàng A12</span>
-                <span style={{ background: 'rgba(0,240,255,0.1)', padding: '12px 24px', borderRadius: 16, border: '1px solid rgba(0,240,255,0.2)' }}>🌐 brandflow.ai</span>
+                <span style={{ background: 'rgba(0,240,255,0.1)', padding: '12px 24px', borderRadius: 16, border: '1px solid rgba(0,240,255,0.2)' }}>🌐 brand-flow-hust.vercel.app</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* CARDS (25-60cm) => top: 1450px */}
-        <div style={{ position: 'absolute', top: 1450, left: 60, right: 60, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        {/* CARDS (25-60cm) => top: 1380px */}
+        <div style={{ position: 'absolute', top: 1380, left: 60, right: 60, display: 'flex', flexDirection: 'column', gap: 24 }}>
           {[
-            { title: '5 Agents phản biện chéo như một team agency thật.', icon: '⚡' },
-            { title: 'CFO AI dự báo tài chính, đặt KPI, chặn kế hoạch rủi ro.', icon: '🛡️', highlight: true },
-            { title: 'Xuất Blueprint PDF thuyết trình B2B trong vài phút.', icon: '📄' },
+            { title: '5 Agents phản biện chéo như một team agency thật.', icon: Network },
+            { title: 'CFO AI dự báo tài chính, đặt KPI, chặn kế hoạch rủi ro.', icon: Shield, highlight: true },
+            { title: 'Xuất Blueprint PDF thuyết trình B2B trong vài phút.', icon: FileText },
           ].map((f, i) => (
             <div key={i} style={{ 
               display: 'flex', gap: 24, alignItems: 'center', padding: '28px 30px', 
@@ -317,9 +328,8 @@ function PrintStandee() {
                 background: f.highlight ? 'linear-gradient(135deg, rgba(0,240,255,0.4), rgba(112,0,255,0.4))' : 'rgba(0,240,255,0.1)', 
                 border: f.highlight ? 'none' : '1px solid rgba(0,240,255,0.3)', 
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 32
               }}>
-                {f.icon}
+                <f.icon size={32} color={f.highlight ? '#fff' : '#00F0FF'} />
               </div>
               <div style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontSize: 30, fontWeight: 700, color: f.highlight ? '#fff' : '#cbd5e1' }}>
                 {f.title}
