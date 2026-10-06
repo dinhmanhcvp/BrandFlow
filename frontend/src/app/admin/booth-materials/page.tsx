@@ -283,26 +283,67 @@ function PrintStandee() {
         {/* 3. SCHEMA - 5 AGENTS ASSET BLOCK */}
         <div style={{ position: 'relative', marginTop: 60, width: 640, height: 420, marginInline: 'auto' }}>
           
-          {/* Dashboard faded background placeholder */}
+          {/* High-Tech HUD Dashboard Background */}
           <div style={{ 
             position: 'absolute', top: '45%', left: '50%', transform: 'translate(-50%, -50%)',
-            width: 440, height: 240, background: 'linear-gradient(180deg, rgba(15,23,42,0.9) 0%, rgba(15,23,42,0.1) 100%)',
-            border: '1px solid rgba(0,240,255,0.2)', borderRadius: 20, zIndex: 0,
-            boxShadow: '0 20px 50px rgba(0,0,0,0.5), 0 0 50px rgba(0,240,255,0.1)', overflow: 'hidden'
+            width: 480, height: 260, 
+            background: 'linear-gradient(135deg, rgba(15,23,42,0.8) 0%, rgba(2,6,23,0.9) 100%)',
+            border: '1px solid rgba(0,240,255,0.2)', borderRadius: 16, zIndex: 0,
+            boxShadow: '0 20px 60px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,240,255,0.05)',
+            display: 'flex', flexDirection: 'column', overflow: 'hidden'
           }}>
-             {/* Dashboard internal UI lines */}
-             <div style={{ display: 'flex', gap: 8, padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)' }}>
-               <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(239,68,68,0.5)' }} />
-               <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(234,179,8,0.5)' }} />
-               <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(34,197,94,0.5)' }} />
-             </div>
-             <div style={{ display: 'flex', gap: 20, padding: 24 }}>
-               <div style={{ width: 80, height: 80, borderRadius: '50%', border: '12px solid rgba(0,240,255,0.15)', borderTopColor: 'rgba(0,240,255,0.6)', borderRightColor: 'rgba(0,240,255,0.4)' }} />
-               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
-                 <div style={{ width: '100%', height: 28, background: 'rgba(255,255,255,0.06)', borderRadius: 6 }} />
-                 <div style={{ width: '60%', height: 28, background: 'rgba(255,255,255,0.06)', borderRadius: 6 }} />
-               </div>
-             </div>
+            {/* Top Bar */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px', borderBottom: '1px solid rgba(0,240,255,0.15)', background: 'rgba(0,240,255,0.03)' }}>
+              <div style={{ display: 'flex', gap: 6 }}>
+                <div style={{ width: 10, height: 10, borderRadius: '50%', border: '1px solid rgba(0,240,255,0.5)' }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', border: '1px solid rgba(0,240,255,0.5)', background: 'rgba(0,240,255,0.5)' }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', border: '1px solid rgba(0,240,255,0.5)' }} />
+              </div>
+              <div style={{ fontSize: 10, fontFamily: 'monospace', color: 'rgba(0,240,255,0.6)', letterSpacing: '0.1em' }}>AGENT_WORKSPACE_V2</div>
+            </div>
+
+            <div style={{ display: 'flex', flex: 1, padding: '24px 20px', gap: 24 }}>
+              {/* Donut Chart Block */}
+              <div style={{ width: 130, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', letterSpacing: '0.05em', fontFamily: 'var(--font-inter), sans-serif' }}>PERFORMANCE</div>
+                <div style={{ position: 'relative', width: 100, height: 100 }}>
+                  <svg viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)', overflow: 'visible' }}>
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(0,240,255,0.1)" strokeWidth="12" />
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="url(#neonCyan)" strokeWidth="12" strokeDasharray="180 251" strokeLinecap="round" />
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="url(#neonPurple)" strokeWidth="12" strokeDasharray="40 251" strokeDashoffset="-200" strokeLinecap="round" />
+                  </svg>
+                  <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ fontSize: 18, fontWeight: 900, color: '#fff', fontFamily: 'var(--font-space-grotesk), sans-serif' }}>98</span>
+                    <span style={{ fontSize: 8, color: '#00F0FF', fontFamily: 'var(--font-inter), sans-serif' }}>SCORE</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Data Visualization Block */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', height: 60, borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: 6 }}>
+                    {[30, 50, 45, 85, 60, 95, 70].map((val, idx) => (
+                      <div key={idx} style={{ 
+                        width: 14, height: `${val}%`, 
+                        background: idx === 5 ? '#00F0FF' : 'rgba(0,240,255,0.15)', 
+                        borderRadius: '3px 3px 0 0',
+                        boxShadow: idx === 5 ? '0 0 10px rgba(0,240,255,0.4)' : 'none'
+                      }} />
+                    ))}
+                 </div>
+                 
+                 <div style={{ flex: 1, position: 'relative' }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', marginBottom: 8, letterSpacing: '0.05em', fontFamily: 'var(--font-inter), sans-serif' }}>FORECAST METRICS</div>
+                    <svg viewBox="0 0 200 40" preserveAspectRatio="none" style={{ width: '100%', height: 35, overflow: 'visible' }}>
+                      <path d="M0,35 L40,15 L80,25 L120,5 L160,20 L200,0" fill="none" stroke="#00F0FF" strokeWidth="2.5" filter="drop-shadow(0 4px 6px rgba(0,240,255,0.4))" />
+                      <path d="M0,40 L40,20 L80,30 L120,10 L160,25 L200,5" fill="none" stroke="rgba(168,85,247,0.5)" strokeWidth="1.5" strokeDasharray="4 4" />
+                    </svg>
+                 </div>
+              </div>
+            </div>
+            
+            {/* Scanline Overlay */}
+            <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,240,255,0.03) 2px, rgba(0,240,255,0.03) 4px)', pointerEvents: 'none' }} />
           </div>
 
           <svg width={640} height={420} style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'visible' }}>
