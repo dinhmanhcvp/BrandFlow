@@ -274,9 +274,9 @@ function PrintStandee() {
               filter: 'drop-shadow(0 0 20px rgba(0,240,255,0.3))'
             }}>Không Cần Agency.</span>
           </h2>
-          <p style={{ fontSize: 26, color: '#cbd5e1', marginTop: 20, maxWidth: 700, lineHeight: 1.5, fontWeight: 400, marginInline: 'auto' }}>
-            <span style={{ color: '#00F0FF', fontWeight: 700 }}>Hệ thống duy nhất</span> mô phỏng trọn vẹn phòng Marketing thực thụ.<br/>
-            Nhập Brief – Nhận lại Blueprint B2B chuyên nghiệp ngay lập tức.
+          <p style={{ fontSize: 26, color: '#cbd5e1', marginTop: 20, maxWidth: 650, lineHeight: 1.5, fontWeight: 400, marginInline: 'auto' }}>
+            Hệ thống duy nhất mô phỏng <span style={{ color: '#00F0FF', fontWeight: 700 }}>phòng Marketing thực thụ</span>.<br/>
+            Biến mọi ý tưởng thành chiến lược B2B hoàn chỉnh ngay lập tức.
           </p>
         </div>
 
@@ -428,31 +428,32 @@ function PrintStandee() {
         </div>
 
         {/* 5. PERSUASIVE FEATURES */}
-        <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 20, width: 720 }}>
+        <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 16, width: 720 }}>
           {[
-            { title: 'ĐỘI NGŨ 5 AI AGENTS CHUYÊN BIỆT', desc: 'Phản biện chéo, giả lập chuẩn xác workflow agency thực thụ.', icon: Network },
-            { title: 'CFO AI KIỂM SOÁT NGÂN SÁCH', desc: 'Tự động phân bổ chi phí, đặt KPI & chặn rủi ro lãng phí.', icon: Shield },
-            { title: 'XUẤT BLUEPRINT B2B THẦN TỐC', desc: 'Nhận ngay bản trình bày chuyên nghiệp chỉ sau vài phút.', icon: FileText },
+            { title: 'ĐỘI NGŨ 5 AI AGENTS CHUYÊN BIỆT', desc: 'Giả lập chuẩn xác workflow agency, phản biện và tối ưu liên tục.', icon: Network },
+            { title: 'TỰ ĐỘNG NGHIÊN CỨU THỊ TRƯỜNG', desc: 'Cào dữ liệu, phân tích đối thủ & tệp khách hàng hoàn toàn tự động.', icon: Globe },
+            { title: 'CFO AI KIỂM SOÁT TÀI CHÍNH', desc: 'Tự động phân bổ ngân sách, đặt KPI & chặn ngay rủi ro lãng phí.', icon: Shield },
+            { title: 'XUẤT BLUEPRINT B2B THẦN TỐC', desc: 'Chỉ mất vài phút để nhận bản thuyết trình chiến lược hoàn chỉnh.', icon: FileText },
           ].map((f, i) => (
             <div key={i} style={{ 
-              display: 'flex', gap: 24, alignItems: 'center', padding: '16px 20px', 
+              display: 'flex', gap: 24, alignItems: 'center', padding: '14px 20px', 
               background: 'linear-gradient(90deg, rgba(15,23,42,0.6) 0%, rgba(15,23,42,0) 100%)',
               borderLeft: '4px solid #00F0FF', borderRadius: '0 24px 24px 0'
             }}>
               <div style={{
-                width: 55, height: 55, borderRadius: 14, flexShrink: 0,
+                width: 50, height: 50, borderRadius: 14, flexShrink: 0,
                 background: 'rgba(0,240,255,0.1)', 
                 border: '1px solid rgba(0,240,255,0.4)', 
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 boxShadow: '0 0 20px rgba(0,240,255,0.1)'
               }}>
-                <f.icon size={28} color="#00F0FF" />
+                <f.icon size={26} color="#00F0FF" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <div style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontSize: 24, fontWeight: 900, color: '#fff', letterSpacing: '0.02em' }}>
                   {f.title}
                 </div>
-                <div style={{ fontFamily: 'var(--font-inter), sans-serif', fontSize: 20, fontWeight: 400, color: '#cbd5e1' }}>
+                <div style={{ fontFamily: 'var(--font-inter), sans-serif', fontSize: 18, fontWeight: 400, color: '#cbd5e1' }}>
                   {f.desc}
                 </div>
               </div>
