@@ -263,11 +263,11 @@ function PrintStandee() {
         </div>
 
         {/* 2. TITLE */}
-        <div style={{ textAlign: 'center', marginTop: 30, width: 660 }}>
-          <h1 style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontWeight: 900, fontSize: 44, lineHeight: 1.1, letterSpacing: '-0.02em', textTransform: 'uppercase', margin: 0 }}>
+        <div style={{ textAlign: 'center', marginTop: 15, width: 660 }}>
+          <h1 style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontWeight: 900, fontSize: 36, lineHeight: 1.1, letterSpacing: '-0.02em', textTransform: 'uppercase', margin: 0 }}>
             <span style={{ color: '#fff', textShadow: '0 0 20px rgba(255,255,255,0.4)' }}>Từ Brief Đến Chiến Lược.</span>
           </h1>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontStyle: 'italic', fontSize: 50, lineHeight: 1.2, margin: '5px 0 0 0' }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontStyle: 'italic', fontSize: 40, lineHeight: 1.2, margin: '5px 0 0 0' }}>
             <span style={{ 
               background: 'linear-gradient(to right, #00F0FF, #a855f7)', 
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
@@ -281,30 +281,30 @@ function PrintStandee() {
         </div>
 
         {/* 3. SCHEMA - PURE 5 AGENTS NETWORK */}
-        <div style={{ position: 'relative', marginTop: 15, width: 500, height: 320, marginInline: 'auto' }}>
+        <div style={{ position: 'relative', marginTop: 10, width: 440, height: 260, marginInline: 'auto' }}>
           
-          <svg width={500} height={320} style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'visible' }}>
+          <svg width={440} height={260} style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'visible' }}>
             {/* Outer ring */}
-            <line x1={80} y1={70} x2={120} y2={250} stroke="#00F0FF" strokeWidth={1.5} strokeOpacity={0.3} />
-            <line x1={120} y1={250} x2={380} y2={250} stroke="#00F0FF" strokeWidth={1.5} strokeOpacity={0.3} />
-            <line x1={380} y1={250} x2={420} y2={70} stroke="#00F0FF" strokeWidth={1.5} strokeOpacity={0.3} />
-            <line x1={420} y1={70} x2={80} y2={70} stroke="#00F0FF" strokeWidth={1.5} strokeOpacity={0.3} />
+            <line x1={70} y1={50} x2={100} y2={210} stroke="#00F0FF" strokeWidth={1.5} strokeOpacity={0.3} />
+            <line x1={100} y1={210} x2={340} y2={210} stroke="#00F0FF" strokeWidth={1.5} strokeOpacity={0.3} />
+            <line x1={340} y1={210} x2={370} y2={50} stroke="#00F0FF" strokeWidth={1.5} strokeOpacity={0.3} />
+            <line x1={370} y1={50} x2={70} y2={50} stroke="#00F0FF" strokeWidth={1.5} strokeOpacity={0.3} />
             
             {/* Spokes to center */}
-            <line x1={80} y1={70} x2={250} y2={160} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
-            <line x1={120} y1={250} x2={250} y2={160} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
-            <line x1={380} y1={250} x2={250} y2={160} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
-            <line x1={420} y1={70} x2={250} y2={160} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
+            <line x1={70} y1={50} x2={220} y2={130} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
+            <line x1={100} y1={210} x2={220} y2={130} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
+            <line x1={340} y1={210} x2={220} y2={130} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
+            <line x1={370} y1={50} x2={220} y2={130} stroke="#00F0FF" strokeWidth={2} strokeOpacity={0.6} />
           </svg>
 
           {/* Nodes */}
           {(() => {
             const nodes = [
-              { label: 'Creative', icon: PenTool, x: 80, y: 70, size: 60 },
-              { label: 'Strategy', icon: Target, x: 120, y: 250, size: 60 },
-              { label: 'CFO AI', icon: BrainCircuit, x: 250, y: 160, size: 100, highlight: true },
-              { label: 'Media', icon: Monitor, x: 380, y: 250, size: 60 },
-              { label: 'Research', icon: FileText, x: 420, y: 70, size: 60 },
+              { label: 'Creative', icon: PenTool, x: 70, y: 50, size: 50 },
+              { label: 'Strategy', icon: Target, x: 100, y: 210, size: 50 },
+              { label: 'CFO AI', icon: BrainCircuit, x: 220, y: 130, size: 85, highlight: true },
+              { label: 'Media', icon: Monitor, x: 340, y: 210, size: 50 },
+              { label: 'Research', icon: FileText, x: 370, y: 50, size: 50 },
             ];
 
             return (
@@ -312,24 +312,24 @@ function PrintStandee() {
                 {nodes.map((n, i) => (
                   <div key={i} style={{
                     position: 'absolute', top: n.y, left: n.x, transform: 'translate(-50%, -50%)',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6
                   }}>
                     <div style={{
                       width: n.size, height: n.size, borderRadius: '50%',
                       background: n.highlight ? 'linear-gradient(135deg, rgba(15,23,42,1), rgba(30,41,59,1))' : 'rgba(15,23,42,0.95)',
                       border: n.highlight ? '3px solid #00F0FF' : '2px solid rgba(0,240,255,0.5)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      boxShadow: n.highlight ? '0 0 40px rgba(0,240,255,0.7), inset 0 0 15px rgba(0,240,255,0.3)' : '0 0 15px rgba(0,240,255,0.3)',
+                      boxShadow: n.highlight ? '0 0 30px rgba(0,240,255,0.7), inset 0 0 10px rgba(0,240,255,0.3)' : '0 0 10px rgba(0,240,255,0.3)',
                     }}>
-                      <n.icon size={n.highlight ? 45 : 26} color={n.highlight ? '#fff' : '#00F0FF'} />
+                      <n.icon size={n.highlight ? 40 : 22} color={n.highlight ? '#fff' : '#00F0FF'} />
                     </div>
                     <div style={{
                       fontFamily: 'var(--font-space-grotesk), sans-serif',
-                      fontSize: n.highlight ? 20 : 14,
+                      fontSize: n.highlight ? 16 : 12,
                       fontWeight: 900,
                       color: n.highlight ? '#fff' : '#00F0FF',
-                      textShadow: n.highlight ? '0 0 10px rgba(0,0,0,1)' : '0 2px 4px rgba(0,0,0,0.8)',
-                      background: 'rgba(2,6,23,0.7)', padding: '4px 10px', borderRadius: 20, border: '1px solid rgba(0,240,255,0.2)',
+                      textShadow: n.highlight ? '0 0 8px rgba(0,0,0,1)' : '0 2px 4px rgba(0,0,0,0.8)',
+                      background: 'rgba(2,6,23,0.7)', padding: '3px 8px', borderRadius: 20, border: '1px solid rgba(0,240,255,0.2)',
                       letterSpacing: '0.05em', textTransform: 'uppercase', whiteSpace: 'nowrap'
                     }}>
                       {n.label}
@@ -341,31 +341,41 @@ function PrintStandee() {
           })()}
         </div>
 
-        {/* 4. QR & CTA BLOCK */}
-        <div style={{ marginTop: 40 }}>
+        {/* 4. PARTNER LOGOS */}
+        <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', width: 620 }}>
+          <div style={{ fontSize: 10, color: '#fff', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 8, textTransform: 'uppercase' }}>
+            ĐỒNG HÀNH & TRIỂN KHAI CÙNG
+          </div>
+          <div style={{ padding: '0 24px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <img src="/logos-strip.png" alt="Partners" style={{ maxWidth: '100%', height: 'auto', objectFit: 'contain' }} />
+          </div>
+        </div>
+
+        {/* 5. QR & CTA BLOCK */}
+        <div style={{ marginTop: 25 }}>
           <div style={{ 
-            display: 'flex', alignItems: 'center', gap: 24, background: 'linear-gradient(90deg, rgba(15,23,42,0.9), rgba(15,23,42,0.6))', 
-            padding: '16px 24px', borderRadius: 24, border: '1px solid rgba(0,240,255,0.4)', 
-            backdropFilter: 'blur(16px)', boxShadow: '0 20px 40px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,240,255,0.1)',
-            width: 600
+            display: 'flex', alignItems: 'center', gap: 20, background: 'linear-gradient(90deg, rgba(15,23,42,0.9), rgba(15,23,42,0.6))', 
+            padding: '12px 20px', borderRadius: 20, border: '1px solid rgba(0,240,255,0.4)', 
+            backdropFilter: 'blur(16px)', boxShadow: '0 15px 30px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,240,255,0.1)',
+            width: 540
           }}>
-            <div style={{ width: 120, height: 120, background: '#fff', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8, boxShadow: '0 0 40px rgba(0,240,255,0.5)' }}>
+            <div style={{ width: 100, height: 100, background: '#fff', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, boxShadow: '0 0 30px rgba(0,240,255,0.5)' }}>
               <QRCodeSVG value="https://brand-flow-hust.vercel.app/" style={{ width: '100%', height: '100%', color: '#020617' }} />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <div style={{ fontSize: 24, fontWeight: 900, color: '#fff', lineHeight: 1.3, marginBottom: 12, letterSpacing: '-0.02em', fontFamily: 'var(--font-space-grotesk), sans-serif', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: 20, fontWeight: 900, color: '#fff', lineHeight: 1.3, marginBottom: 8, letterSpacing: '-0.02em', fontFamily: 'var(--font-space-grotesk), sans-serif', textTransform: 'uppercase' }}>
                 QUÉT MÃ ĐỂ NHẬN<br/>
                 <span style={{ color: '#00F0FF' }}>BLUEPRINT MẪU</span>
               </div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 18, color: '#e2e8f0', fontWeight: 700, background: 'rgba(0,0,0,0.4)', padding: '8px 16px', borderRadius: 100, border: '1px solid rgba(255,255,255,0.1)', width: 'fit-content' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 16, color: '#e2e8f0', fontWeight: 700, background: 'rgba(0,0,0,0.4)', padding: '6px 12px', borderRadius: 100, border: '1px solid rgba(255,255,255,0.1)', width: 'fit-content' }}>
                 <span style={{ color: '#00F0FF' }}>●</span> brandflow.ai
               </div>
             </div>
           </div>
         </div>
 
-        {/* 5. PERSUASIVE FEATURES */}
-        <div style={{ marginTop: 30, display: 'flex', flexDirection: 'column', gap: 12, width: 620 }}>
+        {/* 6. PERSUASIVE FEATURES */}
+        <div style={{ marginTop: 25, display: 'flex', flexDirection: 'column', gap: 10, width: 600 }}>
           {[
             { title: 'ĐỘI NGŨ 5 AI AGENTS CHUYÊN BIỆT', desc: 'Giả lập chuẩn xác workflow agency, phản biện và tối ưu.', icon: Network },
             { title: 'TỰ ĐỘNG NGHIÊN CỨU THỊ TRƯỜNG', desc: 'Cào dữ liệu, phân tích đối thủ & tệp khách hàng tự động.', icon: Globe },
@@ -373,39 +383,29 @@ function PrintStandee() {
             { title: 'XUẤT BLUEPRINT B2B THẦN TỐC', desc: 'Chỉ mất vài phút để nhận bản thuyết trình chiến lược.', icon: FileText },
           ].map((f, i) => (
             <div key={i} style={{ 
-              display: 'flex', gap: 16, alignItems: 'center', padding: '12px 16px', 
+              display: 'flex', gap: 14, alignItems: 'center', padding: '10px 14px', 
               background: 'linear-gradient(90deg, rgba(15,23,42,0.6) 0%, rgba(15,23,42,0) 100%)',
-              borderLeft: '4px solid #00F0FF', borderRadius: '0 20px 20px 0'
+              borderLeft: '4px solid #00F0FF', borderRadius: '0 16px 16px 0'
             }}>
               <div style={{
-                width: 40, height: 40, borderRadius: 10, flexShrink: 0,
+                width: 36, height: 36, borderRadius: 8, flexShrink: 0,
                 background: 'rgba(0,240,255,0.1)', 
                 border: '1px solid rgba(0,240,255,0.4)', 
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 0 15px rgba(0,240,255,0.1)'
+                boxShadow: '0 0 12px rgba(0,240,255,0.1)'
               }}>
-                <f.icon size={20} color="#00F0FF" />
+                <f.icon size={18} color="#00F0FF" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <div style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontSize: 18, fontWeight: 900, color: '#fff', letterSpacing: '0.02em' }}>
+                <div style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', fontSize: 16, fontWeight: 900, color: '#fff', letterSpacing: '0.02em' }}>
                   {f.title}
                 </div>
-                <div style={{ fontFamily: 'var(--font-inter), sans-serif', fontSize: 14, fontWeight: 400, color: '#cbd5e1' }}>
+                <div style={{ fontFamily: 'var(--font-inter), sans-serif', fontSize: 13, fontWeight: 400, color: '#cbd5e1' }}>
                   {f.desc}
                 </div>
               </div>
             </div>
           ))}
-        </div>
-        
-        {/* 6. PARTNER LOGOS */}
-        <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', width: 620 }}>
-          <div style={{ fontSize: 10, color: '#64748b', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 12, textTransform: 'uppercase' }}>
-            ĐỒNG HÀNH & TRIỂN KHAI CÙNG
-          </div>
-          <div style={{ background: '#fff', borderRadius: 16, padding: '12px 24px', width: '100%', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center' }}>
-            <img src="/logos-strip.png" alt="Partners" style={{ maxWidth: '100%', height: 'auto', objectFit: 'contain' }} />
-          </div>
         </div>
         
       </div>
