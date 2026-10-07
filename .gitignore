@@ -1,4 +1,12 @@
 .env
 .env.*
-.env.local
-.env.test
+node_modules/
+__pycache__/
+.pytest_cache/
+frontend/dist/
+frontend/.next/
+video/out/
+*.pyc
+scratch/
+recover_temp/
+scratch_repo/

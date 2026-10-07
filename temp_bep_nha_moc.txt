@@ -1,0 +1,308 @@
+HỒ SƠ MÔ PHỎNG DOANH NGHIỆP F&B
+dành cho kiểm thử hệ thống
+BrandFlow
+Thương hiệu mô phỏng: Bếp Nhà Mộc
+Nhà hàng cơm gia đình Việt Nam · Hà Nội · 2 chi nhánh · 28 nhân sự
+
+
+Mục Lục Nội Dung
+Tổng quan doanh nghiệp
+Bối cảnh thị trường và cạnh tranh
+Chân dung doanh nghiệp
+Brand Guidelines / Quy chuẩn thương hiệu
+Customer Personas / Chân dung khách hàng mục tiêu
+Historical Campaign Archive / Lịch sử chiến dịch
+Campaign Scenarios / Kịch bản chiến dịch kiểm thử
+Bộ dữ liệu đầu vào khuyến nghị cho BrandFlow
+Tóm tắt cuối cùng
+
+
+1. Tổng Quan Doanh Nghiệp
+1.1 Thông tin cơ bản
+
+
+1.2 Sản phẩm và dịch vụ chính
+
+
+1.3 Bảng giá tham khảo
+
+
+1.4 Kênh bán hàng và doanh thu ước tính
+
+
+
+1.5 Mục tiêu kinh doanh
+
+Ngắn hạn (3–6 tháng)
+Tăng lượng đơn suất trưa ngày thường thêm 15%
+Cải thiện tỷ lệ khách văn phòng quay lại
+Giảm phụ thuộc vào các chương trình giảm giá trên app giao đồ ăn
+Xây dựng thông điệp thương hiệu nhất quán: "cơm nhà sạch, tiện, đáng tin"
+Cải thiện điểm đánh giá và số lượng review trên Google Maps
+Xây dựng lịch đăng content hàng tuần ổn định hơn
+
+Trung hạn (6–18 tháng)
+Phát triển đơn hàng trực tiếp qua Zalo và điện thoại
+Xây dựng 3–5 món chủ lực (signature dishes)
+Ra mắt gói cơm văn phòng theo tháng (subscription)
+Xây dựng cơ sở dữ liệu khách hàng cơ bản
+Ổn định chi nhánh Hà Đông trước khi mở thêm điểm mới
+
+Dài hạn (2–3 năm)
+Trở thành thương hiệu cơm Việt được nhận diện rõ ràng tại Hà Nội
+Mở rộng lên 4–5 chi nhánh mà vẫn giữ được chất lượng đồng đều
+Chuẩn hóa quy trình bếp và vận hành
+Tiến vào mảng catering doanh nghiệp vừa và nhỏ
+
+1.6 Vấn đề marketing hiện tại
+
+
+
+2. Bối Cảnh Thị Trường & Cạnh Tranh
+
+2.1 Bối cảnh ngành F&B
+Thị trường cơm văn phòng tại Hà Nội rất đông đúc và cạnh tranh cao. Nhiều quán cơm bình dân, chuỗi ăn trưa, và thương hiệu cơm healthy đang cạnh tranh trực tiếp bằng giá, tốc độ giao hàng và ưu đãi. Kênh giao đồ ăn (GrabFood, ShopeeFood) đã trở thành trụ cột doanh thu nhưng cũng là gánh nặng chi phí vì hoa hồng nền tảng cao.
+
+2.2 Đối thủ cạnh tranh trực tiếp
+
+Quán cơm văn phòng bình dân quanh khu vực Cầu Giấy, Hà Đông
+Thương hiệu cơm bowl healthy / cơm ăn kiêng
+Chuỗi cơm trưa Việt Nam (nếu có mặt tại khu vực)
+Nhà hàng gia đình nhỏ có bán trên app giao đồ ăn
+
+2.3 Đối thủ cạnh tranh gián tiếp
+
+Suất ăn từ căn- tin nội bộ doanh nghiệp
+Thức ăn tại cửa hàng tiện lợi (7- Eleven, Circle K, GS25)
+Bún, phở, mì - các món ăn thay thế bữa trưa
+Người bán cơm nhà qua nhóm Facebook / Zalo
+Flash sale giao đồ ăn từ các thương hiệu cạnh tranh về giá
+
+2.4 Xu hướng khách hàng
+
+Khách hàng thực dụng, không trung thành với một thương hiệu cụ thể
+Quyết định chủ yếu dựa vào giá, thời gian giao hàng và kích thước phần ăn
+Dễ bị thu hút bởi khuyến mãi, combo hấp dẫn của đối thủ
+Nhận diện quán qua đặc điểm "cơm sạch ở Cầu Giấy" nhiều hơn là tên thương hiệu
+Một số phân khúc ngày càng quan tâm đến nguyên liệu sạch, trình bày đẹp và câu chuyện thương hiệu
+
+2.5 Cơ hội và thách thức
+
+
+
+3. Chân Dung Doanh Nghiệp
+3.1 Câu chuyện thương hiệu
+Bếp Nhà Mộc ra đời từ một quan sát rất thực tế: nhiều nhân viên văn phòng quanh khu Cầu Giấy đang phải ăn những bữa trưa dầu mỡ, đơn điệu và không đảm bảo chất lượng. Chị Nguyễn Thị Mai Anh, người sáng lập, quyết định mở quán với một ý tưởng đơn giản: nấu cơm đúng kiểu cơm nhà - không quá cầu kỳ, không quá mặn, không ngập dầu mỡ, và có thể ăn nhiều lần trong tuần mà không chán.
+Những ngày đầu, quán sống chủ yếu nhờ khách văn phòng gần đó và truyền miệng. Giai đoạn COVID- 19 buộc quán chuyển mạnh sang giao đồ ăn và combo cơm trưa. Sau khi mở cửa trở lại, lượng khách dùng bữa tại quán hồi phục dần - nhưng kênh giao hàng vẫn giữ vai trò quan trọng trong doanh thu.
+Hiện tại, Bếp Nhà Mộc có hình ảnh ấm áp và gần gũi, nhưng định vị chưa thực sự rõ ràng. Một phần khách nhìn nhận đây là thương hiệu cơm healthy, một phần khác coi là nhà hàng gia đình, và không ít người đơn giản chỉ nhớ đây là "quán cơm sạch ở Cầu Giấy".
+
+3.2 Điểm khác biệt (so với đối thủ cùng phân khúc)
+
+Thức ăn được khách hàng nhận xét là sạch hơn và đúng chất cơm nhà hơn các quán bình dân
+Không định vị là rẻ nhất, cũng không là nhà hàng cao cấp - ở giữa và có giá trị thực
+Thực đơn quen thuộc, dễ ăn thường xuyên, không gây cảm giác ngán
+Dịch vụ có tính cá nhân hóa (nhất là với khách đặt nhóm qua Zalo)
+
+3.3 Nguồn lực hiện tại
+
+
+3.4 Hạn chế vận hành
+
+
+3.5 Hạn chế marketing
+
+
+3.6 Các giả định quan trọng (cho mục đích kiểm thử)
+
+
+Doanh nghiệp không phải startup với nguồn lực không giới hạn, cũng không phải chuỗi thương hiệu đã hoàn thiện
+Có đầy đủ sự phức tạp của một SME thực tế: dữ liệu lộn xộn, vận hành chưa chuẩn, định vị chưa rõ
+Hệ thống hỗ trợ marketing không nên đề xuất ngay các chiến dịch branding tốn kém
+Ưu tiên đề xuất: làm rõ định vị, tìm phân khúc khách hàng sinh lời nhất, đơn giản hóa thực đơn, cải thiện tỷ lệ quay lại, tạo thói quen marketing tuần
+
+
+4. . Brand Guidelines / Quy Chuẩn Thương Hiệu
+
+4.1 Tính cách thương hiệu
+
+
+
+4.2 Giọng nói thương hiệu theo từng ngữ cảnh
+
+
+4.3 Ví dụ viết đúng và viết sai
+
+
+4.4 Từ khóa bị cấm hoàn toàn
+
+
+
+4.5 Cách viết CTA (kêu gọi hành động)
+
+Nguyên tắc CTA:
+Mỗi bài chỉ có một CTA duy nhất - không yêu cầu cùng lúc "like, share, comment và đặt hàng"
+Làm cho hành động trở nên dễ dàng, không cần phải hào hứng
+Phù hợp với từng kênh: Facebook → link đặt hàng hoặc số Zalo; Zalo → reply "1" để đặt
+Không van xin: tránh "ủng hộ quán mình nhé", "đặt ủng hộ chị với"
+
+
+4.6 Quy tắc khuyến mãi
+
+
+Các loại khuyến mãi được phép:
+Tặng đồ uống kèm suất ăn
+Combo 2 người giá ưu đãi
+Ngày đặc biệt hàng tuần (ví dụ: Thứ 4 có món đặc biệt)
+Giảm giá nhóm văn phòng từ 5 người
+Ưu đãi riêng cho khách Zalo thân thiết
+Món theo mùa giới hạn
+Combo dùng thử lần đầu
+
+Các hành vi khuyến mãi bị cấm:
+Giảm cùng một món 2 tuần liên tiếp
+Giảm giá sâu hơn 25%
+Chạy khuyến mãi trong giờ cao điểm
+Giảm giá không có lý do hay dịp cụ thể
+Flash sale với đồng hồ đếm ngược giả
+Theo sát mọi khuyến mãi của đối thủ
+
+4.7 Quy tắc phản hồi khách hàng
+
+
+Quy trình xử lý phàn nàn - 3 bước:
+Nhận lỗi không biện hộ: "Dạ bếp rất tiếc về trải nghiệm lần này của bạn."
+Chuyển sang kênh riêng: "Bạn nhắn Zalo cho bếp [số] để mình hỗ trợ trực tiếp nhé."
+Đề xuất giải pháp cụ thể: hoàn tiền, đổi món, hoặc ưu tiên đơn hàng sau - không chỉ xin lỗi suông.
+
+
+4.8 Quy chuẩn hình ảnh
+
+Bảng màu thương hiệu:
+
+Quy tắc chụp ảnh:
+Chỉ dùng ánh sáng tự nhiên. Không dùng đèn flash. Chụp gần cửa sổ vào buổi sáng
+Chụp full set: cơm, món chính, rau và đồ uống trong cùng một khung hình
+Dùng nền gỗ, khay mây hoặc bát gốm. Không dùng khay nhựa
+Góc chụp hơi trên (45–60 độ) cho suất cơm. Góc ngang mắt cho canh và súp
+Không dùng filter nặng. Chỉ tăng nhẹ độ ấm (+10 nhiệt độ màu)
+Tránh nền lộn xộn - dọn sạch mặt bàn, không để lộ dây điện hay đồ linh tinh
+
+Quy tắc bố cục bài đăng:
+Mỗi loại bài có một Canva template riêng: thực đơn ngày, khuyến mãi, theo mùa, combo gia đình
+Font: một serif cho tiêu đề (Playfair Display hoặc EB Garamond), một sans cho nội dung (DM Sans hoặc Be Vietnam Pro)
+Nhãn giá dùng màu Kho nâu đỏ (#C4622D). Không dùng đỏ thuần - quá mạnh
+Tối đa 2 loại font và 3 màu mỗi bài
+Logo: nhỏ, góc dưới bên phải. Không căn giữa, không phóng to
+
+Tuyệt đối không dùng:
+Nền neon hoặc màu sắc chói
+Kết hợp đỏ- vàng (liên tưởng đồ ăn nhanh)
+Sticker hay emoji overlay dày đặc
+Ảnh ghép 4+ tấm lộn xộn
+Text trắng in hoa toàn bộ trên nền ảnh tối
+Ảnh stock hoặc ảnh AI- generated của thức ăn
+
+4.9 Quy tắc theo mùa
+
+
+
+4.10 Các quy tắc cần lưu vào RAG memory của BrandFlow
+
+Không bao giờ dùng các từ phóng đại: ngon nhất, số 1, tuyệt vời nhất
+Không tạo áp lực giả: flash sale, đừng bỏ lỡ, chỉ hôm nay
+Mỗi bài đăng chỉ có một CTA duy nhất
+Thực đơn ngày phải đăng trước 10h00 sáng mỗi ngày thường
+Xử lý phàn nàn theo 3 bước: nhận lỗi → chuyển kênh riêng → đề xuất giải pháp cụ thể
+Giảm giá app tối đa 2 lần/tháng, chỉ trong những giai đoạn thực sự chậm
+Không chạy app discount và Zalo discount cùng lúc trên cùng một sản phẩm
+Kết thúc mỗi khuyến mãi app bằng tin nhắn chuyển đổi sang đặt trực tiếp qua Zalo
+Tất cả thay đổi về giá phải được thông báo trước 1 tuần
+Không đưa ra món mới trong mùa cao điểm hay tuần bán chạy
+
+
+5. Customer Personas / Chân Dung Khách Hàng
+
+5.1 Persona 1 — Minh: Người Tối Ưu Ngày Thường
+
+
+
+5.2 Persona 2 — Lan: Người Tổ Chức Chu Đáo
+
+
+
+5.3 Persona 3 — Thảo: Người Sống Lành Mạnh Có Chủ Đích
+
+
+
+
+6. Historical Campaign Archive / Lịch Sử Chiến Dịch
+
+
+
+6.1 Quy tắc rút ra từ lịch sử chiến dịch (lưu vào BrandFlow)
+
+Không chạy ads hay khuyến mãi mà không có mục tiêu đo lường cụ thể (KPI tối thiểu: số đơn, chi phí/đơn, tỷ lệ khách mới)
+Giảm giá app chỉ dùng khi thực sự chậm, không phải chiến lược mặc định
+Tặng thêm giá trị (đồ uống, phần phụ) hiệu quả hơn cắt giảm trực tiếp
+Thực đơn ngày phải đăng đều đặn - đây là content quan trọng nhất
+Không bắt đầu kênh mới (TikTok, Instagram) nếu không có người phụ trách
+Google Maps cần quản lý chủ động - phản hồi review trong 48 giờ
+
+
+7. Campaign Scenarios / Kịch Bản Chiến Dịch Kiểm Thử
+7.1 Chiến dịch Tết — "Bữa Cơm Cuối Năm, Đừng Để Bếp Nhà Lạnh"
+
+
+
+Phân chia ngân sách
+
+Timeline chi tiết
+
+Ràng buộc vận hành QUAN TRỌNG
+
+KPI và tiêu chí đánh giá output của BrandFlow
+
+
+
+8. Bộ Dữ Liệu Đầu Vào Khuyến Nghị Cho BrandFlow
+
+8.1 Các điểm cần bổ sung (Thông tin chưa được cung cấp)
+
+
+Kết quả đo lường cụ thể từ các campaign trong quá khứ (số đơn, CAC, tỷ lệ quay lại)
+Doanh thu theo từng kênh cụ thể (chưa phân tách theo sản phẩm)
+Thông tin về chương trình khách hàng thân thiết (nếu có, dù chưa chính thức)
+Lịch sử thay đổi giá và phản ứng của khách hàng
+Số lượng đơn hàng trung bình mỗi ngày theo từng kênh
+Thông tin về đối thủ cạnh tranh trực tiếp và chiến lược của họ
+
+
+9. Tóm Tắt Cuối Cùng
+9.1 Doanh nghiệp này là ai?
+Bếp Nhà Mộc là một nhà hàng cơm gia đình Việt Nam quy mô nhỏ, hoạt động tại Hà Nội từ năm 2019 với 2 chi nhánh và 28 nhân viên. Doanh nghiệp do chủ trực tiếp điều hành, không có marketer chuyên nghiệp, phục vụ chủ yếu dân văn phòng và gia đình tại khu vực Cầu Giấy và Hà Đông với mức giá vừa phải. Doanh thu hàng tháng ước tính 600–770 triệu VND, biên lợi nhuận 8–12%.
+
+9.2 Vấn đề marketing chính là gì?
+
+Định vị thương hiệu chưa rõ - khách nhớ "quán cơm sạch" nhưng không nhớ tên thương hiệu
+Không có món chủ lực (hero product) để tạo khác biệt
+Content và hình ảnh không nhất quán, thiếu lịch đăng bài ổn định
+Phụ thuộc quá nhiều vào nền tảng giao đồ ăn - giảm biên lợi nhuận
+Không đo lường hiệu quả marketing - chạy theo cảm tính
+Dữ liệu khách hàng phân mảnh, không có CRM
+
+9.3 BrandFlow cần hỗ trợ điều gì?
+
+Làm rõ và củng cố định vị thương hiệu quanh "cơm nhà sạch, tiện, đáng tin"
+Xác định phân khúc khách hàng sinh lời nhất và tập trung nguồn lực
+Tạo lịch content tuần thực tế với ngân sách giới hạn
+Đề xuất campaign cụ thể với KPI đo lường được
+Hỗ trợ chuyển đổi khách từ app giao đồ ăn sang đặt trực tiếp qua Zalo
+Gợi ý đơn giản hóa thực đơn và phát triển món chủ lực
+Lập kế hoạch theo mùa phù hợp với ràng buộc vận hành
+
+9.4 Những điểm dùng để kiểm thử hệ thống
+
+
+9.5 Rủi ro và điểm cần chú ý khi chạy thử BrandFlow
+
+

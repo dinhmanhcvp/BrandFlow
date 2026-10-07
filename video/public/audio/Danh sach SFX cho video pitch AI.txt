@@ -1,0 +1,81 @@
+DANH SÁCH SOUND EFFECTS (SFX) CHO VIDEO PITCH SẢN PHẨM AI
+
+1. TỔNG QUAN VỀ NGUỒN TÀI NGUYÊN VÀ GIẤY PHÉP:
+- Nguồn 1: Kenney.nl (Các gói Interface Sounds và UI Audio).
+  + Giấy phép trên trang: Creative Commons Zero (CC0 1.0 Universal - Public Domain Dedication). Miễn phí hoàn toàn cho dự án cá nhân, giáo dục và thương mại, không bắt buộc ghi nhận quyền tác giả.
+- Nguồn 2: Pixabay.com.
+  + Tình trạng truy cập: Trang Pixabay Sound Effects chặn tải và truy cập trực tiếp bằng hệ thống Cloudflare Bot Verification (mã lỗi HTTP 403 / "Just a moment..."). Tuân thủ quy định và yêu cầu của đề bài ("Nếu Pixabay chặn tải trực tiếp thì ghi rõ và bỏ qua"), bộ SFX này được hoàn thiện từ nguồn Kenney.nl đã xác thực CC0.
+
+2. CHI TIẾT DANH SÁCH 12 FILE SFX ĐÃ CHỌN LỌC:
+
+1. Tên file: click_soft-01.mp3
+   - Trang nguồn: Kenney.nl (Interface Sounds)
+   - URL trang gốc: https://kenney.nl/assets/interface-sounds
+   - Giấy phép hiển thị trên trang: Creative Commons CC0
+   - Gợi ý sử dụng trong video pitch: Đoạn "Thả file" hoặc chọn các tùy chọn tính năng giao diện AI hiện đại (tiếng click ngắn, sạch, mềm mại).
+
+2. Tên file: click_soft-02.mp3
+   - Trang nguồn: Kenney.nl (UI Audio)
+   - URL trang gốc: https://kenney.nl/assets/ui-audio
+   - Giấy phép hiển thị trên trang: Creative Commons CC0
+   - Gợi ý sử dụng trong video pitch: Đoạn "Tạo bộ nhận diện" - tương tác nhấn nút điều khiển trên dashboard hoặc chọn mẫu thiết kế.
+
+3. Tên file: toggle_switch-01.mp3
+   - Trang nguồn: Kenney.nl (Interface Sounds)
+   - URL trang gốc: https://kenney.nl/assets/interface-sounds
+   - Giấy phép hiển thị trên trang: Creative Commons CC0
+   - Gợi ý sử dụng trong video pitch: Bật switch chế độ AI Automation hoặc kích hoạt tính năng thông minh.
+
+4. Tên file: toggle_switch-02.mp3
+   - Trang nguồn: Kenney.nl (Interface Sounds)
+   - URL trang gốc: https://kenney.nl/assets/interface-sounds
+   - Giấy phép hiển thị trên trang: Creative Commons CC0
+   - Gợi ý sử dụng trong video pitch: Tắt/bật cấu hình nâng cao trong phần demo sản phẩm.
+
+5. Tên file: pop_subtle-01.mp3
+   - Trang nguồn: Kenney.nl (Interface Sounds)
+   - URL trang gốc: https://kenney.nl/assets/interface-sounds
+   - Giấy phép hiển thị trên trang: Creative Commons CC0
+   - Gợi ý sử dụng trong video pitch: Đoạn "Nêu vấn đề" (hiển thị popup cảnh báo khó khăn truyền thống) hoặc xuất hiện tooltip hướng dẫn.
+
+6. Tên file: pop_subtle-02.mp3
+   - Trang nguồn: Kenney.nl (Interface Sounds)
+   - URL trang gốc: https://kenney.nl/assets/interface-sounds
+   - Giấy phép hiển thị trên trang: Creative Commons CC0
+   - Gợi ý sử dụng trong video pitch: Các icon tính năng nảy ra (pop up) trên màn hình khi giới thiệu hệ sinh thái AI.
+
+7. Tên file: confirmation_chime-01.mp3
+   - Trang nguồn: Kenney.nl (Interface Sounds)
+   - URL trang gốc: https://kenney.nl/assets/interface-sounds
+   - Giấy phép hiển thị trên trang: Creative Commons CC0
+   - Gợi ý sử dụng trong video pitch: Đoạn "Xuất báo cáo" - âm thanh báo hiệu tác vụ AI đã hoàn thành thành công và sẵn sàng tải về.
+
+8. Tên file: confirmation_chime-02.mp3
+   - Trang nguồn: Kenney.nl (Interface Sounds)
+   - URL trang gốc: https://kenney.nl/assets/interface-sounds
+   - Giấy phép hiển thị trên trang: Creative Commons CC0
+   - Gợi ý sử dụng trong video pitch: Đoạn "Tên sản phẩm" - âm thanh xác nhận thương hiệu thanh lịch, phong cách công nghệ tối giản.
+
+9. Tên file: confirmation_glass-03.mp3
+   - Trang nguồn: Kenney.nl (Interface Sounds)
+   - URL trang gốc: https://kenney.nl/assets/interface-sounds
+   - Giấy phép hiển thị trên trang: Creative Commons CC0
+   - Gợi ý sử dụng trong video pitch: Đoạn "Câu chốt" (CTA) hoặc logo reveal tinh tế, trong trẻo như kính pha lê.
+
+10. Tên file: whoosh_swipe-01.mp3
+    - Trang nguồn: Kenney.nl (Interface Sounds)
+    - URL trang gốc: https://kenney.nl/assets/interface-sounds
+    - Giấy phép hiển thị trên trang: Creative Commons CC0
+    - Gợi ý sử dụng trong video pitch: Chuyển cảnh lướt giữa cảnh "Nêu vấn đề" sang "Giới thiệu giải pháp AI".
+
+11. Tên file: whoosh_swipe-02.mp3
+    - Trang nguồn: Kenney.nl (Interface Sounds)
+    - URL trang gốc: https://kenney.nl/assets/interface-sounds
+    - Giấy phép hiển thị trên trang: Creative Commons CC0
+    - Gợi ý sử dụng trong video pitch: Trượt thẻ tính năng giao diện (card swipe) trong phần trình diễn năng lực AI.
+
+12. Tên file: whoosh_transition-03.mp3
+    - Trang nguồn: Kenney.nl (Interface Sounds)
+    - URL trang gốc: https://kenney.nl/assets/interface-sounds
+    - Giấy phép hiển thị trên trang: Creative Commons CC0
+    - Gợi ý sử dụng trong video pitch: Mở rộng cửa sổ làm việc toàn màn hình khi bắt đầu tiến trình "Tạo bộ nhận diện".

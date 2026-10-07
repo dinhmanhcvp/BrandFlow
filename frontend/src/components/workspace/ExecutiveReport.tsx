@@ -184,7 +184,7 @@ export default function ExecutiveReport() {
               <h2 className="text-teal-400 font-inter font-bold uppercase tracking-[0.2em] text-xs">Strategic Marketing Plan & Growth Thesis</h2>
             </div>
             <h1 className={`${LoraFont} text-5xl sm:text-[64px] font-bold text-white tracking-tight leading-[1.05] mb-8`}>
-              Bản Cáo Bạch<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-400">Kế Hoạch Chiến Lược</span>
+              Báo Cáo<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-400">Kế Hoạch Chiến Lược</span>
             </h1>
             <p className={`${InterFont} text-slate-300 text-lg leading-relaxed max-w-xl font-light`}>
               Tài liệu hoạch định chiến lược kinh doanh và Marketing tổng thể, được sinh tự động bởi hệ thống Multi-Agent AI (CEO, CMO, CFO, COO) dựa trên nguồn lực lõi của doanh nghiệp.

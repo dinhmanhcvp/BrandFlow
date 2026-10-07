@@ -281,7 +281,7 @@ function PrintStandee() {
         </div>
 
         {/* 3. SCHEMA - PURE 5 AGENTS NETWORK */}
-        <div style={{ position: 'relative', marginTop: 40, width: 500, height: 320, marginInline: 'auto' }}>
+        <div style={{ position: 'relative', marginTop: 15, width: 500, height: 320, marginInline: 'auto' }}>
           
           <svg width={500} height={320} style={{ position: 'absolute', inset: 0, zIndex: 1, overflow: 'visible' }}>
             {/* Outer ring */}
@@ -330,7 +330,7 @@ function PrintStandee() {
                       color: n.highlight ? '#fff' : '#00F0FF',
                       textShadow: n.highlight ? '0 0 10px rgba(0,0,0,1)' : '0 2px 4px rgba(0,0,0,0.8)',
                       background: 'rgba(2,6,23,0.7)', padding: '4px 10px', borderRadius: 20, border: '1px solid rgba(0,240,255,0.2)',
-                      letterSpacing: '0.05em', textTransform: 'uppercase'
+                      letterSpacing: '0.05em', textTransform: 'uppercase', whiteSpace: 'nowrap'
                     }}>
                       {n.label}
                     </div>
@@ -396,6 +396,16 @@ function PrintStandee() {
               </div>
             </div>
           ))}
+        </div>
+        
+        {/* 6. PARTNER LOGOS */}
+        <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', width: 620 }}>
+          <div style={{ fontSize: 10, color: '#64748b', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 12, textTransform: 'uppercase' }}>
+            ĐỒNG HÀNH & TRIỂN KHAI CÙNG
+          </div>
+          <div style={{ background: '#fff', borderRadius: 16, padding: '12px 24px', width: '100%', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center' }}>
+            <img src="/logos-strip.png" alt="Partners" style={{ maxWidth: '100%', height: 'auto', objectFit: 'contain' }} />
+          </div>
         </div>
         
       </div>

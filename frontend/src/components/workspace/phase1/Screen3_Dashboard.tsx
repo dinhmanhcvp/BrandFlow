@@ -439,7 +439,7 @@ export default function Screen3_Dashboard({ onGoToHub, onGoToNext }: { onGoToHub
          <div className="space-y-4">
            <strong className="text-white block text-sm opacity-90">{expertAnalysis.strategic_recommendation.split(/(?=\d+\))/)[0]}</strong>
            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-             {expertAnalysis.strategic_recommendation.split(/(?=\d+\))/).slice(1).map((item, idx) => (
+             {expertAnalysis.strategic_recommendation.split(/(?=\d+\))/).slice(1).map((item: string, idx: number) => (
                <div key={idx} className="flex items-start text-sm text-cyan-50 bg-cyan-950/50 p-4 rounded-xl border border-cyan-500/20 hover:border-cyan-400/50 transition-all hover:-translate-y-1 shadow-md">
                  <CheckCircle2 className="w-6 h-6 text-cyan-400 mr-3 shrink-0 mt-0.5" />
                  <span className="leading-relaxed font-medium">{item.replace(/^\d+\)\s*/, '')}</span>

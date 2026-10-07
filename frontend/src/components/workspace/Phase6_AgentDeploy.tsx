@@ -2,16 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, CheckCircle, Database, Shield, Zap, Terminal, Cpu, Network, Lock, MessageSquare, ArrowRight, Activity, Server, FileJson, Layers, RefreshCw, Layout } from 'lucide-react';
+import { Bot, CheckCircle, Database, Shield, Terminal, Cpu, Network, Lock, MessageSquare, ArrowRight, Activity, Server, FileJson, Layers, RefreshCw, Layout } from 'lucide-react';
 import { useFormStore } from '@/store/useFormStore';
 
 export default function Phase6_AgentDeploy({ onNext, onBack }: { onNext: () => void, onBack?: () => void }) {
   const [step, setStep] = useState(0);
-  const { brandDNA, wizardAnswers, businessIntent } = useFormStore();
+  const { brandDNA, wizardAnswers } = useFormStore();
   const isBepNhaMoc = brandDNA?.brand_name?.includes('Nhà Mộc') || wizardAnswers?.company_name?.includes('Nhà Mộc');
 
   useEffect(() => {
-    if (window && (window as any).__DEMO_MODE__) {
+    if (typeof window !== 'undefined' && (window as any).__DEMO_MODE__) {
       const timers = [
         setTimeout(() => setStep(1), 500),
         setTimeout(() => setStep(2), 1500),
@@ -22,7 +22,8 @@ export default function Phase6_AgentDeploy({ onNext, onBack }: { onNext: () => v
       ];
       return () => timers.forEach(clearTimeout);
     } else {
-      setStep(6);
+      const timer = setTimeout(() => setStep(6), 0);
+      return () => clearTimeout(timer);
     }
   }, []);
 
