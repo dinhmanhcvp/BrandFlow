@@ -238,8 +238,18 @@ function PrintStandee() {
       </svg>
 
       {/* ── FOREGROUND CONTENT ── */}
-      <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 40 }}>
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 24 }}>
         
+        {/* 0. PARTNER LOGOS (TOP) */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 620, marginBottom: 20 }}>
+          <div style={{ fontSize: 10, color: '#fff', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 8, textTransform: 'uppercase' }}>
+            ĐỒNG HÀNH & TRIỂN KHAI CÙNG
+          </div>
+          <div style={{ padding: '0 24px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <img src="/logos-strip.png" alt="Partners" style={{ maxWidth: '100%', height: 'auto', objectFit: 'contain' }} />
+          </div>
+        </div>
+
         {/* 1. LOGO & TAGLINE */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -341,17 +351,7 @@ function PrintStandee() {
           })()}
         </div>
 
-        {/* 4. PARTNER LOGOS */}
-        <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', width: 620 }}>
-          <div style={{ fontSize: 10, color: '#fff', letterSpacing: '0.2em', fontWeight: 700, marginBottom: 8, textTransform: 'uppercase' }}>
-            ĐỒNG HÀNH & TRIỂN KHAI CÙNG
-          </div>
-          <div style={{ padding: '0 24px', width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <img src="/logos-strip.png" alt="Partners" style={{ maxWidth: '100%', height: 'auto', objectFit: 'contain' }} />
-          </div>
-        </div>
-
-        {/* 5. QR & CTA BLOCK */}
+        {/* 4. QR & CTA BLOCK */}
         <div style={{ marginTop: 25 }}>
           <div style={{ 
             display: 'flex', alignItems: 'center', gap: 20, background: 'linear-gradient(90deg, rgba(15,23,42,0.9), rgba(15,23,42,0.6))', 
