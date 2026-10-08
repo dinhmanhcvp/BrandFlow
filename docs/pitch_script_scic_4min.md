@@ -11,8 +11,11 @@
 | 4 | Traction & Benchmark | 0:30 | 2:45 – 3:15 |
 | 5 | Business model & Roadmap | 0:15 | 3:15 – 3:30 |
 | 6 | Ask | 0:21 | 3:30 – 3:51 |
+| 7 | Kết thúc (Slogan & Website) | 0:09 | 3:51 – 4:00 |
+| Q&A 1 | Benchmark Sản phẩm | (Q&A) | - |
+| Q&A 2 | Cố vấn / Mentor | (Q&A) | - |
 
-**Tổng ~3:51** (lời nói ~2:21 + video 1:30), còn dư ~9 giây. Ước tính ở nhịp ~3,4 âm tiết/giây; hãy bấm giờ khi tập thật.
+**Tổng ~4:00** (lời nói ~2:30 + video 1:30). Ước tính ở nhịp ~3,4 âm tiết/giây; hãy bấm giờ khi tập thật.
 
 ---
 
@@ -65,7 +68,30 @@
 
 > Chúng tôi gọi năm mươi nghìn đô la vòng pre-seed, đủ mười lăm tháng vận hành; sáu mươi phần trăm cho kỹ thuật và hạ tầng AI, bốn mươi phần trăm cho thu hút khách hàng. Mười hai tháng tới: năm nghìn người dùng, năm trăm khách trả phí, hòa vốn vận hành.
 >
-> Marketing không nên là đặc quyền của doanh nghiệp lớn. BrandFlow. Your brand. In control. Xin cảm ơn.
+> Marketing không nên là đặc quyền của doanh nghiệp lớn. BrandFlow cam kết đồng hành cùng các doanh nghiệp vừa và nhỏ trên chặng đường phát triển.
+
+### SLIDE 7 — Kết thúc (3:51 – 4:00)
+
+> *[Visual DNA: Giao diện đồng bộ ngôn ngữ tiếng Việt. Logo BrandFlow chuẩn SVG ở trung tâm, dùng font chữ cách điệu. Sau đó chuyển dần sang giao diện website]*
+> 
+> Your brand. In control. Xin chân thành cảm ơn ban giám khảo!
+
+---
+
+## SLIDE PHỤC VỤ Q&A (Hỏi Đáp)
+
+### Q&A SLIDE 1 — Benchmark Sản Phẩm trên Thị Trường
+> *[Visual DNA: Bảng so sánh hoặc phân nhóm các công cụ đồng bộ thiết kế chung]*
+> - **Sản phẩm Gen AI (Tạo sinh đa dụng):** ChatGPT, Claude, Gemini, Jasper, Copy.ai.
+> - **Công cụ AI cho Marketing (Giải pháp ngách):** HubSpot AI, Anyword, Mutiny, Surfer SEO, Canva Magic Studio.
+> - **Martech (Nền tảng Marketing):** HubSpot, Salesforce Marketing Cloud, Marketo, Mailchimp.
+
+### Q&A SLIDE 2 — Đội ngũ Cố Vấn (Mentors / Advisors)
+> *[Visual DNA: Hình ảnh chuyên nghiệp và chức danh của các cố vấn, thiết kế theo format chuẩn của bộ pitch deck]*
+> - **TS. Trần Hải Ly:** Giảng viên Bộ môn Marketing và Truyền thông, Đại học Ngoại thương (FTU).
+> - **ThS. Trần Hồng Nhung:** Giảng viên Khoa Marketing, Đại học Kinh tế Quốc dân (NEU).
+> - **ThS. Trần Việt An:** Giảng viên Khoa Marketing, Đại học Kinh tế Quốc dân (NEU).
+> - **Anh Nguyễn Trọng Hoàng:** Brand Manager, Xanh SM.
 
 ---
 

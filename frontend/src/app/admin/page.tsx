@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import BenchmarkTab from './BenchmarkTab';
 
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
@@ -97,7 +98,7 @@ export default function AdminDashboard() {
  const [loading, setLoading] = useState(true);
  const [error, setError] = useState('');
  const [selectedUser, setSelectedUser] = useState<any>(null);
- const [activeTab, setActiveTab] = useState<'overview' | 'growth' | 'agents' | 'audit'>('overview');
+ const [activeTab, setActiveTab] = useState<'overview' | 'growth' | 'agents' | 'benchmark' | 'audit'>('overview');
  const router = useRouter();
 
  const getMockUserDetails = (user: any) => {
@@ -330,6 +331,7 @@ export default function AdminDashboard() {
       { key: 'overview' as const, icon: BarChart3, label: 'Overview' },
       { key: 'growth' as const, icon: TrendingUp, label: 'Growth & Traction' },
       { key: 'agents' as const, icon: Brain, label: 'AI & Features' },
+      { key: 'benchmark' as const, icon: Target, label: 'Benchmarks' },
       { key: 'audit' as const, icon: Shield, label: 'Audit Log' },
      ]).map(tab => (
       <button key={tab.key} onClick={() => setActiveTab(tab.key)}
@@ -757,6 +759,11 @@ export default function AdminDashboard() {
          </div>
         </div>
        </motion.div>
+      )}
+
+      {/* ═══════════ TAB: BENCHMARK ═══════════ */}
+      {activeTab === 'benchmark' && (
+       <BenchmarkTab key="benchmark" />
       )}
 
      </AnimatePresence>

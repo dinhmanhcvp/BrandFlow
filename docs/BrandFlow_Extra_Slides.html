@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandFlow - Additional Slides</title>
+    <!-- Thêm font chữ cách điệu (Montserrat cho tiêu đề, Inter cho nội dung) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --emerald-500: #10b981;
+            --emerald-400: #34d399;
+            --text-main: #334155;
+            --text-light: #94a3b8;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            box-sizing: border-box;
+            page-break-after: always;
+        }
+
+        /* Slide 7: Closing / Website */
+        .slide-dark {
+            background: linear-gradient(135deg, var(--slate-900) 0%, #000000 100%);
+            color: white;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-container {
+            margin-bottom: 2rem;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        /* SVG Logo Styling */
+        .logo-svg {
+            width: 180px;
+            height: auto;
+            margin-bottom: 1rem;
+            fill: var(--emerald-500);
+        }
+
+        .slogan {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ffffff, var(--emerald-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            letter-spacing: -0.02em;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+        
+        .website-mockup {
+            margin-top: 3rem;
+            font-size: 1.5rem;
+            color: var(--emerald-400);
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out 1.2s forwards;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .website-mockup::before, .website-mockup::after {
+            content: "";
+            height: 1px;
+            width: 50px;
+            background-color: var(--emerald-500);
+            opacity: 0.5;
+        }
+
+        /* Slide Q&A Styling */
+        .slide-light {
+            background-color: var(--slate-50);
+            color: var(--slate-900);
+            padding: 4rem 8rem;
+            align-items: flex-start;
+        }
+
+        .slide-light h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3rem;
+            color: var(--slate-900);
+            margin-top: 0;
+            margin-bottom: 3rem;
+            border-left: 8px solid var(--emerald-500);
+            padding-left: 1.5rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .qa-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--slate-100);
+            transition: transform 0.3s ease;
+        }
+        
+        .qa-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.1);
+        }
+
+        .qa-card h3 {
+            font-size: 1.5rem;
+            color: var(--emerald-500);
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .qa-card p {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+        
+        .qa-card .highlight {
+            font-weight: 600;
+            color: var(--slate-900);
+        }
+        
+        .qa-card .sub-text {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: 0.8rem;
+        }
+
+        /* Mentor Grid */
+        .mentor-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .mentor-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--emerald-500);
+        }
+
+        .mentor-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: var(--slate-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--emerald-500);
+            flex-shrink: 0;
+        }
+
+        .mentor-info h3 {
+            font-size: 1.6rem;
+            margin: 0 0 0.5rem 0;
+            color: var(--slate-900);
+        }
+
+        .mentor-info p {
+            font-size: 1.15rem;
+            margin: 0;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .brand-watermark {
+            position: absolute;
+            bottom: 2rem;
+            right: 3rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--slate-900);
+            opacity: 0.1;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media print {
+            .slide {
+                page-break-after: always;
+                height: 100vh !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            body { background: white; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SLIDE 7: ENDING -->
+    <div class="slide slide-dark" id="slide-7">
+        <div class="logo-container">
+            <!-- BrandFlow SVG Logo Representation -->
+            <svg class="logo-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <circle cx="12" cy="12" r="3" fill="currentColor"/>
+            </svg>
+        </div>
+        <h1 class="slogan">Your brand. In control.</h1>
+        <div class="website-mockup">
+            BRANDFLOW.AI
+        </div>
+    </div>
+
+    <!-- Q&A SLIDE 1: BENCHMARK -->
+    <div class="slide slide-light" id="slide-qa-1">
+        <h2>Benchmark Sản Phẩm Trên Thị Trường</h2>
+        <div class="content-grid">
+            <div class="qa-card">
+                <h3>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    Sản phẩm Gen AI (Tạo sinh đa dụng)
+                </h3>
+                <p><span class="highlight">ChatGPT, Claude, Gemini, Jasper, Copy.ai</span></p>
+                <p class="sub-text">Khác biệt: BrandFlow không chỉ tạo sinh mà tích hợp luồng kiểm toán ngân sách & phản biện bắt buộc.</p>
+            </div>
+            
+            <div class="qa-card">
+                <h3>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                    Công cụ AI cho Marketing (Giải pháp ngách)
+                </h3>
+                <p><span class="highlight">HubSpot AI, Anyword, Mutiny, Surfer SEO, Canva Magic Studio</span></p>
+                <p class="sub-text">Khác biệt: BrandFlow quy hoạch toàn cảnh chiến lược thay vì chỉ giải quyết 1 điểm chạm (SEO/Copy/Design).</p>
+            </div>
+
+            <div class="qa-card">
+                <h3>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"></path><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"></path></svg>
+                    Martech (Nền tảng Marketing)
+                </h3>
+                <p><span class="highlight">HubSpot, Salesforce Marketing Cloud, Marketo, Mailchimp</span></p>
+                <p class="sub-text">Khác biệt: BrandFlow đóng vai trò "Bộ não chiến lược" (Multi-Agent) thay vì hệ thống lưu trữ và tự động hóa.</p>
+            </div>
+        </div>
+        <div class="brand-watermark">BRANDFLOW</div>
+    </div>
+
+    <!-- Q&A SLIDE 2: MENTORS -->
+    <div class="slide slide-light" id="slide-qa-2">
+        <h2>Đội ngũ Cố Vấn (Mentors / Advisors)</h2>
+        <div class="mentor-grid">
+            
+            <div class="mentor-card">
+                <div class="mentor-avatar">🎓</div>
+                <div class="mentor-info">
+                    <h3>TS. Trần Hải Ly</h3>
+                    <p>Giảng viên Bộ môn Marketing & Truyền thông<br><strong>Đại học Ngoại thương (FTU)</strong></p>
+                </div>
+            </div>
+
+            <div class="mentor-card">
+                <div class="mentor-avatar">🎓</div>
+                <div class="mentor-info">
+                    <h3>ThS. Trần Hồng Nhung</h3>
+                    <p>Giảng viên Khoa Marketing<br><strong>Đại học Kinh tế Quốc dân (NEU)</strong></p>
+                </div>
+            </div>
+
+            <div class="mentor-card">
+                <div class="mentor-avatar">🎓</div>
+                <div class="mentor-info">
+                    <h3>ThS. Trần Việt An</h3>
+                    <p>Giảng viên Khoa Marketing<br><strong>Đại học Kinh tế Quốc dân (NEU)</strong></p>
+                </div>
+            </div>
+
+            <div class="mentor-card">
+                <div class="mentor-avatar">💼</div>
+                <div class="mentor-info">
+                    <h3>Anh Nguyễn Trọng Hoàng</h3>
+                    <p>Brand Manager<br><strong>Xanh SM</strong></p>
+                </div>
+            </div>
+
+        </div>
+        <div class="brand-watermark">BRANDFLOW</div>
+    </div>
+
+</body>
+</html>
