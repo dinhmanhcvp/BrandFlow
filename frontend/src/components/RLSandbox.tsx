@@ -34,14 +34,14 @@ export default function RLSandbox() {
  
  setIsExecuting(true);
  setExecutorOutput('');
- setSystemLog('Agent is retrieving context rules from Knowledge Base...');
+ setSystemLog('Trợ lý AI is retrieving context rules from Knowledge Base...');
  
  try {
  // 1. Fetch relevant rules via RAG (Mock)
  const relevantRules = await getRelevantRules(task);
  setAppliedRules(relevantRules);
  
- setSystemLog(`Agent is generating output with ${relevantRules.length} rules injected...`);
+ setSystemLog(`Trợ lý AI is generating output with ${relevantRules.length} rules injected...`);
  
  // 2. Run Executor
  const output = await runExecutorAgent(task, relevantRules);
@@ -60,19 +60,19 @@ export default function RLSandbox() {
  if (!feedback.trim() || !executorOutput) return;
  
  setIsLearning(true);
- setSystemLog(clarifyingQuestion ? 'Learner Agent is analyzing your clarification...' : 'Learner Agent is analyzing feedback and original output...');
+ setSystemLog(clarifyingQuestion ? 'Learner Trợ lý AI is analyzing your clarification...' : 'Learner Trợ lý AI is analyzing feedback and original output...');
  
  try {
  const fullFeedback = feedbackContext ? `${feedbackContext} DETAILS: ${feedback}` : feedback;
  
- // 1. Run Learner Agent
+ // 1. Run Learner Trợ lý AI
  const distilledResult = await runLearnerAgent(executorOutput, fullFeedback) as any;
  
  if (distilledResult.needs_clarification) {
  setClarifyingQuestion(distilledResult.clarifying_question);
  setFeedbackContext(fullFeedback);
  setFeedback('');
- setSystemLog('Learner Agent needs more clarification.');
+ setSystemLog('Learner Trợ lý AI needs more clarification.');
  return;
  }
  
@@ -137,7 +137,7 @@ export default function RLSandbox() {
  <section className="bg-linear-surface p-5 rounded-lg shadow-sm border border-linear-border">
  <h2 className="text-lg font-semibold mb-3 flex items-center gap-2 text-foreground">
  <span className="bg-slate-800 text-white w-6 h-6 rounded-full inline-flex items-center justify-center text-xs">A</span> 
- Executor Agent Task
+ Executor Trợ lý AI Task
  </h2>
  <textarea 
  className="w-full border border-linear-border rounded p-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none resize-none"
@@ -177,7 +177,7 @@ export default function RLSandbox() {
  {clarifyingQuestion && (
  <div className="bg-amber-50 border border-amber-200 p-4 mb-4 rounded-md text-sm text-amber-800 shadow-sm relative">
  <div className="absolute top-0 left-0 bottom-0 w-1 bg-amber-500 rounded-l-md"></div>
- <span className="font-bold mr-2 text-amber-900">🤖 Learner Agent:</span> 
+ <span className="font-bold mr-2 text-amber-900">🤖 Learner Trợ lý AI:</span> 
  {clarifyingQuestion}
  </div>
  )}
@@ -203,7 +203,7 @@ export default function RLSandbox() {
  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
  </svg>
  )}
- Send to Learner Agent
+ Send to Learner Trợ lý AI
  </button>
  </div>
  </section>

@@ -7,603 +7,603 @@ import { Loader2, Plus, PlaySquare, Globe, MessageSquare, PieChart, Send, Sparkl
 import DNAContextBanner from '@/components/shared/DNAContextBanner';
 
 export default function ContentLabPage() {
-  const { t } = useLanguage();
-  const { wizardAnswers, brandDNA, extractedAnswers, intakeAnalysis } = useFormStore();
-  
-  const [urlInput, setUrlInput] = useState('');
-  const [chatInput, setChatInput] = useState('');
-  const [isIngesting, setIsIngesting] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  
-  const [sources, setSources] = useState<any[]>([]);
-  const [selectedSourceIdx, setSelectedSourceIdx] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<'report' | 'chat'>('report');
+ const { t } = useLanguage();
+ const { wizardAnswers, brandDNA, extractedAnswers, intakeAnalysis } = useFormStore();
+ 
+ const [urlInput, setUrlInput] = useState('');
+ const [chatInput, setChatInput] = useState('');
+ const [isIngesting, setIsIngesting] = useState(false);
+ const [isAnalyzing, setIsAnalyzing] = useState(false);
+ 
+ const [sources, setSources] = useState<any[]>([]);
+ const [selectedSourceIdx, setSelectedSourceIdx] = useState<number | null>(null);
+ const [activeTab, setActiveTab] = useState<'report' | 'chat'>('report');
 
-  const handleIngest = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!urlInput.trim()) return;
+ const handleIngest = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!urlInput.trim()) return;
 
-    setIsIngesting(true);
-    try {
-      // DEMO MOCK: Bếp Nhà Mộc
-      const companyName = wizardAnswers?.["Tên doanh nghiệp"] || wizardAnswers?.company_name || "";
-      const isBepNhaMoc = companyName.toLowerCase().includes('bếp nhà mộc') || companyName.toLowerCase().includes('bep nha moc');
-      if (isBepNhaMoc) {
-        await new Promise(r => setTimeout(r, 1200));
-        const bnmMockSrc = {
-          url: urlInput,
-          platform: urlInput.includes('youtube') || urlInput.includes('youtu.be') ? 'youtube' : 'website',
-          title: "Bếp Nhà Mộc - Bài Phân Tích Thực Chiến",
-          description: "Phân tích chiến lược truyền thông từ đối thủ cạnh tranh trực tiếp.",
-          content: "Dữ liệu được bóc tách từ chiến dịch của đối thủ. Phù hợp để làm benchmarking cho Bếp Nhà Mộc."
-        };
-        setSources((prev) => {
-          const next = [...prev, bnmMockSrc];
-          setSelectedSourceIdx(next.length - 1);
-          return next;
-        });
-        setUrlInput('');
-        setIsIngesting(false);
-        return;
-      }
-
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://brandflow-jfha.onrender.com';
-      const token = typeof window !== 'undefined' ? localStorage.getItem('brandflow_token') : null;
-      const res = await fetch(`${API_URL}/api/content-lab/ingest`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-        },
-        body: JSON.stringify({ url: urlInput }),
-      });
-      
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.detail || `HTTP Error ${res.status}`);
-      }
-      
-      const data = await res.json();
-      if (data.status === 'success') {
-        const newSrc = data.data;
-        setSources((prev) => {
-          const next = [...prev, newSrc];
-          setSelectedSourceIdx(next.length - 1);
-          return next;
-        });
-        setUrlInput('');
-      } else {
-        alert("Lỗi: " + (data.detail || data.message));
-      }
-    } catch (err: any) {
-      alert(`Lỗi Ingest: ${err.message || 'Lỗi kết nối Server'}`);
-    } finally {
-      setIsIngesting(false);
-    }
-  };
-
-  const handleAnalyzeVibe = async (targetIdx: number | null = selectedSourceIdx) => {
-    const idx = targetIdx !== null ? targetIdx : (selectedSourceIdx !== null ? selectedSourceIdx : (sources.length > 0 ? 0 : null));
-    if (idx === null || sources.length === 0) return;
-    
-    setIsAnalyzing(true);
-    const targetSource = sources[idx];
-    
-    try {
-      // DEMO MOCK: Bếp Nhà Mộc
-      const companyName = wizardAnswers?.["Tên doanh nghiệp"] || wizardAnswers?.company_name || "";
-      const isBepNhaMoc = companyName.toLowerCase().includes('bếp nhà mộc') || companyName.toLowerCase().includes('bep nha moc');
-      if (isBepNhaMoc) {
-        await new Promise(r => setTimeout(r, 2000));
-        const bnmMockReport = {
-          vibe_summary: 'Chữa lành, Ấm cúng & Chân thành',
-          vibe_keywords: ['Mindfulness', 'Heritage', 'Organic', 'Stress-relief'],
-          vibe_analysis: 'Nội dung sử dụng ngôn ngữ giàu cảm xúc, tập trung vào việc khơi gợi các giác quan (mùi khói bếp, vị ngọt của rau củ) để tạo cảm giác "về nhà".',
-          vibe_and_tone: 'Ấm áp, chân thành, xoa dịu tâm hồn.',
-          visual_style: 'Rustic & Warm Tone',
-          visual_colors: ['Amber Wood', 'Forest Green', 'Warm Yellow'],
-          visual_analysis: 'Sử dụng ánh sáng vàng ấm, background gỗ mộc và các góc chụp cận cảnh chất liệu tự nhiên, tạo độ tin cậy và cảm giác an toàn.',
-          copywriting_hooks: [
-            'Bắt đầu bằng một kỷ niệm quen thuộc thuở ấu thơ.',
-            'Nêu bật sự mệt mỏi của cuộc sống văn phòng để tạo sự đồng cảm.',
-            'Kêu gọi hành động nhẹ nhàng: "Ghé Bếp, uống bát canh cho mát lòng."'
-          ],
-          target_audience: [
-            'Dân văn phòng đang gặp tình trạng Burnout (25-35 tuổi).',
-            'Các cặp đôi/gia đình trẻ tìm kiếm không gian yên tĩnh cuối tuần.',
-            'Chuyên gia, Quản lý cấp trung cần nơi tiếp khách mang tính văn hóa.'
-          ],
-          learning_actions: [
-            'Thử nghiệm chuỗi Video ASMR âm thanh nấu ăn mộc mạc trên TikTok.',
-            'Ra mắt chuyên mục "Câu chuyện Thực Khách" trên Fanpage.',
-            'Thiết kế lại Menu theo phong cách viết tay truyền thống.'
-          ],
-          community_feedback: {
-            sentiment: "Tích cực & Xúc động",
-            key_themes: ["Nhớ nhà/nhớ quê", "Hỏi địa chỉ/giá", "Khen hình ảnh mộc mạc"],
-            audience_quotes: ["Xem video xong muốn về quê ăn cơm mẹ nấu quá", "Quán ở đâu vậy ạ? Nhìn chill quá!"]
-          },
-          deep_transcript_analysis: [
-            "Giọng đọc trầm ấm, nhịp điệu chậm (ASMR) tạo cảm giác healing.",
-            "Không dùng từ ngữ giật tít, thay vào đó là lối kể chuyện rỉ rả tâm tình."
-          ]
-        };
-        setSources((prev) => {
-          const next = [...prev];
-          next[idx] = {
-            ...next[idx],
-            report: bnmMockReport
-          };
-          return next;
-        });
-        setIsAnalyzing(false);
-        return;
-      }
-
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://brandflow-jfha.onrender.com';
-      const token = typeof window !== 'undefined' ? localStorage.getItem('brandflow_token') : null;
-      const res = await fetch(`${API_URL}/api/content-lab/analyze`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-        },
-        body: JSON.stringify({ 
-          scraped_data: targetSource,
-          business_context: {
-            ...wizardAnswers,
-            // Merge intake analysis for rich strategic context
-            ...(intakeAnalysis?.expert_business_analysis || {}),
-          },
-          brand_dna: {
-            ...brandDNA,
-            // Enrich with intake analysis fields if available
-            ...(intakeAnalysis ? {
-              financial_health: intakeAnalysis.expert_business_analysis?.financial_health,
-              strategic_recommendation: intakeAnalysis.expert_business_analysis?.strategic_recommendation,
-              competitive_landscape: intakeAnalysis.expert_business_analysis?.competitive_landscape,
-            } : {}),
-          },
-          extracted_answers: extractedAnswers
-        }),
-      });
-      
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.detail || `HTTP Error ${res.status}`);
-      }
-      
-      const data = await res.json();
-      if (data.status === 'success') {
-        setSources((prev) => {
-          const next = [...prev];
-          next[idx] = {
-            ...next[idx],
-            report: data.report
-          };
-          return next;
-        });
-      } else {
-        alert("Lỗi: " + (data.detail || data.message));
-      }
-    } catch (err: any) {
-      alert(`Lỗi Analyze: ${err.message || 'Lỗi kết nối Server'}`);
-    } finally {
-      setIsAnalyzing(false);
-    }
-  };
-
-  const handleDeleteSource = (idxToDelete: number, e: React.MouseEvent) => {
-    e.stopPropagation();
+  setIsIngesting(true);
+  try {
+   // DEMO MOCK: Bếp Nhà Mộc
+   const companyName = wizardAnswers?.["Tên doanh nghiệp"] || wizardAnswers?.company_name || "";
+   const isBepNhaMoc = companyName.toLowerCase().includes('bếp nhà mộc') || companyName.toLowerCase().includes('bep nha moc');
+   if (isBepNhaMoc) {
+    await new Promise(r => setTimeout(r, 1200));
+    const bnmMockSrc = {
+     url: urlInput,
+     platform: urlInput.includes('youtube') || urlInput.includes('youtu.be') ? 'youtube' : 'website',
+     title: "Bếp Nhà Mộc - Bài Phân Tích Thực Chiến",
+     description: "Phân tích chiến lược truyền thông từ đối thủ cạnh tranh trực tiếp.",
+     content: "Dữ liệu được bóc tách từ chiến dịch của đối thủ. Phù hợp để làm benchmarking cho Bếp Nhà Mộc."
+    };
     setSources((prev) => {
-      const next = prev.filter((_, idx) => idx !== idxToDelete);
-      if (selectedSourceIdx === idxToDelete) {
-        setSelectedSourceIdx(next.length > 0 ? Math.max(0, idxToDelete - 1) : null);
-      } else if (selectedSourceIdx !== null && selectedSourceIdx > idxToDelete) {
-        setSelectedSourceIdx(selectedSourceIdx - 1);
-      }
-      return next;
+     const next = [...prev, bnmMockSrc];
+     setSelectedSourceIdx(next.length - 1);
+     return next;
     });
-  };
+    setUrlInput('');
+    setIsIngesting(false);
+    return;
+   }
 
-  const activeSource = selectedSourceIdx !== null && sources[selectedSourceIdx] ? sources[selectedSourceIdx] : null;
-  const currentReport = activeSource ? activeSource.report : null;
+   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://brandflow-jfha.onrender.com';
+   const token = typeof window !== 'undefined' ? localStorage.getItem('brandflow_token') : null;
+   const res = await fetch(`${API_URL}/api/content-lab/ingest`, {
+    method: 'POST',
+    headers: { 
+     'Content-Type': 'application/json',
+     ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    },
+    body: JSON.stringify({ url: urlInput }),
+   });
+   
+   if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.detail || `HTTP Error ${res.status}`);
+   }
+   
+   const data = await res.json();
+   if (data.status === 'success') {
+    const newSrc = data.data;
+    setSources((prev) => {
+     const next = [...prev, newSrc];
+     setSelectedSourceIdx(next.length - 1);
+     return next;
+    });
+    setUrlInput('');
+   } else {
+    alert("Lỗi: " + (data.detail || data.message));
+   }
+  } catch (err: any) {
+   alert(`Lỗi Ingest: ${err.message || 'Lỗi kết nối Server'}`);
+  } finally {
+   setIsIngesting(false);
+  }
+ };
 
-  return (
-    <div className="h-[calc(100vh-64px)] w-full flex flex-col p-2 md:p-6 bg-transparent overflow-hidden">
-      <DNAContextBanner />
-      <div className="flex-1 flex gap-4 overflow-hidden">
-      {/* LEFT PANE: Sources */}
-      <div className="w-1/3 min-w-[320px] max-w-[400px] section-card flex flex-col relative overflow-hidden">
-        
-        <div className="p-5 border-b border-linear-border/30 flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-bold text-foreground flex items-center">
-              <Sparkles className="w-5 h-5 mr-2 text-cyan-400" /> Content Sources
-            </h2>
-            <p className="text-xs text-linear-text-muted mt-1">Quản lý các tư liệu cần phân tích.</p>
-          </div>
-        </div>
-        
-        <div className="p-5 border-b border-linear-border/30 bg-black/5 dark:bg-white/5">
-          <form onSubmit={handleIngest} className="flex flex-col gap-3">
-            <input 
-              type="url"
-              placeholder="Paste Youtube, TikTok, Facebook, Website URL..."
-              className="w-full px-4 py-2.5 text-sm bg-background/50 border border-linear-border/50 rounded-xl text-foreground placeholder:text-linear-text-muted focus:outline-none focus:ring-2 focus:ring-cyan-500/50 backdrop-blur-sm transition-all"
-              value={urlInput}
-              onChange={(e) => setUrlInput(e.target.value)}
-              required
-            />
-            <button 
-              type="submit" 
-              disabled={isIngesting}
-              className="btn-primary w-full"
-            >
-              {isIngesting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
-              {isIngesting ? "Đang xử lý dữ liệu..." : "Thêm Source"}
-            </button>
-          </form>
-        </div>
+ const handleAnalyzeVibe = async (targetIdx: number | null = selectedSourceIdx) => {
+  const idx = targetIdx !== null ? targetIdx : (selectedSourceIdx !== null ? selectedSourceIdx : (sources.length > 0 ? 0 : null));
+  if (idx === null || sources.length === 0) return;
+  
+  setIsAnalyzing(true);
+  const targetSource = sources[idx];
+  
+  try {
+   // DEMO MOCK: Bếp Nhà Mộc
+   const companyName = wizardAnswers?.["Tên doanh nghiệp"] || wizardAnswers?.company_name || "";
+   const isBepNhaMoc = companyName.toLowerCase().includes('bếp nhà mộc') || companyName.toLowerCase().includes('bep nha moc');
+   if (isBepNhaMoc) {
+    await new Promise(r => setTimeout(r, 2000));
+    const bnmMockReport = {
+     vibe_summary: 'Chữa lành, Ấm cúng & Chân thành',
+     vibe_keywords: ['Mindfulness', 'Heritage', 'Organic', 'Stress-relief'],
+     vibe_analysis: 'Nội dung sử dụng ngôn ngữ giàu cảm xúc, tập trung vào việc khơi gợi các giác quan (mùi khói bếp, vị ngọt của rau củ) để tạo cảm giác "về nhà".',
+     vibe_and_tone: 'Ấm áp, chân thành, xoa dịu tâm hồn.',
+     visual_style: 'Rustic & Warm Tone',
+     visual_colors: ['Amber Wood', 'Forest Green', 'Warm Yellow'],
+     visual_analysis: 'Sử dụng ánh sáng vàng ấm, background gỗ mộc và các góc chụp cận cảnh chất liệu tự nhiên, tạo độ tin cậy và cảm giác an toàn.',
+     copywriting_hooks: [
+      'Bắt đầu bằng một kỷ niệm quen thuộc thuở ấu thơ.',
+      'Nêu bật sự mệt mỏi của cuộc sống văn phòng để tạo sự đồng cảm.',
+      'Kêu gọi hành động nhẹ nhàng: "Ghé Bếp, uống bát canh cho mát lòng."'
+     ],
+     target_audience: [
+      'Dân văn phòng đang gặp tình trạng Burnout (25-35 tuổi).',
+      'Các cặp đôi/gia đình trẻ tìm kiếm không gian yên tĩnh cuối tuần.',
+      'Chuyên gia, Quản lý cấp trung cần nơi tiếp khách mang tính văn hóa.'
+     ],
+     learning_actions: [
+      'Thử nghiệm chuỗi Video ASMR âm thanh nấu ăn mộc mạc trên TikTok.',
+      'Ra mắt chuyên mục "Câu chuyện Thực Khách" trên Fanpage.',
+      'Thiết kế lại Menu theo phong cách viết tay truyền thống.'
+     ],
+     community_feedback: {
+      sentiment: "Tích cực & Xúc động",
+      key_themes: ["Nhớ nhà/nhớ quê", "Hỏi địa chỉ/giá", "Khen hình ảnh mộc mạc"],
+      audience_quotes: ["Xem video xong muốn về quê ăn cơm mẹ nấu quá", "Quán ở đâu vậy ạ? Nhìn chill quá!"]
+     },
+     deep_transcript_analysis: [
+      "Giọng đọc trầm ấm, nhịp điệu chậm (ASMR) tạo cảm giác healing.",
+      "Không dùng từ ngữ giật tít, thay vào đó là lối kể chuyện rỉ rả tâm tình."
+     ]
+    };
+    setSources((prev) => {
+     const next = [...prev];
+     next[idx] = {
+      ...next[idx],
+      report: bnmMockReport
+     };
+     return next;
+    });
+    setIsAnalyzing(false);
+    return;
+   }
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar">
-          {sources.length === 0 ? (
-            <div className="text-center text-sm text-linear-text-muted mt-12 flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full bg-linear-surface border border-linear-border flex items-center justify-center mb-4 opacity-50">
-                <Search className="w-6 h-6" />
-              </div>
-              <p>Chưa có dữ liệu.</p>
-              <p className="text-xs mt-1">Dán URL vào ô trên để bắt đầu.</p>
-            </div>
-          ) : (
-            sources.map((src, idx) => (
-              <div 
-                key={idx} 
-                onClick={() => setSelectedSourceIdx(idx)}
-                className={`group p-3 border rounded-xl shadow-sm backdrop-blur-md transition-all duration-300 cursor-pointer relative overflow-hidden ${
-                  selectedSourceIdx === idx 
-                    ? 'bg-background/90 border-cyan-500/50 shadow-cyan-500/5' 
-                    : 'bg-background/40 hover:bg-background/80 border-linear-border/50 hover:border-cyan-500/30'
-                }`}
-              >
-                <div className={`absolute left-0 top-0 bottom-0 w-1 bg-cyan-500 transition-opacity ${
-                  selectedSourceIdx === idx ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                }`}></div>
-                
-                {/* Delete Button */}
-                <button 
-                  onClick={(e) => handleDeleteSource(idx, e)}
-                  className="absolute right-2 top-2 p-1.5 rounded-lg text-linear-text-muted hover:text-red-400 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all z-20"
-                  title="Xóa Source"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
+   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://brandflow-jfha.onrender.com';
+   const token = typeof window !== 'undefined' ? localStorage.getItem('brandflow_token') : null;
+   const res = await fetch(`${API_URL}/api/content-lab/analyze`, {
+    method: 'POST',
+    headers: { 
+     'Content-Type': 'application/json',
+     ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    },
+    body: JSON.stringify({ 
+     scraped_data: targetSource,
+     business_context: {
+      ...wizardAnswers,
+      // Merge intake analysis for rich strategic context
+      ...(intakeAnalysis?.expert_business_analysis || {}),
+     },
+     brand_dna: {
+      ...brandDNA,
+      // Enrich with intake analysis fields if available
+      ...(intakeAnalysis ? {
+       financial_health: intakeAnalysis.expert_business_analysis?.financial_health,
+       strategic_recommendation: intakeAnalysis.expert_business_analysis?.strategic_recommendation,
+       competitive_landscape: intakeAnalysis.expert_business_analysis?.competitive_landscape,
+      } : {}),
+     },
+     extracted_answers: extractedAnswers
+    }),
+   });
+   
+   if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.detail || `HTTP Error ${res.status}`);
+   }
+   
+   const data = await res.json();
+   if (data.status === 'success') {
+    setSources((prev) => {
+     const next = [...prev];
+     next[idx] = {
+      ...next[idx],
+      report: data.report
+     };
+     return next;
+    });
+   } else {
+    alert("Lỗi: " + (data.detail || data.message));
+   }
+  } catch (err: any) {
+   alert(`Lỗi Analyze: ${err.message || 'Lỗi kết nối Server'}`);
+  } finally {
+   setIsAnalyzing(false);
+  }
+ };
 
-                <div className="flex items-start gap-3 pl-1">
-                  {src.thumbnail_url && (
-                    <img src={src.thumbnail_url} alt="thumbnail" className="w-16 h-16 object-cover rounded-lg shadow-sm border border-linear-border/30" />
-                  )}
-                  <div className="flex-1 min-w-0 py-0.5">
-                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-linear-text-muted mb-1 tracking-wider uppercase">
-                      {src.platform === 'youtube' ? <PlaySquare className="w-3.5 h-3.5 text-red-500" /> : src.platform === 'tiktok' ? <Share2 className="w-3.5 h-3.5 text-pink-500" /> : src.platform === 'facebook' ? <MessageSquare className="w-3.5 h-3.5 text-blue-500" /> : <Globe className="w-3.5 h-3.5 text-emerald-500" />}
-                      <span>{src.platform}</span>
-                    </div>
-                    <h4 className="text-sm font-semibold text-foreground truncate group-hover:text-cyan-400 transition-colors pr-6">{src.title || "Untitled Document"}</h4>
-                    <p className="text-xs text-linear-text-muted line-clamp-1 mt-1">{src.description || src.content?.substring(0, 80) + "..."}</p>
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
+ const handleDeleteSource = (idxToDelete: number, e: React.MouseEvent) => {
+  e.stopPropagation();
+  setSources((prev) => {
+   const next = prev.filter((_, idx) => idx !== idxToDelete);
+   if (selectedSourceIdx === idxToDelete) {
+    setSelectedSourceIdx(next.length > 0 ? Math.max(0, idxToDelete - 1) : null);
+   } else if (selectedSourceIdx !== null && selectedSourceIdx > idxToDelete) {
+    setSelectedSourceIdx(selectedSourceIdx - 1);
+   }
+   return next;
+  });
+ };
 
-      {/* RIGHT PANE: Analysis / Chat */}
-      <div className="flex-1 flex flex-col bg-linear-surface/60 backdrop-blur-2xl border border-linear-border/50 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] relative overflow-hidden">
-        
-        {/* Animated Tabs */}
-        <div className="flex border-b border-linear-border/30 px-6 pt-5 gap-8 bg-black/5 dark:bg-white/5">
-          <button 
-            className={`pb-4 px-2 text-sm font-bold tracking-wide flex items-center transition-all relative ${activeTab === 'report' ? 'text-cyan-400' : 'text-linear-text-muted hover:text-foreground'}`}
-            onClick={() => setActiveTab('report')}
-          >
-            <PieChart className="w-4 h-4 mr-2" /> MARKETING REPORT
-            {activeTab === 'report' && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-400 rounded-t-full shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
-            )}
-          </button>
-          <button 
-            className={`pb-4 px-2 text-sm font-bold tracking-wide flex items-center transition-all relative ${activeTab === 'chat' ? 'text-cyan-400' : 'text-linear-text-muted hover:text-foreground'}`}
-            onClick={() => setActiveTab('chat')}
-          >
-            <MessageSquare className="w-4 h-4 mr-2" /> NOTEBOOK CHAT
-            {activeTab === 'chat' && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-400 rounded-t-full shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
-            )}
-          </button>
-        </div>
+ const activeSource = selectedSourceIdx !== null && sources[selectedSourceIdx] ? sources[selectedSourceIdx] : null;
+ const currentReport = activeSource ? activeSource.report : null;
 
-        <div className="flex-1 overflow-y-auto p-6 md:p-10 no-scrollbar relative">
-          {/* Subtle Background Elements in the Workspace */}
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-[100px] pointer-events-none"></div>
-          
-          {sources.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-linear-text-muted relative z-10">
-              <div className="w-24 h-24 mb-6 rounded-3xl bg-linear-surface border border-linear-border/50 flex items-center justify-center shadow-lg transform rotate-3">
-                <BrainCircuit className="w-12 h-12 text-cyan-500/50" />
-              </div>
-              <h3 className="text-xl font-bold text-foreground mb-2">Content Intelligence</h3>
-              <p className="max-w-md text-center text-sm">Vui lòng nạp tối thiểu một Source ở cột bên trái để Hệ thống Agent bắt đầu đọc hiểu và bóc tách dữ liệu chiến lược.</p>
-            </div>
-          ) : activeTab === 'report' ? (
-            <div className="max-w-5xl mx-auto w-full relative z-10">
-              {!currentReport ? (
-                <div className="flex flex-col items-center justify-center py-32 animate-in fade-in duration-700">
-                  <div className="w-20 h-20 mb-8 rounded-full bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-500/30">
-                    <Sparkles className="w-8 h-8 text-cyan-400" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-foreground mb-4">Dữ liệu đã sẵn sàng</h2>
-                  <p className="text-linear-text-muted mb-8 text-center max-w-lg">
-                    {activeSource ? `Sẵn sàng phân tích nguồn: "${activeSource.title}"` : "Hệ thống Multi-Agent đã sẵn sàng đọc hiểu và phân tích chiến lược."}
-                  </p>
-                  <button 
-                    onClick={() => handleAnalyzeVibe(selectedSourceIdx)}
-                    disabled={isAnalyzing}
-                    className="px-8 py-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-full font-bold shadow-lg shadow-cyan-500/20 hover:scale-105 transition-all flex items-center disabled:opacity-50 disabled:hover:scale-100"
-                  >
-                    {isAnalyzing ? (
-                      <><Loader2 className="w-5 h-5 mr-3 animate-spin" /> Đang dùng AI phân tích Vibe...</>
-                    ) : (
-                      <>Khởi chạy Phân tích Chiến lược <ChevronRight className="w-5 h-5 ml-2" /></>
-                    )}
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
-                  <div className="flex justify-between items-center border-b border-linear-border/20 pb-4">
-                    <div>
-                      <h1 className="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-2">Báo cáo Phân tích Vibe Marketing</h1>
-                      <p className="text-xs text-linear-text-muted flex items-center gap-1">
-                        <span>Nguồn: </span>
-                        <span className="font-semibold text-foreground/80 truncate max-w-md">"{activeSource?.title}"</span>
-                      </p>
-                    </div>
-                    {/* Re-analyze Button */}
-                    <button
-                      onClick={() => handleAnalyzeVibe(selectedSourceIdx)}
-                      disabled={isAnalyzing}
-                      className="flex items-center gap-2 px-4 py-2 text-xs font-bold bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-xl transition-all disabled:opacity-50 shadow-sm"
-                      title="Phân tích lại nguồn này"
-                    >
-                      {isAnalyzing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
-                      Phân tích lại
-                    </button>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Vibe & Tone */}
-                    <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-cyan-500/30 hover:shadow-cyan-500/5 transition-all duration-300 flex flex-col">
-                      <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><PieChart className="w-20 h-20" /></div>
-                      <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
-                        <span className="w-2 h-2 rounded-full bg-cyan-400 mr-2 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></span> Vibe & Tone Định Vị
-                      </h3>
-                      {currentReport.vibe_summary ? (
-                        <div className="relative z-10 flex-1 flex flex-col gap-3">
-                          <p className="text-sm font-semibold text-cyan-400 leading-relaxed">"{currentReport.vibe_summary}"</p>
-                          <div className="flex flex-wrap gap-2">
-                            {currentReport.vibe_keywords?.map((kw: string, i: number) => (
-                              <span key={i} className="px-2.5 py-1 rounded-md bg-cyan-500/10 border border-cyan-500/30 text-[11px] text-cyan-300 font-semibold uppercase tracking-wider">{kw}</span>
-                            ))}
-                          </div>
-                          <div className="h-px w-full bg-linear-border/30 my-1"></div>
-                          <p className="text-sm text-foreground/90 leading-relaxed">{currentReport.vibe_analysis}</p>
-                        </div>
-                      ) : (
-                        <p className="text-sm text-foreground leading-relaxed relative z-10">{currentReport.vibe_and_tone}</p>
-                      )}
-                    </div>
- 
-                    {/* Visuals */}
-                    <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-pink-500/30 hover:shadow-pink-500/5 transition-all duration-300 flex flex-col">
-                      <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Sparkles className="w-20 h-20" /></div>
-                      <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
-                        <span className="w-2 h-2 rounded-full bg-pink-500 mr-2 shadow-[0_0_8px_rgba(236,72,153,0.8)]"></span> Phân Tích Hình Ảnh (Visuals)
-                      </h3>
-                      {currentReport.visual_style ? (
-                        <div className="relative z-10 flex-1 flex flex-col gap-3">
-                          <p className="text-sm font-semibold text-pink-400 flex items-center"><Sparkles className="w-3.5 h-3.5 mr-1.5" /> Style: {currentReport.visual_style}</p>
-                          <div className="flex flex-wrap gap-2">
-                            {currentReport.visual_colors?.map((color: string, i: number) => (
-                              <span key={i} className="px-2.5 py-1 rounded-md bg-pink-500/10 border border-pink-500/30 text-[11px] text-pink-300 font-semibold uppercase tracking-wider">{color}</span>
-                            ))}
-                          </div>
-                          <div className="h-px w-full bg-linear-border/30 my-1"></div>
-                          <p className="text-sm text-foreground/90 leading-relaxed">{currentReport.visual_analysis}</p>
-                        </div>
-                      ) : (
-                        <p className="text-sm text-foreground leading-relaxed relative z-10">{currentReport.visual_analysis}</p>
-                      )}
-                    </div>
- 
-                    {/* Copywriting */}
-                    <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-orange-500/30 hover:shadow-orange-500/5 transition-all duration-300 flex flex-col">
-                      <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><MessageSquare className="w-20 h-20" /></div>
-                      <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
-                        <span className="w-2 h-2 rounded-full bg-orange-400 mr-2 shadow-[0_0_8px_rgba(251,146,60,0.8)]"></span> Kỹ Thuật Copywriting & Hooks
-                      </h3>
-                      <div className="relative z-10 flex-1">
-                        {Array.isArray(currentReport.copywriting_hooks) ? (
-                          <ul className="space-y-3">
-                            {currentReport.copywriting_hooks.map((hook: string, i: number) => (
-                              <li key={i} className="flex items-start text-sm text-foreground/90 bg-linear-surface/40 p-2.5 rounded-lg border border-linear-border/30"><span className="text-orange-400 mr-2.5 mt-0.5">✦</span> <span className="leading-relaxed">{hook}</span></li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p className="text-sm text-foreground leading-relaxed">{currentReport.copywriting_hooks}</p>
-                        )}
-                      </div>
-                    </div>
- 
-                    {/* Audience */}
-                    <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-blue-500/30 hover:shadow-blue-500/5 transition-all duration-300 flex flex-col">
-                      <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Globe className="w-20 h-20" /></div>
-                      <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
-                        <span className="w-2 h-2 rounded-full bg-blue-500 mr-2 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></span> Chân Dung Khách Hàng
-                      </h3>
-                      <div className="relative z-10 flex-1">
-                        {Array.isArray(currentReport.target_audience) ? (
-                          <ul className="space-y-3">
-                            {currentReport.target_audience.map((aud: any, i: number) => (
-                              <li key={i} className="flex items-center text-sm text-foreground/90 bg-linear-surface/40 p-2.5 rounded-lg border border-linear-border/30"><span className="text-blue-400 mr-2.5">👤</span> <span className="leading-relaxed font-medium">{typeof aud === 'object' ? JSON.stringify(aud) : aud}</span></li>
-                            ))}
-                          </ul>
-                        ) : typeof currentReport.target_audience === 'object' && currentReport.target_audience !== null ? (
-                          <div className="space-y-3 text-sm text-foreground/90 bg-linear-surface/40 p-4 rounded-lg border border-linear-border/30 leading-relaxed">
-                            {Object.entries(currentReport.target_audience).map(([key, val]) => (
-                              <div key={key} className="mb-2 last:mb-0">
-                                <span className="font-bold text-blue-400">{key}:</span> {String(val)}
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <p className="text-sm text-foreground leading-relaxed">{String(currentReport.target_audience || '')}</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
- 
-                  {/* Phân tích Sâu: Community & Transcript */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                    {/* Community Feedback */}
-                    {(currentReport.community_feedback || activeSource?.platform === 'tiktok' || activeSource?.platform === 'facebook' || activeSource?.platform === 'youtube') && (
-                    <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-purple-500/30 hover:shadow-purple-500/5 transition-all duration-300 flex flex-col">
-                      <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><MessageCircle className="w-20 h-20" /></div>
-                      <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
-                        <span className="w-2 h-2 rounded-full bg-purple-500 mr-2 shadow-[0_0_8px_rgba(168,85,247,0.8)]"></span> Phản Hồi Cộng Đồng (Comments)
-                      </h3>
-                      <div className="relative z-10 flex-1 flex flex-col gap-3">
-                        {currentReport.community_feedback ? (
-                          <>
-                            <p className="text-sm font-semibold text-purple-400 flex items-center">Sentiment: {currentReport.community_feedback.sentiment}</p>
-                            <div className="flex flex-wrap gap-2">
-                              {currentReport.community_feedback.key_themes?.map((theme: string, i: number) => (
-                                <span key={i} className="px-2.5 py-1 rounded-md bg-purple-500/10 border border-purple-500/30 text-[11px] text-purple-300 font-semibold tracking-wider">{theme}</span>
-                              ))}
-                            </div>
-                            <div className="h-px w-full bg-linear-border/30 my-1"></div>
-                            <ul className="space-y-2">
-                              {currentReport.community_feedback.audience_quotes?.map((quote: string, i: number) => (
-                                <li key={i} className="text-sm text-foreground/90 italic border-l-2 border-purple-500/30 pl-3 py-1">"{quote}"</li>
-                              ))}
-                            </ul>
-                          </>
-                        ) : (
-                          <p className="text-sm text-linear-text-muted italic">Đang thu thập dữ liệu bình luận từ người dùng trên {activeSource?.platform}...</p>
-                        )}
-                      </div>
-                    </div>
-                    )}
-                    
-                    {/* Deep Transcript Analysis */}
-                    {(currentReport.deep_transcript_analysis || activeSource?.platform === 'youtube' || activeSource?.platform === 'tiktok') && (
-                    <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-teal-500/30 hover:shadow-teal-500/5 transition-all duration-300 flex flex-col">
-                      <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><FileText className="w-20 h-20" /></div>
-                      <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
-                        <span className="w-2 h-2 rounded-full bg-teal-500 mr-2 shadow-[0_0_8px_rgba(20,184,166,0.8)]"></span> Kịch Bản & Lời Thoại (Transcript)
-                      </h3>
-                      <div className="relative z-10 flex-1 flex flex-col gap-3">
-                        {currentReport.deep_transcript_analysis ? (
-                          <ul className="space-y-3">
-                            {currentReport.deep_transcript_analysis.map((insight: string, i: number) => (
-                              <li key={i} className="flex items-start text-sm text-foreground/90 bg-linear-surface/40 p-2.5 rounded-lg border border-linear-border/30"><span className="text-teal-400 mr-2.5">▪</span> <span className="leading-relaxed">{insight}</span></li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p className="text-sm text-linear-text-muted italic">Đang bóc tách và phân tích sâu lời thoại / sub của video...</p>
-                        )}
-                      </div>
-                    </div>
-                    )}
-                  </div>
- 
-                  <div className="relative p-8 bg-gradient-to-br from-linear-surface to-background border border-linear-border/60 rounded-2xl shadow-xl mt-8 overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-[80px] group-hover:bg-cyan-500/10 transition-colors"></div>
-                    <h3 className="text-sm uppercase tracking-widest text-cyan-400 font-bold mb-6 flex items-center relative z-10">
-                       <BrainCircuit className="w-5 h-5 mr-2" /> Bài Học & Đề Xuất Thực Thi (Learning Actions)
-                    </h3>
-                    <ul className="space-y-4 relative z-10">
-                      {(currentReport.learning_actions || currentReport.actionable_marketing_ideas || []).map((idea: string, i: number) => (
-                        <li key={i} className="flex items-start text-sm text-foreground/90 group/item bg-background/40 p-4 rounded-xl border border-linear-border/40 hover:border-cyan-500/30 transition-colors shadow-sm">
-                          <span className="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mr-4 text-cyan-400 font-bold group-hover/item:bg-cyan-500 group-hover/item:text-white group-hover/item:shadow-[0_0_10px_rgba(34,211,238,0.5)] transition-all">{i+1}</span>
-                          <span className="mt-1.5 leading-relaxed">{idea}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )
-            }
-            </div>
-          ) : (
-            <div className="h-full flex flex-col justify-between max-w-4xl mx-auto w-full relative z-10">
-              <div className="flex-1 overflow-y-auto p-4 mb-20 space-y-6">
-                <div className="flex justify-center mb-8">
-                  <div className="bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium px-4 py-1.5 rounded-full backdrop-blur-sm">
-                    Phiên trò chuyện đã được kết nối với Dữ liệu Source
-                  </div>
-                </div>
-                
-                {/* AI Chat Bubble */}
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shrink-0">
-                    <Sparkles className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="bg-background/80 backdrop-blur-md border border-linear-border/50 rounded-2xl rounded-tl-none p-5 max-w-[85%] shadow-sm">
-                    <p className="text-sm text-foreground leading-relaxed">Xin chào! Tôi đã đọc xong nội dung từ các Source. Bạn có muốn đào sâu thêm về kỹ thuật kể chuyện (storytelling) hay cách thức triển khai kịch bản tương tự cho sản phẩm của bạn không?</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background via-background/90 to-transparent">
-                <div className="max-w-3xl mx-auto mb-3 flex flex-wrap gap-2 justify-center">
-                   <button 
-                     onClick={() => setChatInput(`Hãy viết lại nội dung bài này theo phong cách ${brandDNA?.tone_of_voice || 'chuyên nghiệp'} của thương hiệu ${wizardAnswers?.company_name || 'chúng tôi'}.`)}
-                     className="text-[10px] sm:text-xs font-semibold px-3 py-1.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 hover:border-cyan-500/40 transition-colors"
-                   >
-                     ✨ Viết lại theo Brand DNA
-                   </button>
-                   <button 
-                     onClick={() => setChatInput(`Trích xuất 3 ý tưởng nội dung từ đây phù hợp với USP: ${brandDNA?.core_usps?.join(', ') || wizardAnswers?.core_usps?.join(', ') || 'sản phẩm chất lượng'}.`)}
-                     className="text-[10px] sm:text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 hover:border-blue-500/40 transition-colors"
-                   >
-                     💡 Ý tưởng phù hợp USP
-                   </button>
-                   <button 
-                     onClick={() => setChatInput(`Đánh giá xem bài này có phù hợp với tệp khách hàng: ${wizardAnswers?.target_audience || 'khách hàng mục tiêu'} hay không?`)}
-                     className="text-[10px] sm:text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 hover:border-indigo-500/40 transition-colors"
-                   >
-                     🎯 Kiểm tra khớp Target Audience
-                   </button>
-                </div>
-                
-                <div className="relative max-w-3xl mx-auto shadow-2xl">
-                  <input 
-                    type="text" 
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    placeholder="Hỏi AI về chiến thuật của nội dung này..." 
-                    className="w-full bg-linear-surface/80 backdrop-blur-xl border border-linear-border/80 rounded-full py-4 pl-6 pr-16 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all placeholder:text-linear-text-muted"
-                  />
-                  <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-full hover:scale-105 transition-transform shadow-lg shadow-cyan-500/20">
-                    <Send className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-      </div>
+ return (
+  <div className="h-[calc(100vh-64px)] w-full flex flex-col p-2 md:p-6 bg-transparent overflow-hidden">
+   <DNAContextBanner />
+   <div className="flex-1 flex gap-4 overflow-hidden">
+   {/* LEFT PANE: Sources */}
+   <div className="w-1/3 min-w-[320px] max-w-[400px] section-card flex flex-col relative overflow-hidden">
+    
+    <div className="p-5 border-b border-linear-border/30 flex items-center justify-between">
+     <div>
+      <h2 className="text-lg font-bold text-foreground flex items-center">
+       <Sparkles className="w-5 h-5 mr-2 text-cyan-400" /> Content Sources
+      </h2>
+      <p className="text-xs text-linear-text-muted mt-1">Quản lý các tư liệu cần phân tích.</p>
+     </div>
     </div>
-  );
+    
+    <div className="p-5 border-b border-linear-border/30 bg-black/5 dark:bg-white/5">
+     <form onSubmit={handleIngest} className="flex flex-col gap-3">
+      <input 
+       type="url"
+       placeholder="Paste Youtube, TikTok, Facebook, Website URL..."
+       className="w-full px-4 py-2.5 text-sm bg-background/50 border border-linear-border/50 rounded-xl text-foreground placeholder:text-linear-text-muted focus:outline-none focus:ring-2 focus:ring-cyan-500/50 backdrop-blur-sm transition-all"
+       value={urlInput}
+       onChange={(e) => setUrlInput(e.target.value)}
+       required
+      />
+      <button 
+       type="submit" 
+       disabled={isIngesting}
+       className="btn-primary w-full"
+      >
+       {isIngesting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
+       {isIngesting ? "Đang xử lý dữ liệu..." : "Thêm Source"}
+      </button>
+     </form>
+    </div>
+
+    <div className="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar">
+     {sources.length === 0 ? (
+      <div className="text-center text-sm text-linear-text-muted mt-12 flex flex-col items-center">
+       <div className="w-16 h-16 rounded-full bg-linear-surface border border-linear-border flex items-center justify-center mb-4 opacity-50">
+        <Search className="w-6 h-6" />
+       </div>
+       <p>Chưa có dữ liệu.</p>
+       <p className="text-xs mt-1">Dán URL vào ô trên để bắt đầu.</p>
+      </div>
+     ) : (
+      sources.map((src, idx) => (
+       <div 
+        key={idx} 
+        onClick={() => setSelectedSourceIdx(idx)}
+        className={`group p-3 border rounded-xl shadow-sm backdrop-blur-md transition-all duration-300 cursor-pointer relative overflow-hidden ${
+         selectedSourceIdx === idx 
+          ? 'bg-background/90 border-cyan-500/50 shadow-cyan-500/5' 
+          : 'bg-background/40 hover:bg-background/80 border-linear-border/50 hover:border-cyan-500/30'
+        }`}
+       >
+        <div className={`absolute left-0 top-0 bottom-0 w-1 bg-cyan-500 transition-opacity ${
+         selectedSourceIdx === idx ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+        }`}></div>
+        
+        {/* Delete Button */}
+        <button 
+         onClick={(e) => handleDeleteSource(idx, e)}
+         className="absolute right-2 top-2 p-1.5 rounded-lg text-linear-text-muted hover:text-red-400 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all z-20"
+         title="Xóa Source"
+        >
+         <Trash2 className="w-3.5 h-3.5" />
+        </button>
+
+        <div className="flex items-start gap-3 pl-1">
+         {src.thumbnail_url && (
+          <img src={src.thumbnail_url} alt="thumbnail" className="w-16 h-16 object-cover rounded-lg shadow-sm border border-linear-border/30" />
+         )}
+         <div className="flex-1 min-w-0 py-0.5">
+          <div className="flex items-center gap-1.5 text-[10px] font-bold text-linear-text-muted mb-1 tracking-wider uppercase">
+           {src.platform === 'youtube' ? <PlaySquare className="w-3.5 h-3.5 text-red-500" /> : src.platform === 'tiktok' ? <Share2 className="w-3.5 h-3.5 text-pink-500" /> : src.platform === 'facebook' ? <MessageSquare className="w-3.5 h-3.5 text-blue-500" /> : <Globe className="w-3.5 h-3.5 text-emerald-500" />}
+           <span>{src.platform}</span>
+          </div>
+          <h4 className="text-sm font-semibold text-foreground truncate group-hover:text-cyan-400 transition-colors pr-6">{src.title || "Untitled Document"}</h4>
+          <p className="text-xs text-linear-text-muted line-clamp-1 mt-1">{src.description || src.content?.substring(0, 80) + "..."}</p>
+         </div>
+        </div>
+       </div>
+      ))
+     )}
+    </div>
+   </div>
+
+   {/* RIGHT PANE: Analysis / Chat */}
+   <div className="flex-1 flex flex-col bg-linear-surface/60 backdrop-blur-2xl border border-linear-border/50 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] relative overflow-hidden">
+    
+    {/* Animated Tabs */}
+    <div className="flex border-b border-linear-border/30 px-6 pt-5 gap-8 bg-black/5 dark:bg-white/5">
+     <button 
+      className={`pb-4 px-2 text-sm font-bold tracking-wide flex items-center transition-all relative ${activeTab === 'report' ? 'text-cyan-400' : 'text-linear-text-muted hover:text-foreground'}`}
+      onClick={() => setActiveTab('report')}
+     >
+      <PieChart className="w-4 h-4 mr-2" /> MARKETING REPORT
+      {activeTab === 'report' && (
+       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-400 rounded-t-full shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
+      )}
+     </button>
+     <button 
+      className={`pb-4 px-2 text-sm font-bold tracking-wide flex items-center transition-all relative ${activeTab === 'chat' ? 'text-cyan-400' : 'text-linear-text-muted hover:text-foreground'}`}
+      onClick={() => setActiveTab('chat')}
+     >
+      <MessageSquare className="w-4 h-4 mr-2" /> NOTEBOOK CHAT
+      {activeTab === 'chat' && (
+       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-400 rounded-t-full shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
+      )}
+     </button>
+    </div>
+
+    <div className="flex-1 overflow-y-auto p-6 md:p-10 no-scrollbar relative">
+     {/* Subtle Background Elements in the Workspace */}
+     <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+     
+     {sources.length === 0 ? (
+      <div className="h-full flex flex-col items-center justify-center text-linear-text-muted relative z-10">
+       <div className="w-24 h-24 mb-6 rounded-3xl bg-linear-surface border border-linear-border/50 flex items-center justify-center shadow-lg transform rotate-3">
+        <BrainCircuit className="w-12 h-12 text-cyan-500/50" />
+       </div>
+       <h3 className="text-xl font-bold text-foreground mb-2">Content Intelligence</h3>
+       <p className="max-w-md text-center text-sm">Vui lòng nạp tối thiểu một Source ở cột bên trái để Hệ thống Trợ lý AI bắt đầu đọc hiểu và bóc tách dữ liệu chiến lược.</p>
+      </div>
+     ) : activeTab === 'report' ? (
+      <div className="max-w-5xl mx-auto w-full relative z-10">
+       {!currentReport ? (
+        <div className="flex flex-col items-center justify-center py-32 animate-in fade-in duration-700">
+         <div className="w-20 h-20 mb-8 rounded-full bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 flex items-center justify-center border border-cyan-500/30">
+          <Sparkles className="w-8 h-8 text-cyan-400" />
+         </div>
+         <h2 className="text-2xl font-bold text-foreground mb-4">Dữ liệu đã sẵn sàng</h2>
+         <p className="text-linear-text-muted mb-8 text-center max-w-lg">
+          {activeSource ? `Sẵn sàng phân tích nguồn: "${activeSource.title}"` : "Hệ thống Multi-Trợ lý AI đã sẵn sàng đọc hiểu và phân tích chiến lược."}
+         </p>
+         <button 
+          onClick={() => handleAnalyzeVibe(selectedSourceIdx)}
+          disabled={isAnalyzing}
+          className="px-8 py-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-full font-bold shadow-lg shadow-cyan-500/20 hover:scale-105 transition-all flex items-center disabled:opacity-50 disabled:hover:scale-100"
+         >
+          {isAnalyzing ? (
+           <><Loader2 className="w-5 h-5 mr-3 animate-spin" /> Đang dùng AI phân tích Vibe...</>
+          ) : (
+           <>Khởi chạy Phân tích Chiến lược <ChevronRight className="w-5 h-5 ml-2" /></>
+          )}
+         </button>
+        </div>
+       ) : (
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+         <div className="flex justify-between items-center border-b border-linear-border/20 pb-4">
+          <div>
+           <h1 className="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-2">Báo cáo Phân tích Vibe Marketing</h1>
+           <p className="text-xs text-linear-text-muted flex items-center gap-1">
+            <span>Nguồn: </span>
+            <span className="font-semibold text-foreground/80 truncate max-w-md">"{activeSource?.title}"</span>
+           </p>
+          </div>
+          {/* Re-analyze Button */}
+          <button
+           onClick={() => handleAnalyzeVibe(selectedSourceIdx)}
+           disabled={isAnalyzing}
+           className="flex items-center gap-2 px-4 py-2 text-xs font-bold bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-xl transition-all disabled:opacity-50 shadow-sm"
+           title="Phân tích lại nguồn này"
+          >
+           {isAnalyzing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+           Phân tích lại
+          </button>
+         </div>
+         
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Vibe & Tone */}
+          <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-cyan-500/30 hover:shadow-cyan-500/5 transition-all duration-300 flex flex-col">
+           <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><PieChart className="w-20 h-20" /></div>
+           <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 mr-2 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></span> Vibe & Tone Định Vị
+           </h3>
+           {currentReport.vibe_summary ? (
+            <div className="relative z-10 flex-1 flex flex-col gap-3">
+             <p className="text-sm font-semibold text-cyan-400 leading-relaxed">"{currentReport.vibe_summary}"</p>
+             <div className="flex flex-wrap gap-2">
+              {currentReport.vibe_keywords?.map((kw: string, i: number) => (
+               <span key={i} className="px-2.5 py-1 rounded-md bg-cyan-500/10 border border-cyan-500/30 text-[11px] text-cyan-300 font-semibold uppercase tracking-wider">{kw}</span>
+              ))}
+             </div>
+             <div className="h-px w-full bg-linear-border/30 my-1"></div>
+             <p className="text-sm text-foreground/90 leading-relaxed">{currentReport.vibe_analysis}</p>
+            </div>
+           ) : (
+            <p className="text-sm text-foreground leading-relaxed relative z-10">{currentReport.vibe_and_tone}</p>
+           )}
+          </div>
+ 
+          {/* Visuals */}
+          <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-pink-500/30 hover:shadow-pink-500/5 transition-all duration-300 flex flex-col">
+           <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Sparkles className="w-20 h-20" /></div>
+           <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
+            <span className="w-2 h-2 rounded-full bg-pink-500 mr-2 shadow-[0_0_8px_rgba(236,72,153,0.8)]"></span> Phân Tích Hình Ảnh (Visuals)
+           </h3>
+           {currentReport.visual_style ? (
+            <div className="relative z-10 flex-1 flex flex-col gap-3">
+             <p className="text-sm font-semibold text-pink-400 flex items-center"><Sparkles className="w-3.5 h-3.5 mr-1.5" /> Style: {currentReport.visual_style}</p>
+             <div className="flex flex-wrap gap-2">
+              {currentReport.visual_colors?.map((color: string, i: number) => (
+               <span key={i} className="px-2.5 py-1 rounded-md bg-pink-500/10 border border-pink-500/30 text-[11px] text-pink-300 font-semibold uppercase tracking-wider">{color}</span>
+              ))}
+             </div>
+             <div className="h-px w-full bg-linear-border/30 my-1"></div>
+             <p className="text-sm text-foreground/90 leading-relaxed">{currentReport.visual_analysis}</p>
+            </div>
+           ) : (
+            <p className="text-sm text-foreground leading-relaxed relative z-10">{currentReport.visual_analysis}</p>
+           )}
+          </div>
+ 
+          {/* Copywriting */}
+          <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-orange-500/30 hover:shadow-orange-500/5 transition-all duration-300 flex flex-col">
+           <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><MessageSquare className="w-20 h-20" /></div>
+           <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
+            <span className="w-2 h-2 rounded-full bg-orange-400 mr-2 shadow-[0_0_8px_rgba(251,146,60,0.8)]"></span> Kỹ Thuật Copywriting & Hooks
+           </h3>
+           <div className="relative z-10 flex-1">
+            {Array.isArray(currentReport.copywriting_hooks) ? (
+             <ul className="space-y-3">
+              {currentReport.copywriting_hooks.map((hook: string, i: number) => (
+               <li key={i} className="flex items-start text-sm text-foreground/90 bg-linear-surface/40 p-2.5 rounded-lg border border-linear-border/30"><span className="text-orange-400 mr-2.5 mt-0.5">✦</span> <span className="leading-relaxed">{hook}</span></li>
+              ))}
+             </ul>
+            ) : (
+             <p className="text-sm text-foreground leading-relaxed">{currentReport.copywriting_hooks}</p>
+            )}
+           </div>
+          </div>
+ 
+          {/* Audience */}
+          <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-blue-500/30 hover:shadow-blue-500/5 transition-all duration-300 flex flex-col">
+           <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Globe className="w-20 h-20" /></div>
+           <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
+            <span className="w-2 h-2 rounded-full bg-blue-500 mr-2 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></span> Chân Dung Khách Hàng
+           </h3>
+           <div className="relative z-10 flex-1">
+            {Array.isArray(currentReport.target_audience) ? (
+             <ul className="space-y-3">
+              {currentReport.target_audience.map((aud: any, i: number) => (
+               <li key={i} className="flex items-center text-sm text-foreground/90 bg-linear-surface/40 p-2.5 rounded-lg border border-linear-border/30"><span className="text-blue-400 mr-2.5">👤</span> <span className="leading-relaxed font-medium">{typeof aud === 'object' ? JSON.stringify(aud) : aud}</span></li>
+              ))}
+             </ul>
+            ) : typeof currentReport.target_audience === 'object' && currentReport.target_audience !== null ? (
+             <div className="space-y-3 text-sm text-foreground/90 bg-linear-surface/40 p-4 rounded-lg border border-linear-border/30 leading-relaxed">
+              {Object.entries(currentReport.target_audience).map(([key, val]) => (
+               <div key={key} className="mb-2 last:mb-0">
+                <span className="font-bold text-blue-400">{key}:</span> {String(val)}
+               </div>
+              ))}
+             </div>
+            ) : (
+             <p className="text-sm text-foreground leading-relaxed">{String(currentReport.target_audience || '')}</p>
+            )}
+           </div>
+          </div>
+         </div>
+ 
+         {/* Phân tích Sâu: Community & Transcript */}
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          {/* Community Feedback */}
+          {(currentReport.community_feedback || activeSource?.platform === 'tiktok' || activeSource?.platform === 'facebook' || activeSource?.platform === 'youtube') && (
+          <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-purple-500/30 hover:shadow-purple-500/5 transition-all duration-300 flex flex-col">
+           <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><MessageCircle className="w-20 h-20" /></div>
+           <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
+            <span className="w-2 h-2 rounded-full bg-purple-500 mr-2 shadow-[0_0_8px_rgba(168,85,247,0.8)]"></span> Phản Hồi Cộng Đồng (Comments)
+           </h3>
+           <div className="relative z-10 flex-1 flex flex-col gap-3">
+            {currentReport.community_feedback ? (
+             <>
+              <p className="text-sm font-semibold text-purple-400 flex items-center">Sentiment: {currentReport.community_feedback.sentiment}</p>
+              <div className="flex flex-wrap gap-2">
+               {currentReport.community_feedback.key_themes?.map((theme: string, i: number) => (
+                <span key={i} className="px-2.5 py-1 rounded-md bg-purple-500/10 border border-purple-500/30 text-[11px] text-purple-300 font-semibold tracking-wider">{theme}</span>
+               ))}
+              </div>
+              <div className="h-px w-full bg-linear-border/30 my-1"></div>
+              <ul className="space-y-2">
+               {currentReport.community_feedback.audience_quotes?.map((quote: string, i: number) => (
+                <li key={i} className="text-sm text-foreground/90 italic border-l-2 border-purple-500/30 pl-3 py-1">"{quote}"</li>
+               ))}
+              </ul>
+             </>
+            ) : (
+             <p className="text-sm text-linear-text-muted italic">Đang thu thập dữ liệu bình luận từ người dùng trên {activeSource?.platform}...</p>
+            )}
+           </div>
+          </div>
+          )}
+          
+          {/* Deep Transcript Analysis */}
+          {(currentReport.deep_transcript_analysis || activeSource?.platform === 'youtube' || activeSource?.platform === 'tiktok') && (
+          <div className="group relative p-6 bg-background/50 backdrop-blur-xl border border-linear-border/60 rounded-2xl shadow-lg hover:border-teal-500/30 hover:shadow-teal-500/5 transition-all duration-300 flex flex-col">
+           <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><FileText className="w-20 h-20" /></div>
+           <h3 className="text-xs uppercase tracking-widest text-linear-text-muted font-bold mb-4 flex items-center">
+            <span className="w-2 h-2 rounded-full bg-teal-500 mr-2 shadow-[0_0_8px_rgba(20,184,166,0.8)]"></span> Kịch Bản & Lời Thoại (Transcript)
+           </h3>
+           <div className="relative z-10 flex-1 flex flex-col gap-3">
+            {currentReport.deep_transcript_analysis ? (
+             <ul className="space-y-3">
+              {currentReport.deep_transcript_analysis.map((insight: string, i: number) => (
+               <li key={i} className="flex items-start text-sm text-foreground/90 bg-linear-surface/40 p-2.5 rounded-lg border border-linear-border/30"><span className="text-teal-400 mr-2.5">▪</span> <span className="leading-relaxed">{insight}</span></li>
+              ))}
+             </ul>
+            ) : (
+             <p className="text-sm text-linear-text-muted italic">Đang bóc tách và phân tích sâu lời thoại / sub của video...</p>
+            )}
+           </div>
+          </div>
+          )}
+         </div>
+ 
+         <div className="relative p-8 bg-gradient-to-br from-linear-surface to-background border border-linear-border/60 rounded-2xl shadow-xl mt-8 overflow-hidden group">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-[80px] group-hover:bg-cyan-500/10 transition-colors"></div>
+          <h3 className="text-sm uppercase tracking-widest text-cyan-400 font-bold mb-6 flex items-center relative z-10">
+            <BrainCircuit className="w-5 h-5 mr-2" /> Bài Học & Đề Xuất Thực Thi (Learning Actions)
+          </h3>
+          <ul className="space-y-4 relative z-10">
+           {(currentReport.learning_actions || currentReport.actionable_marketing_ideas || []).map((idea: string, i: number) => (
+            <li key={i} className="flex items-start text-sm text-foreground/90 group/item bg-background/40 p-4 rounded-xl border border-linear-border/40 hover:border-cyan-500/30 transition-colors shadow-sm">
+             <span className="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mr-4 text-cyan-400 font-bold group-hover/item:bg-cyan-500 group-hover/item:text-white group-hover/item:shadow-[0_0_10px_rgba(34,211,238,0.5)] transition-all">{i+1}</span>
+             <span className="mt-1.5 leading-relaxed">{idea}</span>
+            </li>
+           ))}
+          </ul>
+         </div>
+        </div>
+       )
+      }
+      </div>
+     ) : (
+      <div className="h-full flex flex-col justify-between max-w-4xl mx-auto w-full relative z-10">
+       <div className="flex-1 overflow-y-auto p-4 mb-20 space-y-6">
+        <div className="flex justify-center mb-8">
+         <div className="bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium px-4 py-1.5 rounded-full backdrop-blur-sm">
+          Phiên trò chuyện đã được kết nối với Dữ liệu Source
+         </div>
+        </div>
+        
+        {/* AI Chat Bubble */}
+        <div className="flex items-start gap-4">
+         <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shrink-0">
+          <Sparkles className="w-5 h-5 text-white" />
+         </div>
+         <div className="bg-background/80 backdrop-blur-md border border-linear-border/50 rounded-2xl rounded-tl-none p-5 max-w-[85%] shadow-sm">
+          <p className="text-sm text-foreground leading-relaxed">Xin chào! Tôi đã đọc xong nội dung từ các Source. Bạn có muốn đào sâu thêm về kỹ thuật kể chuyện (storytelling) hay cách thức triển khai kịch bản tương tự cho sản phẩm của bạn không?</p>
+         </div>
+        </div>
+       </div>
+       
+       <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background via-background/90 to-transparent">
+        <div className="max-w-3xl mx-auto mb-3 flex flex-wrap gap-2 justify-center">
+          <button 
+           onClick={() => setChatInput(`Hãy viết lại nội dung bài này theo phong cách ${brandDNA?.tone_of_voice || 'chuyên nghiệp'} của thương hiệu ${wizardAnswers?.company_name || 'chúng tôi'}.`)}
+           className="text-[10px] sm:text-xs font-semibold px-3 py-1.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 hover:border-cyan-500/40 transition-colors"
+          >
+           ✨ Viết lại theo Brand DNA
+          </button>
+          <button 
+           onClick={() => setChatInput(`Trích xuất 3 ý tưởng nội dung từ đây phù hợp với USP: ${brandDNA?.core_usps?.join(', ') || wizardAnswers?.core_usps?.join(', ') || 'sản phẩm chất lượng'}.`)}
+           className="text-[10px] sm:text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 hover:border-blue-500/40 transition-colors"
+          >
+           💡 Ý tưởng phù hợp USP
+          </button>
+          <button 
+           onClick={() => setChatInput(`Đánh giá xem bài này có phù hợp với tệp khách hàng: ${wizardAnswers?.target_audience || 'khách hàng mục tiêu'} hay không?`)}
+           className="text-[10px] sm:text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 hover:border-indigo-500/40 transition-colors"
+          >
+           🎯 Kiểm tra khớp Target Audience
+          </button>
+        </div>
+        
+        <div className="relative max-w-3xl mx-auto shadow-2xl">
+         <input 
+          type="text" 
+          value={chatInput}
+          onChange={(e) => setChatInput(e.target.value)}
+          placeholder="Hỏi AI về chiến thuật của nội dung này..." 
+          className="w-full bg-linear-surface/80 backdrop-blur-xl border border-linear-border/80 rounded-full py-4 pl-6 pr-16 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all placeholder:text-linear-text-muted"
+         />
+         <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-full hover:scale-105 transition-transform shadow-lg shadow-cyan-500/20">
+          <Send className="w-4 h-4" />
+         </button>
+        </div>
+       </div>
+      </div>
+     )}
+    </div>
+   </div>
+   </div>
+  </div>
+ );
 }

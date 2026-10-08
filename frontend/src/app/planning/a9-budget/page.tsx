@@ -9,51 +9,51 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const PNL_DATA = [
-  { item: 'Doanh thu thuần', t0: '60.0', t1: '80.0', t2: '100.0', t3: '120.0' },
-  { item: 'Chi phí giá vốn (COGS)', t0: '34.8', t1: '45.6', t2: '56.0', t3: '66.0' },
-  { item: 'Lợi nhuận gộp', t0: '25.2', t1: '34.4', t2: '44.0', t3: '54.0' },
-  { item: 'Chi phí Marketing', t0: '3.5', t1: '4.5', t2: '5.5', t3: '6.5' },
+ { item: 'Doanh thu thuần', t0: '60.0', t1: '80.0', t2: '100.0', t3: '120.0' },
+ { item: 'Chi phí giá vốn (COGS)', t0: '34.8', t1: '45.6', t2: '56.0', t3: '66.0' },
+ { item: 'Lợi nhuận gộp', t0: '25.2', t1: '34.4', t2: '44.0', t3: '54.0' },
+ { item: 'Chi phí Marketing', t0: '3.5', t1: '4.5', t2: '5.5', t3: '6.5' },
 ];
 
 export default function PageA9Budget() {
-  const { localData, saveStatus } = useAutoSaveForm('a9-budget', { items: [] });
-  const COLUMNS = [
-    { key: 'item', header: 'Hạng mục P&L', className: 'bg-linear-surface font-medium text-linear-text-muted',
-      render: (row: any) => (
-        <div className="flex items-center justify-between">
-          <span>{row.item}</span>
-          {row.rationale && (
-            <RationaleTooltip rationale={row.rationale} type="rationale">
-              <span className="sr-only">Why</span>
-            </RationaleTooltip>
-          )}
-        </div>
-      )
-    },
-    { key: 't0', header: 'Năm t0', align: 'right' as const, headerClassName: 'bg-purple-100 dark:bg-purple-900/30 text-purple-900 dark:text-purple-400', className: 'bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-400 font-semibold' },
-    { key: 't1', header: 'Năm t+1', align: 'right' as const, className: 'bg-cyan-500/10 text-cyan-400 font-semibold' },
-    { key: 't2', header: 'Năm t+2', align: 'right' as const, className: 'bg-cyan-500/10/70 text-cyan-400 font-bold' },
-    { key: 't3', header: 'Năm t+3', align: 'right' as const, headerClassName: 'bg-cyan-500/20 text-cyan-400', className: 'bg-emerald-100 text-cyan-400 font-black border-l border-white dark:border-slate-800' },
-  ];
+ const { localData, saveStatus } = useAutoSaveForm('a9-budget', { items: [] });
+ const COLUMNS = [
+  { key: 'item', header: 'Hạng mục P&L', className: 'bg-linear-surface font-medium text-linear-text-muted',
+   render: (row: any) => (
+    <div className="flex items-center justify-between">
+     <span>{row.item}</span>
+     {row.rationale && (
+      <RationaleTooltip rationale={row.rationale} type="rationale">
+       <span className="sr-only">Why</span>
+      </RationaleTooltip>
+     )}
+    </div>
+   )
+  },
+  { key: 't0', header: 'Năm t0', align: 'right' as const, headerClassName: 'bg-purple-100 dark:bg-purple-900/30 text-purple-900 dark:text-purple-400', className: 'bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-400 font-semibold' },
+  { key: 't1', header: 'Năm t+1', align: 'right' as const, className: 'bg-cyan-500/10 text-cyan-400 font-semibold' },
+  { key: 't2', header: 'Năm t+2', align: 'right' as const, className: 'bg-cyan-500/10/70 text-cyan-400 font-bold' },
+  { key: 't3', header: 'Năm t+3', align: 'right' as const, headerClassName: 'bg-cyan-500/20 text-cyan-400', className: 'bg-emerald-100 text-cyan-400 font-black border-l border-white dark:border-slate-800' },
+ ];
 
-  return (
-    <>
-    <B2BPageTemplate
-      saveStatus={saveStatus}
-      title="Ngân sách hợp nhất dự phóng (Đơn vị: Tỷ VNĐ)"
-      description="Bảng dự phóng tài chính tổng hợp tất cả dòng doanh thu, chi phí và lợi nhuận cho chu kỳ."
-    >
-      <div className="space-y-6">
-        <InstructionAlert>
-          Đầu ra phải khớp hoàn toàn với các quy ước, đầu mục doanh thu/chi phí tài chính tiêu chuẩn của công ty và tương thích với Tóm tắt tài chính ở Form 3.
-        </InstructionAlert>
-        
-        <div className="bento-card p-6">
-           <PastelTable columns={COLUMNS} data={localData.items} />
-        </div>
-        <WizardNavigation prevLink="/planning/a8-strategies" prevLabel="Về A.8" nextLink="/planning/b0-overview" nextLabel="Hoàn thành Phần A! 👉 Sang Phần B" />
-      </div>
-    </B2BPageTemplate>
-        </>
-  );
+ return (
+  <>
+  <B2BPageTemplate
+   saveStatus={saveStatus}
+   title="Ngân sách hợp nhất dự phóng (Đơn vị: Tỷ VNĐ)"
+   description="Bảng dự phóng tài chính tổng hợp tất cả dòng doanh thu, chi phí và lợi nhuận cho chu kỳ."
+  >
+   <div className="space-y-6">
+    <InstructionAlert>
+     Đầu ra phải khớp hoàn toàn với các quy ước, đầu mục doanh thu/chi phí tài chính tiêu chuẩn của công ty và tương thích với Tóm tắt tài chính ở Form 3.
+    </InstructionAlert>
+    
+    <div className="bento-card p-6">
+      <PastelTable columns={COLUMNS} data={localData.items} />
+    </div>
+    <WizardNavigation prevLink="/planning/a8-strategies" prevLabel="Về A.8" nextLink="/planning/b0-overview" nextLabel="Hoàn thành Phần A! 👉 Sang Phần B" />
+   </div>
+  </B2BPageTemplate>
+    </>
+ );
 }

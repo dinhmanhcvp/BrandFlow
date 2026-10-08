@@ -12,21 +12,21 @@ import { useFormStore } from '@/store/useFormStore';
 import AmbientParticles from '@/components/AmbientParticles';
 
 export default function Phase1_Ingestion({ onGoToHub, onGoToWorkspace }: { onGoToHub: () => void, onGoToWorkspace: () => void }) {
-  // 1 = Source Selection, 1.5 = Business Intent, 2 = Wizard Form, 3 = DNA Dashboard, 3.5 = Feature Selector, 4 = Campaign Objective Setting
-  const [currentScreen, setCurrentScreen] = useState<number>(1);
-  const [intentNextPath, setIntentNextPath] = useState<'wizard' | 'dashboard'>('wizard');
-  const generateAndSaveDNA = useFormStore(state => state.generateAndSaveDNA);
+ // 1 = Source Selection, 1.5 = Business Intent, 2 = Wizard Form, 3 = DNA Dashboard, 3.5 = Feature Selector, 4 = Campaign Objective Setting
+ const [currentScreen, setCurrentScreen] = useState<number>(1);
+ const [intentNextPath, setIntentNextPath] = useState<'wizard' | 'dashboard'>('wizard');
+ const generateAndSaveDNA = useFormStore(state => state.generateAndSaveDNA);
 
-  const goToDashboard = async () => {
-    // Kích hoạt trích xuất Brand DNA chạy ngầm khi vào Dashboard
-    generateAndSaveDNA();
-    setCurrentScreen(3);
-  };
+ const goToDashboard = async () => {
+  // Kích hoạt trích xuất Brand DNA chạy ngầm khi vào Dashboard
+  generateAndSaveDNA();
+  setCurrentScreen(3);
+ };
 
  return (
  <div className="w-full h-full relative overflow-hidden bg-transparent">
  <div className="absolute inset-0 pointer-events-none z-0">
-    <AmbientParticles />
+  <AmbientParticles />
  </div>
  <AnimatePresence mode="wait">
  {currentScreen === 1 && (
@@ -92,8 +92,8 @@ export default function Phase1_Ingestion({ onGoToHub, onGoToWorkspace }: { onGoT
  className="absolute inset-0 z-50 bg-black/50 backdrop-blur-md"
  >
  <ScreenFeatureSelector 
-   onBack={() => setCurrentScreen(1.5)} 
-   onGoToCampaign={() => setCurrentScreen(4)} 
+  onBack={() => setCurrentScreen(1.5)} 
+  onGoToCampaign={() => setCurrentScreen(4)} 
  />
  </motion.div>
  )}

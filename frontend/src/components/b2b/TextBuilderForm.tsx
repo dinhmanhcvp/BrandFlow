@@ -11,15 +11,15 @@ export default function TextBuilderForm() {
  return (
  <div className="space-y-8">
  <div className="bento-card border border-linear-border bg-linear-surface shadow-sm p-6 relative overflow-hidden">
- <h3 className="text-lg font-bold text-foreground mb-4 border-b border-linear-border pb-2 relative z-10">{language === 'vi' ? 'Định nghĩa Doanh nghiệp & Vai trò' : 'Business Definition & Role'}</h3>
+ <h3 className="text-lg font-bold text-foreground mb-4 border-b border-linear-border pb-2 relative z-10">{language === 'vi' ? 'Định nghĩa Doanh nghiệp & Vai trò' : 'Business Definition & Vai trò'}</h3>
  <div className="space-y-4 relative z-10">
  <div>
- <label className="block text-sm font-bold text-foreground mb-1">{language === 'vi' ? 'Vai trò Công ty' : 'Company Role'}</label>
+ <label className="block text-sm font-bold text-foreground mb-1">{language === 'vi' ? 'Vai trò Công ty' : 'Company Vai trò'}</label>
  <input type="text" className="w-full px-4 py-2 bg-background text-foreground border border-linear-border rounded-md focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all" placeholder={language === 'vi' ? "Nhập vai trò tổng quát của công ty..." : "Enter overall company role..."} defaultValue={language === 'vi' ? "Nhà cung cấp Giải pháp Tiếp thị Tự động Hàng đầu" : "Leading Automated Marketing Solution Provider"} />
  </div>
  <div>
  <label className="block text-sm font-bold text-foreground mb-1">{language === 'vi' ? 'Năng lực Cốt lõi' : 'Core Competencies'}</label>
- <textarea rows={3} className="w-full px-4 py-2 bg-background text-foreground border border-linear-border rounded-md focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all" placeholder={language === 'vi' ? "Mô tả năng lực cốt lõi..." : "Describe core competencies..."} defaultValue={language === 'vi' ? "Động cơ tính toán tài chính độc quyền, Thuật toán tranh luận Agent thời gian thực." : "Proprietary financial math engine, Realtime Agent debate algorithms."} />
+ <textarea rows={3} className="w-full px-4 py-2 bg-background text-foreground border border-linear-border rounded-md focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all" placeholder={language === 'vi' ? "Mô tả năng lực cốt lõi..." : "Describe core competencies..."} defaultValue={language === 'vi' ? "Động cơ tính toán tài chính độc quyền, Thuật toán tranh luận Trợ lý AI thời gian thực." : "Proprietary financial math engine, Realtime Trợ lý AI debate algorithms."} />
  </div>
  </div>
  </div>

@@ -16,38 +16,38 @@ const PRESET_AGENTS = [
 ];
 
 interface CustomAgentItem {
-  id: string;
-  name: string;
-  role: string;
-  capabilities: string[];
-  isPreset?: boolean;
-  brain?: number;
-  status?: string;
-  color?: string;
-  iconColor?: string;
-  skill?: string;
+ id: string;
+ name: string;
+ role: string;
+ capabilities: string[];
+ isPreset?: boolean;
+ brain?: number;
+ status?: string;
+ color?: string;
+ iconColor?: string;
+ skill?: string;
 }
 
 const CAPABILITY_LABELS: Record<string, string> = {
-  data_analysis: 'Python DA',
-  web_search: 'Web Search',
-  niche_knowledge: 'Niche RAG',
-  financial_modeling: 'Tài chính',
-  competitor_intel: 'Cạnh tranh',
-  content_strategy: 'Content',
-  customer_insights: 'Insight KH',
-  campaign_optimizer: 'Campaigns',
-  brand_health: 'Brand Health',
-  market_sizing: 'Thị trường',
+ data_analysis: 'Python DA',
+ web_search: 'Web Search',
+ niche_knowledge: 'Niche RAG',
+ financial_modeling: 'Tài chính',
+ competitor_intel: 'Cạnh tranh',
+ content_strategy: 'Content',
+ customer_insights: 'Insight KH',
+ campaign_optimizer: 'Campaigns',
+ brand_health: 'Brand Health',
+ market_sizing: 'Thị trường',
 };
 
 const COLOR_PRESETS = [
-  'from-violet-500 to-purple-500',
-  'from-cyan-500 to-blue-500',
-  'from-emerald-500 to-teal-500',
-  'from-rose-500 to-pink-500',
-  'from-amber-500 to-orange-500',
-  'from-fuchsia-500 to-pink-500',
+ 'from-violet-500 to-purple-500',
+ 'from-cyan-500 to-blue-500',
+ 'from-emerald-500 to-teal-500',
+ 'from-rose-500 to-pink-500',
+ 'from-amber-500 to-orange-500',
+ 'from-fuchsia-500 to-pink-500',
 ];
 
 export default function AgentsPage() {
@@ -59,76 +59,76 @@ export default function AgentsPage() {
  const [selectedAgent, setSelectedAgent] = useState<any>(null);
 
  useEffect(() => {
-   loadCustomAgents();
+  loadCustomAgents();
  }, []);
 
  const loadCustomAgents = async () => {
-   setIsLoading(true);
-   
-   const local = localStorage.getItem('brandflow_custom_agents');
-   const localAgents = local ? JSON.parse(local) : [];
-   
-   try {
-     const res = await fetch('/api/v1/agents');
-     if (res.ok) {
-       const data = await res.json();
-       if (data && data.length > 0) {
-         setCustomAgents(data);
-       } else {
-         setCustomAgents(localAgents);
-       }
-     } else {
-       throw new Error('API error');
-     }
-   } catch {
-     // Fallback: load from localStorage if API is unavailable
+  setIsLoading(true);
+  
+  const local = localStorage.getItem('brandflow_custom_agents');
+  const localAgents = local ? JSON.parse(local) : [];
+  
+  try {
+   const res = await fetch('/api/v1/agents');
+   if (res.ok) {
+    const data = await res.json();
+    if (data && data.length > 0) {
+     setCustomAgents(data);
+    } else {
      setCustomAgents(localAgents);
-   } finally {
-     setIsLoading(false);
+    }
+   } else {
+    throw new Error('API error');
    }
+  } catch {
+   // Fallback: load from localStorage if API is unavailable
+   setCustomAgents(localAgents);
+  } finally {
+   setIsLoading(false);
+  }
  };
 
  const handleDeleteAgent = async (id: string) => {
-   setDeletingId(id);
-   // Remove from local state
-   setCustomAgents(prev => prev.filter(a => a.id !== id));
-   // Also clean localStorage fallback
-   const local = localStorage.getItem('brandflow_custom_agents');
-   if (local) {
-     const arr = JSON.parse(local).filter((a: any) => a.id !== id);
-     localStorage.setItem('brandflow_custom_agents', JSON.stringify(arr));
-   }
-   setDeletingId(null);
+  setDeletingId(id);
+  // Remove from local state
+  setCustomAgents(prev => prev.filter(a => a.id !== id));
+  // Also clean localStorage fallback
+  const local = localStorage.getItem('brandflow_custom_agents');
+  if (local) {
+   const arr = JSON.parse(local).filter((a: any) => a.id !== id);
+   localStorage.setItem('brandflow_custom_agents', JSON.stringify(arr));
+  }
+  setDeletingId(null);
  };
 
  const allAgents = [
-   ...PRESET_AGENTS,
-   ...customAgents.map((a, i) => ({
-     ...a,
-     brain: a.brain || Math.floor(70 + Math.random() * 25),
-     status: a.status || 'Hoạt động',
-     color: a.color || COLOR_PRESETS[i % COLOR_PRESETS.length],
-     iconColor: a.iconColor || 'text-cyan-600',
-     skill: a.skill || (a.capabilities?.slice(0, 2).map(c => CAPABILITY_LABELS[c] || c).join(', ') || 'Custom'),
-   })),
+  ...PRESET_AGENTS,
+  ...customAgents.map((a, i) => ({
+   ...a,
+   brain: a.brain || Math.floor(70 + Math.random() * 25),
+   status: a.status || 'Hoạt động',
+   color: a.color || COLOR_PRESETS[i % COLOR_PRESETS.length],
+   iconColor: a.iconColor || 'text-cyan-600',
+   skill: a.skill || (a.capabilities?.slice(0, 2).map(c => CAPABILITY_LABELS[c] || c).join(', ') || 'Custom'),
+  })),
  ];
 
  return (
-  <div className="w-full h-full overflow-y-auto">
-  <div className="page-container max-w-6xl min-h-full">
+ <div className="w-full h-full overflow-y-auto">
+ <div className="page-container max-w-6xl min-h-full">
  <div className="mb-8 flex justify-between items-end">
-  <div>
-  <h2 className="page-title flex items-center">
-  <Network className="w-6 h-6 mr-3 text-cyan-600" />
-  {t('agents.title')}
-  </h2>
-  <p className="page-desc">{t('agents.desc')}</p>
-  </div>
+ <div>
+ <h2 className="page-title flex items-center">
+ <Network className="w-6 h-6 mr-3 text-cyan-600" />
+ {t('agents.title')}
+ </h2>
+ <p className="page-desc">{t('agents.desc')}</p>
+ </div>
  <Link href="/agent-builder">
-    <button className="hidden md:flex items-center btn-primary gap-2">
-     <Plus className="w-4 h-4" /> Thuê Trợ lý mới
-     <ArrowRight className="w-4 h-4 opacity-70" />
-   </button>
+  <button className="hidden md:flex items-center btn-primary gap-2">
+   <Plus className="w-4 h-4" /> Thuê Trợ lý mới
+   <ArrowRight className="w-4 h-4 opacity-70" />
+  </button>
  </Link>
  </div>
 
@@ -157,18 +157,18 @@ export default function AgentsPage() {
  </div>
  </div>
  <div className="flex gap-1">
-   {!('isPreset' in agent && agent.isPreset) && (
-     <button 
-       onClick={(e) => { e.stopPropagation(); handleDeleteAgent(agent.id); }}
-       className="text-linear-text-muted hover:text-red-500 bg-background p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
-       title="Xóa agent"
-     >
-       <Trash2 className="w-4 h-4" />
-     </button>
-   )}
-   <button className="text-linear-text-muted hover:text-foreground bg-background p-2 rounded-full hover:bg-linear-surface/80 transition-colors">
-     <Settings2 className="w-4 h-4" />
+  {!('isPreset' in agent && agent.isPreset) && (
+   <button 
+    onClick={(e) => { e.stopPropagation(); handleDeleteAgent(agent.id); }}
+    className="text-linear-text-muted hover:text-red-500 bg-background p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+    title="Xóa agent"
+   >
+    <Trash2 className="w-4 h-4" />
    </button>
+  )}
+  <button className="text-linear-text-muted hover:text-foreground bg-background p-2 rounded-full hover:bg-linear-surface/80 transition-colors">
+   <Settings2 className="w-4 h-4" />
+  </button>
  </div>
  </div>
 
@@ -194,7 +194,7 @@ export default function AgentsPage() {
  </motion.div>
  ))}
 
- {/* Add Agent Placeholder */}
+ {/* Add Trợ lý AI Placeholder */}
  <Link href="/agent-builder">
  <motion.div 
  whileHover={{ scale: 1.02 }}
@@ -204,97 +204,97 @@ export default function AgentsPage() {
  <Plus className="w-6 h-6 text-linear-text-muted" />
  </div>
  <p className="text-sm font-bold text-foreground">Mở khóa Trợ lý mới</p>
- <p className="text-xs font-semibold text-linear-text-muted mt-1 px-4">Tạo AI Agent chuyên biệt với các công cụ Research, Data Analysis, và nhiều hơn nữa.</p>
+ <p className="text-xs font-semibold text-linear-text-muted mt-1 px-4">Tạo AI Trợ lý AI chuyên biệt với các công cụ Research, Data Analysis, và nhiều hơn nữa.</p>
  <div className="mt-3 flex items-center gap-1 text-xs font-bold text-cyan-500">
-   Tạo Agent <ArrowRight className="w-3 h-3" />
+  Tạo Trợ lý AI <ArrowRight className="w-3 h-3" />
  </div>
  </motion.div>
  </Link>
  </div>
  </div>
 
- {/* Agent Activity Modal */}
+ {/* Trợ lý AI Activity Modal */}
  <AnimatePresence>
-   {selectedAgent && (
-     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-       <motion.div 
-         initial={{ opacity: 0 }} 
-         animate={{ opacity: 1 }} 
-         exit={{ opacity: 0 }} 
-         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-         onClick={() => setSelectedAgent(null)}
-       />
-       <motion.div 
-         initial={{ opacity: 0, scale: 0.95, y: 20 }}
-         animate={{ opacity: 1, scale: 1, y: 0 }}
-         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-         className="relative w-full max-w-3xl max-h-[85vh] bg-background border border-linear-border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
-       >
-         {/* Modal Header */}
-         <div className="flex items-center justify-between p-5 border-b border-linear-border bg-slate-50 dark:bg-slate-900/50">
-           <div className="flex items-center gap-4">
-             <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br ${selectedAgent.color} shadow-sm`}>
-               <Bot className="w-6 h-6 text-white" />
-             </div>
-             <div>
-               <h3 className="text-xl font-bold text-foreground leading-tight">{selectedAgent.name}</h3>
-               <p className="text-xs text-linear-text-muted font-medium mt-0.5">{selectedAgent.role}</p>
-             </div>
-           </div>
-           <button 
-             onClick={() => setSelectedAgent(null)}
-             className="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 transition-colors"
-           >
-             <X className="w-5 h-5" />
-           </button>
-         </div>
-
-         {/* Modal Content - Activity Log */}
-         <div className="flex-1 overflow-y-auto p-5 md:p-6 custom-scrollbar bg-slate-50/50 dark:bg-[#0B1120]">
-           <div className="flex items-center justify-between mb-6">
-             <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-               <Activity className="w-4 h-4 text-cyan-500" /> Chu trình đã chạy (Recent Cycles)
-             </h4>
-             <div className="flex items-center gap-2 text-xs font-semibold px-2.5 py-1 rounded-md border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-               ONLINE
-             </div>
-           </div>
-           <div className="space-y-5">
-             {[1, 2, 3].map((cycle, idx) => (
-               <div key={idx} className="p-4 rounded-xl border border-linear-border bg-white dark:bg-slate-900 shadow-sm relative overflow-hidden group">
-                 <div className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${selectedAgent.color}`}></div>
-                 <div className="flex items-center justify-between mb-3 pl-2">
-                   <span className="text-xs font-bold text-slate-500 font-mono flex items-center gap-2">
-                     <BrainCircuit className="w-3.5 h-3.5" /> CYCLE_ID: 8F{idx}3-A{cycle}9B
-                   </span>
-                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/20">SUCCESS</span>
-                 </div>
-                 <div className="text-[13px] text-slate-700 dark:text-slate-300 space-y-3 pl-2">
-                   <div className="flex items-start gap-2.5">
-                     <Zap className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                     <p><strong>Input:</strong> Nhận parameter context cho workflow <span className="text-cyan-600 dark:text-cyan-400 font-semibold">'{selectedAgent.skill}'</span>.</p>
-                   </div>
-                   <div className="flex items-start gap-2.5">
-                     <Network className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-                     <p><strong>Processing:</strong> Thực thi Cognitive Load Simulation trên 10,000 variants. Lọc ra 3 kịch bản tối ưu nhất.</p>
-                   </div>
-                   <div className="flex items-start gap-2.5">
-                     <MessageSquare className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                     <p><strong>Output:</strong> Đẩy dữ liệu chiến lược vào Shared Context cho quá trình Cross-Agent Debate.</p>
-                   </div>
-                 </div>
-                 <div className="mt-4 pt-3 border-t border-linear-border flex justify-between items-center text-[10px] text-slate-400 pl-2">
-                   <span>Model: GPT-4-Omni-Enterprise</span>
-                   <span>Execution Time: {(1.2 + idx * 0.4).toFixed(2)}s</span>
-                 </div>
-               </div>
-             ))}
-           </div>
-         </div>
-       </motion.div>
+  {selectedAgent && (
+   <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <motion.div 
+     initial={{ opacity: 0 }} 
+     animate={{ opacity: 1 }} 
+     exit={{ opacity: 0 }} 
+     className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+     onClick={() => setSelectedAgent(null)}
+    />
+    <motion.div 
+     initial={{ opacity: 0, scale: 0.95, y: 20 }}
+     animate={{ opacity: 1, scale: 1, y: 0 }}
+     exit={{ opacity: 0, scale: 0.95, y: 20 }}
+     className="relative w-full max-w-3xl max-h-[85vh] bg-background border border-linear-border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+    >
+     {/* Modal Header */}
+     <div className="flex items-center justify-between p-5 border-b border-linear-border bg-slate-50 dark:bg-slate-900/50">
+      <div className="flex items-center gap-4">
+       <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br ${selectedAgent.color} shadow-sm`}>
+        <Bot className="w-6 h-6 text-white" />
+       </div>
+       <div>
+        <h3 className="text-xl font-bold text-foreground leading-tight">{selectedAgent.name}</h3>
+        <p className="text-xs text-linear-text-muted font-medium mt-0.5">{selectedAgent.role}</p>
+       </div>
+      </div>
+      <button 
+       onClick={() => setSelectedAgent(null)}
+       className="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 transition-colors"
+      >
+       <X className="w-5 h-5" />
+      </button>
      </div>
-   )}
+
+     {/* Modal Content - Activity Log */}
+     <div className="flex-1 overflow-y-auto p-5 md:p-6 custom-scrollbar bg-slate-50/50 dark:bg-[#0B1120]">
+      <div className="flex items-center justify-between mb-6">
+       <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+        <Activity className="w-4 h-4 text-cyan-500" /> Chu trình đã chạy (Recent Cycles)
+       </h4>
+       <div className="flex items-center gap-2 text-xs font-semibold px-2.5 py-1 rounded-md border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+        ONLINE
+       </div>
+      </div>
+      <div className="space-y-5">
+       {[1, 2, 3].map((cycle, idx) => (
+        <div key={idx} className="p-4 rounded-xl border border-linear-border bg-white dark:bg-slate-900 shadow-sm relative overflow-hidden group">
+         <div className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${selectedAgent.color}`}></div>
+         <div className="flex items-center justify-between mb-3 pl-2">
+          <span className="text-xs font-bold text-slate-500 font-mono flex items-center gap-2">
+           <BrainCircuit className="w-3.5 h-3.5" /> CYCLE_ID: 8F{idx}3-A{cycle}9B
+          </span>
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/20">SUCCESS</span>
+         </div>
+         <div className="text-[13px] text-slate-700 dark:text-slate-300 space-y-3 pl-2">
+          <div className="flex items-start gap-2.5">
+           <Zap className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+           <p><strong>Input:</strong> Nhận parameter context cho workflow <span className="text-cyan-600 dark:text-cyan-400 font-semibold">'{selectedAgent.skill}'</span>.</p>
+          </div>
+          <div className="flex items-start gap-2.5">
+           <Network className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+           <p><strong>Processing:</strong> Thực thi Cognitive Load Simulation trên 10,000 variants. Lọc ra 3 kịch bản tối ưu nhất.</p>
+          </div>
+          <div className="flex items-start gap-2.5">
+           <MessageSquare className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+           <p><strong>Output:</strong> Đẩy dữ liệu chiến lược vào Shared Context cho quá trình Cross-Trợ lý AI Debate.</p>
+          </div>
+         </div>
+         <div className="mt-4 pt-3 border-t border-linear-border flex justify-between items-center text-[10px] text-slate-400 pl-2">
+          <span>Model: GPT-4-Omni-Enterprise</span>
+          <span>Execution Time: {(1.2 + idx * 0.4).toFixed(2)}s</span>
+         </div>
+        </div>
+       ))}
+      </div>
+     </div>
+    </motion.div>
+   </div>
+  )}
  </AnimatePresence>
 
  </div>

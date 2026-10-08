@@ -5,19 +5,19 @@ import { useRouter } from 'next/navigation';
 import Phase1_Ingestion from '@/components/workspace/Phase1_Ingestion';
 
 export default function OnboardingPage() {
-  const router = useRouter();
+ const router = useRouter();
 
-  const handleGoToHub = () => {
-    router.push('/hub');
-  };
+ const handleGoToHub = () => {
+  router.push('/hub');
+ };
 
-  const handleGoToWorkspace = () => {
-    router.push('/workspace');
-  };
+ const handleGoToWorkspace = () => {
+  router.push('/workspace');
+ };
 
-  return (
-    <div className="absolute inset-0 flex overflow-hidden bg-transparent">
-      <Phase1_Ingestion onGoToHub={handleGoToHub} onGoToWorkspace={handleGoToWorkspace} />
-    </div>
-  );
+ return (
+  <div className="absolute inset-0 flex overflow-hidden bg-transparent">
+   <Phase1_Ingestion onGoToHub={handleGoToHub} onGoToWorkspace={handleGoToWorkspace} />
+  </div>
+ );
 }

@@ -9,52 +9,52 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const GANTT_DATA = [
-  { name: 'On-air TVC Mascot ruột', t8: true, t9: true, t10: false, t11: false, t12: false },
-  { name: 'Sampling siêu thị', t8: true, t9: true, t10: false, t11: false, t12: false },
-  { name: 'Ra mắt túi zip mini 15g', t8: true, t9: true, t10: false, t11: false, t12: false },
-  { name: 'Flash Sale Mega Cuối năm', t8: false, t9: false, t10: false, t11: false, t12: true },
+ { name: 'On-air TVC Mascot ruột', t8: true, t9: true, t10: false, t11: false, t12: false },
+ { name: 'Sampling siêu thị', t8: true, t9: true, t10: false, t11: false, t12: false },
+ { name: 'Ra mắt túi zip mini 15g', t8: true, t9: true, t10: false, t11: false, t12: false },
+ { name: 'Flash Sale Mega Cuối năm', t8: false, t9: false, t10: false, t11: false, t12: true },
 ];
 
 export default function PageB6Gantt() {
-  const { localData, saveStatus } = useAutoSaveForm('b6-gantt', { items: [] });
-  const COLUMNS = [
-    { key: 'name', header: 'Chiến dịch / Hành động', className: 'bg-linear-surface font-medium text-foreground', width: '250px',
-      render: (row: any) => (
-        <div className="flex items-center justify-between">
-          <span>{row.name}</span>
-          {row.rationale && (
-            <RationaleTooltip rationale={row.rationale} type="rationale">
-              <span className="sr-only">Why</span>
-            </RationaleTooltip>
-          )}
-        </div>
-      )
-    },
-    { key: 't8', header: 'Tháng 1', align: 'center' as const, render: (r: any) => r.t8 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-gradient-to-r from-emerald-500 to-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
-    { key: 't9', header: 'Tháng 2', align: 'center' as const, render: (r: any) => r.t9 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
-    { key: 't10', header: 'Tháng 3', align: 'center' as const, render: (r: any) => r.t10 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
-    { key: 't11', header: 'Tháng 4', align: 'center' as const, render: (r: any) => r.t11 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
-    { key: 't12', header: 'Tháng 5', align: 'center' as const, render: (r: any) => r.t12 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-gradient-to-r from-emerald-400 to-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.4)] rounded-r-full"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
-  ];
+ const { localData, saveStatus } = useAutoSaveForm('b6-gantt', { items: [] });
+ const COLUMNS = [
+  { key: 'name', header: 'Chiến dịch / Hành động', className: 'bg-linear-surface font-medium text-foreground', width: '250px',
+   render: (row: any) => (
+    <div className="flex items-center justify-between">
+     <span>{row.name}</span>
+     {row.rationale && (
+      <RationaleTooltip rationale={row.rationale} type="rationale">
+       <span className="sr-only">Why</span>
+      </RationaleTooltip>
+     )}
+    </div>
+   )
+  },
+  { key: 't8', header: 'Tháng 1', align: 'center' as const, render: (r: any) => r.t8 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-gradient-to-r from-emerald-500 to-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
+  { key: 't9', header: 'Tháng 2', align: 'center' as const, render: (r: any) => r.t9 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
+  { key: 't10', header: 'Tháng 3', align: 'center' as const, render: (r: any) => r.t10 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
+  { key: 't11', header: 'Tháng 4', align: 'center' as const, render: (r: any) => r.t11 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
+  { key: 't12', header: 'Tháng 5', align: 'center' as const, render: (r: any) => r.t12 ? <div className="h-8 w-[105%] -ml-[2.5%] bg-gradient-to-r from-emerald-400 to-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.4)] rounded-r-full"></div> : null, className: 'border-l border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-0 overflow-hidden' },
+ ];
 
-  return (
-    <>
-    <B2BPageTemplate
-      saveStatus={saveStatus}
-      title="Bảng lập kế hoạch hoạt động (Gantt Chart)"
-      description="Lịch biểu trực quan các chiến dịch tiếp thị."
-    >
-      <div className="space-y-6">
-        <InstructionAlert>
-          Biểu đồ Gantt theo tháng/tuần đánh dấu thời gian bắt đầu và kết thúc của các chiến dịch lớn.
-        </InstructionAlert>
-        
-        <div className="bento-card p-6 overflow-x-auto">
-           <PastelTable columns={COLUMNS} data={localData.items} />
-        </div>
-        <WizardNavigation prevLink="/planning/b5-pnl" prevLabel="Về B.5" nextLink="/planning/c0-overview" nextLabel="Hoàn thành Phần B! 👉 Sang Phần C" />
-      </div>
-    </B2BPageTemplate>
-        </>
-  );
+ return (
+  <>
+  <B2BPageTemplate
+   saveStatus={saveStatus}
+   title="Bảng lập kế hoạch hoạt động (Gantt Chart)"
+   description="Lịch biểu trực quan các chiến dịch tiếp thị."
+  >
+   <div className="space-y-6">
+    <InstructionAlert>
+     Biểu đồ Gantt theo tháng/tuần đánh dấu thời gian bắt đầu và kết thúc của các chiến dịch lớn.
+    </InstructionAlert>
+    
+    <div className="bento-card p-6 overflow-x-auto">
+      <PastelTable columns={COLUMNS} data={localData.items} />
+    </div>
+    <WizardNavigation prevLink="/planning/b5-pnl" prevLabel="Về B.5" nextLink="/planning/c0-overview" nextLabel="Hoàn thành Phần B! 👉 Sang Phần C" />
+   </div>
+  </B2BPageTemplate>
+    </>
+ );
 }

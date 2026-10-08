@@ -3,30 +3,30 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface WizardNavigationProps {
-  prevLink?: string;
-  prevLabel?: string;
-  nextLink?: string;
-  nextLabel?: string;
+ prevLink?: string;
+ prevLabel?: string;
+ nextLink?: string;
+ nextLabel?: string;
 }
 
 export default function WizardNavigation({ prevLink, prevLabel, nextLink, nextLabel }: WizardNavigationProps) {
-  return (
-    <div className="print-hide flex items-center justify-between mt-10 pt-6 border-t border-linear-border">
-      {prevLink && prevLabel ? (
-        <Link href={prevLink} className="flex items-center px-5 py-2.5 rounded-lg text-linear-text-muted hover:text-foreground hover:bg-slate-100 dark:bg-slate-800/30 transition-colors font-medium">
-          <ArrowLeft className="w-4 h-4 mr-2" /> Quay lại: {prevLabel}
-        </Link>
-      ) : (
-        <div /> 
-      )}
+ return (
+  <div className="print-hide flex items-center justify-between mt-10 pt-6 border-t border-linear-border">
+   {prevLink && prevLabel ? (
+    <Link href={prevLink} className="flex items-center px-5 py-2.5 rounded-lg text-linear-text-muted hover:text-foreground hover:bg-slate-100 dark:bg-slate-800/30 transition-colors font-medium">
+     <ArrowLeft className="w-4 h-4 mr-2" /> Quay lại: {prevLabel}
+    </Link>
+   ) : (
+    <div /> 
+   )}
 
-      {nextLink && nextLabel ? (
-        <Link href={nextLink} className="flex items-center px-6 py-2.5 rounded-lg bg-slate-800 text-white hover:bg-slate-700 hover:shadow-md transition-all font-semibold">
-          Tiếp theo: {nextLabel} <ArrowRight className="w-4 h-4 ml-2" />
-        </Link>
-      ) : (
-        <div />
-      )}
-    </div>
-  );
+   {nextLink && nextLabel ? (
+    <Link href={nextLink} className="flex items-center px-6 py-2.5 rounded-lg bg-slate-800 text-white hover:bg-slate-700 hover:shadow-md transition-all font-semibold">
+     Tiếp theo: {nextLabel} <ArrowRight className="w-4 h-4 ml-2" />
+    </Link>
+   ) : (
+    <div />
+   )}
+  </div>
+ );
 }

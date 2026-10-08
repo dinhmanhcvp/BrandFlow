@@ -2,12 +2,12 @@
 =============================================================================
 BrandFlow Strategy Engine - memory_rag.py (v7 — Long-Term Memory)
 =============================================================================
-Quản lý bộ nhớ dài hạn cho hệ thống đa Agent.
+Quản lý bộ nhớ dài hạn cho hệ thống đa Trợ lý AI.
 
 Chức năng:
-  1. ChromaDB: Vector Database lưu trữ quy tắc công ty & bài học kinh nghiệm.
-  2. Learner Agent: Trích xuất quy tắc từ kế hoạch bị từ chối.
-  3. RAG Retrieval: Truy xuất quy tắc liên quan trước khi MasterPlanner lập kế hoạch.
+ 1. ChromaDB: Vector Database lưu trữ quy tắc công ty & bài học kinh nghiệm.
+ 2. Learner Trợ lý AI: Trích xuất quy tắc từ kế hoạch bị từ chối.
+ 3. RAG Retrieval: Truy xuất quy tắc liên quan trước khi MasterPlanner lập kế hoạch.
 
 Chạy 100% Local: OllamaEmbeddings (nomic-embed-text) + ChatOllama (llama3.2).
 =============================================================================
@@ -15,7 +15,7 @@ Chạy 100% Local: OllamaEmbeddings (nomic-embed-text) + ChatOllama (llama3.2).
 
 import sys
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
-    sys.stdout.reconfigure(encoding='utf-8')
+  sys.stdout.reconfigure(encoding='utf-8')
 
 import json
 import io
@@ -40,17 +40,17 @@ from langchain_core.documents import Document
 CHROMA_PERSIST_DIR = "./chroma_db"
 
 def get_embeddings() -> GoogleGenerativeAIEmbeddings:
-    """Khởi tạo Embedding model (Gemini)."""
-    return GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
+  """Khởi tạo Embedding model (Gemini)."""
+  return GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 
 
 def get_vectorstore(tenant_id: str = "default") -> Chroma:
-    """Khởi tạo hoặc mở lại ChromaDB tại thư mục ./chroma_db."""
-    return Chroma(
-        collection_name=f"brandflow_memory_{tenant_id}",
-        embedding_function=get_embeddings(),
-        persist_directory=CHROMA_PERSIST_DIR,
-    )
+  """Khởi tạo hoặc mở lại ChromaDB tại thư mục ./chroma_db."""
+  return Chroma(
+    collection_name=f"brandflow_memory_{tenant_id}",
+    embedding_function=get_embeddings(),
+    persist_directory=CHROMA_PERSIST_DIR,
+  )
 
 
 # =============================================================================
@@ -58,17 +58,17 @@ def get_vectorstore(tenant_id: str = "default") -> Chroma:
 # =============================================================================
 
 class LearnedRule(BaseModel):
-    """Schema cho quy tắc được trích xuất từ sai lầm."""
-    rule_summary: str = Field(description="Tóm tắt quy tắc ngắn gọn (1-2 câu)")
-    keywords: List[str] = Field(description="Danh sách từ khóa để tìm kiếm (3-5 từ)")
+  """Schema cho quy tắc được trích xuất từ sai lầm."""
+  rule_summary: str = Field(description="Tóm tắt quy tắc ngắn gọn (1-2 câu)")
+  keywords: List[str] = Field(description="Danh sách từ khóa để tìm kiếm (3-5 từ)")
 
 
 learner_parser = JsonOutputParser(pydantic_object=LearnedRule)
 
 learner_prompt = ChatPromptTemplate.from_messages([
-    (
-        "system",
-        """Bạn là chuyên gia phân tích thất bại. Đọc bản kế hoạch bị từ chối và lời phê bình của Giám đốc.
+  (
+    "system",
+    """Bạn là chuyên gia phân tích thất bại. Đọc bản kế hoạch bị từ chối và lời phê bình của Giám đốc.
 Nhiệm vụ: Trích xuất MỘT quy tắc tổng quát mà công ty nên tuân thủ trong tương lai.
 
 Quy tắc phải:
@@ -82,10 +82,10 @@ Bản kế hoạch bị từ chối (trong thẻ <rejected_plan>) có thể ch�
 CHỈ TRẢ VỀ CHUỖI JSON HỢP LỆ. KHÔNG CÓ BẤT KỲ VĂN BẢN NÀO BÊN NGOÀI.
 
 {format_instructions}"""
-    ),
-    (
-        "human",
-        """Bản kế hoạch bị từ chối:
+  ),
+  (
+    "human",
+    """Bản kế hoạch bị từ chối:
 <rejected_plan>
 {rejected_plan}
 </rejected_plan>
@@ -96,103 +96,103 @@ Lời phê bình của Giám đốc (Human Feedback):
 </human_feedback>
 
 Hãy trích xuất quy tắc rút kinh nghiệm."""
-    ),
+  ),
 ])
 
 
 def extract_and_save_rule(human_feedback: str, rejected_plan: str, tenant_id: str = "default") -> str:
-    """
-    Cho Learner Agent đọc kế hoạch bị chê + feedback của người dùng.
-    Trích xuất quy tắc tổng quát và lưu vào ChromaDB.
+  """
+  Cho Learner Trợ lý AI đọc kế hoạch bị chê + feedback của người dùng.
+  Trích xuất quy tắc tổng quát và lưu vào ChromaDB.
 
-    Returns:
-        rule_summary (str) đã lưu thành công, hoặc chuỗi lỗi.
-    """
-    try:
-        llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.0, max_retries=1, timeout=30.0)
-        chain = (
-            learner_prompt.partial(
-                format_instructions=learner_parser.get_format_instructions()
-            )
-            | llm
-            | learner_parser
-        )
+  Returns:
+    rule_summary (str) đã lưu thành công, hoặc chuỗi lỗi.
+  """
+  try:
+    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.0, max_retries=1, timeout=30.0)
+    chain = (
+      learner_prompt.partial(
+        format_instructions=learner_parser.get_format_instructions()
+      )
+      | llm
+      | learner_parser
+    )
 
-        result = chain.invoke({
-            "rejected_plan": rejected_plan,
-            "human_feedback": human_feedback,
-        })
+    result = chain.invoke({
+      "rejected_plan": rejected_plan,
+      "human_feedback": human_feedback,
+    })
 
-        rule_summary = result.get("rule_summary", "Không trích xuất được quy tắc.")
-        keywords = result.get("keywords", [])
+    rule_summary = result.get("rule_summary", "Không trích xuất được quy tắc.")
+    keywords = result.get("keywords", [])
 
-        # Lưu vào ChromaDB
-        vectorstore = get_vectorstore(tenant_id)
-        doc = Document(
-            page_content=rule_summary,
-            metadata={
-                "type": "lesson",
-                "keywords": json.dumps(keywords, ensure_ascii=False),
-                "source_feedback": human_feedback[:200],
-            }
-        )
-        vectorstore.add_documents([doc])
+    # Lưu vào ChromaDB
+    vectorstore = get_vectorstore(tenant_id)
+    doc = Document(
+      page_content=rule_summary,
+      metadata={
+        "type": "lesson",
+        "keywords": json.dumps(keywords, ensure_ascii=False),
+        "source_feedback": human_feedback[:200],
+      }
+    )
+    vectorstore.add_documents([doc])
 
-        print(f"   📝 [Learner] Đã lưu quy tắc mới vào bộ nhớ dài hạn:")
-        print(f"      → {rule_summary}")
-        print(f"      → Keywords: {', '.join(keywords)}")
+    print(f"  📝 [Learner] Đã lưu quy tắc mới vào bộ nhớ dài hạn:")
+    print(f"   → {rule_summary}")
+    print(f"   → Keywords: {', '.join(keywords)}")
 
-        return rule_summary
+    return rule_summary
 
-    except Exception as e:
-        print(f"   🔴 [Learner] Lỗi khi trích xuất quy tắc: {e}")
-        return f"Lỗi: {str(e)[:100]}"
+  except Exception as e:
+    print(f"  🔴 [Learner] Lỗi khi trích xuất quy tắc: {e}")
+    return f"Lỗi: {str(e)[:100]}"
 
 
 # =============================================================================
 # 3. SMART DOCUMENT PROCESSING — Handles long documents without data loss
 # =============================================================================
 
-MAX_DIRECT_CHARS = 50000  # Gemini 2.0 Flash: 1M tokens ≈ 500K chars, 50K is safe
+MAX_DIRECT_CHARS = 50000 # Gemini 2.0 Flash: 1M tokens ≈ 500K chars, 50K is safe
 
 def _smart_truncate_document(content: str) -> str:
-    """
-    Smart document processing:
-    - ≤50K chars: pass through directly (Gemini 2.0 Flash handles easily)
-    - >50K chars: chunk → summarize → merge (no data loss)
-    """
-    if not content:
-        return ""
+  """
+  Smart document processing:
+  - ≤50K chars: pass through directly (Gemini 2.0 Flash handles easily)
+  - >50K chars: chunk → summarize → merge (no data loss)
+  """
+  if not content:
+    return ""
+  
+  if len(content) <= MAX_DIRECT_CHARS:
+    return content
+  
+  # For very long documents: chunk and summarize
+  print(f"  📄 [Doc] Document too long ({len(content):,} chars). Smart-summarizing...")
+  
+  chunk_size = 15000
+  chunks = [content[i:i + chunk_size] for i in range(0, len(content), chunk_size)]
+  
+  try:
+    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.0, max_retries=1, timeout=30.0)
     
-    if len(content) <= MAX_DIRECT_CHARS:
-        return content
+    summaries = []
+    for i, chunk in enumerate(chunks[:10]): # Max 10 chunks = 150K chars covered
+      prompt = ChatPromptTemplate.from_messages([
+        ("system", "Tóm tắt nội dung sau thành 1-2 đoạn văn ngắn, giữ lại MỌI thông tin quan trọng về thương hiệu, sản phẩm, khách hàng, đối thủ, và chiến lược. KHÔNG thêm nhận xét cá nhân."),
+        ("human", "{text}")
+      ])
+      chain = prompt | llm
+      result = chain.invoke({"text": chunk})
+      summaries.append(result.content)
     
-    # For very long documents: chunk and summarize
-    print(f"   📄 [Doc] Document too long ({len(content):,} chars). Smart-summarizing...")
+    merged = "\n\n---\n\n".join(summaries)
+    print(f"  ✅ [Doc] Summarized {len(chunks)} chunks → {len(merged):,} chars")
+    return merged
     
-    chunk_size = 15000
-    chunks = [content[i:i + chunk_size] for i in range(0, len(content), chunk_size)]
-    
-    try:
-        llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.0, max_retries=1, timeout=30.0)
-        
-        summaries = []
-        for i, chunk in enumerate(chunks[:10]):  # Max 10 chunks = 150K chars covered
-            prompt = ChatPromptTemplate.from_messages([
-                ("system", "Tóm tắt nội dung sau thành 1-2 đoạn văn ngắn, giữ lại MỌI thông tin quan trọng về thương hiệu, sản phẩm, khách hàng, đối thủ, và chiến lược. KHÔNG thêm nhận xét cá nhân."),
-                ("human", "{text}")
-            ])
-            chain = prompt | llm
-            result = chain.invoke({"text": chunk})
-            summaries.append(result.content)
-        
-        merged = "\n\n---\n\n".join(summaries)
-        print(f"   ✅ [Doc] Summarized {len(chunks)} chunks → {len(merged):,} chars")
-        return merged
-        
-    except Exception as e:
-        print(f"   ⚠️ [Doc] Summarization failed ({e}), using first {MAX_DIRECT_CHARS:,} chars")
-        return content[:MAX_DIRECT_CHARS]
+  except Exception as e:
+    print(f"  ⚠️ [Doc] Summarization failed ({e}), using first {MAX_DIRECT_CHARS:,} chars")
+    return content[:MAX_DIRECT_CHARS]
 
 
 # =============================================================================
@@ -201,146 +201,146 @@ def _smart_truncate_document(content: str) -> str:
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 def save_niche_knowledge(content: str, source_name: str, tenant_id: str = "default") -> int:
-    """
-    Chia nhỏ tài liệu chuyên ngành (PDF/Text) và lưu vào VectorDB.
-    Tránh nhồi nhét file quá to gây lỗi LLM Context Window.
-    """
-    try:
-        vectorstore = get_vectorstore(tenant_id)
-        
-        # Cắt nhỏ tài liệu
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200,
-            length_function=len
-        )
-        chunks = text_splitter.split_text(content)
-        
-        docs = [
-            Document(
-                page_content=chunk, 
-                metadata={"type": "niche_knowledge", "source": source_name}
-            ) for chunk in chunks
-        ]
-        
-        vectorstore.add_documents(docs)
-        print(f"✅ [Niche Knowledge] Đã lưu {len(docs)} chunks từ {source_name} vào DB.")
-        return len(docs)
-    except Exception as e:
-        print(f"🔴 [Niche Knowledge] Lỗi lưu trữ: {e}")
-        return 0
+  """
+  Chia nhỏ tài liệu chuyên ngành (PDF/Text) và lưu vào VectorDB.
+  Tránh nhồi nhét file quá to gây lỗi LLM Context Window.
+  """
+  try:
+    vectorstore = get_vectorstore(tenant_id)
+    
+    # Cắt nhỏ tài liệu
+    text_splitter = RecursiveCharacterTextSplitter(
+      chunk_size=1000,
+      chunk_overlap=200,
+      length_function=len
+    )
+    chunks = text_splitter.split_text(content)
+    
+    docs = [
+      Document(
+        page_content=chunk, 
+        metadata={"type": "niche_knowledge", "source": source_name}
+      ) for chunk in chunks
+    ]
+    
+    vectorstore.add_documents(docs)
+    print(f"✅ [Niche Knowledge] Đã lưu {len(docs)} chunks từ {source_name} vào DB.")
+    return len(docs)
+  except Exception as e:
+    print(f"🔴 [Niche Knowledge] Lỗi lưu trữ: {e}")
+    return 0
 
 def search_niche_knowledge(query: str, tenant_id: str = "default", k: int = 3) -> str:
-    """
-    Tìm kiếm thông tin ngành bằng RAG và trả lời câu hỏi chuyên môn.
-    """
-    try:
-        vectorstore = get_vectorstore(tenant_id)
-        
-        # Chỉ lấy tài liệu loại "niche_knowledge"
-        retriever = vectorstore.as_retriever(
-            search_kwargs={"k": k, "filter": {"type": "niche_knowledge"}}
-        )
-        
-        docs = retriever.invoke(query)
-        if not docs:
-            return "Không tìm thấy dữ liệu liên quan trong Kho Tri Thức Ngành của bạn."
-            
-        context_text = "\n\n".join([f"--- Từ tài liệu: {d.metadata.get('source', 'Unknown')} ---\n{d.page_content}" for d in docs])
-        
-        llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.2)
-        
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", "Bạn là Chuyên gia Tư vấn Chuyên sâu (Niche Consultant). Dựa VÀO CHÍNH XÁC dữ liệu sau đây, hãy trả lời câu hỏi của người dùng. Tuyệt đối không bịa đặt. Nếu dữ liệu không có, hãy trả lời 'Tôi không tìm thấy thông tin này trong tài liệu.'\n\nDỮ LIỆU:\n{context}"),
-            ("human", "Câu hỏi: {question}")
-        ])
-        
-        chain = prompt | llm
-        result = chain.invoke({
-            "context": context_text,
-            "question": query
-        })
-        
-        return result.content
-    except Exception as e:
-        return f"Lỗi truy xuất tri thức: {e}"
+  """
+  Tìm kiếm thông tin ngành bằng RAG và trả lời câu hỏi chuyên môn.
+  """
+  try:
+    vectorstore = get_vectorstore(tenant_id)
+    
+    # Chỉ lấy tài liệu loại "niche_knowledge"
+    retriever = vectorstore.as_retriever(
+      search_kwargs={"k": k, "filter": {"type": "niche_knowledge"}}
+    )
+    
+    docs = retriever.invoke(query)
+    if not docs:
+      return "Không tìm thấy dữ liệu liên quan trong Kho Tri Thức Ngành của bạn."
+      
+    context_text = "\n\n".join([f"--- Từ tài liệu: {d.metadata.get('source', 'Unknown')} ---\n{d.page_content}" for d in docs])
+    
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.2)
+    
+    prompt = ChatPromptTemplate.from_messages([
+      ("system", "Bạn là Chuyên gia Tư vấn Chuyên sâu (Niche Consultant). Dựa VÀO CHÍNH XÁC dữ liệu sau đây, hãy trả lời câu hỏi của người dùng. Tuyệt đối không bịa đặt. Nếu dữ liệu không có, hãy trả lời 'Tôi không tìm thấy thông tin này trong tài liệu.'\n\nDỮ LIỆU:\n{context}"),
+      ("human", "Câu hỏi: {question}")
+    ])
+    
+    chain = prompt | llm
+    result = chain.invoke({
+      "context": context_text,
+      "question": query
+    })
+    
+    return result.content
+  except Exception as e:
+    return f"Lỗi truy xuất tri thức: {e}"
 
 # =============================================================================
 # 4. FILE PARSING & BRAND DNA EXTRACTION
 # =============================================================================
 
 async def parse_file_content(file: UploadFile) -> str:
-    """Đọc nội dung thô từ file PDF, DOCX, hoặc TXT tải lên."""
-    content = await file.read()
-    filename = file.filename.lower()
-    text = ""
+  """Đọc nội dung thô từ file PDF, DOCX, hoặc TXT tải lên."""
+  content = await file.read()
+  filename = file.filename.lower()
+  text = ""
 
-    try:
-        if filename.endswith(".pdf"):
-            with pdfplumber.open(io.BytesIO(content)) as pdf:
-                for page in pdf.pages:
-                    extracted = page.extract_text()
-                    if extracted:
-                        text += extracted + "\n"
-        elif filename.endswith(".docx"):
-            doc = docx.Document(io.BytesIO(content))
-            for para in doc.paragraphs:
-                text += para.text + "\n"
-        elif filename.endswith(".txt"):
-            text = content.decode("utf-8")
-        else:
-            raise ValueError("Định dạng file không được hỗ trợ. Chỉ nhận PDF, DOCX, TXT.")
-    except Exception as e:
-        print(f"🔴 [File Parser] Lỗi khi đọc file {file.filename}: {e}")
-        raise ValueError(f"Không thể đọc nội dung file: {str(e)}")
+  try:
+    if filename.endswith(".pdf"):
+      with pdfplumber.open(io.BytesIO(content)) as pdf:
+        for page in pdf.pages:
+          extracted = page.extract_text()
+          if extracted:
+            text += extracted + "\n"
+    elif filename.endswith(".docx"):
+      doc = docx.Document(io.BytesIO(content))
+      for para in doc.paragraphs:
+        text += para.text + "\n"
+    elif filename.endswith(".txt"):
+      text = content.decode("utf-8")
+    else:
+      raise ValueError("Định dạng file không được hỗ trợ. Chỉ nhận PDF, DOCX, TXT.")
+  except Exception as e:
+    print(f"🔴 [File Parser] Lỗi khi đọc file {file.filename}: {e}")
+    raise ValueError(f"Không thể đọc nội dung file: {str(e)}")
 
-    return text.strip()
+  return text.strip()
 
 
 class DesignDNA(BaseModel):
-    colors: List[str] = Field(description="Màu sắc chủ đạo của thương hiệu (VD: Xanh dương, Trắng, #FF5733)")
-    typography: str = Field(description="Phong cách font chữ (VD: Sans-serif hiện đại, Serif cổ điển)")
-    imagery_vibe: str = Field(description="Phong cách hình ảnh (VD: Tối giản, Sặc sỡ, Chuyên nghiệp)")
-    logo_style: str = Field(description="Phong cách thiết kế logo (VD: Wordmark, Icon tĩnh, Trừu tượng)")
+  colors: List[str] = Field(description="Màu sắc chủ đạo của thương hiệu (VD: Xanh dương, Trắng, #FF5733)")
+  typography: str = Field(description="Phong cách font chữ (VD: Sans-serif hiện đại, Serif cổ điển)")
+  imagery_vibe: str = Field(description="Phong cách hình ảnh (VD: Tối giản, Sặc sỡ, Chuyên nghiệp)")
+  logo_style: str = Field(description="Phong cách thiết kế logo (VD: Wordmark, Icon tĩnh, Trừu tượng)")
 
 class CustomerPersona(BaseModel):
-    """Chân dung khách hàng mục tiêu cực kỳ chi tiết."""
-    persona_name: str = Field(description="Tên đại diện cho nhóm khách hàng (VD: 'Lan - Quản lý Văn phòng 28 tuổi')")
-    demographics: str = Field(description="Nhân khẩu học: Tuổi, giới tính, thu nhập, nghề nghiệp, khu vực sống")
-    psychographics: str = Field(description="Tâm lý: Giá trị sống, sở thích, lối sống, niềm tin, thái độ tiêu dùng")
-    pain_points: List[str] = Field(description="3-5 nỗi đau/vấn đề cụ thể mà khách hàng đang gặp phải")
-    goals_desires: List[str] = Field(description="3-5 mục tiêu/mong muốn mà khách hàng theo đuổi")
-    media_touchpoints: List[str] = Field(description="Các kênh/nền tảng mà khách hàng tiếp xúc hàng ngày (VD: TikTok, Zalo, Instagram...)")
-    buying_triggers: List[str] = Field(description="Các yếu tố kích hoạt quyết định mua hàng")
-    objections: List[str] = Field(description="Các lý do khiến khách hàng do dự/từ chối mua")
+  """Chân dung khách hàng mục tiêu cực kỳ chi tiết."""
+  persona_name: str = Field(description="Tên đại diện cho nhóm khách hàng (VD: 'Lan - Quản lý Văn phòng 28 tuổi')")
+  demographics: str = Field(description="Nhân khẩu học: Tuổi, giới tính, thu nhập, nghề nghiệp, khu vực sống")
+  psychographics: str = Field(description="Tâm lý: Giá trị sống, sở thích, lối sống, niềm tin, thái độ tiêu dùng")
+  pain_points: List[str] = Field(description="3-5 nỗi đau/vấn đề cụ thể mà khách hàng đang gặp phải")
+  goals_desires: List[str] = Field(description="3-5 mục tiêu/mong muốn mà khách hàng theo đuổi")
+  media_touchpoints: List[str] = Field(description="Các kênh/nền tảng mà khách hàng tiếp xúc hàng ngày (VD: TikTok, Zalo, Instagram...)")
+  buying_triggers: List[str] = Field(description="Các yếu tố kích hoạt quyết định mua hàng")
+  objections: List[str] = Field(description="Các lý do khiến khách hàng do dự/từ chối mua")
 
 class CompetitorProfile(BaseModel):
-    """Phân tích từng đối thủ cạnh tranh."""
-    name: str = Field(description="Tên đối thủ cạnh tranh")
-    positioning: str = Field(description="Định vị và phân khúc giá của đối thủ")
-    strengths: List[str] = Field(description="2-3 điểm mạnh chính")
-    weaknesses: List[str] = Field(description="2-3 điểm yếu/kẽ hở có thể khai thác")
+  """Phân tích từng đối thủ cạnh tranh."""
+  name: str = Field(description="Tên đối thủ cạnh tranh")
+  positioning: str = Field(description="Định vị và phân khúc giá của đối thủ")
+  strengths: List[str] = Field(description="2-3 điểm mạnh chính")
+  weaknesses: List[str] = Field(description="2-3 điểm yếu/kẽ hở có thể khai thác")
 
 class BrandDNA(BaseModel):
-    """Schema cho phân tích Brand DNA từ file khách hàng tải lên — Chuẩn Enterprise."""
-    brand_positioning_statement: str = Field(description="Tuyên ngôn định vị thương hiệu (1-2 câu): 'Cho [đối tượng], [thương hiệu] là [danh mục] mang lại [giá trị] vì [lý do tin tưởng]'")
-    brand_narrative: str = Field(description="Câu chuyện thương hiệu (Brand Story) 3-5 câu: Vì sao thương hiệu ra đời, sứ mệnh, và tầm nhìn")
-    core_usps: List[str] = Field(description="3-5 điểm bán hàng độc nhất (Unique Selling Points) — phải cụ thể, có thể kiểm chứng")
-    customer_personas: List[CustomerPersona] = Field(description="2-3 Customer Personas chi tiết nhất có thể")
-    competitor_landscape: List[CompetitorProfile] = Field(description="2-4 đối thủ cạnh tranh trực tiếp và gián tiếp, phân tích điểm mạnh/yếu")
-    target_audience_insights: List[str] = Field(description="Insights sâu sắc về hành vi và tâm lý khách hàng mục tiêu")
-    tone_of_voice: str = Field(description="Giọng điệu thương hiệu chi tiết (VD: Hiện đại nhưng ấm áp, hài hước nhưng chuyên nghiệp...)")
-    channel_strategy: List[str] = Field(description="3-5 kênh Marketing ưu tiên kèm lý do (VD: 'TikTok — vì 65% Gen Z tiếp cận thương hiệu qua short-form video')")
-    strict_rules: List[str] = Field(description="Các quy tắc DOs và DON'Ts quan trọng cho Marketing")
-    design_dna: DesignDNA = Field(description="Định hướng nhận diện thương hiệu và thiết kế")
+  """Schema cho phân tích Brand DNA từ file khách hàng tải lên — Chuẩn Enterprise."""
+  brand_positioning_statement: str = Field(description="Tuyên ngôn định vị thương hiệu (1-2 câu): 'Cho [đối tượng], [thương hiệu] là [danh mục] mang lại [giá trị] vì [lý do tin tưởng]'")
+  brand_narrative: str = Field(description="Câu chuyện thương hiệu (Brand Story) 3-5 câu: Vì sao thương hiệu ra đời, sứ mệnh, và tầm nhìn")
+  core_usps: List[str] = Field(description="3-5 điểm bán hàng độc nhất (Unique Selling Points) — phải cụ thể, có thể kiểm chứng")
+  customer_personas: List[CustomerPersona] = Field(description="2-3 Customer Personas chi tiết nhất có thể")
+  competitor_landscape: List[CompetitorProfile] = Field(description="2-4 đối thủ cạnh tranh trực tiếp và gián tiếp, phân tích điểm mạnh/yếu")
+  target_audience_insights: List[str] = Field(description="Insights sâu sắc về hành vi và tâm lý khách hàng mục tiêu")
+  tone_of_voice: str = Field(description="Giọng điệu thương hiệu chi tiết (VD: Hiện đại nhưng ấm áp, hài hước nhưng chuyên nghiệp...)")
+  channel_strategy: List[str] = Field(description="3-5 kênh Marketing ưu tiên kèm lý do (VD: 'TikTok — vì 65% Gen Z tiếp cận thương hiệu qua short-form video')")
+  strict_rules: List[str] = Field(description="Các quy tắc DOs và DON'Ts quan trọng cho Marketing")
+  design_dna: DesignDNA = Field(description="Định hướng nhận diện thương hiệu và thiết kế")
 
 
 dna_parser = JsonOutputParser(pydantic_object=BrandDNA)
 
 dna_prompt = ChatPromptTemplate.from_messages([
-    (
-        "system",
-        """Bạn là một Senior Brand Strategist (15 năm kinh nghiệm) tại McKinsey & Company, đồng thời là CMO (Chief Marketing Officer) từng điều hành ngân sách Marketing $50M+ cho các tập đoàn FMCG và F&B tại Đông Nam Á.
+  (
+    "system",
+    """Bạn là một Senior Brand Strategist (15 năm kinh nghiệm) tại McKinsey & Company, đồng thời là CMO (Chief Marketing Officer) từng điều hành ngân sách Marketing $50M+ cho các tập đoàn FMCG và F&B tại Đông Nam Á.
 
 Bạn được thuê để thực hiện một bản PHÂN TÍCH BRAND DNA CẤP ĐỘ TƯ VẤN (Consulting-Grade) cho doanh nghiệp dựa trên dữ liệu khảo sát và tài liệu được cung cấp.
 
@@ -351,26 +351,26 @@ Bước 2: NGHIÊN CỨU NGÀNH — Dựa vào kiến thức chuyên môn, xác 
 Bước 3: PHÂN TÍCH CHIẾN LƯỢC — Áp dụng Porter's Five Forces, VRIO Framework, và Brand Positioning Map để xác định lợi thế cạnh tranh.
 Bước 4: XÂY DỰNG CUSTOMER PERSONA — Tạo 2-3 chân dung khách hàng cực kỳ chi tiết (Demographics + Psychographics + Pain Points + Media Habits).
 Bước 5: PHÂN TÍCH ĐỐI THỦ — Xác định 2-4 đối thủ trực tiếp/gián tiếp, phân tích điểm mạnh/yếu, và tìm kẽ hở (White Space) để khai thác.
-Bước 6: TỔNG HỢP DNA — Đúc rút thành Brand DNA hoàn chỉnh: Positioning Statement, Brand Story, USPs, Tone of Voice, Channel Strategy, Design DNA.
+Bước 6: TỔNG HỢP DNA — Đúc rút thành Brand DNA hoàn chỉnh: Positioning Statement, Brand Story, USPs, Giọng điệu, Channel Strategy, Design DNA.
 
 ═══ TIÊU CHUẨN CHẤT LƯỢNG ═══
 
 1. CUSTOMER PERSONAS phải CỰC KỲ CHI TIẾT:
-   - Đặt tên cụ thể (VD: "Minh — Freelancer 26 tuổi, thu nhập 15-20tr/tháng")
-   - Mô tả ngày thường (daily routine) và thói quen tiêu dùng
-   - Pain points phải là nỗi đau THỰC, không phải lý thuyết
-   - Media touchpoints phải phản ánh thực tế thị trường Việt Nam 2024-2026
+  - Đặt tên cụ thể (VD: "Minh — Freelancer 26 tuổi, thu nhập 15-20tr/tháng")
+  - Mô tả ngày thường (daily routine) và thói quen tiêu dùng
+  - Pain points phải là nỗi đau THỰC, không phải lý thuyết
+  - Media touchpoints phải phản ánh thực tế thị trường Việt Nam 2024-2026
 
 2. COMPETITOR LANDSCAPE phải CÓ CĂN CỨ:
-   - Đặt tên đối thủ cụ thể (có thể là thương hiệu thật hoặc archetype phổ biến trong ngành)
-   - Phân tích điểm mạnh/yếu phải actionable (có thể hành động được)
+  - Đặt tên đối thủ cụ thể (có thể là thương hiệu thật hoặc archetype phổ biến trong ngành)
+  - Phân tích điểm mạnh/yếu phải actionable (có thể hành động được)
 
 3. CHANNEL STRATEGY phải THỰC TIỄN:
-   - Mỗi kênh phải kèm lý do tại sao phù hợp với Target Audience
-   - Ưu tiên kênh có ROI cao nhất cho quy mô doanh nghiệp
+  - Mỗi kênh phải kèm lý do tại sao phù hợp với Target Audience
+  - Ưu tiên kênh có ROI cao nhất cho quy mô doanh nghiệp
 
 4. BRAND POSITIONING STATEMENT theo công thức:
-   "Cho [đối tượng mục tiêu], [thương hiệu] là [danh mục/loại hình] mang lại [lợi ích cốt lõi] vì [lý do tin tưởng/bằng chứng]"
+  "Cho [đối tượng mục tiêu], [thương hiệu] là [danh mục/loại hình] mang lại [lợi ích cốt lõi] vì [lý do tin tưởng/bằng chứng]"
 
 5. BRAND NARRATIVE phải có cảm xúc, kể được câu chuyện gốc rễ của thương hiệu.
 
@@ -380,10 +380,10 @@ Bước 6: TỔNG HỢP DNA — Đúc rút thành Brand DNA hoàn chỉnh: Posit
 - CHỈ TRẢ VỀ JSON HỢP LỆ. KHÔNG CÓ TEXT BÊN NGOÀI.
 
 {format_instructions}"""
-    ),
-    (
-        "human",
-        """--- DỮ LIỆU KHẢO SÁT (FORM) ---
+  ),
+  (
+    "human",
+    """--- DỮ LIỆU KHẢO SÁT (FORM) ---
 <form_data>
 {form_data}
 </form_data>
@@ -394,124 +394,124 @@ Bước 6: TỔNG HỢP DNA — Đúc rút thành Brand DNA hoàn chỉnh: Posit
 </uploaded_document>
 
 Hãy thực hiện phân tích Brand DNA theo đúng 6 bước (Chain-of-Thought) đã mô tả. Kết quả cuối cùng PHẢI là JSON hoàn chỉnh theo schema."""
-    ),
+  ),
 ])
 
 
 def extract_unified_dna(form_data: dict, document_content: str, tenant_id: str = "default") -> dict:
-    """
-    Sử dụng LLM để đọc Form Data và Text thô, trích xuất cấu trúc BrandDNA JSON.
-    Sau đó tự động lưu các strict_rules vào ChromaDB.
-    """
-    # Smart document processing: up to 50K chars, summarize if longer
-    safe_content = _smart_truncate_document(document_content) if document_content else "Không có tài liệu."
-    form_str = json.dumps(form_data, ensure_ascii=False, indent=2) if form_data else "Không có dữ liệu form."
+  """
+  Sử dụng LLM để đọc Form Data và Text thô, trích xuất cấu trúc BrandDNA JSON.
+  Sau đó tự động lưu các strict_rules vào ChromaDB.
+  """
+  # Smart document processing: up to 50K chars, summarize if longer
+  safe_content = _smart_truncate_document(document_content) if document_content else "Không có tài liệu."
+  form_str = json.dumps(form_data, ensure_ascii=False, indent=2) if form_data else "Không có dữ liệu form."
 
-    try:
-        if "bepnhamoc" in safe_content.lower() or "bếp nhà mộc" in safe_content.lower() or (form_data and ("bepnhamoc" in str(form_data).lower() or "bếp nhà mộc" in str(form_data).lower())):
-            from app.agents.intake.intake_agent import extract_document_summary
-            print("🕵️‍♂️ [MOCK MODE] extract_unified_dna intercepted for Bếp Nhà Mộc")
-            fallback_intake = extract_document_summary("bếp nhà mộc")
-            fallback_data = {
-                "brand_name": "Bếp Nhà Mộc",
-                "core_value": "Mộc mạc (Rustic), Gắn kết (Connection), Lành sạch (Wholesome)",
-                "positioning": "Nơi chữa lành tâm hồn thị dân thông qua trải nghiệm Ẩm thực Việt di sản, trong không gian nhà gỗ mộc mạc và nguyên liệu 100% hữu cơ.",
-                "brand_archetype": "The Caregiver (Người chăm sóc) & The Creator (Người sáng tạo)",
-                "company_name": "Bếp Nhà Mộc",
-                "core_usps": [
-                    "Món ăn chuẩn vị gia truyền nấu từ nguyên liệu Organic",
-                    "Không gian nhà gỗ cổ mộc mạc mang cảm giác như được 'về nhà'",
-                    "Trải nghiệm ăn uống chánh niệm (Mindful Dining)"
-                ],
-                "target_audience_insights": ["Người trẻ 22-35 tuổi (Gen Y & Z) làm việc tại đô thị lớn, quan tâm đến ăn uống lành mạnh."],
-                "tone_of_voice": "Gần gũi, ân cần, chân thành và mang đậm chất thơ của một người kể chuyện hoài niệm.",
-                "strict_rules": [
-                    "Sử dụng đại từ 'Bếp' và 'Thực khách' trong giao tiếp",
-                    "Tập trung vào yếu tố chữa lành, mộc mạc, không dùng các từ ngữ quá thương mại"
-                ],
-                "design_dna": {
-                    "colors": ["#4A5D23", "#8B4513", "#F5DEB3"],
-                    "typography": "Classic Serif (Cổ điển) kết hợp Minimalist Sans (Tối giản)",
-                    "imagery_vibe": "Mộc mạc, Ấm áp, Chữa lành, Di sản, Xanh",
-                    "logo_style": "Vintage, tối giản"
-                }
-            }
-            return {
-                "status": "success",
-                "message": "Phân tích Brand DNA (Mock) thành công.",
-                "data": fallback_data,
-                "intake_analysis": fallback_intake
-            }
+  try:
+    if "bepnhamoc" in safe_content.lower() or "bếp nhà mộc" in safe_content.lower() or (form_data and ("bepnhamoc" in str(form_data).lower() or "bếp nhà mộc" in str(form_data).lower())):
+      from app.agents.intake.intake_agent import extract_document_summary
+      print("🕵️‍♂️ [MOCK MODE] extract_unified_dna intercepted for Bếp Nhà Mộc")
+      fallback_intake = extract_document_summary("bếp nhà mộc")
+      fallback_data = {
+        "brand_name": "Bếp Nhà Mộc",
+        "core_value": "Mộc mạc (Rustic), Gắn kết (Connection), Lành sạch (Wholesome)",
+        "positioning": "Nơi chữa lành tâm hồn thị dân thông qua trải nghiệm Ẩm thực Việt di sản, trong không gian nhà gỗ mộc mạc và nguyên liệu 100% hữu cơ.",
+        "brand_archetype": "The Caregiver (Người chăm sóc) & The Creator (Người sáng tạo)",
+        "company_name": "Bếp Nhà Mộc",
+        "core_usps": [
+          "Món ăn chuẩn vị gia truyền nấu từ nguyên liệu Organic",
+          "Không gian nhà gỗ cổ mộc mạc mang cảm giác như được 'về nhà'",
+          "Trải nghiệm ăn uống chánh niệm (Mindful Dining)"
+        ],
+        "target_audience_insights": ["Người trẻ 22-35 tuổi (Gen Y & Z) làm việc tại đô thị lớn, quan tâm đến ăn uống lành mạnh."],
+        "tone_of_voice": "Gần gũi, ân cần, chân thành và mang đậm chất thơ của một người kể chuyện hoài niệm.",
+        "strict_rules": [
+          "Sử dụng đại từ 'Bếp' và 'Thực khách' trong giao tiếp",
+          "Tập trung vào yếu tố chữa lành, mộc mạc, không dùng các từ ngữ quá thương mại"
+        ],
+        "design_dna": {
+          "colors": ["#4A5D23", "#8B4513", "#F5DEB3"],
+          "typography": "Classic Serif (Cổ điển) kết hợp Minimalist Sans (Tối giản)",
+          "imagery_vibe": "Mộc mạc, Ấm áp, Chữa lành, Di sản, Xanh",
+          "logo_style": "Vintage, tối giản"
+        }
+      }
+      return {
+        "status": "success",
+        "message": "Phân tích Brand DNA (Mock) thành công.",
+        "data": fallback_data,
+        "intake_analysis": fallback_intake
+      }
 
-        llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.1, max_retries=1, timeout=45.0)
-        chain = (
-            dna_prompt.partial(
-                format_instructions=dna_parser.get_format_instructions()
-            )
-            | llm
-            | dna_parser
+    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.1, max_retries=1, timeout=45.0)
+    chain = (
+      dna_prompt.partial(
+        format_instructions=dna_parser.get_format_instructions()
+      )
+      | llm
+      | dna_parser
+    )
+
+    print(f"🧠 [Brand DNA] Bắt đầu phân tích DNA từ Form và Tài liệu...")
+    result = chain.invoke({"form_data": form_str, "document_content": safe_content})
+
+    # Lưu các strict_rules vào ChromaDB
+    vectorstore = get_vectorstore(tenant_id)
+    strict_rules = result.get("strict_rules", [])
+    if strict_rules:
+      docs = [
+        Document(
+          page_content=f"[BRAND RULE]: {rule}",
+          metadata={"type": "brand_dna_rule"}
         )
+        for rule in strict_rules
+      ]
+      try:
+        vectorstore.add_documents(docs)
+        print(f"  ✅ [Brand DNA] Đã lưu {len(docs)} quy tắc bắt buộc vào bộ nhớ dài hạn.")
+      except Exception as embed_e:
+        print(f"  ⚠️ [Brand DNA] Bỏ qua lưu ChromaDB do lỗi (Embedding API rate limit/quota): {embed_e}")
 
-        print(f"🧠 [Brand DNA] Bắt đầu phân tích DNA từ Form và Tài liệu...")
-        result = chain.invoke({"form_data": form_str, "document_content": safe_content})
+    # --- EXTRACT INTAKE ANALYSIS FOR DASHBOARD ---
+    from app.agents.intake.intake_agent import extract_document_summary
+    combined_text_for_dashboard = f"--- DỮ LIỆU KHẢO SÁT ---\n{form_str}\n\n--- TÀI LIỆU KHÁCH HÀNG ---\n{safe_content}"
+    intake_analysis = extract_document_summary(combined_text_for_dashboard)
 
-        # Lưu các strict_rules vào ChromaDB
-        vectorstore = get_vectorstore(tenant_id)
-        strict_rules = result.get("strict_rules", [])
-        if strict_rules:
-            docs = [
-                Document(
-                    page_content=f"[BRAND RULE]: {rule}",
-                    metadata={"type": "brand_dna_rule"}
-                )
-                for rule in strict_rules
-            ]
-            try:
-                vectorstore.add_documents(docs)
-                print(f"   ✅ [Brand DNA] Đã lưu {len(docs)} quy tắc bắt buộc vào bộ nhớ dài hạn.")
-            except Exception as embed_e:
-                print(f"   ⚠️ [Brand DNA] Bỏ qua lưu ChromaDB do lỗi (Embedding API rate limit/quota): {embed_e}")
+    return {
+      "status": "success",
+      "message": "Phân tích Brand DNA thành công.",
+      "data": result,
+      "intake_analysis": intake_analysis
+    }
 
-        # --- EXTRACT INTAKE ANALYSIS FOR DASHBOARD ---
-        from app.agents.intake.intake_agent import extract_document_summary
-        combined_text_for_dashboard = f"--- DỮ LIỆU KHẢO SÁT ---\n{form_str}\n\n--- TÀI LIỆU KHÁCH HÀNG ---\n{safe_content}"
-        intake_analysis = extract_document_summary(combined_text_for_dashboard)
-
-        return {
-            "status": "success",
-            "message": "Phân tích Brand DNA thành công.",
-            "data": result,
-            "intake_analysis": intake_analysis
-        }
-
-    except Exception as e:
-        print(f"🔴 [Brand DNA] Lỗi khi LLM phân tích: {e}")
-        # --- FALLBACK AN TOÀN KHI GẶP LỖI RATE LIMIT HOẶC QUOTA ---
-        from app.agents.intake.intake_agent import extract_document_summary
-        # Truyền lại combined text để interceptor mock vẫn hoạt động
-        combined_text_for_dashboard = f"--- DỮ LIỆU KHẢO SÁT ---\n{form_str}\n\n--- TÀI LIỆU KHÁCH HÀNG ---\n{safe_content}"
-        fallback_intake = extract_document_summary(combined_text_for_dashboard)
-        
-        fallback_data = {
-            "company_name": fallback_intake.get("company_name", "Công ty (Fallback)"),
-            "core_usps": fallback_intake.get("core_usps", ["Chất lượng cao", "Uy tín lâu năm"]),
-            "target_audience_insights": [fallback_intake.get("target_audience", "Khách hàng doanh nghiệp")],
-            "tone_of_voice": fallback_intake.get("tone_of_voice", "Chuyên nghiệp, Đáng tin cậy"),
-            "strict_rules": ["Luôn tuân thủ quy định ngành"],
-            "design_dna": {
-                "colors": fallback_intake.get("visual_brand_dna", {}).get("primary_colors", ["#10B981", "#0F172A"]) if isinstance(fallback_intake.get("visual_brand_dna"), dict) else ["#10B981", "#0F172A"],
-                "typography": fallback_intake.get("visual_brand_dna", {}).get("typography_style", "Modern Sans") if isinstance(fallback_intake.get("visual_brand_dna"), dict) else "Modern Sans",
-                "imagery_vibe": "Sạch sẽ, Tối giản",
-                "logo_style": "Ký tự"
-            }
-        }
-        
-        return {
-            "status": "success",
-            "message": "Phân tích Brand DNA (Fallback) do lỗi API.",
-            "data": fallback_data,
-            "intake_analysis": fallback_intake
-        }
+  except Exception as e:
+    print(f"🔴 [Brand DNA] Lỗi khi LLM phân tích: {e}")
+    # --- FALLBACK AN TOÀN KHI GẶP LỖI RATE LIMIT HOẶC QUOTA ---
+    from app.agents.intake.intake_agent import extract_document_summary
+    # Truyền lại combined text để interceptor mock vẫn hoạt động
+    combined_text_for_dashboard = f"--- DỮ LIỆU KHẢO SÁT ---\n{form_str}\n\n--- TÀI LIỆU KHÁCH HÀNG ---\n{safe_content}"
+    fallback_intake = extract_document_summary(combined_text_for_dashboard)
+    
+    fallback_data = {
+      "company_name": fallback_intake.get("company_name", "Công ty (Fallback)"),
+      "core_usps": fallback_intake.get("core_usps", ["Chất lượng cao", "Uy tín lâu năm"]),
+      "target_audience_insights": [fallback_intake.get("target_audience", "Khách hàng doanh nghiệp")],
+      "tone_of_voice": fallback_intake.get("tone_of_voice", "Chuyên nghiệp, Đáng tin cậy"),
+      "strict_rules": ["Luôn tuân thủ quy định ngành"],
+      "design_dna": {
+        "colors": fallback_intake.get("visual_brand_dna", {}).get("primary_colors", ["#10B981", "#0F172A"]) if isinstance(fallback_intake.get("visual_brand_dna"), dict) else ["#10B981", "#0F172A"],
+        "typography": fallback_intake.get("visual_brand_dna", {}).get("typography_style", "Modern Sans") if isinstance(fallback_intake.get("visual_brand_dna"), dict) else "Modern Sans",
+        "imagery_vibe": "Sạch sẽ, Tối giản",
+        "logo_style": "Ký tự"
+      }
+    }
+    
+    return {
+      "status": "success",
+      "message": "Phân tích Brand DNA (Fallback) do lỗi API.",
+      "data": fallback_data,
+      "intake_analysis": fallback_intake
+    }
 
 
 # =============================================================================
@@ -519,132 +519,132 @@ def extract_unified_dna(form_data: dict, document_content: str, tenant_id: str =
 # =============================================================================
 
 def inject_industry_presets(industry_name: str, tenant_id: str = "default") -> dict:
-    """Nạp bộ quy chuẩn ngành có sẵn vào ChromaDB."""
-    presets = {
-        "F&B": [
-            "Luôn nhấn mạnh vào hình ảnh món ăn chân thực và hấp dẫn.",
-            "Khuyến khích sử dụng các bài review thực tế từ khách hàng.",
-            "Tuyệt đối không sử dụng các từ ngữ mang tính y khoa hoặc chữa bệnh."
-        ],
-        "Spa_Beauty": [
-            "Bắt buộc phải có hình ảnh Before/After khi quảng cáo liệu trình.",
-            "Không được cam kết chữa khỏi 100% các vấn đề về da/dáng.",
-            "Sử dụng tone giọng nhẹ nhàng, thể hiện sự chuyên nghiệp và thấu hiểu của chuyên gia."
-        ],
-        "B2B_Tech": [
-            "Tập trung truyền thông trên kênh LinkedIn với nội dung chuyên sâu.",
-            "Nhấn mạnh vào tỷ lệ hoàn vốn (ROI) và các tính năng kỹ thuật nổi bật.",
-            "Văn phong chuyên nghiệp, số liệu rõ ràng, tránh dùng từ lóng hoặc quá cảm xúc."
-        ]
-    }
+  """Nạp bộ quy chuẩn ngành có sẵn vào ChromaDB."""
+  presets = {
+    "F&B": [
+      "Luôn nhấn mạnh vào hình ảnh món ăn chân thực và hấp dẫn.",
+      "Khuyến khích sử dụng các bài review thực tế từ khách hàng.",
+      "Tuyệt đối không sử dụng các từ ngữ mang tính y khoa hoặc chữa bệnh."
+    ],
+    "Spa_Beauty": [
+      "Bắt buộc phải có hình ảnh Before/After khi quảng cáo liệu trình.",
+      "Không được cam kết chữa khỏi 100% các vấn đề về da/dáng.",
+      "Sử dụng tone giọng nhẹ nhàng, thể hiện sự chuyên nghiệp và thấu hiểu của chuyên gia."
+    ],
+    "B2B_Tech": [
+      "Tập trung truyền thông trên kênh LinkedIn với nội dung chuyên sâu.",
+      "Nhấn mạnh vào tỷ lệ hoàn vốn (ROI) và các tính năng kỹ thuật nổi bật.",
+      "Văn phong chuyên nghiệp, số liệu rõ ràng, tránh dùng từ lóng hoặc quá cảm xúc."
+    ]
+  }
+  
+  if industry_name not in presets:
+    return {"status": "error", "message": f"Ngành '{industry_name}' không được hỗ trợ."}
     
-    if industry_name not in presets:
-        return {"status": "error", "message": f"Ngành '{industry_name}' không được hỗ trợ."}
-        
-    rules = presets[industry_name]
-    try:
-        vectorstore = get_vectorstore(tenant_id)
-        docs = [
-            Document(page_content=rule, metadata={"type": "preset", "industry": industry_name})
-            for rule in rules
-        ]
-        vectorstore.add_documents(docs)
-        print(f"   ✅ [Onboarding] Đã nạp {len(rules)} quy chuẩn cho ngành {industry_name}")
-        return {"status": "success", "message": f"Đã nạp bộ quy chuẩn ngành {industry_name} thành công."}
-    except Exception as e:
-         print(f"   🔴 [Onboarding] Lỗi khi nạp rules: {e}")
-         return {"status": "error", "message": str(e)}
+  rules = presets[industry_name]
+  try:
+    vectorstore = get_vectorstore(tenant_id)
+    docs = [
+      Document(page_content=rule, metadata={"type": "preset", "industry": industry_name})
+      for rule in rules
+    ]
+    vectorstore.add_documents(docs)
+    print(f"  ✅ [Onboarding] Đã nạp {len(rules)} quy chuẩn cho ngành {industry_name}")
+    return {"status": "success", "message": f"Đã nạp bộ quy chuẩn ngành {industry_name} thành công."}
+  except Exception as e:
+     print(f"  🔴 [Onboarding] Lỗi khi nạp rules: {e}")
+     return {"status": "error", "message": str(e)}
 
 def generate_guideline_from_qa(qa_pairs: dict, tenant_id: str = "default") -> dict:
-    """Sinh ra 3 quy tắc marketing ngắn gọn từ câu trả lời phỏng vấn."""
+  """Sinh ra 3 quy tắc marketing ngắn gọn từ câu trả lời phỏng vấn."""
+  
+  qa_text = "\n".join([f"Hỏi: {q}\nĐáp: {a}" for q, a in qa_pairs.items()])
+  
+  prompt = ChatPromptTemplate.from_messages([
+    ("system", "Bạn là chuyên gia chiến lược thương hiệu. Dựa vào các câu trả lời phỏng vấn sau của chủ doanh nghiệp, hãy đúc kết ra đúng 3 quy tắc marketing (Brand Guidelines) ngắn gọn nhất để AI tuân thủ. Chỉ trả về các quy tắc, mỗi quy tắc bắt đầu bằng một dấu gạch ngang '-', không kèm giải thích hay bất kỳ văn bản nào khác."),
+    ("human", "Câu trả lời phỏng vấn:\n{qa_text}")
+  ])
+  
+  try:
+    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.2, max_retries=1, timeout=30.0)
+    chain = prompt | llm
     
-    qa_text = "\n".join([f"Hỏi: {q}\nĐáp: {a}" for q, a in qa_pairs.items()])
+    response = chain.invoke({"qa_text": qa_text})
     
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", "Bạn là chuyên gia chiến lược thương hiệu. Dựa vào các câu trả lời phỏng vấn sau của chủ doanh nghiệp, hãy đúc kết ra đúng 3 quy tắc marketing (Brand Guidelines) ngắn gọn nhất để AI tuân thủ. Chỉ trả về các quy tắc, mỗi quy tắc bắt đầu bằng một dấu gạch ngang '-', không kèm giải thích hay bất kỳ văn bản nào khác."),
-        ("human", "Câu trả lời phỏng vấn:\n{qa_text}")
-    ])
+    # Parse output
+    rules = [line.strip().lstrip('- ') for line in response.content.split('\n') if line.strip().startswith('-')]
     
-    try:
-        llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.2, max_retries=1, timeout=30.0)
-        chain = prompt | llm
-        
-        response = chain.invoke({"qa_text": qa_text})
-        
-        # Parse output
-        rules = [line.strip().lstrip('- ') for line in response.content.split('\n') if line.strip().startswith('-')]
-        
-        if not rules:
-             # Fallback incase format isn't strictly followed
-             rules = [rule.strip() for rule in response.content.split('\n') if rule.strip()]
-             
-        # Optional constraint for 3 rules
-        rules = rules[:3]
-             
-        vectorstore = get_vectorstore(tenant_id)
-        docs = [
-            Document(page_content=rule, metadata={"type": "onboarding"})
-            for rule in rules
-        ]
-        vectorstore.add_documents(docs)
-        print(f"   ✅ [Onboarding] Đã tạo và lưu {len(rules)} quy tắc từ phỏng vấn.")
-        return {"status": "success", "message": "Đã khởi tạo sổ tay thương hiệu từ phỏng vấn.", "rules": rules}
-        
-    except Exception as e:
-        print(f"   🔴 [Onboarding] Lỗi khi tạo guideline từ QA: {e}")
-        return {"status": "error", "message": str(e)}
+    if not rules:
+       # Fallback incase format isn't strictly followed
+       rules = [rule.strip() for rule in response.content.split('\n') if rule.strip()]
+       
+    # Optional constraint for 3 rules
+    rules = rules[:3]
+       
+    vectorstore = get_vectorstore(tenant_id)
+    docs = [
+      Document(page_content=rule, metadata={"type": "onboarding"})
+      for rule in rules
+    ]
+    vectorstore.add_documents(docs)
+    print(f"  ✅ [Onboarding] Đã tạo và lưu {len(rules)} quy tắc từ phỏng vấn.")
+    return {"status": "success", "message": "Đã khởi tạo sổ tay thương hiệu từ phỏng vấn.", "rules": rules}
+    
+  except Exception as e:
+    print(f"  🔴 [Onboarding] Lỗi khi tạo guideline từ QA: {e}")
+    return {"status": "error", "message": str(e)}
 
 # =============================================================================
 # 4. RAG RETRIEVAL — Truy xuất quy tắc liên quan
 # =============================================================================
 
 def get_relevant_guidelines(goal: str, top_k: int = 3, tenant_id: str = "default") -> str:
-    """
-    Query ChromaDB bằng mục tiêu chiến dịch, lấy ra top-k quy tắc liên quan nhất.
+  """
+  Query ChromaDB bằng mục tiêu chiến dịch, lấy ra top-k quy tắc liên quan nhất.
 
-    Args:
-        goal: Mục tiêu chiến dịch marketing.
-        top_k: Số lượng quy tắc tối đa cần lấy.
+  Args:
+    goal: Mục tiêu chiến dịch marketing.
+    top_k: Số lượng quy tắc tối đa cần lấy.
 
-    Returns:
-        Chuỗi string gộp các quy tắc, hoặc "" nếu DB trống / lỗi.
-    """
-    try:
-        vectorstore = get_vectorstore(tenant_id)
+  Returns:
+    Chuỗi string gộp các quy tắc, hoặc "" nếu DB trống / lỗi.
+  """
+  try:
+    vectorstore = get_vectorstore(tenant_id)
 
-        # Kiểm tra xem DB có dữ liệu không
-        collection = vectorstore._collection
-        if collection.count() == 0:
-            return ""
+    # Kiểm tra xem DB có dữ liệu không
+    collection = vectorstore._collection
+    if collection.count() == 0:
+      return ""
 
-        results = vectorstore.similarity_search(goal, k=top_k)
+    results = vectorstore.similarity_search(goal, k=top_k)
 
-        if not results:
-            return ""
+    if not results:
+      return ""
 
-        guidelines = []
-        for i, doc in enumerate(results, 1):
-            guidelines.append(f"  {i}. {doc.page_content}")
+    guidelines = []
+    for i, doc in enumerate(results, 1):
+      guidelines.append(f" {i}. {doc.page_content}")
 
-        return "\n".join(guidelines)
+    return "\n".join(guidelines)
 
-    except Exception as e:
-        print(f"   ⚠️ [RAG] Lỗi khi truy xuất bộ nhớ: {e}")
-        return ""
+  except Exception as e:
+    print(f"  ⚠️ [RAG] Lỗi khi truy xuất bộ nhớ: {e}")
+    return ""
 
 
 def add_manual_guideline(text: str, guideline_type: str = "company_rule", tenant_id: str = "default") -> None:
-    """Thêm một quy tắc thủ công vào ChromaDB."""
-    try:
-        vectorstore = get_vectorstore(tenant_id)
-        doc = Document(
-            page_content=text,
-            metadata={"type": guideline_type}
-        )
-        vectorstore.add_documents([doc])
-        print(f"   ✅ [DB] Đã lưu quy tắc: '{text[:80]}...'")
-    except Exception as e:
-        print(f"   🔴 [DB] Lỗi khi lưu: {e}")
+  """Thêm một quy tắc thủ công vào ChromaDB."""
+  try:
+    vectorstore = get_vectorstore(tenant_id)
+    doc = Document(
+      page_content=text,
+      metadata={"type": guideline_type}
+    )
+    vectorstore.add_documents([doc])
+    print(f"  ✅ [DB] Đã lưu quy tắc: '{text[:80]}...'")
+  except Exception as e:
+    print(f"  🔴 [DB] Lỗi khi lưu: {e}")
 
 
 # =============================================================================
@@ -652,31 +652,31 @@ def add_manual_guideline(text: str, guideline_type: str = "company_rule", tenant
 # =============================================================================
 
 if __name__ == "__main__":
-    print("\n" + "═" * 70)
-    print("🧪 [TEST] memory_rag.py — Vector Database & RAG Retrieval")
-    print("═" * 70)
+  print("\n" + "═" * 70)
+  print("🧪 [TEST] memory_rag.py — Vector Database & RAG Retrieval")
+  print("═" * 70)
 
-    # (1) Thêm tay một Document mẫu
-    print("\n📥 Đang thêm quy tắc mẫu vào ChromaDB...")
-    add_manual_guideline(
-        "Luật công ty: Ngân sách dưới 20 triệu không được thuê KOL.",
-        guideline_type="company_rule"
-    )
-    add_manual_guideline(
-        "Bài học: Không nên bỏ hết ngân sách vào một kênh duy nhất. Phải đa dạng ít nhất 3 kênh.",
-        guideline_type="lesson"
-    )
+  # (1) Thêm tay một Document mẫu
+  print("\n📥 Đang thêm quy tắc mẫu vào ChromaDB...")
+  add_manual_guideline(
+    "Luật công ty: Ngân sách dưới 20 triệu không được thuê KOL.",
+    guideline_type="company_rule"
+  )
+  add_manual_guideline(
+    "Bài học: Không nên bỏ hết ngân sách vào một kênh duy nhất. Phải đa dạng ít nhất 3 kênh.",
+    guideline_type="lesson"
+  )
 
-    # (2) Gọi thử hàm get_relevant_guidelines
-    print("\n🔍 Đang truy vấn ChromaDB với mục tiêu: 'Chiến dịch tiết kiệm'...")
-    guidelines = get_relevant_guidelines("Chiến dịch tiết kiệm")
+  # (2) Gọi thử hàm get_relevant_guidelines
+  print("\n🔍 Đang truy vấn ChromaDB với mục tiêu: 'Chiến dịch tiết kiệm'...")
+  guidelines = get_relevant_guidelines("Chiến dịch tiết kiệm")
 
-    if guidelines:
-        print(f"\n   📋 Kết quả tìm kiếm:")
-        print(guidelines)
-    else:
-        print("   ⚠️ Không tìm thấy quy tắc nào!")
+  if guidelines:
+    print(f"\n  📋 Kết quả tìm kiếm:")
+    print(guidelines)
+  else:
+    print("  ⚠️ Không tìm thấy quy tắc nào!")
 
-    print("\n" + "═" * 70)
-    print("✅ Test hoàn tất!")
-    print("═" * 70)
+  print("\n" + "═" * 70)
+  print("✅ Test hoàn tất!")
+  print("═" * 70)

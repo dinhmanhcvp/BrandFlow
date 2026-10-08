@@ -18,100 +18,100 @@ import AmbientParticles from '@/components/AmbientParticles';
 // Maps the current workspace stage to the 5-step pipeline progress
 // ═══════════════════════════════════════════════════════════════════
 const STAGE_TO_PIPELINE: Record<number, PipelineStage> = {
-  1: 2,  // Debate = Planning (stage 2)
-  2: 3,  // Tactics = Review (stage 3)
-  3: 4,  // Execution = Reconciliation (stage 4)
-  4: 5,  // Creative = Validation done (stage 5)
-  5: 5,  // Deploy = Done
-  6: 5,  // Report = Done
+ 1: 2, // Debate = Planning (stage 2)
+ 2: 3, // Tactics = Review (stage 3)
+ 3: 4, // Execution = Reconciliation (stage 4)
+ 4: 5, // Creative = Validation done (stage 5)
+ 5: 5, // Deploy = Done
+ 6: 5, // Report = Done
 };
 
 export default function WorkspaceFlow() {
-  const { t } = useLanguage();
-  const [currentStage, setCurrentStage] = useState(1);
-  const [globalBudget, setGlobalBudget] = useState('100000000'); 
+ const { t } = useLanguage();
+ const [currentStage, setCurrentStage] = useState(1);
+ const [globalBudget, setGlobalBudget] = useState('100000000'); 
 
-  const goToState = (stage: number) => {
-    setCurrentStage(stage);
-  };
+ const goToState = (stage: number) => {
+  setCurrentStage(stage);
+ };
 
-  const pipelineStage: PipelineStage = STAGE_TO_PIPELINE[currentStage] || 1;
+ const pipelineStage: PipelineStage = STAGE_TO_PIPELINE[currentStage] || 1;
 
-  return (
-    <div className="flex flex-col h-full w-full bg-background relative overflow-hidden z-0">
-      <div className="absolute inset-0 bg-[url('/img/grid.svg')] opacity-[0.02] dark:opacity-[0.05] z-0 pointer-events-none" />
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-cyan-500/5 dark:bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none -z-10" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[120px] pointer-events-none -z-10" />
-      <AmbientParticles />
-      
-      {/* ── Top Navigation Bar ── */}
-      <div className="w-full bg-linear-surface/80 border-b border-linear-border backdrop-blur-lg px-4 md:px-6 py-2.5 flex items-center justify-between shrink-0 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] mt-12 md:mt-0 sticky top-0 z-50 transition-all duration-300">
-        
-        <div className="flex items-center gap-4">
-          <h1 className="font-bold text-foreground tracking-tight text-sm md:text-base">
-            Workspace Engine
-          </h1>
-          <div className="hidden sm:flex items-center px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-800/50 shadow-sm transition-all duration-300 hover:shadow-md hover:bg-emerald-100/50 cursor-default">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-2 drop-shadow-[0_0_3px_rgba(16,185,129,0.5)]" />
-            <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">
-              Agents Active
-            </span>
-          </div>
+ return (
+  <div className="flex flex-col h-full w-full bg-background relative overflow-hidden z-0">
+   <div className="absolute inset-0 bg-[url('/img/grid.svg')] opacity-[0.02] dark:opacity-[0.05] z-0 pointer-events-none" />
+   <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-cyan-500/5 dark:bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none -z-10" />
+   <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[120px] pointer-events-none -z-10" />
+   <AmbientParticles />
+   
+   {/* ── Top Navigation Bar ── */}
+   <div className="w-full bg-linear-surface/80 border-b border-linear-border backdrop-blur-lg px-4 md:px-6 py-2.5 flex items-center justify-between shrink-0 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] mt-12 md:mt-0 sticky top-0 z-50 transition-all duration-300">
+    
+    <div className="flex items-center gap-4">
+     <h1 className="font-bold text-foreground tracking-tight text-sm md:text-base">
+      Workspace Engine
+     </h1>
+     <div className="hidden sm:flex items-center px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-800/50 shadow-sm transition-all duration-300 hover:shadow-md hover:bg-emerald-100/50 cursor-default">
+      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-2 drop-shadow-[0_0_3px_rgba(16,185,129,0.5)]" />
+      <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">
+       Agents Active
+      </span>
+     </div>
 
-          <button 
-            onClick={() => window.location.href = '/onboarding'}
-            className="ml-2 px-2 md:px-3 py-1.5 rounded-lg border border-linear-border bg-linear-surface/80 hover:bg-linear-surface hover:text-cyan-500 transition-all text-xs font-bold text-linear-text-muted flex items-center justify-center"
-          >
-            <svg className="w-4 h-4 md:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-            <span className="hidden md:inline">Edit Input</span>
-          </button>
-        </div>
-
-        <div className="flex items-center space-x-6 md:space-x-10 overflow-x-auto no-scrollbar py-1">
-          {[1, 2, 3, 4, 5, 6].map((s) => (
-            <div 
-              key={s} 
-              className={`flex items-center text-[10px] sm:text-[11px] md:text-xs font-semibold uppercase tracking-widest transition-all duration-300 group shrink-0 ${
-                currentStage === s 
-                ? 'text-blue-600 dark:text-blue-400 scale-[1.02]' 
-                : currentStage > s 
-                ? 'text-blue-500 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 hover:-translate-y-[1px]' 
-                : 'text-linear-text-muted '
-              }`}
-              onClick={() => currentStage > s && goToState(s)}
-            >
-              <span className={`w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center mr-2 transition-all duration-300 shadow-sm ${
-                currentStage === s 
-                ? 'border border-blue-600 bg-blue-50/80 dark:bg-blue-900/30 ring-2 ring-blue-100 dark:ring-blue-900/50' 
-                : currentStage > s 
-                ? 'border border-blue-500 bg-blue-500/10 text-blue-700 group-hover:bg-blue-500/20 group-hover:shadow-md' 
-                : 'border border-linear-border bg-background '
-              }`}>
-                {s}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Pipeline Progress Bar (Glass Box) ── */}
-      <div className="w-full bg-linear-surface/40 border-b border-linear-border/50 backdrop-blur-sm px-4 md:px-8 shrink-0">
-        <div className="max-w-4xl mx-auto">
-          <PipelineProgress currentStage={pipelineStage} />
-        </div>
-      </div>
-
-      {/* ── Main Content Area ── */}
-      <div className="flex-1 w-full h-full overflow-hidden relative">
-        <div className="absolute inset-0 transition-opacity duration-300">
-          {currentStage === 1 && <Phase2_Debate onNext={() => goToState(2)} onBack={() => window.location.href = '/onboarding'} />}
-          {currentStage === 2 && <Phase3_Tactics onNext={() => goToState(3)} onBack={() => goToState(1)} globalBudget={globalBudget} />}
-          {currentStage === 3 && <Phase4_Execution onNext={() => goToState(4)} onBack={() => goToState(2)} />}
-          {currentStage === 4 && <Phase5_Creative onNext={() => goToState(5)} onBack={() => goToState(3)} />}
-          {currentStage === 5 && <Phase6_AgentDeploy onNext={() => goToState(6)} onBack={() => goToState(4)} />}
-          {currentStage === 6 && <Phase7_Report onExport={() => alert('Exporting')} onBack={() => goToState(5)} />}
-        </div>
-      </div>
+     <button 
+      onClick={() => window.location.href = '/onboarding'}
+      className="ml-2 px-2 md:px-3 py-1.5 rounded-lg border border-linear-border bg-linear-surface/80 hover:bg-linear-surface hover:text-cyan-500 transition-all text-xs font-bold text-linear-text-muted flex items-center justify-center"
+     >
+      <svg className="w-4 h-4 md:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+      <span className="hidden md:inline">Edit Input</span>
+     </button>
     </div>
-  );
+
+    <div className="flex items-center space-x-6 md:space-x-10 overflow-x-auto no-scrollbar py-1">
+     {[1, 2, 3, 4, 5, 6].map((s) => (
+      <div 
+       key={s} 
+       className={`flex items-center text-[10px] sm:text-[11px] md:text-xs font-semibold uppercase tracking-widest transition-all duration-300 group shrink-0 ${
+        currentStage === s 
+        ? 'text-blue-600 dark:text-blue-400 scale-[1.02]' 
+        : currentStage > s 
+        ? 'text-blue-500 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 hover:-translate-y-[1px]' 
+        : 'text-linear-text-muted '
+       }`}
+       onClick={() => currentStage > s && goToState(s)}
+      >
+       <span className={`w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center mr-2 transition-all duration-300 shadow-sm ${
+        currentStage === s 
+        ? 'border border-blue-600 bg-blue-50/80 dark:bg-blue-900/30 ring-2 ring-blue-100 dark:ring-blue-900/50' 
+        : currentStage > s 
+        ? 'border border-blue-500 bg-blue-500/10 text-blue-700 group-hover:bg-blue-500/20 group-hover:shadow-md' 
+        : 'border border-linear-border bg-background '
+       }`}>
+        {s}
+       </span>
+      </div>
+     ))}
+    </div>
+   </div>
+
+   {/* ── Pipeline Progress Bar (Glass Box) ── */}
+   <div className="w-full bg-linear-surface/40 border-b border-linear-border/50 backdrop-blur-sm px-4 md:px-8 shrink-0">
+    <div className="max-w-4xl mx-auto">
+     <PipelineProgress currentStage={pipelineStage} />
+    </div>
+   </div>
+
+   {/* ── Main Content Area ── */}
+   <div className="flex-1 w-full h-full overflow-hidden relative">
+    <div className="absolute inset-0 transition-opacity duration-300">
+     {currentStage === 1 && <Phase2_Debate onNext={() => goToState(2)} onBack={() => window.location.href = '/onboarding'} />}
+     {currentStage === 2 && <Phase3_Tactics onNext={() => goToState(3)} onBack={() => goToState(1)} globalBudget={globalBudget} />}
+     {currentStage === 3 && <Phase4_Execution onNext={() => goToState(4)} onBack={() => goToState(2)} />}
+     {currentStage === 4 && <Phase5_Creative onNext={() => goToState(5)} onBack={() => goToState(3)} />}
+     {currentStage === 5 && <Phase6_AgentDeploy onNext={() => goToState(6)} onBack={() => goToState(4)} />}
+     {currentStage === 6 && <Phase7_Report onExport={() => alert('Exporting')} onBack={() => goToState(5)} />}
+    </div>
+   </div>
+  </div>
+ );
 }

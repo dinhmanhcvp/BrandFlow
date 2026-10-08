@@ -1,1 +1,1 @@
-# Content Lab Agent module
+# Content Lab Trợ lý AI module

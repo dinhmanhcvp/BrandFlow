@@ -8,7 +8,7 @@ import { DistilledRule } from './mockKnowledgeBase';
 // ==========================================
 
 export const runExecutorAgent = async (task: string, injectedRules: DistilledRule[]) => {
- let systemPrompt = `You are an expert PR, Marketing, and Content AI Agent. Your task is to execute the user's request.`;
+ let systemPrompt = `You are an expert PR, Marketing, and Content AI Trợ lý AI. Your task is to execute the user's request.`;
  
  if (injectedRules.length > 0) {
  const rulesText = injectedRules.map(r => `- ${r.distilled_rule}`).join('\n');
@@ -49,7 +49,7 @@ export const runExecutorAgent = async (task: string, injectedRules: DistilledRul
 };
 
 export const runLearnerAgent = async (originalOutput: string, feedback: string) => {
- const systemPrompt = `You are a Learner Agent (Knowledge Distiller).
+ const systemPrompt = `You are a Learner Trợ lý AI (Knowledge Distiller).
 Your job is to analyze the User's Feedback regarding an Original Output.
 
 If the User's Feedback is too short, vague, abstract, or purely emotional (e.g., "khá chán", "không thích", "bad", "sửa lại") WITHOUT specifying exactly WHAT to fix, you must return a clarifying question in Vietnamese.

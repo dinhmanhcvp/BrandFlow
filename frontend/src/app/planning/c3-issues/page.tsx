@@ -9,59 +9,59 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const ISSUES_DATA = [
-  { sbu: 'Thực đơn Chữa lành', market: 'Tăng trưởng nhanh (40%)', comp: 'Khốc liệt về giá, đa dạng đối thủ', issue: 'Mở rộng dung tích nhỏ để tối ưu giá dùng thử.' },
-  { sbu: 'Giao hàng O2O (Zalo Mini App)', market: 'Bão hòa, tăng trưởng chậm', comp: 'Dẫn đầu thị phần, ít biến động', issue: 'Tối ưu hóa chuỗi cung ứng logistics lạnh chung.' },
+ { sbu: 'Thực đơn Chữa lành', market: 'Tăng trưởng nhanh (40%)', comp: 'Khốc liệt về giá, đa dạng đối thủ', issue: 'Mở rộng dung tích nhỏ để tối ưu giá dùng thử.' },
+ { sbu: 'Giao hàng O2O (Zalo Mini App)', market: 'Bão hòa, tăng trưởng chậm', comp: 'Dẫn đầu thị phần, ít biến động', issue: 'Tối ưu hóa chuỗi cung ứng logistics lạnh chung.' },
 ];
 
 export default function PageC3Issues() {
-  const { localData, saveStatus } = useAutoSaveForm('c3-issues', { items: [] });
-  const COLUMNS = [
-    { key: 'sbu', header: 'Tên SBU', className: 'bg-linear-surface font-bold text-foreground',
-      render: (row: any) => (
-        <div className="flex items-center justify-between">
-          <span>{row.sbu}</span>
-          {row.rationale && (
-            <RationaleTooltip rationale={row.rationale} type="source">
-              <span className="sr-only">Why</span>
-            </RationaleTooltip>
-          )}
-        </div>
-      )
-    },
-    { key: 'market', header: 'Đặc điểm Thị trường', className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted border-l border-white dark:border-slate-800' },
-    { key: 'comp', header: 'Đặc điểm Cạnh tranh', className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted border-l border-white dark:border-slate-800' },
-    { key: 'issue', header: 'Vấn đề Chiến lược Then chốt', className: 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-400 font-medium border-l border-white dark:border-slate-800',
-      render: (row: any) => (
-        <div className="flex items-center justify-between">
-          <span>{row.issue}</span>
-          {row.rationale && (
-            <RationaleTooltip rationale={row.rationale} type="rationale">
-              <span className="sr-only">Why</span>
-            </RationaleTooltip>
-          )}
-        </div>
-      )
-    },
-  ];
+ const { localData, saveStatus } = useAutoSaveForm('c3-issues', { items: [] });
+ const COLUMNS = [
+  { key: 'sbu', header: 'Tên SBU', className: 'bg-linear-surface font-bold text-foreground',
+   render: (row: any) => (
+    <div className="flex items-center justify-between">
+     <span>{row.sbu}</span>
+     {row.rationale && (
+      <RationaleTooltip rationale={row.rationale} type="source">
+       <span className="sr-only">Why</span>
+      </RationaleTooltip>
+     )}
+    </div>
+   )
+  },
+  { key: 'market', header: 'Đặc điểm Thị trường', className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted border-l border-white dark:border-slate-800' },
+  { key: 'comp', header: 'Đặc điểm Cạnh tranh', className: 'bg-slate-50 dark:bg-slate-800/50 text-linear-text-muted border-l border-white dark:border-slate-800' },
+  { key: 'issue', header: 'Vấn đề Chiến lược Then chốt', className: 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-400 font-medium border-l border-white dark:border-slate-800',
+   render: (row: any) => (
+    <div className="flex items-center justify-between">
+     <span>{row.issue}</span>
+     {row.rationale && (
+      <RationaleTooltip rationale={row.rationale} type="rationale">
+       <span className="sr-only">Why</span>
+      </RationaleTooltip>
+     )}
+    </div>
+   )
+  },
+ ];
 
-  return (
-    <>
-    <B2BPageTemplate
-      saveStatus={saveStatus}
-      title="Bảng Phân tích Vấn đề (Major Issues)"
-      description="Tạo bảng so sánh chéo (cross-reference) vấn đề để HQ dễ dàng ra quyết định."
-    >
-      <div className="space-y-6">
-        <InstructionAlert className="!bg-[#fdf4ff] !border-fuchsia-400 !text-fuchsia-800">
-           Mang tất cả các Đặc thù Thị trường và Vấn đề Then chốt (từ SWOT của từng SBU) nhập lên HQ để tìm kiếm điểm cộng hưởng (Synergy).
-        </InstructionAlert>
-        
-        <div className="bento-card p-6">
-           <PastelTable columns={COLUMNS} data={localData.items} />
-        </div>
-        <WizardNavigation prevLink="/planning/c2-history" prevLabel="Về C.2" nextLink="/planning/c4-dashboard" nextLabel="Tiếp tục: C.4 Bảng điều khiển" />
-      </div>
-    </B2BPageTemplate>
-        </>
-  );
+ return (
+  <>
+  <B2BPageTemplate
+   saveStatus={saveStatus}
+   title="Bảng Phân tích Vấn đề (Major Issues)"
+   description="Tạo bảng so sánh chéo (cross-reference) vấn đề để HQ dễ dàng ra quyết định."
+  >
+   <div className="space-y-6">
+    <InstructionAlert className="!bg-[#fdf4ff] !border-fuchsia-400 !text-fuchsia-800">
+      Mang tất cả các Đặc thù Thị trường và Vấn đề Then chốt (từ SWOT của từng SBU) nhập lên HQ để tìm kiếm điểm cộng hưởng (Synergy).
+    </InstructionAlert>
+    
+    <div className="bento-card p-6">
+      <PastelTable columns={COLUMNS} data={localData.items} />
+    </div>
+    <WizardNavigation prevLink="/planning/c2-history" prevLabel="Về C.2" nextLink="/planning/c4-dashboard" nextLabel="Tiếp tục: C.4 Bảng điều khiển" />
+   </div>
+  </B2BPageTemplate>
+    </>
+ );
 }
