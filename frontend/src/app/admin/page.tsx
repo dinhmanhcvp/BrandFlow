@@ -11,7 +11,7 @@ import {
  UserPlus, Repeat, Crown, Timer, Code
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, ComposedChart, Line, Legend } from 'recharts';
 import BenchmarkTab from './BenchmarkTab';
 
 
@@ -403,35 +403,34 @@ export default function AdminDashboard() {
           <h3 className="text-sm font-bold text-foreground flex items-center gap-2 mb-5">
            <CalendarDays className="w-4 h-4 text-cyan-400" /> Hoạt động 14 ngày gần nhất
           </h3>
-          <div className="flex items-end gap-1.5 h-[200px]">
-           {dailyGrowthSorted.map((d, i) => {
-            const maxV = Math.max(...dailyGrowthSorted.map(x => x.visits), 1);
-            const pct = (d.visits / maxV) * 100;
-            const dayLabel = d.date?.slice(5) || d.day?.slice(5) || '';
-            const dateObj = new Date(d.date || d.day || '');
-            const isWeekend = dateObj.getDay() === 0 || dateObj.getDay() === 6;
-            return (
-             <div key={i} className="flex-1 flex flex-col items-center gap-1">
-              <span className="text-[8px] font-bold text-foreground">{d.visits}</span>
-              {d.new_users > 0 && <span className="text-[7px] text-emerald-400 font-bold">+{d.new_users}</span>}
-              <motion.div initial={{ height: 0 }} animate={{ height: `${Math.max(pct, 3)}%` }}
-               transition={{ duration: 0.6, delay: i * 0.03 }}
-               className={`w-full rounded-t-md relative group cursor-help ${isWeekend ? 'bg-gradient-to-t from-slate-600 to-slate-400' : 'bg-gradient-to-t from-cyan-600 to-cyan-400'}`}
-              >
-               <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/90 text-white text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                {d.active_users} DAU · {d.total_users} total
-               </div>
-              </motion.div>
-              <span className={`text-[7px] font-mono ${isWeekend ? 'text-slate-500' : 'text-linear-text-muted'}`}>{dayLabel}</span>
-             </div>
-            );
-           })}
-          </div>
-          <div className="flex items-center gap-6 mt-3 pt-3 border-t border-linear-border/30 text-[10px] text-linear-text-muted">
-           <span>📊 <span className="font-bold text-cyan-400">Cyan bar</span> = Ngày thường</span>
-           <span>📊 <span className="font-bold text-slate-400">Grey bar</span> = Cuối tuần</span>
-           <span>👤 Hover = DAU + Total</span>
-           <span className="text-emerald-400">+N = New users</span>
+          <div className="h-[250px] w-full">
+           <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={dailyGrowthSorted} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+             <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+             <XAxis 
+              dataKey={(d) => d.date?.slice(5) || d.day?.slice(5) || ''} 
+              stroke="#94A3B8" 
+              fontSize={10} 
+             />
+             <YAxis yAxisId="left" stroke="#94A3B8" fontSize={10} />
+             <YAxis yAxisId="right" orientation="right" stroke="#94A3B8" fontSize={10} />
+             <RechartsTooltip 
+              contentStyle={{ backgroundColor: '#0F172A', borderColor: '#1E293B', borderRadius: '8px', color: '#fff' }}
+              itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
+              labelStyle={{ color: '#94A3B8', marginBottom: '4px' }}
+             />
+             <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
+             <Bar yAxisId="left" dataKey="visits" name="Lượt truy cập" fill="#06B6D4" radius={[4, 4, 0, 0]} maxBarSize={40}>
+              {dailyGrowthSorted.map((entry, index) => {
+               const dateObj = new Date(entry.date || entry.day || '');
+               const isWeekend = dateObj.getDay() === 0 || dateObj.getDay() === 6;
+               return <Cell key={`cell-${index}`} fill={isWeekend ? '#64748B' : '#06B6D4'} />;
+              })}
+             </Bar>
+             <Line yAxisId="right" type="monotone" dataKey="active_users" name="Active Users" stroke="#F59E0B" strokeWidth={2} dot={{ r: 4, fill: '#F59E0B', strokeWidth: 2, stroke: '#0F172A' }} activeDot={{ r: 6 }} />
+             <Line yAxisId="right" type="monotone" dataKey="new_users" name="New Users" stroke="#10B981" strokeWidth={2} dot={{ r: 3, fill: '#10B981', strokeWidth: 2, stroke: '#0F172A' }} />
+            </ComposedChart>
+           </ResponsiveContainer>
           </div>
          </div>
         )}
