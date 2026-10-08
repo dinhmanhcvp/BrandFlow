@@ -10,12 +10,13 @@ import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell, ReferenceLine } from 'recharts';
 
 const PNL_CHART = [
- { name: 'DT Gộp', val: 12.5, fill: '#3B82F6' },
- { name: 'Giá vốn', val: -4.0, fill: '#EF4444' },
- { name: 'LN Gộp', val: 7.5, fill: '#10B981' },
- { name: 'Chi phí', val: -4.8, fill: '#EF4444' },
- { name: 'EBITDA', val: 2.6, fill: '#8B5CF6' },
- { name: 'EBT (Lãi)', val: 2.2, fill: '#10B981' },
+ { name: 'Doanh Thu', val: 32.0, fill: '#3B82F6' },
+ { name: 'Giá vốn', val: -20.8, fill: '#EF4444' },
+ { name: 'LN Gộp', val: 11.2, fill: '#10B981' },
+ { name: 'Chi phí MKT', val: -3.5, fill: '#F59E0B' },
+ { name: 'CP Vận hành', val: -3.2, fill: '#EF4444' },
+ { name: 'EBITDA', val: 4.5, fill: '#8B5CF6' },
+ { name: 'Lãi Ròng', val: 3.8, fill: '#10B981' },
 ];
 
 const getRowStyle = (itemName: string) => {
@@ -83,7 +84,7 @@ export default function PageB5Pnl() {
     </InstructionAlert>
     
     <div className="bento-card p-6">
-      <PastelTable columns={COLUMNS} data={localData.items} />
+      <PastelTable columns={COLUMNS} data={localData?.items?.length > 0 ? localData.items : PNL_DATA} />
     </div>
 
     <div className="bento-card p-6 min-h-[400px] flex flex-col">

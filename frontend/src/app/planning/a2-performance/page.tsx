@@ -10,16 +10,16 @@ import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 import { ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const CHART_DATA = [
- { year: 'Năm t-3 (2023)', revenue: 4.5, margin: 16.5 },
- { year: 'Năm t-2 (2024)', revenue: 6.96, margin: 11.2 },
- { year: 'Năm t-1 (2025)', revenue: 8.22, margin: 8.4 },
+ { year: 'Năm t-3 (2023)', revenue: 7.5, margin: 12.5 },
+ { year: 'Năm t-2 (2024)', revenue: 16.5, margin: 14.2 },
+ { year: 'Năm t-1 (2025)', revenue: 32.0, margin: 18.5 },
 ];
 
 const PERF_DATA = [
- { metric: 'Khối lượng bán ra', y3: '50 tấn', y2: '85 tấn', y1: '150 tấn', reason: 'Nắm bắt xu hướng "healthy"' },
- { metric: 'Doanh thu thuần', y3: '15 tỷ VNĐ', y2: '25.5 tỷ VNĐ', y1: '45 tỷ VNĐ', reason: 'Mở rộng kênh đại lý' },
- { metric: 'Tỷ suất LN gộp (%)', y3: '35%', y2: '38%', y1: '42%', reason: 'Lợi thế quy mô (Scale)' },
- { metric: 'Biên LN gộp', y3: '5.25 tỷ', y2: '9.69 tỷ', y1: '18.9 tỷ', reason: 'Tối ưu chi phí vận hành bếp' },
+ { metric: 'Số phần ăn bán ra', y3: '120,000 phần', y2: '250,000 phần', y1: '480,000 phần', reason: 'Nắm bắt xu hướng "healthy" và truyền miệng' },
+ { metric: 'Doanh thu thuần', y3: '7.5 tỷ VNĐ', y2: '16.5 tỷ VNĐ', y1: '32.0 tỷ VNĐ', reason: 'Tăng trưởng qua ShopeeFood/Grab' },
+ { metric: 'Tỷ suất LN gộp (%)', y3: '28%', y2: '31%', y1: '35%', reason: 'Lợi thế quy mô nhập nguyên liệu (Scale)' },
+ { metric: 'Biên LN gộp', y3: '2.1 tỷ', y2: '5.1 tỷ', y1: '11.2 tỷ', reason: 'Tối ưu chi phí vận hành gian bếp trung tâm' },
 ];
 
 export default function PageA2Performance() {
@@ -60,7 +60,7 @@ export default function PageA2Performance() {
      
      <div className="bento-card p-6">
        <h3 className="text-sm font-semibold text-linear-text-muted mb-4 uppercase tracking-widest">Tóm tắt hiệu suất</h3>
-       <PastelTable columns={COLUMNS} data={localData.items} />
+       <PastelTable columns={COLUMNS} data={localData?.items?.length > 0 ? localData.items : PERF_DATA} />
      </div>
 
      <div className="bento-card p-6 min-h-[400px] flex flex-col">

@@ -14,8 +14,8 @@ import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip as Recharts
 const BCG_DATA = [
  { name: 'Cơm Văn Phòng (App)', share: 80, growth: 15, fill: '#3B82F6', z: 300, quadrant: 'Bò Sữa (Cash Cow)' }, 
  { name: 'Thịt kho niêu (Signature)', share: 75, growth: 85, fill: '#10B981', z: 200, quadrant: 'Ngôi Sao (Star)' }, 
- { name: 'Gói Cơm B2B', share: 20, growth: 90, fill: '#F59E0B', z: 150, quadrant: 'Dấu Hỏi (Question Mark)' }, 
- { name: 'Món chiên xào', share: 15, growth: 10, fill: '#EF4444', z: 100, quadrant: 'Chó Mực (Dog)' }, 
+ { name: 'Gói Cơm B2B (Công ty)', share: 20, growth: 90, fill: '#F59E0B', z: 150, quadrant: 'Dấu Hỏi (Question Mark)' }, 
+ { name: 'Nước ép đóng chai', share: 15, growth: 10, fill: '#EF4444', z: 100, quadrant: 'Chó Mực (Dog)' }, 
 ];
 
 const CustomTooltip = ({ active, payload }: any) => {
@@ -34,8 +34,9 @@ const CustomTooltip = ({ active, payload }: any) => {
 };
 
 const DPM_DATA = [
- { segment: 'Mẹ & Trẻ em', attr: 'Cao', pos: 'Mạnh', decision: 'Đầu tư mạnh để tăng trưởng' },
- { segment: 'Dân văn phòng', attr: 'Trung bình', pos: 'Khá', decision: 'Duy trì & Quản lý chọn lọc' },
+ { segment: 'Dân văn phòng (Gen Z, Y)', attr: 'Cao', pos: 'Mạnh', decision: 'Bảo vệ thị phần & Chăm sóc qua Zalo' },
+ { segment: 'Doanh nghiệp SMEs (B2B)', attr: 'Rất Cao', pos: 'Yếu', decision: 'Đầu tư mạnh để chiếm lĩnh' },
+ { segment: 'Sinh viên', attr: 'Trung bình', pos: 'Khá', decision: 'Duy trì có chọn lọc' },
 ];
 
 export default function PageA6Portfolio() {
@@ -72,7 +73,7 @@ export default function PageA6Portfolio() {
     </InstructionAlert>
     
     <div className="bento-card p-6">
-      <PastelTable columns={COLUMNS} data={localData.items} />
+      <PastelTable columns={COLUMNS} data={localData?.items?.length > 0 ? localData.items : DPM_DATA} />
     </div>
     
     {/* BCG Matrix ScatterChart */}

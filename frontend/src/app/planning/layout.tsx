@@ -58,7 +58,7 @@ export default function PlanningLayout({ children }: { children: React.ReactNode
    <div className="w-72 shrink-0 border-r border-linear-border/50 bg-slate-900/40 hidden lg:flex flex-col relative z-20">
     <div className="p-6 border-b border-linear-border/50">
      <h2 className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 font-heading tracking-tight mb-2">
-      Strategic Planning
+      Lập Kế hoạch Chiến lược
      </h2>
      <p className="text-xs text-slate-400 font-medium">12 bước chuẩn hóa kế hoạch tiếp thị đa kênh.</p>
     </div>

@@ -12,15 +12,15 @@ import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const CHART_DATA = [
- { year: 'Năm t0 (Nay)', app: 6.5, direct: 1.7, dineIn: 0, b2b: 0 },
- { year: 'Năm t+1', app: 5.2, direct: 4.5, dineIn: 1.2, b2b: 1.5 },
- { year: 'Năm t+2', app: 4.1, direct: 7.2, dineIn: 2.5, b2b: 3.8 },
- { year: 'Năm t+3', app: 3.0, direct: 9.5, dineIn: 4.0, b2b: 6.5 },
+ { year: 'Năm t0 (Nay)', app: 25.0, direct: 5.0, dineIn: 2.0, b2b: 0 },
+ { year: 'Năm t+1', app: 28.0, direct: 12.0, dineIn: 4.5, b2b: 5.0 },
+ { year: 'Năm t+2', app: 32.0, direct: 22.0, dineIn: 6.0, b2b: 15.0 },
+ { year: 'Năm t+3', app: 35.0, direct: 35.0, dineIn: 8.0, b2b: 30.0 },
 ];
 
 const FIN_DATA = [
- { metric: 'Doanh thu thuần', t0: '60 tỷ', t1: '80 tỷ', t2: '100 tỷ', t3: '120 tỷ', source: 'Sản phẩm mới (Mix hạt)' },
- { metric: 'Lợi nhuận gộp', t0: '25.2 tỷ', t1: '34.4 tỷ', t2: '44 tỷ', t3: '54 tỷ', source: 'Tăng độ phủ phân khúc Mẹ & Bé' },
+ { metric: 'Doanh thu thuần', t0: '32 tỷ', t1: '49.5 tỷ', t2: '75 tỷ', t3: '108 tỷ', source: 'Đẩy mạnh B2B Catering & Zalo OA' },
+ { metric: 'Lợi nhuận gộp', t0: '11.2 tỷ', t1: '18.3 tỷ', t2: '28.5 tỷ', t3: '43.2 tỷ', source: 'Tối ưu CAC trên App, tăng khách quen' },
 ];
 
 export default function PageA3Revenue() {
@@ -60,7 +60,7 @@ export default function PageA3Revenue() {
 
     <div className="bento-card p-6">
       <h3 className="text-sm font-semibold text-linear-text-muted mb-4 uppercase tracking-widest">Dự báo (Projections)</h3>
-      <PastelTable columns={FIN_COLUMNS} data={localData.items} />
+      <PastelTable columns={FIN_COLUMNS} data={localData?.items?.length > 0 ? localData.items : FIN_DATA} />
     </div>
 
     {/* Charts Section */}
