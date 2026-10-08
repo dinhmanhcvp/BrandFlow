@@ -27,7 +27,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
  // File upload states
  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
  const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'partial' | 'error'>('idle');
- const [uploadMessage, setUploadMessage] = useState('');
+ const [uploadMessage, setUploadMessage] = useState<React.ReactNode>('');
  const [previewFile, setPreviewFile] = useState<File | null>(null);
 
  // Web crawl states
@@ -249,7 +249,20 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
    if (isBepNhaMoc) {
     await new Promise(r => setTimeout(r, 1500)); // 1.5s dramatic pause
     setUploadStatus('success');
-    setUploadMessage('✅ bepnhamoc.docx · 12.5k ký tự · 4 trang [AI Extraction]\n⚡ Math Engine & Cross-Validation: Hoàn tất (0.8s)');
+    setUploadMessage(
+     <div className="flex flex-col gap-2.5 mt-1 w-full">
+      <div className="flex items-center gap-2 text-foreground font-medium bg-linear-surface border border-linear-border rounded-lg px-3 py-2 w-full shadow-sm">
+       <FileDigit className="w-4 h-4 text-cyan-400 shrink-0" />
+       <span className="truncate">bepnhamoc.docx</span>
+       <span className="text-xs text-linear-text-muted font-normal bg-background px-2 py-0.5 rounded-full border border-linear-border shrink-0 ml-2">12.5k ký tự · 4 trang</span>
+       <span className="text-[10px] font-black text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-1.5 py-0.5 rounded shrink-0 ml-auto flex items-center gap-1"><Sparkles className="w-3 h-3"/> AI Extracted</span>
+      </div>
+      <div className="flex items-center gap-2 text-cyan-400 font-medium text-[11px] uppercase tracking-wider bg-cyan-500/10 px-3 py-1.5 rounded-lg border border-cyan-500/20 w-fit">
+       <BrainCircuit className="w-4 h-4" />
+       Math Engine & Cross-Validation: Hoàn tất (0.8s)
+      </div>
+     </div>
+    );
     
     setExtractedAnswers({
      "Tên doanh nghiệp": "Hệ thống F&B Bếp Nhà Mộc (Casual Dining)",
@@ -401,15 +414,27 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
     gap_questions: ["Cần thêm thông tin về vòng đời khách hàng (LTV)?"] 
    });
    
-   const lines: string[] = ['(Chế độ Mock) Đã trích xuất bằng AI Model dự phòng:'];
+   setUploadMessage(
+    <div className="flex flex-col gap-2.5 mt-1 w-full">
+     <div className="text-[11px] font-bold text-amber-500 uppercase tracking-wider">(Chế độ Mock) Đã trích xuất bằng AI dự phòng</div>
+     {selectedFiles.map((f, i) => (
+      <div key={i} className="flex items-center gap-2 text-foreground font-medium bg-linear-surface border border-linear-border rounded-lg px-3 py-2 w-full shadow-sm">
+       <FileDigit className="w-4 h-4 text-cyan-400 shrink-0" />
+       <span className="truncate">{f.name}</span>
+       <span className="text-xs text-linear-text-muted font-normal bg-background px-2 py-0.5 rounded-full border border-linear-border shrink-0 ml-2">{(f.size / 1024).toFixed(1)}k ký tự</span>
+       <span className="text-[10px] font-black text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-1.5 py-0.5 rounded shrink-0 ml-auto flex items-center gap-1"><Sparkles className="w-3 h-3"/> AI Extracted</span>
+      </div>
+     ))}
+     <div className="flex items-center gap-2 text-cyan-400 font-medium text-[11px] uppercase tracking-wider bg-cyan-500/10 px-3 py-1.5 rounded-lg border border-cyan-500/20 w-fit">
+      <BrainCircuit className="w-4 h-4" />
+      Math Engine & Cross-Validation: Hoàn tất (0.8s)
+     </div>
+    </div>
+   );
+
    selectedFiles.forEach((f) => {
-    const chars = ` · ${(f.size / 1024).toFixed(1)}k ký tự`;
-    lines.push(`✅ ${f.name}${chars} [AI Extraction]`);
     appendRawIngestedContent(`\n--- TÀI LIỆU UPLOAD: ${f.name} ---\nĐây là nội dung mô phỏng trích xuất từ file. Hệ thống đã xác định các Pain Points, Target Audience và Business Goals.`);
    });
-   lines.push('⚡ Math Engine & Cross-Validation: Hoàn tất (0.8s)');
-   
-   setUploadMessage(lines.join('\n'));
   }
  };
 
@@ -646,20 +671,24 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               className={cn(
-               "flex items-start gap-2 p-3 rounded-xl text-sm font-medium mt-2",
+               "flex items-start gap-2 p-3 rounded-xl text-sm mt-2 w-full",
                uploadStatus === 'success'
-                ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
+                ? "" // Removed background styling for success since JSX has it
                 : uploadStatus === 'partial'
-                ? "bg-amber-500/10 border border-amber-500/30 text-amber-400"
-                : "bg-red-500/10 border border-red-500/30 text-red-400"
+                ? "bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium"
+                : "bg-red-500/10 border border-red-500/30 text-red-400 font-medium"
               )}
              >
-              {uploadStatus === 'success'
-               ? <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
-               : uploadStatus === 'partial'
-               ? <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-               : <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />}
-              <span className="whitespace-pre-line">{uploadMessage}</span>
+              {uploadStatus === 'success' ? (
+               <div className="w-full">{uploadMessage}</div>
+              ) : (
+               <>
+                {uploadStatus === 'partial'
+                 ? <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                 : <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />}
+                <span className="whitespace-pre-line w-full">{uploadMessage}</span>
+               </>
+              )}
              </motion.div>
             )}
            </AnimatePresence>
