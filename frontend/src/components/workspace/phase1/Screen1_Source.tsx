@@ -398,10 +398,10 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
    
    const mockExtractedAnswers = {
     "Tên doanh nghiệp": "BrandFlow Enterprise (Mock)",
-    "Mô hình kinh doanh": "B2B SaaS - Subscription Model",
-    "Khách hàng mục tiêu": "C-Level, Marketing Directors (30-50 tuổi) tại các doanh nghiệp SME & Corporate",
+    "Mô hình kinh doanh": "SaaS B2B - Mô hình Thuê bao (Subscription)",
+    "Khách hàng mục tiêu": "Cấp quản lý C-Level, Giám đốc Marketing (30-50 tuổi) tại các doanh nghiệp SME & Tập đoàn",
     "Thực trạng Pain Points": "Quá trình lập kế hoạch Marketing thủ công, rời rạc. Khó đo lường ROI. Tốc độ ra quyết định chậm do phân mảnh dữ liệu.",
-    "Mục tiêu Chiến lược": "Tăng trưởng MRR 25% trong Q3. Tối ưu CAC xuống dưới $150. Đạt 10k Active Users.",
+    "Mục tiêu Chiến lược": "Tăng trưởng doanh thu MRR 25% trong Quý 3. Tối ưu chi phí CAC xuống dưới $150. Đạt 10k người dùng Active.",
     "Ngân sách (OPEX)": "350,000,000 VND / tháng"
    };
    

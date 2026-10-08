@@ -499,7 +499,7 @@ export const useFormStore = create<FormStore>((set, get) => ({
       ]
      },
      visual_brand_dna: {
-      visual_archetype: "Warm, Authentic, Simple, Nostalgic",
+      visual_archetype: "Ấm áp, Chân thật, Đơn giản, Hoài niệm",
       primary_colors: ["#C4622D", "#F9F5F0", "#3E523A"],
       moodboard_keywords: ["Bát gốm mộc mạc", "Ánh sáng tự nhiên buổi sáng", "Khay gỗ", "Gần gũi", "Chân thật"]
      }

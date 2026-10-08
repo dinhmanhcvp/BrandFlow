@@ -228,7 +228,7 @@ export default function Screen3_Dashboard({ onGoToHub, onGoToNext }: { onGoToHub
  transition={{ delay: 0.2 }}
  className="bento-card p-6 border-linear-border"
  >
- <h3 className="text-xs font-bold text-linear-text-muted uppercase tracking-widest mb-4">🎨 Visual Brand DNA</h3>
+ <h3 className="text-xs font-bold text-linear-text-muted uppercase tracking-widest mb-4">🎨 Bản sắc Hình ảnh (Visual DNA)</h3>
  <div className="flex items-center mb-6">
  <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mr-4 shadow-sm border border-orange-100">
  <Shield className="w-6 h-6 text-orange-600" />
