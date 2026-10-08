@@ -1,0 +1,91 @@
+[
+  {
+    "task_id": "MKT-2026-0492",
+    "task_type": "Campaign Planning & Content Generation",
+    "industry": "F&B (Chuỗi Cà Phê)",
+    "difficulty": "Hard",
+    "brand_dna": {
+      "tone_of_voice": "Trẻ trung, thân thiện, truyền cảm hứng",
+      "key_message": "Cà phê Việt nguyên bản, không pha trộn",
+      "target_audience": "Sinh viên và nhân viên văn phòng 18-35 tuổi",
+      "forbidden_words": ["rẻ tiền", "công nghiệp", "hóa chất"]
+    },
+    "input_prompt": "Lên kế hoạch ra mắt sản phẩm Cà phê Muối mới trong tháng 7 với ngân sách 20 triệu VNĐ. Yêu cầu chi tiết phân bổ ngân sách và 1 mẫu bài đăng Facebook.",
+    "golden_output": {
+      "budget_allocation": [
+        { "channel": "Facebook Ads", "amount": 10000000, "rationale": "Kênh tiếp cận chính để target tệp nhân viên văn phòng bán kính 5km" },
+        { "channel": "TikTok Reviewers (Micro-Influencers)", "amount": 6000000, "rationale": "Tạo độ viral và xu hướng trong giới trẻ sinh viên" },
+        { "channel": "In-store POSM & Sampling", "amount": 4000000, "rationale": "Kích thích dùng thử trực tiếp tại cửa hàng để chứng minh vị 'nguyên bản'" }
+      ],
+      "content_samples": [
+        {
+          "type": "Facebook Post",
+          "content": "🌊 BẠN ĐÃ THỬ CÀ PHÊ MUỐI ĐẬM ĐÀ CHUẨN VỊ CHƯA?\n\nChút vị mặn mòi tinh tế hòa quyện cùng vị đắng đậm của cà phê Việt nguyên bản, thêm lớp kem macchiato béo ngậy làm bừng tỉnh mọi giác quan...\n\n👉 Tất cả tạo nên siêu phẩm 'Cà Phê Muối' mới nhất! Ghé ngay hôm nay để nhận ưu đãi Mua 1 Tặng 1 tuần đầu ra mắt nhé!\n\n#CaPheMuoi #CaPheVietNguyenBan #TruyenCamHung",
+          "dna_compliance_score": 1.0
+        }
+      ]
+    },
+    "evaluation_metrics": {
+      "expected_tcr": 1.0,
+      "expected_brand_dna_retention": 0.98,
+      "rouge_l_benchmark": 0.89,
+      "human_expert_score": 9.5
+    }
+  },
+  {
+    "task_id": "MKT-2026-1105",
+    "task_type": "Crisis Management & PR",
+    "industry": "Cosmetics (Mỹ phẩm thiên nhiên)",
+    "difficulty": "Expert",
+    "brand_dna": {
+      "tone_of_voice": "Chân thành, minh bạch, chuyên môn cao",
+      "key_message": "Đẹp từ thiên nhiên, an toàn tuyệt đối",
+      "target_audience": "Phụ nữ 25-45 tuổi, da nhạy cảm",
+      "forbidden_words": ["cam kết 100%", "trắng cấp tốc", "thần dược"]
+    },
+    "input_prompt": "Khách hàng phàn nàn trên group bóc phốt rằng serum bị đổi màu sau 2 tháng sử dụng. Hãy viết bài đính chính chính thức trên Fanpage.",
+    "golden_output": {
+      "content_samples": [
+        {
+          "type": "Official PR Post",
+          "content": "Kính gửi quý khách hàng,\n\nChúng tôi vừa nhận được thông tin về việc sản phẩm Serum Vitamin C bị ngả màu sau một thời gian mở nắp. Với tinh thần minh bạch, chúng tôi xin phép giải thích cụ thể như sau:\n\nDo thành phần 100% chiết xuất từ thiên nhiên và KHÔNG sử dụng chất bảo quản tạo màu công nghiệp, Vitamin C hữu cơ rất dễ bị oxy hóa khi tiếp xúc với không khí. Đây là hiện tượng vật lý hoàn toàn bình thường và minh chứng cho độ nguyên chất của sản phẩm, tuy nhiên nó có thể làm giảm đi một phần hiệu quả dưỡng da.\n\nGiải pháp: Chúng tôi khuyến nghị quý khách luôn đóng chặt nắp và bảo quản trong ngăn mát tủ lạnh. Đối với các khách hàng gặp tình trạng này trong vòng 1 tháng đầu mua hàng, chúng tôi xin hỗ trợ đổi mới sản phẩm miễn phí.\n\nSự an toàn của làn da bạn luôn là ưu tiên cao nhất của chúng tôi.\n\nTrân trọng.",
+          "dna_compliance_score": 0.99
+        }
+      ]
+    },
+    "evaluation_metrics": {
+      "expected_tcr": 1.0,
+      "expected_brand_dna_retention": 1.0,
+      "rouge_l_benchmark": 0.92,
+      "human_expert_score": 9.8
+    }
+  },
+  {
+    "task_id": "MKT-2026-0822",
+    "task_type": "SEO Blog Generation",
+    "industry": "EdTech (Tiếng Anh giao tiếp)",
+    "difficulty": "Medium",
+    "brand_dna": {
+      "tone_of_voice": "Động viên, thực tế, năng động",
+      "key_message": "Giao tiếp tự tin chỉ sau 3 tháng",
+      "target_audience": "Người đi làm bận rộn",
+      "forbidden_words": ["khó khăn", "nhồi nhét", "học vẹt"]
+    },
+    "input_prompt": "Viết dàn ý chuẩn SEO cho bài blog: 'Cách luyện nghe tiếng Anh cho người đi làm bận rộn'. Keyword chính: luyện nghe tiếng Anh.",
+    "golden_output": {
+      "content_samples": [
+        {
+          "type": "SEO Outline",
+          "content": "H1: 5 Bí Quyết Luyện Nghe Tiếng Anh Hiệu Quả Cho Người Đi Làm Bận Rộn\n\nH2: 1. Tận dụng 'thời gian chết' để luyện nghe tiếng Anh\n- Nghe podcast khi đi làm trên xe bus/ô tô.\n- Bật bản tin tiếng Anh khi làm việc nhà.\n\nH2: 2. Phương pháp nghe thụ động (Passive Listening) kết hợp chủ động\n- Tại sao người bận rộn cần nghe thụ động?\n- Cách chọn nguồn nghe phù hợp trình độ.\n\nH2: 3. Đừng cố dịch sang tiếng Việt - Hãy nghe hiểu ngữ cảnh\n- Lỗi sai phổ biến khiến bạn chậm tiến bộ.\n- Mẹo tư duy trực tiếp bằng tiếng Anh.\n\nH2: 4. Ứng dụng công nghệ hỗ trợ luyện nghe tiếng Anh mỗi ngày\n- Giới thiệu 3 app học tập tối ưu cho lịch trình kín mít.\n\nH2: Kết luận\n- Giao tiếp tự tin không đòi hỏi bạn học ngày đêm, chỉ cần 15 phút đều đặn. Tham gia khóa thực chiến 3 tháng ngay!",
+          "dna_compliance_score": 0.95
+        }
+      ]
+    },
+    "evaluation_metrics": {
+      "expected_tcr": 1.0,
+      "expected_brand_dna_retention": 0.95,
+      "rouge_l_benchmark": 0.85,
+      "human_expert_score": 9.0
+    }
+  }
+]

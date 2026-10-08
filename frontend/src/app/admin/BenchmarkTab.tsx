@@ -260,6 +260,64 @@ export default function BenchmarkTab() {
           </table>
         </div>
       </div>
+
+      {/* Golden Dataset Sample */}
+      <div className="bg-linear-surface border border-amber-500/30 rounded-2xl overflow-hidden shadow-lg group">
+        <div className="px-6 py-4 border-b border-linear-border/50 bg-amber-500/5 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Database className="w-5 h-5 text-amber-500" />
+            <h2 className="text-sm font-bold text-amber-400">Golden Set Sample (Trích xuất từ MKT-Bench-2026)</h2>
+          </div>
+          <span className="px-2 py-1 bg-red-500/10 text-red-400 text-[10px] font-bold rounded-full border border-red-500/20">MKT-2026-0492 • Hard Difficulty</span>
+        </div>
+        <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Input Side */}
+          <div className="space-y-4">
+            <div className="bg-black/30 p-4 rounded-xl border border-linear-border/50">
+              <h4 className="text-xs font-bold text-slate-400 uppercase mb-3 flex items-center gap-2"><Target className="w-3.5 h-3.5"/> Brand DNA (Context)</h4>
+              <ul className="text-[13px] space-y-2.5 text-slate-300">
+                <li className="flex gap-2"><strong className="text-slate-400 min-w-[120px]">Tone of Voice:</strong> Trẻ trung, thân thiện, truyền cảm hứng</li>
+                <li className="flex gap-2"><strong className="text-slate-400 min-w-[120px]">Key Message:</strong> Cà phê Việt nguyên bản, không pha trộn</li>
+                <li className="flex gap-2"><strong className="text-slate-400 min-w-[120px]">Target Audience:</strong> Sinh viên và nhân viên văn phòng 18-35 tuổi</li>
+                <li className="flex gap-2"><strong className="text-red-400 min-w-[120px]">Forbidden Words:</strong> "rẻ tiền", "công nghiệp", "hóa chất"</li>
+              </ul>
+            </div>
+            <div className="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20">
+              <h4 className="text-xs font-bold text-blue-400 uppercase mb-2 flex items-center gap-2"><Zap className="w-3.5 h-3.5"/> Prompt (Yêu cầu)</h4>
+              <p className="text-[13px] text-blue-100 italic leading-relaxed">"Lên kế hoạch ra mắt sản phẩm Cà phê Muối mới trong tháng 7 với ngân sách 20 triệu VNĐ. Yêu cầu chi tiết phân bổ ngân sách và 1 mẫu bài đăng Facebook."</p>
+            </div>
+          </div>
+          
+          {/* Output Side */}
+          <div className="space-y-4">
+            <div className="bg-emerald-500/10 p-5 rounded-xl border border-emerald-500/20 h-full flex flex-col">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-xs font-bold text-emerald-400 uppercase flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5"/> Golden Output (Mẫu chuẩn)</h4>
+                <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">Expert Score: 9.5/10</span>
+              </div>
+              <div className="space-y-4 flex-1">
+                <div>
+                  <div className="text-[11px] text-emerald-300/80 font-bold uppercase mb-2 tracking-wide">1. Budget Allocation</div>
+                  <ul className="text-[13px] text-emerald-100/90 space-y-1.5 list-disc pl-4">
+                    <li><strong className="text-emerald-300">10M (FB Ads):</strong> Target tệp nhân viên văn phòng bán kính 5km</li>
+                    <li><strong className="text-emerald-300">6M (TikTok):</strong> Tạo độ viral và xu hướng trong giới trẻ sinh viên</li>
+                    <li><strong className="text-emerald-300">4M (POSM):</strong> Kích thích dùng thử trực tiếp tại cửa hàng</li>
+                  </ul>
+                </div>
+                <div>
+                  <div className="text-[11px] text-emerald-300/80 font-bold uppercase mb-2 tracking-wide">2. Content Sample (FB Post)</div>
+                  <div className="bg-black/40 p-3.5 rounded-lg text-[13px] text-emerald-50/90 font-serif leading-relaxed border border-emerald-500/10">
+                    🌊 BẠN ĐÃ THỬ CÀ PHÊ MUỐI ĐẬM ĐÀ CHUẨN VỊ CHƯA?<br/><br/>
+                    Chút vị mặn mòi tinh tế hòa quyện cùng vị đắng đậm của cà phê Việt nguyên bản, thêm lớp kem macchiato béo ngậy làm bừng tỉnh mọi giác quan...<br/>
+                    👉 Tất cả tạo nên siêu phẩm 'Cà Phê Muối' mới nhất! Ghé ngay hôm nay để nhận ưu đãi Mua 1 Tặng 1 tuần đầu ra mắt nhé!<br/><br/>
+                    <span className="text-emerald-400/80 text-[11px] font-sans block">#CaPheMuoi #CaPheVietNguyenBan #TruyenCamHung</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 }
