@@ -9,9 +9,9 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const PORT_DATA = [
- { bcg: 'Ngôi sao (Star)', sbu: 'Thực đơn Chữa lành (Mindful Menu)', rev: '45 tỷ', target: '120 tỷ' },
- { bcg: 'Bò sữa (Cash Cow)', sbu: 'Giao hàng O2O (Zalo Mini App) dẻo', rev: '200 tỷ', target: '250 tỷ' },
- { bcg: 'Dấu hỏi (Question)', sbu: 'Nước ép đóng chai', rev: '15 tỷ', target: '50 tỷ' },
+ { bcg: 'Ngôi sao (Star)', sbu: 'Thịt kho niêu (Signature)', rev: '12 tỷ', target: '25 tỷ' },
+ { bcg: 'Bò sữa (Cash Cow)', sbu: 'Cơm văn phòng (App)', rev: '18 tỷ', target: '30 tỷ' },
+ { bcg: 'Dấu hỏi (Question)', sbu: 'Gói Cơm B2B (Công ty)', rev: '2 tỷ', target: '15 tỷ' },
 ];
 
 export default function PageC2History() {
@@ -50,7 +50,7 @@ export default function PageC2History() {
     </InstructionAlert>
     
     <div className="bento-card p-6">
-      <PastelTable columns={COLUMNS} data={localData.items} />
+      <PastelTable columns={COLUMNS} data={localData?.items?.length > 0 ? localData.items : PORT_DATA} />
     </div>
     <WizardNavigation prevLink="/planning/c1-direction" prevLabel="Về C.1" nextLink="/planning/c3-issues" nextLabel="Tiếp tục: C.3 Phân tích Vấn đề" />
    </div>

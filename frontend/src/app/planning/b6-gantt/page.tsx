@@ -9,10 +9,10 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const GANTT_DATA = [
- { name: 'On-air TVC Mascot ruột', t8: true, t9: true, t10: false, t11: false, t12: false },
- { name: 'Sampling siêu thị', t8: true, t9: true, t10: false, t11: false, t12: false },
- { name: 'Ra mắt túi zip mini 15g', t8: true, t9: true, t10: false, t11: false, t12: false },
- { name: 'Flash Sale Mega Cuối năm', t8: false, t9: false, t10: false, t11: false, t12: true },
+ { name: 'Ra mắt Cơm Trưa Chữa Lành', t8: true, t9: true, t10: false, t11: false, t12: false },
+ { name: 'Phủ sóng KOC Review TikTok', t8: false, t9: true, t10: true, t11: false, t12: false },
+ { name: 'Push Sale Khách B2B', t8: false, t9: false, t10: true, t11: true, t12: false },
+ { name: 'Tri ân khách quen Zalo Cuối năm', t8: false, t9: false, t10: false, t11: false, t12: true },
 ];
 
 export default function PageB6Gantt() {
@@ -50,7 +50,7 @@ export default function PageB6Gantt() {
     </InstructionAlert>
     
     <div className="bento-card p-6 overflow-x-auto">
-      <PastelTable columns={COLUMNS} data={localData.items} />
+      <PastelTable columns={COLUMNS} data={localData?.items?.length > 0 ? localData.items : GANTT_DATA} />
     </div>
     <WizardNavigation prevLink="/planning/b5-pnl" prevLabel="Về B.5" nextLink="/planning/c0-overview" nextLabel="Hoàn thành Phần B! 👉 Sang Phần C" />
    </div>

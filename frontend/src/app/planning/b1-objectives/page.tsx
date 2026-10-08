@@ -9,8 +9,8 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const OBJ_DATA = [
- { pair: 'Vị nguyên bản / Mẹ & Bé', vol: '130 tấn', margin: '42%', strategy: 'Đẩy mạnh Sampling & TVC', budget: '1,500' },
- { pair: 'Vị trái cây / Văn phòng', vol: '70 tấn', margin: '45%', strategy: 'Kích cầu qua KOC TikTok', budget: '800' },
+ { pair: 'Thịt kho niêu / Dân văn phòng', vol: '120k phần', margin: '45%', strategy: 'Kích cầu qua Review TikTok & Reels', budget: '150 triệu' },
+ { pair: 'Gói Cơm B2B / Doanh nghiệp', vol: '150 Hợp đồng', margin: '35%', strategy: 'Tiếp cận trực tiếp (Direct Sales)', budget: '50 triệu' },
 ];
 
 export default function PageB1Objectives() {
@@ -47,7 +47,7 @@ export default function PageB1Objectives() {
     </InstructionAlert>
     
     <div className="bento-card p-6">
-      <PastelTable columns={COLUMNS} data={localData.items} />
+      <PastelTable columns={COLUMNS} data={localData?.items?.length > 0 ? localData.items : OBJ_DATA} />
     </div>
    </div>
   </B2BPageTemplate>

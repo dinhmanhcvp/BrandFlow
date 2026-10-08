@@ -9,8 +9,8 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const ASSUMP_DATA = [
- { core: 'Xu hướng "Clean Label" tăng 15%/năm', logic: 'Thị hiếu tiêu dùng không đảo chiều', action: 'Giảm chi phí R&D dòng sản phẩm mới' },
- { core: 'Giá nguyên liệu sữa tươi ổn định', logic: 'Biên độ dao động < 5%', action: 'Tìm kiếm nhà cung cấp dự phòng' },
+ { core: 'Xu hướng "Cơm văn phòng healthy" tăng', logic: 'Thị hiếu người dùng ưu tiên sức khỏe', action: 'Tăng cường PR lợi ích dinh dưỡng' },
+ { core: 'Giá nguyên liệu gạo & thịt heo ổn định', logic: 'Dự báo lạm phát < 4%', action: 'Chốt hợp đồng nguyên liệu dài hạn 6 tháng' },
 ];
 
 export default function PageA7Assumptions() {
@@ -45,7 +45,7 @@ export default function PageA7Assumptions() {
     </InstructionAlert>
     
     <div className="bento-card p-6">
-      <PastelTable columns={COLUMNS} data={localData.items} />
+      <PastelTable columns={COLUMNS} data={localData?.items?.length > 0 ? localData.items : ASSUMP_DATA} />
     </div>
     <WizardNavigation prevLink="/planning/a6-portfolio" prevLabel="Về A.6" nextLink="/planning/a8-strategies" nextLabel="Tiếp tục: A.8 Mục tiêu & Chiến lược" />
    </div>

@@ -9,8 +9,8 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const ISSUES_DATA = [
- { sbu: 'Thực đơn Chữa lành', market: 'Tăng trưởng nhanh (40%)', comp: 'Khốc liệt về giá, đa dạng đối thủ', issue: 'Mở rộng dung tích nhỏ để tối ưu giá dùng thử.' },
- { sbu: 'Giao hàng O2O (Zalo Mini App)', market: 'Bão hòa, tăng trưởng chậm', comp: 'Dẫn đầu thị phần, ít biến động', issue: 'Tối ưu hóa chuỗi cung ứng logistics lạnh chung.' },
+ { sbu: 'Thịt kho niêu', market: 'Tăng trưởng nhanh (30%)', comp: 'Ít đối thủ làm chuẩn vị', issue: 'Scale-up quy mô sản xuất bị giới hạn do quy trình thủ công.' },
+ { sbu: 'Cơm văn phòng (App)', market: 'Bão hòa, phí sàn cao', comp: 'Khốc liệt về giá', issue: 'Chuyển đổi khách hàng từ App sang Zalo OA để giữ biên lợi nhuận.' },
 ];
 
 export default function PageC3Issues() {
@@ -57,7 +57,7 @@ export default function PageC3Issues() {
     </InstructionAlert>
     
     <div className="bento-card p-6">
-      <PastelTable columns={COLUMNS} data={localData.items} />
+      <PastelTable columns={COLUMNS} data={localData?.items?.length > 0 ? localData.items : ISSUES_DATA} />
     </div>
     <WizardNavigation prevLink="/planning/c2-history" prevLabel="Về C.2" nextLink="/planning/c4-dashboard" nextLabel="Tiếp tục: C.4 Bảng điều khiển" />
    </div>

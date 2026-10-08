@@ -9,8 +9,8 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const CONT_DATA = [
- { risk: 'Phí sàn TikTok tăng', level: 'TB', impact: 'Giảm 15% biên LN Online', trigger: 'CPO > 25%', action: 'Dịch chuyển 50% ngân sách sang kênh mầm non' },
- { risk: 'Đối thủ giảm giá sốc', level: 'Cao', impact: 'Mất 5% thị phần ngắn hạn', trigger: 'Chênh lệch giá > 30%', action: 'Tung gói Combo tặng kèm, không giảm giá lẻ' },
+ { risk: 'Chiết khấu App (ShopeeFood) tăng mạnh', level: 'Cao', impact: 'Giảm 10% biên LN Gộp', trigger: 'Phí sàn > 28%', action: 'Tặng mã giảm giá riêng lôi kéo khách qua Zalo OA' },
+ { risk: 'Khan hiếm nguồn cung thịt sạch', level: 'TB', impact: 'Đứt gãy 20% menu chính', trigger: 'Báo động dịch bệnh từ NCC', action: 'Kích hoạt ngay nhà cung cấp dự phòng số 2' },
 ];
 
 export default function PageB4Contingency() {
@@ -46,7 +46,7 @@ export default function PageB4Contingency() {
     </InstructionAlert>
     
     <div className="bento-card p-6">
-      <PastelTable columns={COLUMNS} data={localData.items} />
+      <PastelTable columns={COLUMNS} data={localData?.items?.length > 0 ? localData.items : CONT_DATA} />
     </div>
     <WizardNavigation prevLink="/planning/b3-budget" prevLabel="Về B.3" nextLink="/planning/b5-pnl" nextLabel="Tiếp tục: B.5 Lãi lỗ" />
    </div>

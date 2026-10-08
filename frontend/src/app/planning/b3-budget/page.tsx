@@ -9,9 +9,9 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const BUDGET_DATA = [
- { item: 'Quảng cáo số (Ads)', past: '800 triệu', now: '1.2 tỷ', next: '1.5 tỷ' },
- { item: 'Khuyến mãi (Trade)', past: '500 triệu', now: '800 triệu', next: '1.0 tỷ' },
- { item: 'vận hành bếp Media (TVC)', past: '200 triệu', now: '400 triệu', next: '800 triệu' },
+ { item: 'Quảng cáo số (Food App & FB)', past: '120 triệu', now: '200 triệu', next: '350 triệu' },
+ { item: 'Khuyến mãi giảm giá (Trade)', past: '300 triệu', now: '400 triệu', next: '600 triệu' },
+ { item: 'PR & Branding (Zalo OA)', past: '50 triệu', now: '100 triệu', next: '200 triệu' },
 ];
 
 export default function PageB3Budget() {
@@ -58,7 +58,7 @@ export default function PageB3Budget() {
     </InstructionAlert>
     
     <div className="bento-card p-6">
-      <PastelTable columns={COLUMNS} data={localData.items} />
+      <PastelTable columns={COLUMNS} data={localData?.items?.length > 0 ? localData.items : BUDGET_DATA} />
     </div>
     <WizardNavigation prevLink="/planning/b2-action" prevLabel="Về B.2" nextLink="/planning/b4-contingency" nextLabel="Tiếp tục: B.4 Dự phòng" />
    </div>

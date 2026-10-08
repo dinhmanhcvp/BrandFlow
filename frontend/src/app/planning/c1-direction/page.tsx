@@ -11,9 +11,9 @@ import { TranslationKey } from '@/i18n/translations';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const DIR_DATA = [
- { item: 'Đóng góp mục tiêu', content: 'Tổng doanh thu 500 tỷ trong 3 năm.' },
- { item: 'Định nghĩa kinh doanh', content: 'Hệ sinh thái thực phẩm xanh, sạch, bản địa.' },
- { item: 'Hướng đi tương lai', content: 'Chiếm lĩnh nội địa, chuẩn bị tiêu chuẩn xuất khẩu.' },
+ { item: 'Đóng góp mục tiêu', content: 'Doanh thu đạt mốc 108 tỷ sau 3 năm, top 5 chuỗi cơm văn phòng.' },
+ { item: 'Định nghĩa kinh doanh', content: 'Cung cấp không chỉ bữa ăn, mà là "trải nghiệm chữa lành" giữa giờ làm.' },
+ { item: 'Hướng đi tương lai', content: 'Chiếm lĩnh kênh Zalo OA để làm chủ tệp khách hàng, giảm lệ thuộc App.' },
 ];
 
 export default function PageC1Direction() {
@@ -59,7 +59,7 @@ export default function PageC1Direction() {
     </InstructionAlert>
     
     <div className="bento-card p-6">
-      <PastelTable columns={COLUMNS} data={localData.items} />
+      <PastelTable columns={COLUMNS} data={localData?.items?.length > 0 ? localData.items : DIR_DATA} />
     </div>
     <WizardNavigation prevLink="/planning/c0-overview" prevLabel="Về C.0 Tổng quan" nextLink="/planning/c2-history" nextLabel="Tiếp tục: C.2 Lịch sử Danh mục" />
    </div>

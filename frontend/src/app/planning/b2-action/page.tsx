@@ -10,8 +10,18 @@ import { Target, Compass, Globe, Clock, Users, Wrench } from 'lucide-react';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const ACTION_DATA = [
- { obj: 'Trực quan hóa công dụng lợi khuẩn', tactic: 'vận hành bếp TVC hoạt hình: 1 Mascot duy nhất vươn tay chỉ trực diện vào đồ họa đường ruột đang tiêu hóa tốt.', owner: 'Creative Team', deadline: 'Tuần 3, Tháng 8', cost: '300,000,000' },
- { obj: 'Tăng tương tác điểm bán', tactic: 'Tổ chức booth dùng thử, chụp hình check-in cùng Mascot đơn.', owner: 'Trade Mkt', deadline: 'Tháng 9', cost: '150,000,000' },
+ { 
+  segment: 'Dân văn phòng (Zalo)', 
+  obj: 'Tăng 20% đơn lặp lại', 
+  strategy: 'Kích hoạt chương trình Thẻ Hội Viên điện tử', 
+  tactics: ['1. Tích hợp Mini-app Zalo', '2. Tặng Voucher 30k cho khách mời bạn', '3. Push ZaloZNS trưa thứ 6'] 
+ },
+ { 
+  segment: 'Doanh nghiệp (Catering)', 
+  obj: 'Ký 15 hợp đồng mới', 
+  strategy: 'Cung cấp Ăn thử miễn phí (Tasting Session)', 
+  tactics: ['1. Lọc danh sách 100 SMEs', '2. Telesale đặt lịch', '3. Gửi hộp cơm mẫu cao cấp đính kèm Proposal'] 
+ }
 ];
 
 export default function PageB2Action() {
@@ -151,7 +161,7 @@ export default function PageB2Action() {
     {/* Tactics Table */}
     <div className="bento-card p-6">
       <h3 className="text-sm font-semibold text-linear-text-muted mb-4 uppercase tracking-widest">Bảng Kế Hoạch 7Ps</h3>
-      <PastelTable columns={COLUMNS} data={localData.items || ACTION_DATA} />
+      <PastelTable columns={COLUMNS} data={localData?.items?.length > 0 ? localData.items : ACTION_DATA} />
     </div>
 
     <WizardNavigation prevLink="/planning/b1-objectives" prevLabel="Về B.1" nextLink="/planning/b3-budget" nextLabel="Tiếp tục: B.3 Ngân sách Marketing" />

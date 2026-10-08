@@ -9,12 +9,8 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const MATRIX_DATA = [
- { level: 'Tổng Doanh Thu', past: '1.2 tỷ', now: '1.8 tỷ', target: '3 tỷ', note: 'Mục tiêu sau 90 ngày Launching' },
- { level: 'Khách quay lại (Retention)', past: '15%', now: '35%', target: '50%', note: 'Hệ sinh thái Mini App' },
- { level: 'Tỷ trọng: Gen Z', past: '30%', now: '50%', target: '60%', note: 'Khách hàng mục tiêu chính' },
- { level: 'Tỷ trọng: Khách văn phòng', past: '50%', now: '40%', target: '35%', note: 'Business Lunch' },
- { level: 'SP: Cơm niêu gia đình', past: '80%', now: '70%', target: '60%', note: 'Món lõi truyền thống' },
- { level: 'SP: Combo Trưa bã mía', past: '0%', now: '15%', target: '25%', note: 'Thêm dòng SP mới thân thiện' },
+ { target: 'SMEs (Catering)', s1: 'Bán chéo (Cross-sell) combo nước ép', s2: 'Phát triển Gói Cơm VIP', s3: 'Mở cơ sở gần tòa nhà VP mới', s4: 'Đầu tư dây chuyền đóng gói công nghiệp' },
+ { target: 'Dân văn phòng (Zalo)', s1: 'Khuyến mãi tích điểm Loyalty', s2: 'Thực đơn Low-carb mới', s3: 'Mở rộng bán kính giao 5km', s4: 'Hợp tác nhượng quyền Food-court' },
 ];
 
 const FOUR_P_DATA = [
@@ -132,7 +128,7 @@ export default function PageA8Strategies() {
 
     <div className="bento-card p-6">
       <h3 className="text-sm font-semibold text-linear-text-muted mb-4 uppercase tracking-widest">Ma trận Mục tiêu (Khối lượng, Phân khúc, Sản phẩm)</h3>
-      <PastelTable columns={MATRIX_COLS} data={localData.items || MATRIX_DATA} />
+      <PastelTable columns={MATRIX_COLS} data={localData?.items?.length > 0 ? localData.items : MATRIX_DATA} />
     </div>
 
     <div className="bento-card p-6">

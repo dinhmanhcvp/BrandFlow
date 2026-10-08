@@ -9,10 +9,10 @@ import WizardNavigation from '@/components/b2b/WizardNavigation';
 import { RationaleTooltip } from '@/components/ui/RationaleTooltip';
 
 const PNL_DATA = [
- { item: 'Doanh thu thuần', t0: '60.0', t1: '80.0', t2: '100.0', t3: '120.0' },
- { item: 'Chi phí giá vốn (COGS)', t0: '34.8', t1: '45.6', t2: '56.0', t3: '66.0' },
- { item: 'Lợi nhuận gộp', t0: '25.2', t1: '34.4', t2: '44.0', t3: '54.0' },
- { item: 'Chi phí Marketing', t0: '3.5', t1: '4.5', t2: '5.5', t3: '6.5' },
+ { item: 'Doanh thu thuần', t0: '32.0', t1: '49.5', t2: '75.0', t3: '108.0' },
+ { item: 'Chi phí giá vốn (COGS)', t0: '20.8', t1: '32.1', t2: '48.7', t3: '70.2' },
+ { item: 'Lợi nhuận gộp', t0: '11.2', t1: '17.4', t2: '26.3', t3: '37.8' },
+ { item: 'Chi phí Marketing', t0: '3.5', t1: '5.0', t2: '7.5', t3: '10.5' },
 ];
 
 export default function PageA9Budget() {
@@ -49,7 +49,7 @@ export default function PageA9Budget() {
     </InstructionAlert>
     
     <div className="bento-card p-6">
-      <PastelTable columns={COLUMNS} data={localData.items} />
+      <PastelTable columns={COLUMNS} data={localData?.items?.length > 0 ? localData.items : PNL_DATA} />
     </div>
     <WizardNavigation prevLink="/planning/a8-strategies" prevLabel="Về A.8" nextLink="/planning/b0-overview" nextLabel="Hoàn thành Phần A! 👉 Sang Phần B" />
    </div>
