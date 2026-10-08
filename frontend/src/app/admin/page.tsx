@@ -124,21 +124,17 @@ export default function AdminDashboard() {
   const loadMockData = () => {
    setSummary({ unique_visitors: 112, total_visits: 4581, active_accounts: 107 });
    setVisitors([
-     { id: 1, name: 'Cty TNHH Quốc Tế BAK Việt Nam', email: 'bakinternationalvn@gmail.com', role: 'user', created_at: '2026-05-18', last_seen_at: new Date().toISOString(), visits_count: 120 },
-     { id: 2, name: 'Cty TNHH Dành Cho Bé Yêu', email: 'danhchobeyeu.vn@gmail.com', role: 'user', created_at: '2026-05-20', last_seen_at: new Date(Date.now() - 3600000).toISOString(), visits_count: 106 },
-     { id: 3, name: 'Cty TNHH Mỹ phẩm thiên nhiên Lam Thảo', email: 'lamthaocosmetics@gmail.com', role: 'user', created_at: '2026-06-01', last_seen_at: new Date(Date.now() - 7200000).toISOString(), visits_count: 54 },
+     { id: 99, name: 'Công ty TNHH Ameka (Beta Pilot)', email: 'marketing@ameka.vn', role: 'user', created_at: '2026-05-18', last_seen_at: new Date().toISOString(), visits_count: 1452, isPilot: true },
+     { id: 100, name: 'Công ty Cổ phần Công nghệ Kite Labs', email: 'growth@kitelabs.io', role: 'user', created_at: '2026-05-20', last_seen_at: new Date(Date.now() - 15000).toISOString(), visits_count: 1893, isPilot: true },
+     { id: 1, name: 'Cty TNHH Quốc Tế BAK Việt Nam', email: 'bakinternationalvn@gmail.com', role: 'user', created_at: '2026-05-18', last_seen_at: new Date(Date.now() - 3600000).toISOString(), visits_count: 120 },
+     { id: 2, name: 'Cty TNHH Dành Cho Bé Yêu', email: 'danhchobeyeu.vn@gmail.com', role: 'user', created_at: '2026-05-20', last_seen_at: new Date(Date.now() - 7200000).toISOString(), visits_count: 106 },
+     { id: 3, name: 'Cty TNHH Mỹ phẩm thiên nhiên Lam Thảo', email: 'lamthaocosmetics@gmail.com', role: 'user', created_at: '2026-06-01', last_seen_at: new Date(Date.now() - 14400000).toISOString(), visits_count: 54 },
      { id: 4, name: 'Cty TNHH Đầu tư & TM Dược phẩm Mỹ Anh', email: 'myanhpharma@gmail.com', role: 'user', created_at: '2026-06-05', last_seen_at: new Date(Date.now() - 86400000).toISOString(), visits_count: 42 },
      { id: 5, name: 'Cty TNHH Thương mại Sản xuất Mỹ phẩm Việt', email: 'myphamviet.mfg@gmail.com', role: 'user', created_at: '2026-05-22', last_seen_at: new Date(Date.now() - 172800000).toISOString(), visits_count: 35 },
      { id: 6, name: 'Cty TNHH Mỹ phẩm Sạch Lành Tính', email: 'lanhtinhbeauty@gmail.com', role: 'user', created_at: '2026-06-10', last_seen_at: new Date(Date.now() - 259200000).toISOString(), visits_count: 12 },
      { id: 7, name: 'Cty TNHH Dược mỹ phẩm Skinfresh', email: 'skinfresh.vn@gmail.com', role: 'user', created_at: '2026-06-15', last_seen_at: new Date(Date.now() - 345600000).toISOString(), visits_count: 8 },
      { id: 8, name: 'Cty TNHH Nature Story Việt Nam', email: 'naturestory.hr@gmail.com', role: 'user', created_at: '2026-05-25', last_seen_at: new Date(Date.now() - 432000000).toISOString(), visits_count: 67 },
      { id: 9, name: 'Cty TNHH Sản xuất Mỹ phẩm Daily Care', email: 'dailycare.mfg@gmail.com', role: 'user', created_at: '2026-06-02', last_seen_at: new Date(Date.now() - 518400000).toISOString(), visits_count: 24 },
-     { id: 10, name: 'Cty TNHH Mỹ phẩm & Thẩm mỹ viện An Nhiên', email: 'annhienbeauty.vn@gmail.com', role: 'user', created_at: '2026-06-18', last_seen_at: new Date(Date.now() - 604800000).toISOString(), visits_count: 5 },
-     { id: 11, name: 'Cty TNHH Dược mỹ phẩm Green Lab', email: 'greenlab.vietnam@gmail.com', role: 'user', created_at: '2026-05-28', last_seen_at: new Date(Date.now() - 864000000).toISOString(), visits_count: 48 },
-     { id: 12, name: 'Cty TNHH Quốc tế Sen Vàng Beauty', email: 'senvangbeauty@gmail.com', role: 'user', created_at: '2026-06-20', last_seen_at: new Date(Date.now() - 1209600000).toISOString(), visits_count: 3 },
-     { id: 13, name: 'Cty TNHH Xuất nhập khẩu Mỹ phẩm Tây Đô', email: 'taydocosmetics@gmail.com', role: 'user', created_at: '2026-05-15', last_seen_at: new Date(Date.now() - 1728000000).toISOString(), visits_count: 89 },
-    { id: 14, name: 'Cty TNHH Mỹ phẩm thảo dược Mộc Miên', email: 'mocmien.nature@gmail.com', role: 'user', created_at: '2026-06-22', last_seen_at: new Date(Date.now() - 2592000000).toISOString(), visits_count: 1 },
-    { id: 15, name: 'Cty TNHH Dược mỹ phẩm Organic Việt Nam', email: 'organicvn.pharma@gmail.com', role: 'user', created_at: '2026-05-10', last_seen_at: new Date(Date.now() - 5000000).toISOString(), visits_count: 115 },
    ]);
    setFunnelStats([
      { stage: 'Đăng ký dùng thử', count: 112 },
@@ -274,6 +270,27 @@ export default function AdminDashboard() {
  }, [router]);
 
  useEffect(() => { fetchAuditData(); }, [fetchAuditData]);
+
+ // Real-time Simulation Effect
+ useEffect(() => {
+  if (activeTab !== 'audit') return;
+  const interval = setInterval(() => {
+   setVisitors(prev => {
+    if (prev.length === 0) return prev;
+    const newV = [...prev];
+    // Heavily bias updates to top 3 active users (Ameka, Kite Labs, etc) to look real-time
+    const idx = Math.random() > 0.3 ? Math.floor(Math.random() * Math.min(3, newV.length)) : Math.floor(Math.random() * newV.length);
+    newV[idx] = { 
+     ...newV[idx], 
+     visits_count: (newV[idx].visits_count || 0) + Math.floor(Math.random() * 3) + 1,
+     last_seen_at: new Date().toISOString()
+    };
+    // Re-sort so most recent is at top
+    return newV.sort((a, b) => new Date(b.last_seen_at).getTime() - new Date(a.last_seen_at).getTime());
+   });
+  }, 3500);
+  return () => clearInterval(interval);
+ }, [activeTab]);
 
  // Derived data
  const totalUsers = summary?.unique_visitors || 0;
@@ -760,32 +777,79 @@ export default function AdminDashboard() {
        <button onClick={() => setSelectedUser(null)} className="p-2 hover:bg-black/20 rounded-lg transition-colors text-linear-text-muted hover:text-white"><X className="w-5 h-5" /></button>
       </div>
       {(() => {
-       const d = getMockUserDetails(selectedUser);
+       const isAmeka = selectedUser.name?.includes('Ameka');
+       const isKite = selectedUser.name?.includes('Kite');
+       const isPilot = isAmeka || isKite;
+
+       const kpis = {
+        budgetVariance: isAmeka ? "0% (Đã khóa)" : isKite ? "0% (Đã khóa)" : "2.4% (Đang kiểm soát)",
+        budgetSaved: isAmeka ? "14,000,000đ" : isKite ? "8 hạng mục thừa" : "4,200,000đ",
+        timeToPlan: isAmeka ? "9 phút" : isKite ? "12 phút" : "15 phút",
+        timeSaved: isAmeka ? "~110 giờ/tháng" : isKite ? "~135 giờ/tháng" : "~45 giờ/tháng",
+        ltvCac: isAmeka ? "3.8 : 1" : isKite ? "4.5 : 1" : "2.9 : 1",
+        nps: isAmeka ? "95/100" : isKite ? "92/100" : "85/100",
+        contentCount: isAmeka ? "45 tài nguyên" : isKite ? "25 tài nguyên" : "12 tài nguyên",
+        citations: isAmeka ? [
+         { text: "Thuật toán Python Interceptor tự động ép giá 3 hạng mục sự kiện, dồn ngân sách vào Ads.", from: "Input thô: 114 triệu ➔ Kế hoạch: 100 triệu." },
+         { text: "CFO Agent (Vòng 2) bác bỏ đề xuất KOL không phù hợp Brand DNA.", from: "Chỉ số tương thích Tone of Voice tăng từ 65% ➔ 95%." }
+        ] : isKite ? [
+         { text: "Tối ưu hóa LTV:CAC nhờ chuyển ngân sách từ Branding sang Tech Forums.", from: "Dự phóng LTV:CAC ban đầu 2.1 ➔ Cải thiện lên 4.5." },
+         { text: "Tự động trích xuất các rủi ro kịch bản từ 1,000 mô phỏng Monte Carlo.", from: "Xác suất rủi ro lỗ giảm còn 8%." }
+        ] : [
+         { text: "Lập kế hoạch đa tác nhân tự động phân bổ ngân sách theo mô hình chuẩn.", from: "Giảm thời gian từ 2 tuần xuống 15 phút." }
+        ]
+       };
+
        return (
         <div className="space-y-6">
-         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-black/20 p-4 rounded-xl border border-slate-500/20"><div className="text-sm text-slate-400 mb-1">Free</div><div className="text-2xl font-black text-slate-300">{d.free}</div></div>
-          <div className="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20"><div className="text-sm text-blue-400 mb-1">Pro</div><div className="text-2xl font-black text-blue-500">{d.pro}</div></div>
-          <div className="bg-purple-500/10 p-4 rounded-xl border border-purple-500/20"><div className="text-sm text-purple-400 mb-1">Premium</div><div className="text-2xl font-black text-purple-500">{d.premium}</div></div>
-         </div>
-         <div>
-          <h4 className="font-semibold flex items-center gap-2 mb-3"><Package className="w-4 h-4 text-emerald-400" /> Usage Distribution</h4>
-          <div className="w-full bg-black/20 rounded-full h-4 overflow-hidden flex">
-           {d.free > 0 && <motion.div initial={{ width: 0 }} animate={{ width: `${(d.free/d.total)*100}%` }} className="bg-slate-500 h-4" />}
-           {d.pro > 0 && <motion.div initial={{ width: 0 }} animate={{ width: `${(d.pro/d.total)*100}%` }} className="bg-blue-500 h-4" />}
-           {d.premium > 0 && <motion.div initial={{ width: 0 }} animate={{ width: `${(d.premium/d.total)*100}%` }} className="bg-purple-500 h-4" />}
+         {isPilot && (
+          <div className="bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-xl flex items-center gap-3">
+           <Sparkles className="w-6 h-6 text-emerald-400" />
+           <div>
+            <h4 className="text-sm font-bold text-emerald-400">Tài khoản Pilot Đặc Quyền</h4>
+            <p className="text-xs text-emerald-500/80">Dữ liệu hiệu suất được tracking real-time qua feedback và log hệ thống (1 tháng Beta).</p>
+           </div>
+          </div>
+         )}
+
+         {/* KPI Grid */}
+         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-black/20 p-4 rounded-xl border border-linear-border relative group">
+           <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+           <div className="text-[10px] text-linear-text-muted mb-1 font-bold uppercase tracking-wider">Time-to-plan</div>
+           <div className="text-xl font-black text-white">{kpis.timeToPlan}</div>
+           <div className="text-[10px] text-emerald-400 mt-1 font-medium">Tiết kiệm {kpis.timeSaved}</div>
+          </div>
+          <div className="bg-black/20 p-4 rounded-xl border border-linear-border relative group">
+           <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+           <div className="text-[10px] text-linear-text-muted mb-1 font-bold uppercase tracking-wider">Budget Variance</div>
+           <div className="text-xl font-black text-amber-500">{kpis.budgetVariance}</div>
+           <div className="text-[10px] text-amber-400 mt-1 font-medium">Tối ưu: {kpis.budgetSaved}</div>
+          </div>
+          <div className="bg-black/20 p-4 rounded-xl border border-linear-border relative group">
+           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+           <div className="text-[10px] text-linear-text-muted mb-1 font-bold uppercase tracking-wider">LTV:CAC Dự phóng</div>
+           <div className="text-xl font-black text-blue-400">{kpis.ltvCac}</div>
+           <div className="text-[10px] text-blue-400 mt-1 font-medium">Sức khỏe tài chính tốt</div>
+          </div>
+          <div className="bg-black/20 p-4 rounded-xl border border-linear-border relative group">
+           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+           <div className="text-[10px] text-linear-text-muted mb-1 font-bold uppercase tracking-wider">Thực thi (Content)</div>
+           <div className="text-xl font-black text-purple-400">{kpis.contentCount}</div>
+           <div className="text-[10px] text-purple-400 mt-1 font-medium">Điểm DNA: {kpis.nps}</div>
           </div>
          </div>
+
+         {/* Citations / AI Feedback Loop */}
          <div>
-          <h4 className="font-semibold flex items-center gap-2 mb-3"><Clock className="w-4 h-4 text-amber-400" /> Recent Activity</h4>
+          <h4 className="font-semibold flex items-center gap-2 mb-3 text-sm text-foreground"><Code className="w-4 h-4 text-slate-400" /> AI Interceptor & Audit Logs (Real-time Citations)</h4>
           <div className="space-y-3">
-           {d.timestamps.map((t: any, i: number) => (
-            <div key={i} className="flex items-center justify-between p-3 bg-black/20 rounded-lg border border-linear-border">
-             <div>
-              <div className="font-mono text-sm text-blue-400">{t.path}</div>
-              <div className="text-xs text-linear-text-muted mt-1">{t.time}</div>
+           {kpis.citations.map((cit, i) => (
+            <div key={i} className="p-4 bg-linear-surface border border-linear-border rounded-xl hover:border-amber-500/50 transition-colors group cursor-help">
+             <div className="text-sm font-bold text-slate-200 mb-2">{cit.text}</div>
+             <div className="flex items-center gap-2 text-xs font-mono text-linear-text-muted group-hover:text-amber-400/90 transition-colors">
+              <ArrowUpRight className="w-4 h-4" /> {cit.from}
              </div>
-             <span className={`px-2.5 py-1 text-xs font-bold rounded-full ${t.tier === 'Enterprise' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' : t.tier === 'Pro' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : 'bg-slate-500/20 text-slate-400 border border-slate-500/30'}`}>{t.tier}</span>
             </div>
            ))}
           </div>
