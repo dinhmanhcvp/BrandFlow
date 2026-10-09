@@ -793,6 +793,7 @@ export default function AdminDashboard() {
         { text: "Tái cơ cấu luồng ngân sách: Cắt giảm 12% Budget từ Display Ads chuyển sang Retargeting Ads.", from: "CFO Agent Log (Trace ID: X94-A2).", type: "budget" },
         { text: "Dừng tự động 3 chiến dịch vượt ngưỡng CPL (Cost-per-lead) mục tiêu trong vòng 24h.", from: "System Watchdog #Ameka-A3.", type: "budget" },
         { text: "Phân bổ ngân sách động (Dynamic Budgeting) đạt tỷ lệ ROI kỳ vọng +315%.", from: "Monte Carlo Simulation (Vòng 3).", type: "budget" },
+        { text: "Tự động phân bổ 30% ngân sách Branding sang các Influencer ngách (Micro-influencer) có tệp Follower trùng khớp 95% Target Audience.", from: "AI Budget Allocation Model.", type: "budget" },
         { text: "Tốc độ Launch Campaign (Time-to-market) giảm đột phá từ 3 tuần xuống chỉ còn 4 phút/chiến dịch.", from: "Dữ liệu đo lường hành vi thực tế trên 12 luồng chiến dịch đã chạy.", type: "time" },
         { text: "Tự động hóa 80% quy trình Briefing với Agency.", from: "Task Automation Log (120 tasks).", type: "time" },
         { text: "Năng suất sản xuất Content (Content Velocity) tăng x4 lần, tiết kiệm ~240 giờ làm việc/tháng cho đội ngũ in-house.", from: "Bảng khảo sát hiệu suất từ Head of Marketing của Ameka.", type: "time" },
@@ -800,25 +801,42 @@ export default function AdminDashboard() {
         { text: "Chỉ số LTV:CAC cực kỳ khỏe mạnh: 4.8 : 1.", from: "Predictive LTV Model (90-day window).", type: "ltvcac" },
         { text: "Chi phí chuyển đổi (CAC) giảm 42% nhờ target chuẩn tệp khách hàng Lookalike.", from: "Conversion API Log.", type: "ltvcac" },
         { text: "Tỷ lệ giữ chân khách hàng (Retention) dự kiến tăng 15%.", from: "Phân tích Sentiment trên MXH.", type: "ltvcac" },
+        { text: "Hệ thống A/B Testing tự động tối ưu hóa 25 phiên bản Landing Page khác nhau, chọn ra bản có Tỷ lệ chuyển đổi (CVR) cao nhất 18%.", from: "A/B Testing Engine.", type: "ltvcac" },
         { text: "Tỷ lệ Brand DNA Retention (Độ chuẩn nhận diện) duy trì ở mức 99% trong toàn bộ 145 tài nguyên Marketing được tự động sinh ra.", from: "Hệ thống Audit Log tự động chấm điểm chéo (Cross-Evaluation).", type: "content" },
         { text: "Hệ thống tự động bác bỏ 4 đề xuất KOL vì vi phạm từ khóa cấm của thương hiệu.", from: "Interceptor Log (KOL-Match).", type: "content" },
         { text: "Sinh ra 45 kịch bản Video TikTok bắt trend chỉ trong 12 giây.", from: "Gen-Z Language Model Log.", type: "content" },
-        { text: "Tự động hiệu chỉnh 30 bài PR theo chuẩn SEO mà không làm mất giọng điệu thương hiệu.", from: "SEO Content Optimizer.", type: "content" }
+        { text: "Tự động hiệu chỉnh 30 bài PR theo chuẩn SEO mà không làm mất giọng điệu thương hiệu.", from: "SEO Content Optimizer.", type: "content" },
+        { text: "Loại bỏ hoàn toàn sai sót chính tả và ngữ pháp trong 1,200 bài đăng Social Media trong 30 ngày.", from: "Proofreading Agent Log.", type: "content" }
        ];
 
        const kiteCitations = [
         { text: "Tối ưu hóa chỉ số LTV:CAC cực ấn tượng (từ 2.1 lên 5.2) nhờ dịch chuyển ngân sách tự động sang tập người dùng Tech Forums.", from: "Real-time Dashboard Report (Dựa trên 1893 lượt truy cập).", type: "ltvcac" },
         { text: "Chi phí thu hút một user mới (CAC) giảm 55% thông qua tối ưu hóa luồng Cold Email.", from: "Email Drip Campaign Log.", type: "ltvcac" },
         { text: "Dự phóng LTV trong 12 tháng tăng trưởng 20% dựa trên chỉ số kích hoạt (Activation Rate).", from: "AI Cohort Analysis.", type: "ltvcac" },
+        { text: "Phát hiện 3 luồng rò rỉ khách hàng (Churn Rate) ở giai đoạn Onboarding và tự động gửi thông điệp giữ chân (Win-back).", from: "Churn Prediction Engine.", type: "ltvcac" },
+        { text: "Đề xuất chiến lược Cross-sell tự động làm tăng 22% giá trị trung bình trên mỗi đơn hàng (AOV).", from: "Recommendation Engine Log.", type: "ltvcac" },
+        { text: "Phát hiện và cảnh báo 12 đối thủ cạnh tranh đang chạy các chiến dịch giảm giá 'cắt máu' trong cùng phân khúc.", from: "Market Intelligence Bot.", type: "ltvcac" },
         { text: "Tự động trích xuất các kịch bản rủi ro thị trường từ 1,000 mô phỏng Monte Carlo, giảm thiểu tỷ lệ rủi ro lỗ từ 35% xuống 8%.", from: "CFO Agent Data Engine.", type: "budget" },
         { text: "Dịch chuyển 8 hạng mục chi phí không thiết yếu sang ngân sách R&D Marketing.", from: "Budget Restructuring Log.", type: "budget" },
         { text: "Khóa 100% ngân sách Branding không đo lường được (Zero Variance).", from: "CFO Approval Logic.", type: "budget" },
+        { text: "Chặn đứng 45 triệu VNĐ chi phí lãng phí từ Google Ads do từ khóa (Keywords) cạnh tranh không mang lại chuyển đổi.", from: "Ad Spend Watchdog.", type: "budget" },
+        { text: "Tối ưu hóa giá thầu (Bidding) tự động trên 5 nền tảng quảng cáo (Facebook, Google, TikTok, LinkedIn, Zalo).", from: "Cross-platform Bidding API.", type: "budget" },
+        { text: "Điều hướng 15% Budget từ các bài PR báo chí truyền thống sang kênh KOC Tiktok với hiệu suất gấp 3 lần.", from: "ROI Maximizer Log.", type: "budget" },
+        { text: "Tính toán và phân bổ chi phí thu hút khách hàng (CAC) linh hoạt theo từng múi giờ vàng để tối ưu 28% chi phí.", from: "Time-series Budget Allocation.", type: "budget" },
         { text: "Tạo hàng loạt 85 kịch bản Video ngắn (Short-form Video) bám sát 100% Brand Voice chỉ trong 1 phiên làm việc.", from: "Log hệ thống ghi nhận lúc 14:30 ngày 15/09/2026.", type: "content" },
         { text: "Tự động loại bỏ 100% từ khóa cấm ('cắt lỗ', 'phức tạp') trong nội dung sinh ra.", from: "Keyword Interceptor.", type: "content" },
         { text: "Chấm điểm NPS nội dung đạt 98/100, vượt xa chuẩn Industry (82).", from: "AI Text-Quality Scoring.", type: "content" },
+        { text: "Tự động phân nhóm tập khách hàng (Segmentation) từ 100,000 Data Point, chia thành 8 Persona riêng biệt.", from: "Customer Data Platform (CDP) Sync.", type: "content" },
+        { text: "Phân tích sắc thái bình luận (Sentiment Analysis) trên 50,000 lượt tương tác để cảnh báo sớm rủi ro truyền thông.", from: "Social Listening Agent.", type: "content" },
+        { text: "Thiết kế và render hàng loạt 120 Banner hiển thị đa kích thước bám sát Brand Guideline mà không cần Designer.", from: "Creative Generation Engine.", type: "content" },
+        { text: "Mô hình dự báo (Predictive Modeling) ước tính độ viral của chiến dịch chính xác tới 89%.", from: "Viral Scoring AI.", type: "content" },
         { text: "Rút ngắn thời gian lập kế hoạch Growth Hacking từ 12 ngày xuống 6 phút.", from: "Performance Log.", type: "time" },
         { text: "Tự động hóa luồng báo cáo Real-time, tiết kiệm ~180 giờ/tháng cho đội Data.", from: "Dashboard Auto-sync Log.", type: "time" },
-        { text: "Tỷ suất hoàn vốn (ROI) tổng thể đạt +420% ngay trong tháng đầu ứng dụng BrandFlow vào quy trình Growth Hacking.", from: "Feedback trực tiếp từ Founder & CEO Kite Labs.", type: "time" }
+        { text: "Tỷ suất hoàn vốn (ROI) tổng thể đạt +420% ngay trong tháng đầu ứng dụng BrandFlow vào quy trình Growth Hacking.", from: "Feedback trực tiếp từ Founder & CEO Kite Labs.", type: "time" },
+        { text: "Tạo và gửi cá nhân hóa 2,500 email chăm sóc khách hàng trong vòng 15 giây.", from: "SMTP & API Execution Log.", type: "time" },
+        { text: "Thiết lập kịch bản chăm sóc khách hàng đa kênh (Omni-channel) kết nối đồng bộ giữa Facebook, Zalo, và Email.", from: "Workflow Builder Automations.", type: "time" },
+        { text: "Cắt giảm 100% thời gian họp báo cáo (Weekly Sync) nhờ Dashboard tự động cập nhật số liệu chuẩn xác từng giây.", from: "Management Activity Log.", type: "time" },
+        { text: "Kiểm duyệt chéo (Cross-check) thông tin kỹ thuật của sản phẩm với cơ sở dữ liệu nội bộ trong 2 giây/bài viết.", from: "Fact-checker Agent Log.", type: "time" }
        ];
 
        const defaultCitations = [
