@@ -12,47 +12,12 @@ export default function VideoDemoPage() {
     <p className="text-linear-text-muted">High-fidelity demonstration of BrandFlow AI Multi-Trợ lý AI architecture.</p>
    </div>
 
-   <div className="w-full aspect-video bg-[#050505] border border-white/10 rounded-2xl overflow-hidden relative shadow-2xl flex items-center justify-center group cursor-pointer">
-    {/* Background Gradients */}
-    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-600/10 opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-cyan-500/20 blur-[100px] rounded-full pointer-events-none" />
-    
-    {/* Play Button */}
-    <motion.div 
-     whileHover={{ scale: 1.1 }}
-     whileTap={{ scale: 0.95 }}
-     className="relative z-10 w-24 h-24 bg-white/10 backdrop-blur-md rounded-full border border-white/20 flex items-center justify-center group-hover:bg-cyan-500/20 group-hover:border-cyan-400/50 transition-all duration-300"
-    >
-     <Play className="w-10 h-10 text-white ml-2" fill="currentColor" />
-    </motion.div>
-
-    {/* HUD Elements */}
-    <div className="absolute top-6 left-6 flex gap-4">
-     <div className="px-3 py-1.5 rounded bg-black/40 backdrop-blur border border-white/10 text-xs font-bold text-cyan-400 tracking-widest uppercase flex items-center gap-2">
-      <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" /> Live System
-     </div>
-     <div className="px-3 py-1.5 rounded bg-black/40 backdrop-blur border border-white/10 text-xs font-bold text-white/50 tracking-widest uppercase">
-      V 2.0.4
-     </div>
-    </div>
-
-    <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
-     <div>
-      <h3 className="text-2xl font-black text-white tracking-tighter mb-1 drop-shadow-md">BrandFlow Master Demo</h3>
-      <p className="text-sm text-white/60 font-medium">Full AI Marketing Pipeline (Intake → CFO Audit → Blueprint)</p>
-     </div>
-     <div className="flex gap-2">
-      <div className="w-10 h-10 rounded bg-white/5 backdrop-blur border border-white/10 flex items-center justify-center text-white/50">
-       <Sparkles className="w-5 h-5" />
-      </div>
-      <div className="w-10 h-10 rounded bg-white/5 backdrop-blur border border-white/10 flex items-center justify-center text-white/50">
-       <Cpu className="w-5 h-5" />
-      </div>
-      <div className="w-10 h-10 rounded bg-white/5 backdrop-blur border border-white/10 flex items-center justify-center text-white/50">
-       <Layers className="w-5 h-5" />
-      </div>
-     </div>
-    </div>
+   <div className="w-full aspect-video bg-[#050505] border border-white/10 rounded-2xl overflow-hidden relative shadow-2xl flex items-center justify-center">
+    <video 
+      src="/videos/Brandflow_Final.mp4" 
+      controls 
+      className="w-full h-full"
+    />
    </div>
 
    <div className="grid grid-cols-3 gap-6 w-full mt-12">
