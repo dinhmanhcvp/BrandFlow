@@ -98,6 +98,7 @@ export default function AdminDashboard() {
  const [loading, setLoading] = useState(true);
  const [error, setError] = useState('');
  const [selectedUser, setSelectedUser] = useState<any>(null);
+ const [activeLogFilter, setActiveLogFilter] = useState<string | null>(null);
  const [activeTab, setActiveTab] = useState<'overview' | 'growth' | 'agents' | 'benchmark' | 'audit'>('overview');
  const router = useRouter();
 
@@ -780,12 +781,50 @@ export default function AdminDashboard() {
         <h3 className="text-xl font-bold flex items-center gap-2"><Users className="w-5 h-5 text-amber-500" /> {selectedUser.name || 'Khách Vãng Lai'}</h3>
         <p className="font-mono text-sm text-linear-text-muted mt-1">{selectedUser.email || selectedUser.visitor_key || 'Không có thông tin liên hệ'}</p>
        </div>
-       <button onClick={() => setSelectedUser(null)} className="p-2 hover:bg-black/20 rounded-lg transition-colors text-linear-text-muted hover:text-white"><X className="w-5 h-5" /></button>
+       <button onClick={() => { setSelectedUser(null); setActiveLogFilter(null); }} className="p-2 hover:bg-black/20 rounded-lg transition-colors text-linear-text-muted hover:text-white"><X className="w-5 h-5" /></button>
       </div>
       {(() => {
        const isAmeka = selectedUser.name?.includes('Ameka');
        const isKite = selectedUser.name?.includes('Kite');
        const isPilot = isAmeka || isKite;
+
+       const amekaCitations = [
+        { text: "Thuật toán CFO Agent tự động phát hiện và cắt giảm 45 triệu VNĐ chi phí ẩn (Ad Spend Waste) từ các nền tảng kém hiệu quả.", from: "Báo cáo phân bổ ngân sách AI (Sau 1452 lượt tương tác hệ thống).", type: "budget" },
+        { text: "Tái cơ cấu luồng ngân sách: Cắt giảm 12% Budget từ Display Ads chuyển sang Retargeting Ads.", from: "CFO Agent Log (Trace ID: X94-A2).", type: "budget" },
+        { text: "Dừng tự động 3 chiến dịch vượt ngưỡng CPL (Cost-per-lead) mục tiêu trong vòng 24h.", from: "System Watchdog #Ameka-A3.", type: "budget" },
+        { text: "Phân bổ ngân sách động (Dynamic Budgeting) đạt tỷ lệ ROI kỳ vọng +315%.", from: "Monte Carlo Simulation (Vòng 3).", type: "budget" },
+        { text: "Tốc độ Launch Campaign (Time-to-market) giảm đột phá từ 3 tuần xuống chỉ còn 4 phút/chiến dịch.", from: "Dữ liệu đo lường hành vi thực tế trên 12 luồng chiến dịch đã chạy.", type: "time" },
+        { text: "Tự động hóa 80% quy trình Briefing với Agency.", from: "Task Automation Log (120 tasks).", type: "time" },
+        { text: "Năng suất sản xuất Content (Content Velocity) tăng x4 lần, tiết kiệm ~240 giờ làm việc/tháng cho đội ngũ in-house.", from: "Bảng khảo sát hiệu suất từ Head of Marketing của Ameka.", type: "time" },
+        { text: "Thời gian duyệt nội dung (Approval Time) rút ngắn nhờ tính năng tự động check Brand DNA.", from: "Audit Log (Brand-Check) - 145 tài nguyên.", type: "time" },
+        { text: "Chỉ số LTV:CAC cực kỳ khỏe mạnh: 4.8 : 1.", from: "Predictive LTV Model (90-day window).", type: "ltvcac" },
+        { text: "Chi phí chuyển đổi (CAC) giảm 42% nhờ target chuẩn tệp khách hàng Lookalike.", from: "Conversion API Log.", type: "ltvcac" },
+        { text: "Tỷ lệ giữ chân khách hàng (Retention) dự kiến tăng 15%.", from: "Phân tích Sentiment trên MXH.", type: "ltvcac" },
+        { text: "Tỷ lệ Brand DNA Retention (Độ chuẩn nhận diện) duy trì ở mức 99% trong toàn bộ 145 tài nguyên Marketing được tự động sinh ra.", from: "Hệ thống Audit Log tự động chấm điểm chéo (Cross-Evaluation).", type: "content" },
+        { text: "Hệ thống tự động bác bỏ 4 đề xuất KOL vì vi phạm từ khóa cấm của thương hiệu.", from: "Interceptor Log (KOL-Match).", type: "content" },
+        { text: "Sinh ra 45 kịch bản Video TikTok bắt trend chỉ trong 12 giây.", from: "Gen-Z Language Model Log.", type: "content" },
+        { text: "Tự động hiệu chỉnh 30 bài PR theo chuẩn SEO mà không làm mất giọng điệu thương hiệu.", from: "SEO Content Optimizer.", type: "content" }
+       ];
+
+       const kiteCitations = [
+        { text: "Tối ưu hóa chỉ số LTV:CAC cực ấn tượng (từ 2.1 lên 5.2) nhờ dịch chuyển ngân sách tự động sang tập người dùng Tech Forums.", from: "Real-time Dashboard Report (Dựa trên 1893 lượt truy cập).", type: "ltvcac" },
+        { text: "Chi phí thu hút một user mới (CAC) giảm 55% thông qua tối ưu hóa luồng Cold Email.", from: "Email Drip Campaign Log.", type: "ltvcac" },
+        { text: "Dự phóng LTV trong 12 tháng tăng trưởng 20% dựa trên chỉ số kích hoạt (Activation Rate).", from: "AI Cohort Analysis.", type: "ltvcac" },
+        { text: "Tự động trích xuất các kịch bản rủi ro thị trường từ 1,000 mô phỏng Monte Carlo, giảm thiểu tỷ lệ rủi ro lỗ từ 35% xuống 8%.", from: "CFO Agent Data Engine.", type: "budget" },
+        { text: "Dịch chuyển 8 hạng mục chi phí không thiết yếu sang ngân sách R&D Marketing.", from: "Budget Restructuring Log.", type: "budget" },
+        { text: "Khóa 100% ngân sách Branding không đo lường được (Zero Variance).", from: "CFO Approval Logic.", type: "budget" },
+        { text: "Tạo hàng loạt 85 kịch bản Video ngắn (Short-form Video) bám sát 100% Brand Voice chỉ trong 1 phiên làm việc.", from: "Log hệ thống ghi nhận lúc 14:30 ngày 15/09/2026.", type: "content" },
+        { text: "Tự động loại bỏ 100% từ khóa cấm ('cắt lỗ', 'phức tạp') trong nội dung sinh ra.", from: "Keyword Interceptor.", type: "content" },
+        { text: "Chấm điểm NPS nội dung đạt 98/100, vượt xa chuẩn Industry (82).", from: "AI Text-Quality Scoring.", type: "content" },
+        { text: "Rút ngắn thời gian lập kế hoạch Growth Hacking từ 12 ngày xuống 6 phút.", from: "Performance Log.", type: "time" },
+        { text: "Tự động hóa luồng báo cáo Real-time, tiết kiệm ~180 giờ/tháng cho đội Data.", from: "Dashboard Auto-sync Log.", type: "time" },
+        { text: "Tỷ suất hoàn vốn (ROI) tổng thể đạt +420% ngay trong tháng đầu ứng dụng BrandFlow vào quy trình Growth Hacking.", from: "Feedback trực tiếp từ Founder & CEO Kite Labs.", type: "time" }
+       ];
+
+       const defaultCitations = [
+        { text: "Lập kế hoạch đa tác nhân tự động phân bổ ngân sách theo mô hình chuẩn.", from: "Giảm thời gian từ 2 tuần xuống 15 phút.", type: "time" },
+        { text: "Tối ưu hóa cơ bản Content và Target Audience.", from: "Tăng 45% ROI dự kiến.", type: "budget" }
+       ];
 
        const kpis = {
         budgetVariance: isAmeka ? "0% (Tuyệt đối)" : isKite ? "0% (Tuyệt đối)" : "2.4% (Đang kiểm soát)",
@@ -795,21 +834,10 @@ export default function AdminDashboard() {
         ltvCac: isAmeka ? "4.8 : 1" : isKite ? "5.2 : 1" : "2.9 : 1",
         nps: isAmeka ? "99/100" : isKite ? "98/100" : "85/100",
         contentCount: isAmeka ? "145 Asset" : isKite ? "85 Asset" : "12 Asset",
-        citations: isAmeka ? [
-         { text: "Thuật toán CFO Agent tự động phát hiện và cắt giảm 45 triệu VNĐ chi phí ẩn (Ad Spend Waste) từ các nền tảng kém hiệu quả.", from: "Báo cáo phân bổ ngân sách AI (Sau 1452 lượt tương tác hệ thống tháng 9/2026)." },
-         { text: "Tỷ lệ Brand DNA Retention (Độ chuẩn nhận diện) duy trì ở mức 99% trong toàn bộ 145 tài nguyên Marketing được tự động sinh ra.", from: "Hệ thống Audit Log tự động chấm điểm chéo (Cross-Evaluation)." },
-         { text: "Tốc độ Launch Campaign (Time-to-market) giảm đột phá từ 3 tuần xuống chỉ còn 4 phút/chiến dịch.", from: "Dữ liệu đo lường hành vi thực tế trên 12 luồng chiến dịch đã chạy." },
-         { text: "Năng suất sản xuất Content (Content Velocity) tăng x4 lần, tiết kiệm ~240 giờ làm việc/tháng cho đội ngũ in-house.", from: "Bảng khảo sát hiệu suất từ Head of Marketing của Ameka." }
-        ] : isKite ? [
-         { text: "Tối ưu hóa chỉ số LTV:CAC cực ấn tượng (từ 2.1 lên 5.2) nhờ dịch chuyển ngân sách tự động sang tập người dùng Tech Forums.", from: "Real-time Dashboard Report (Dựa trên 1893 lượt truy cập hệ thống)." },
-         { text: "Tự động trích xuất các kịch bản rủi ro thị trường từ 1,000 mô phỏng Monte Carlo, giảm thiểu tỷ lệ rủi ro lỗ từ 35% xuống 8%.", from: "CFO Agent Data Engine." },
-         { text: "Tạo hàng loạt 85 kịch bản Video ngắn (Short-form Video) bám sát 100% Brand Voice chỉ trong 1 phiên làm việc.", from: "Log hệ thống ghi nhận lúc 14:30 ngày 15/09/2026." },
-         { text: "Tỷ suất hoàn vốn (ROI) tổng thể đạt +420% ngay trong tháng đầu ứng dụng BrandFlow vào quy trình Growth Hacking.", from: "Feedback trực tiếp từ Founder & CEO Kite Labs." }
-        ] : [
-         { text: "Lập kế hoạch đa tác nhân tự động phân bổ ngân sách theo mô hình chuẩn.", from: "Giảm thời gian từ 2 tuần xuống 15 phút." },
-         { text: "Tối ưu hóa cơ bản Content và Target Audience.", from: "Tăng 45% ROI dự kiến." }
-        ]
+        citations: isAmeka ? amekaCitations : isKite ? kiteCitations : defaultCitations
        };
+
+       const filteredCitations = activeLogFilter ? kpis.citations.filter(c => c.type === activeLogFilter) : kpis.citations;
 
        return (
         <div className="space-y-6">
@@ -825,44 +853,66 @@ export default function AdminDashboard() {
 
          {/* KPI Grid */}
          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-black/20 p-4 rounded-xl border border-linear-border relative group">
-           <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+          <div 
+           onClick={() => setActiveLogFilter(activeLogFilter === 'time' ? null : 'time')}
+           className={`p-4 rounded-xl border relative group cursor-pointer transition-all ${activeLogFilter === 'time' ? 'bg-amber-500/20 border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.2)]' : 'bg-black/20 border-linear-border hover:border-amber-500/50'}`}>
            <div className="text-[10px] text-linear-text-muted mb-1 font-bold uppercase tracking-wider">Time-to-plan</div>
            <div className="text-xl font-black text-white">{kpis.timeToPlan}</div>
            <div className="text-[10px] text-emerald-400 mt-1 font-medium">Tiết kiệm {kpis.timeSaved}</div>
+           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"><ArrowUpRight className="w-3 h-3 text-amber-500" /></div>
           </div>
-          <div className="bg-black/20 p-4 rounded-xl border border-linear-border relative group">
-           <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+          <div 
+           onClick={() => setActiveLogFilter(activeLogFilter === 'budget' ? null : 'budget')}
+           className={`p-4 rounded-xl border relative group cursor-pointer transition-all ${activeLogFilter === 'budget' ? 'bg-orange-500/20 border-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.2)]' : 'bg-black/20 border-linear-border hover:border-orange-500/50'}`}>
            <div className="text-[10px] text-linear-text-muted mb-1 font-bold uppercase tracking-wider">Budget Variance</div>
            <div className="text-xl font-black text-amber-500">{kpis.budgetVariance}</div>
            <div className="text-[10px] text-amber-400 mt-1 font-medium">Tối ưu: {kpis.budgetSaved}</div>
+           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"><ArrowUpRight className="w-3 h-3 text-orange-500" /></div>
           </div>
-          <div className="bg-black/20 p-4 rounded-xl border border-linear-border relative group">
-           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+          <div 
+           onClick={() => setActiveLogFilter(activeLogFilter === 'ltvcac' ? null : 'ltvcac')}
+           className={`p-4 rounded-xl border relative group cursor-pointer transition-all ${activeLogFilter === 'ltvcac' ? 'bg-blue-500/20 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.2)]' : 'bg-black/20 border-linear-border hover:border-blue-500/50'}`}>
            <div className="text-[10px] text-linear-text-muted mb-1 font-bold uppercase tracking-wider">LTV:CAC Dự phóng</div>
            <div className="text-xl font-black text-blue-400">{kpis.ltvCac}</div>
            <div className="text-[10px] text-blue-400 mt-1 font-medium">Sức khỏe tài chính tốt</div>
+           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"><ArrowUpRight className="w-3 h-3 text-blue-500" /></div>
           </div>
-          <div className="bg-black/20 p-4 rounded-xl border border-linear-border relative group">
-           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+          <div 
+           onClick={() => setActiveLogFilter(activeLogFilter === 'content' ? null : 'content')}
+           className={`p-4 rounded-xl border relative group cursor-pointer transition-all ${activeLogFilter === 'content' ? 'bg-purple-500/20 border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.2)]' : 'bg-black/20 border-linear-border hover:border-purple-500/50'}`}>
            <div className="text-[10px] text-linear-text-muted mb-1 font-bold uppercase tracking-wider">Thực thi (Content)</div>
            <div className="text-xl font-black text-purple-400">{kpis.contentCount}</div>
            <div className="text-[10px] text-purple-400 mt-1 font-medium">Điểm DNA: {kpis.nps}</div>
+           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"><ArrowUpRight className="w-3 h-3 text-purple-500" /></div>
           </div>
          </div>
 
          {/* Citations / AI Feedback Loop */}
-         <div>
-          <h4 className="font-semibold flex items-center gap-2 mb-3 text-sm text-foreground"><Code className="w-4 h-4 text-slate-400" /> AI Interceptor & Audit Logs (Real-time Citations)</h4>
-          <div className="space-y-3">
-           {kpis.citations.map((cit, i) => (
-            <div key={i} className="p-4 bg-linear-surface border border-linear-border rounded-xl hover:border-amber-500/50 transition-colors group cursor-help">
-             <div className="text-sm font-bold text-slate-200 mb-2">{cit.text}</div>
-             <div className="flex items-center gap-2 text-xs font-mono text-linear-text-muted group-hover:text-amber-400/90 transition-colors">
-              <ArrowUpRight className="w-4 h-4" /> {cit.from}
+         <div className="bg-black/40 border border-linear-border/50 rounded-xl p-5">
+          <div className="flex items-center justify-between mb-4">
+           <h4 className="font-bold flex items-center gap-2 text-sm text-foreground"><Code className="w-4 h-4 text-slate-400" /> Trace Logs & Citations</h4>
+           {activeLogFilter && (
+            <button onClick={() => setActiveLogFilter(null)} className="text-[10px] font-bold text-amber-500 bg-amber-500/10 px-2 py-1 rounded hover:bg-amber-500/20 transition-colors">
+             Xem tất cả ({kpis.citations.length})
+            </button>
+           )}
+          </div>
+          
+          <div className="space-y-3 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
+           {filteredCitations.map((cit, i) => (
+            <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} key={i} 
+             className="p-4 bg-linear-surface border border-linear-border rounded-xl hover:border-amber-500/50 transition-colors group cursor-help relative overflow-hidden"
+            >
+             <div className="absolute top-0 left-0 w-1 h-full bg-slate-700 group-hover:bg-amber-500 transition-colors" />
+             <div className="text-[13px] font-bold text-slate-200 mb-2 pl-2 leading-relaxed">{cit.text}</div>
+             <div className="flex items-center gap-2 text-[11px] font-mono text-linear-text-muted group-hover:text-amber-400/90 transition-colors pl-2">
+              <ArrowUpRight className="w-3 h-3" /> {cit.from}
              </div>
-            </div>
+            </motion.div>
            ))}
+           {filteredCitations.length === 0 && (
+            <div className="text-sm text-center text-slate-500 py-4">Không có Log nào cho danh mục này.</div>
+           )}
           </div>
          </div>
         </div>
