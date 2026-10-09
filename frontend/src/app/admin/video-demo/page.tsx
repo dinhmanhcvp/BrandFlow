@@ -15,7 +15,8 @@ export default function VideoDemoPage() {
    <div className="w-full aspect-video bg-[#050505] border border-white/10 rounded-2xl overflow-hidden relative shadow-2xl flex items-center justify-center">
     <video 
       src="/videos/Brandflow_Final.mp4" 
-      controls 
+      controls
+      loop
       className="w-full h-full"
     />
    </div>
