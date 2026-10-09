@@ -1,11 +1,12 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, 
   ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, 
   Radar, Legend 
 } from 'recharts';
-import { Trophy, Target, Zap, Shield, Sparkles, Brain, Cpu, CheckCircle2, Info, Database, Microscope, ChevronRight } from 'lucide-react';
+import { Trophy, Target, Zap, Shield, Sparkles, Brain, Cpu, CheckCircle2, Info, Database, Microscope, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
+import { goldenDataset } from '../data/golden_dataset';
 
 const radarData = [
   { subject: 'Brand DNA Retention', BrandFlow: 98, GenAI: 65, Martech: 40, MarketingAI: 75 },
@@ -39,6 +40,10 @@ const MetricTooltip = ({ title, description }: { title: string, description: str
 };
 
 export default function BenchmarkTab() {
+  const [isGoldenSetOpen, setIsGoldenSetOpen] = useState(false);
+  const [activeSampleIdx, setActiveSampleIdx] = useState(0);
+  const activeSample = goldenDataset[activeSampleIdx];
+
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
       
@@ -261,62 +266,100 @@ export default function BenchmarkTab() {
         </div>
       </div>
 
-      {/* Golden Dataset Sample */}
+      {/* Golden Dataset Sample - Collapsible Section */}
       <div className="bg-linear-surface border border-amber-500/30 rounded-2xl overflow-hidden shadow-lg group">
-        <div className="px-6 py-4 border-b border-linear-border/50 bg-amber-500/5 flex items-center justify-between">
+        <div 
+          className="px-6 py-4 border-b border-linear-border/50 bg-amber-500/5 flex items-center justify-between cursor-pointer hover:bg-amber-500/10 transition-colors"
+          onClick={() => setIsGoldenSetOpen(!isGoldenSetOpen)}
+        >
           <div className="flex items-center gap-2">
             <Database className="w-5 h-5 text-amber-500" />
             <h2 className="text-sm font-bold text-amber-400">Golden Set Sample (Trích xuất từ MKT-Bench-2026)</h2>
+            <span className="ml-2 px-2 py-0.5 bg-amber-500/10 text-amber-500 text-[10px] font-bold rounded-full border border-amber-500/20">{goldenDataset.length} Samples</span>
           </div>
-          <span className="px-2 py-1 bg-red-500/10 text-red-400 text-[10px] font-bold rounded-full border border-red-500/20">MKT-2026-0492 • Hard Difficulty</span>
+          {isGoldenSetOpen ? <ChevronUp className="w-5 h-5 text-amber-500" /> : <ChevronDown className="w-5 h-5 text-amber-500" />}
         </div>
-        <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Input Side */}
-          <div className="space-y-4">
-            <div className="bg-black/30 p-4 rounded-xl border border-linear-border/50">
-              <h4 className="text-xs font-bold text-slate-400 uppercase mb-3 flex items-center gap-2"><Target className="w-3.5 h-3.5"/> Brand DNA (Context)</h4>
-              <ul className="text-[13px] space-y-2.5 text-slate-300">
-                <li className="flex gap-2"><strong className="text-slate-400 min-w-[120px]">Tone of Voice:</strong> Trẻ trung, thân thiện, truyền cảm hứng</li>
-                <li className="flex gap-2"><strong className="text-slate-400 min-w-[120px]">Key Message:</strong> Cà phê Việt nguyên bản, không pha trộn</li>
-                <li className="flex gap-2"><strong className="text-slate-400 min-w-[120px]">Target Audience:</strong> Sinh viên và nhân viên văn phòng 18-35 tuổi</li>
-                <li className="flex gap-2"><strong className="text-red-400 min-w-[120px]">Forbidden Words:</strong> "rẻ tiền", "công nghiệp", "hóa chất"</li>
-              </ul>
-            </div>
-            <div className="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20">
-              <h4 className="text-xs font-bold text-blue-400 uppercase mb-2 flex items-center gap-2"><Zap className="w-3.5 h-3.5"/> Prompt (Yêu cầu)</h4>
-              <p className="text-[13px] text-blue-100 italic leading-relaxed">"Lên kế hoạch ra mắt sản phẩm Cà phê Muối mới trong tháng 7 với ngân sách 20 triệu VNĐ. Yêu cầu chi tiết phân bổ ngân sách và 1 mẫu bài đăng Facebook."</p>
-            </div>
-          </div>
-          
-          {/* Output Side */}
-          <div className="space-y-4">
-            <div className="bg-emerald-500/10 p-5 rounded-xl border border-emerald-500/20 h-full flex flex-col">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-xs font-bold text-emerald-400 uppercase flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5"/> Golden Output (Mẫu chuẩn)</h4>
-                <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">Expert Score: 9.5/10</span>
-              </div>
-              <div className="space-y-4 flex-1">
-                <div>
-                  <div className="text-[11px] text-emerald-300/80 font-bold uppercase mb-2 tracking-wide">1. Budget Allocation</div>
-                  <ul className="text-[13px] text-emerald-100/90 space-y-1.5 list-disc pl-4">
-                    <li><strong className="text-emerald-300">10M (FB Ads):</strong> Target tệp nhân viên văn phòng bán kính 5km</li>
-                    <li><strong className="text-emerald-300">6M (TikTok):</strong> Tạo độ viral và xu hướng trong giới trẻ sinh viên</li>
-                    <li><strong className="text-emerald-300">4M (POSM):</strong> Kích thích dùng thử trực tiếp tại cửa hàng</li>
-                  </ul>
+        
+        <AnimatePresence>
+          {isGoldenSetOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="p-6 border-t border-linear-border/30">
+                {/* Sample Navigation Tabs */}
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {goldenDataset.map((sample, idx) => (
+                    <button
+                      key={sample.task_id}
+                      onClick={() => setActiveSampleIdx(idx)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                        activeSampleIdx === idx 
+                          ? 'bg-amber-500/20 border-amber-500/50 text-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.2)]' 
+                          : 'bg-black/30 border-linear-border text-slate-400 hover:text-slate-200 hover:border-slate-500'
+                      }`}
+                    >
+                      {sample.industry}
+                    </button>
+                  ))}
                 </div>
-                <div>
-                  <div className="text-[11px] text-emerald-300/80 font-bold uppercase mb-2 tracking-wide">2. Content Sample (FB Post)</div>
-                  <div className="bg-black/40 p-3.5 rounded-lg text-[13px] text-emerald-50/90 font-serif leading-relaxed border border-emerald-500/10">
-                    🌊 BẠN ĐÃ THỬ CÀ PHÊ MUỐI ĐẬM ĐÀ CHUẨN VỊ CHƯA?<br/><br/>
-                    Chút vị mặn mòi tinh tế hòa quyện cùng vị đắng đậm của cà phê Việt nguyên bản, thêm lớp kem macchiato béo ngậy làm bừng tỉnh mọi giác quan...<br/>
-                    👉 Tất cả tạo nên siêu phẩm 'Cà Phê Muối' mới nhất! Ghé ngay hôm nay để nhận ưu đãi Mua 1 Tặng 1 tuần đầu ra mắt nhé!<br/><br/>
-                    <span className="text-emerald-400/80 text-[11px] font-sans block">#CaPheMuoi #CaPheVietNguyenBan #TruyenCamHung</span>
+
+                {/* Sample Content */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Input Side */}
+                  <div className="space-y-4">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <span className="px-2 py-1 bg-slate-800 text-slate-300 text-[10px] font-bold rounded border border-slate-700">{activeSample.task_id}</span>
+                      <span className="px-2 py-1 bg-red-500/10 text-red-400 text-[10px] font-bold rounded border border-red-500/20">{activeSample.difficulty}</span>
+                      <span className="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded border border-blue-500/20">{activeSample.task_type}</span>
+                    </div>
+                    <div className="bg-black/30 p-4 rounded-xl border border-linear-border/50">
+                      <h4 className="text-xs font-bold text-slate-400 uppercase mb-3 flex items-center gap-2"><Target className="w-3.5 h-3.5"/> Brand DNA (Context)</h4>
+                      <ul className="text-[13px] space-y-2.5 text-slate-300">
+                        <li className="flex gap-2"><strong className="text-slate-400 min-w-[120px]">Tone of Voice:</strong> <span>{activeSample.brand_dna.tone_of_voice}</span></li>
+                        <li className="flex gap-2"><strong className="text-slate-400 min-w-[120px]">Key Message:</strong> <span>{activeSample.brand_dna.key_message}</span></li>
+                        <li className="flex gap-2"><strong className="text-slate-400 min-w-[120px]">Target Audience:</strong> <span>{activeSample.brand_dna.target_audience}</span></li>
+                        <li className="flex gap-2"><strong className="text-red-400 min-w-[120px]">Forbidden Words:</strong> <span>{activeSample.brand_dna.forbidden_words.map(w => `"${w}"`).join(', ')}</span></li>
+                      </ul>
+                    </div>
+                    <div className="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20">
+                      <h4 className="text-xs font-bold text-blue-400 uppercase mb-2 flex items-center gap-2"><Zap className="w-3.5 h-3.5"/> Prompt (Yêu cầu)</h4>
+                      <p className="text-[13px] text-blue-100 italic leading-relaxed">"{activeSample.input_prompt}"</p>
+                    </div>
+                  </div>
+                  
+                  {/* Output Side */}
+                  <div className="space-y-4">
+                    <div className="bg-emerald-500/10 p-5 rounded-xl border border-emerald-500/20 h-full flex flex-col">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-xs font-bold text-emerald-400 uppercase flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5"/> Golden Output (Mẫu chuẩn)</h4>
+                        <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">Expert Score: {activeSample.score}</span>
+                      </div>
+                      <div className="space-y-4 flex-1">
+                        <div>
+                          <div className="text-[11px] text-emerald-300/80 font-bold uppercase mb-2 tracking-wide">1. Budget & Strategy</div>
+                          <ul className="text-[13px] text-emerald-100/90 space-y-1.5 list-disc pl-4">
+                            {activeSample.golden_output.budget_allocation.map((item, i) => (
+                              <li key={i}><strong className="text-emerald-300">{item.channel}:</strong> {item.rationale}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <div className="text-[11px] text-emerald-300/80 font-bold uppercase mb-2 tracking-wide">2. Content Sample</div>
+                          <div className="bg-black/40 p-3.5 rounded-lg text-[13px] text-emerald-50/90 font-serif leading-relaxed border border-emerald-500/10 whitespace-pre-wrap">
+                            {activeSample.golden_output.content_sample}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );
