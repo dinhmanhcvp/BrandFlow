@@ -6,7 +6,7 @@ import {
   Radar, Legend 
 } from 'recharts';
 import { Trophy, Target, Zap, Shield, Sparkles, Brain, Cpu, CheckCircle2, Info, Database, Microscope, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
-import { goldenDataset } from '../data/golden_dataset';
+import { goldenDataset } from '../../data/golden_dataset';
 
 const radarData = [
   { subject: 'Brand DNA Retention', BrandFlow: 98, GenAI: 65, Martech: 40, MarketingAI: 75 },
