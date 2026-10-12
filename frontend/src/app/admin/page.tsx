@@ -314,6 +314,11 @@ export default function AdminDashboard() {
       </div>
      </div>
      <div className="flex items-center gap-3">
+      <a href="/onboarding"
+       className="flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-500 hover:from-blue-500 hover:to-teal-400 text-white rounded-lg transition-all text-xs font-black shadow-md shadow-cyan-500/20"
+      >
+       <Sparkles className="w-3.5 h-3.5 text-cyan-200" /> Onboarding (TV Demo)
+      </a>
       <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
        <span className="text-[11px] font-bold text-emerald-400">Live</span>

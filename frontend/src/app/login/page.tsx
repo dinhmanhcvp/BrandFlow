@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Hexagon, Loader2 } from 'lucide-react';
+import { Mail, Lock, Hexagon, Loader2, Sparkles } from 'lucide-react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 
 
@@ -126,7 +126,7 @@ function LoginForm() {
    localStorage.removeItem('bf_phase1_screen');
    localStorage.removeItem('bf_doc_text');
 
-   window.location.href = '/admin';
+   window.location.href = '/onboarding';
    return;
   }
 
@@ -212,6 +212,26 @@ function LoginForm() {
 
     <div className="bg-white/80 dark:bg-[#111827]/80 backdrop-blur-2xl p-8 rounded-[2rem] border border-slate-200/60 dark:border-slate-800/60 shadow-[0_8px_40px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_40px_rgba(0,0,0,0.4)]">
      <div className="space-y-3 mb-8">
+      {/* 1-Click TV Showcase Admin Login */}
+      <button
+       type="button"
+       id="btn-admin-tv-login"
+       onClick={() => {
+        localStorage.setItem('brandflow_token', 'mock_admin_token');
+        localStorage.setItem('brandflow_user_id', 'admin');
+        localStorage.setItem('brandflow_email', 'admin@brandflow.ai');
+        localStorage.setItem('brandflow_is_admin', 'true');
+        localStorage.removeItem('bf_ws_stage');
+        localStorage.removeItem('bf_phase1_screen');
+        localStorage.removeItem('bf_doc_text');
+        window.location.href = '/onboarding';
+       }}
+       className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-500 hover:from-blue-500 hover:to-teal-400 text-white rounded-xl text-xs font-black shadow-lg shadow-cyan-500/20 hover:scale-[1.01] transition-all cursor-pointer"
+      >
+       <Sparkles className="w-4 h-4 text-cyan-200 animate-pulse" />
+       Đăng nhập Admin TV Showcase (Vào Onboarding)
+      </button>
+
       <button
        type="button"
        onClick={() => {

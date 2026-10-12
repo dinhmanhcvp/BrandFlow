@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BrandFlow — Showcase Kỷ Niệm 70 Năm ĐH Bách Khoa Hà Nội</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      background-color: #0b1120;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Khung hiển thị dọc 9:16 */
+    #stage-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      max-width: 56.25vh; /* 9 / 16 = 0.5625 */
+      background-color: #f8fafc;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+    }
+
+    /* Canvas hạt nền trôi nổi */
+    #particle-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Lớp nội dung slide */
+    #slide-viewport {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 6.5% 6.6% 8%; /* Tương đương 110px top, 72px lề, 140px bottom */
+    }
+
+    .slide {
+      position: absolute;
+      inset: 6.5% 6.6% 8%;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      transform: translateY(12px);
+      z-index: 15;
+    }
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    /* Thanh điều khiển nổi cho màn hình quảng cáo */
+    #kiosk-controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      gap: 10px;
+      opacity: 0.2;
+      transition: opacity 0.3s;
+    }
+    #kiosk-controls:hover {
+      opacity: 1;
+    }
+    .ctrl-btn {
+      background: rgba(15, 23, 42, 0.85);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+    }
+    .ctrl-btn:hover {
+      background: #2563eb;
+    }
+
+    /* Header & Footer chung */
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+      margin-bottom: 30px;
+    }
+    .slide-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1.5px solid #e2e8f0;
+      padding-top: 14px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #64748b;
+    }
+
+    /* Typography */
+    h1.display-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 42px;
+      line-height: 1.15;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.025em;
+      margin-bottom: 12px;
+    }
+    h2.section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    p.lead {
+      font-size: 18px;
+      line-height: 1.45;
+      color: #64748b;
+      margin-bottom: 24px;
+    }
+
+    /* Card & Table */
+    .card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .placeholder-box {
+      background: #f1f5f9;
+      border: 1.5px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 6px 14px;
+      color: #64748b;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .progress-bar-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(226, 232, 240, 0.6);
+      z-index: 50;
+    }
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #2563eb, #06b6d4);
+      transition: width 0.1s linear;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="stage-container">
+    <!-- Thanh tiến trình tự động chuyển slide -->
+    <div class="progress-bar-container">
+      <div id="progress-bar"></div>
+    </div>
+
+    <!-- Canvas hạt nền trôi nổi mượt mà -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- SLIDE 1: Mở đầu -->
+    <div class="slide active" id="slide-1">
+      <div style="display:flex; align-items:center; gap:20px; margin-top:20px;">
+        <img src="public/assets/official/logo-ky-niem-70-nam.svg" style="height:64px;" alt="BK70">
+        <div style="width:1.5px; height:48px; background:#cbd5e1;"></div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <img src="public/assets/brand/brandflow_icon.svg" style="height:44px;" alt="BrandFlow">
+          <span style="font-family:'Dancing Script', cursive; font-size:32px; font-weight:700; color:#0f172a;">BrandFlow</span>
+        </div>
+      </div>
+
+      <div style="margin: auto 0;">
+        <div style="font-size:15px; font-weight:700; color:#0e7490; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:14px;">
+          ● Chào mừng Kỷ niệm 70 năm thành lập ĐHBK Hà Nội
+        </div>
+        <h1 class="display-title">Thương hiệu của bạn – Trong tầm kiểm soát</h1>
+        <p class="lead">Hành trình nghiên cứu, ứng dụng AI đa tác tử tối ưu hóa chiến lược và ngân sách marketing cho doanh nghiệp.</p>
+      </div>
+
+      <div class="slide-footer">
+        <span>brand-flow-hust.vercel.app</span>
+        <span>MỞ ĐẦU · 01 / 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: Bản sắc thương hiệu -->
+    <div class="slide" id="slide-2">
+      <div class="slide-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <img src="public/assets/brand/brandflow_icon.svg" style="height:36px;">
+          <span style="font-family:'Dancing Script', cursive; font-size:24px; font-weight:700;">BrandFlow</span>
+        </div>
+        <img src="public/assets/official/logo-ky-niem-70-nam.svg" style="height:46px;">
+      </div>
+
+      <div style="flex:1;">
+        <div style="font-size:14px; font-weight:700; color:#2563eb; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">● Sứ mệnh</div>
+        <div class="card" style="margin-bottom:28px;">
+          <h2 style="font-family:'Space Grotesk'; font-size:24px; font-weight:700; color:#0f172a; line-height:1.3;">
+            Bình dân hóa năng lực marketing chiến lược bài bản cho 98% doanh nghiệp vừa và nhỏ Việt Nam bằng AI.
+          </h2>
+        </div>
+
+        <div style="font-family:'Space Grotesk'; font-size:16px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">Ba nguyên tắc cốt lõi</div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="card" style="display:flex; gap:16px; padding:14px;">
+            <span style="font-family:'Space Grotesk'; font-size:20px; font-weight:700; color:#0e7490;">01</span>
+            <div>
+              <strong style="font-size:17px; color:#0f172a; display:block;">Toán học kiểm soát ngân sách</strong>
+              <span style="font-size:15px; color:#64748b;">Khóa định mức chi phí bằng thuật toán, 0 đồng vượt ngân sách.</span>
+            </div>
+          </div>
+          <div class="card" style="display:flex; gap:16px; padding:14px;">
+            <span style="font-family:'Space Grotesk'; font-size:20px; font-weight:700; color:#0e7490;">02</span>
+            <div>
+              <strong style="font-size:17px; color:#0f172a; display:block;">Hội đồng AI phản biện chéo</strong>
+              <span style="font-size:15px; color:#64748b;">Tranh luận đa chiều tối thiểu 3 vòng trước khi duyệt xuất bản.</span>
+            </div>
+          </div>
+          <div class="card" style="display:flex; gap:16px; padding:14px;">
+            <span style="font-family:'Space Grotesk'; font-size:20px; font-weight:700; color:#0e7490;">03</span>
+            <div>
+              <strong style="font-size:17px; color:#0f172a; display:block;">Thực thi đồng bộ DNA</strong>
+              <span style="font-size:15px; color:#64748b;">Xuyên suốt từ định vị, content đa nền tảng đến trợ lý AI.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>BẢN SẮC THƯƠNG HIỆU</span>
+        <span>02 / 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: Biểu trưng -->
+    <div class="slide" id="slide-3">
+      <div class="slide-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <img src="public/assets/brand/brandflow_icon.svg" style="height:36px;">
+          <span style="font-family:'Dancing Script', cursive; font-size:24px; font-weight:700;">BrandFlow</span>
+        </div>
+        <img src="public/assets/official/logo-ky-niem-70-nam.svg" style="height:46px;">
+      </div>
+
+      <div style="flex:1;">
+        <h2 class="section-title">Biểu trưng BrandFlow</h2>
+        <p class="lead">Dòng chảy hội tụ vào mạng lưới nút công nghệ thông minh.</p>
+
+        <div class="card" style="display:flex; align-items:center; justify-content:center; padding:36px 20px; margin-bottom:24px;">
+          <div style="border:1.5px dashed #06b6d4; padding:16px 28px; border-radius:10px; background:#f1f5f9; display:flex; align-items:center; gap:16px;">
+            <img src="public/assets/brand/brandflow_icon.svg" style="height:56px;">
+            <span style="font-family:'Dancing Script', cursive; font-size:38px; font-weight:700; color:#0f172a;">BrandFlow</span>
+          </div>
+        </div>
+
+        <div style="font-family:'Space Grotesk'; font-size:15px; font-weight:700; color:#64748b; text-transform:uppercase; margin-bottom:12px;">Quy tắc cấm kỵ</div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;">
+          <div class="card" style="text-align:center; padding:14px 8px;">
+            <span style="font-size:20px; display:block; transform:scaleX(1.3); opacity:0.6;">⚡</span>
+            <span style="color:#ef4444; font-size:13px; font-weight:600;">✕ Kéo giãn</span>
+          </div>
+          <div class="card" style="text-align:center; padding:14px 8px;">
+            <span style="font-size:20px; display:block; filter:hue-rotate(90deg); opacity:0.6;">⚡</span>
+            <span style="color:#ef4444; font-size:13px; font-weight:600;">✕ Đổi màu</span>
+          </div>
+          <div class="card" style="text-align:center; padding:14px 8px;">
+            <span style="font-size:20px; display:block; transform:rotate(-30deg); opacity:0.6;">⚡</span>
+            <span style="color:#ef4444; font-size:13px; font-weight:600;">✕ Xoay nghiêng</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>BIỂU TRƯNG</span>
+        <span>03 / 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Màu sắc -->
+    <div class="slide" id="slide-4">
+      <div class="slide-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <img src="public/assets/brand/brandflow_icon.svg" style="height:36px;">
+          <span style="font-family:'Dancing Script', cursive; font-size:24px; font-weight:700;">BrandFlow</span>
+        </div>
+        <img src="public/assets/official/logo-ky-niem-70-nam.svg" style="height:46px;">
+      </div>
+
+      <div style="flex:1;">
+        <h2 class="section-title">Bảng màu giao diện sáng</h2>
+        <p class="lead">Trích xuất trực tiếp từ token của hệ thống BrandFlow.</p>
+
+        <!-- Thanh tỉ lệ -->
+        <div style="height:32px; border-radius:8px; overflow:hidden; display:flex; border:1px solid #e2e8f0; margin-bottom:20px;">
+          <div style="width:60%; background:#f8fafc; border-right:1px solid #e2e8f0;" title="Nền 60%"></div>
+          <div style="width:20%; background:#0f172a;" title="Chữ 20%"></div>
+          <div style="width:8%; background:#64748b;" title="Phụ 8%"></div>
+          <div style="width:7%; background:#2563eb;" title="Blue 7%"></div>
+          <div style="width:5%; background:#06b6d4;" title="Cyan 5%"></div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:12px 18px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="width:28px; height:28px; border-radius:6px; background:#f8fafc; border:1px solid #cbd5e1;"></span>
+              <div><strong style="display:block; font-size:16px;">Nền chính</strong><small style="color:#64748b;">--background</small></div>
+            </div>
+            <strong>#F8FAFC (60%)</strong>
+          </div>
+          <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:12px 18px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="width:28px; height:28px; border-radius:6px; background:#0f172a;"></span>
+              <div><strong style="display:block; font-size:16px;">Chữ chính</strong><small style="color:#64748b;">--foreground</small></div>
+            </div>
+            <strong>#0F172A (20%)</strong>
+          </div>
+          <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:12px 18px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="width:28px; height:28px; border-radius:6px; background:#2563eb;"></span>
+              <div><strong style="display:block; font-size:16px;">Xanh dương nhấn</strong><small style="color:#64748b;">gradient-ai (đầu)</small></div>
+            </div>
+            <strong>#2563EB (7%)</strong>
+          </div>
+          <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:12px 18px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="width:28px; height:28px; border-radius:6px; background:#06b6d4;"></span>
+              <div><strong style="display:block; font-size:16px;">Xanh ngọc công nghệ</strong><small style="color:#64748b;">NEON_CYAN</small></div>
+            </div>
+            <strong>#06B6D4 (5%)</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>MÀU SẮC</span>
+        <span>04 / 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: Thành tích -->
+    <div class="slide" id="slide-8">
+      <div class="slide-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <img src="public/assets/brand/brandflow_icon.svg" style="height:36px;">
+          <span style="font-family:'Dancing Script', cursive; font-size:24px; font-weight:700;">BrandFlow</span>
+        </div>
+        <img src="public/assets/official/logo-ky-niem-70-nam.svg" style="height:46px;">
+      </div>
+
+      <div style="flex:1;">
+        <h2 class="section-title">Thành tích & Giải thưởng</h2>
+        <p class="lead">Ghi nhận từ các cuộc thi khoa học và sáng tạo khởi nghiệp.</p>
+
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div style="display:grid; grid-template-columns:60px 1fr 1fr 80px; gap:8px; padding:12px 16px; background:#f1f5f9; font-size:13px; font-weight:700; color:#64748b;">
+            <span>NĂM</span><span>TÊN GIẢI</span><span>ĐƠN VỊ</span><span style="text-align:right;">KẾT QUẢ</span>
+          </div>
+          <div style="display:grid; grid-template-columns:60px 1fr 1fr 80px; gap:8px; padding:14px 16px; border-bottom:1px solid #e2e8f0; font-size:14px;">
+            <strong style="color:#2563eb;">2024</strong>
+            <strong>BK Innovation</strong>
+            <span style="color:#64748b;">ĐH Bách Khoa</span>
+            <span style="text-align:right; font-weight:700; color:#0e7490;">Giải Nhất</span>
+          </div>
+          <div style="display:grid; grid-template-columns:60px 1fr 1fr 80px; gap:8px; padding:14px 16px; border-bottom:1px solid #e2e8f0; font-size:14px;">
+            <strong style="color:#2563eb;">2024</strong>
+            <strong>SCIC AI Pitch</strong>
+            <span style="color:#64748b;">Bộ KH&CN</span>
+            <span style="text-align:right; font-weight:700; color:#0e7490;">Top 5</span>
+          </div>
+          <div style="display:grid; grid-template-columns:60px 1fr 1fr 80px; gap:8px; padding:14px 16px; font-size:14px;">
+            <strong style="color:#2563eb;">2025</strong>
+            <strong>AI Challenge</strong>
+            <span style="color:#64748b;">Trung tâm ĐMST</span>
+            <span style="text-align:right; font-weight:700; color:#0e7490;">Quán quân</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>THÀNH TÍCH</span>
+        <span>08 / 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: Sản phẩm -->
+    <div class="slide" id="slide-9">
+      <div class="slide-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <img src="public/assets/brand/brandflow_icon.svg" style="height:36px;">
+          <span style="font-family:'Dancing Script', cursive; font-size:24px; font-weight:700;">BrandFlow</span>
+        </div>
+        <img src="public/assets/official/logo-ky-niem-70-nam.svg" style="height:46px;">
+      </div>
+
+      <div style="flex:1;">
+        <h2 class="section-title">Giao diện Hệ thống</h2>
+        <p class="lead">Nền tảng vận hành tự động phòng Marketing AI cho doanh nghiệp.</p>
+
+        <div style="border-radius:12px; overflow:hidden; border:1.5px solid #e2e8f0; box-shadow:0 10px 25px rgba(0,0,0,0.06); margin-bottom:18px;">
+          <div style="height:26px; background:#f1f5f9; display:flex; align-items:center; padding:0 10px; gap:6px;">
+            <span style="width:6px; height:6px; border-radius:50%; background:#cbd5e1;"></span>
+            <span style="width:6px; height:6px; border-radius:50%; background:#cbd5e1;"></span>
+            <span style="width:6px; height:6px; border-radius:50%; background:#cbd5e1;"></span>
+            <span style="font-size:11px; color:#64748b; margin-left:10px;">https://brand-flow-hust.vercel.app/</span>
+          </div>
+          <img src="public/assets/screens/home.png" style="width:100%; display:block;" alt="Home UI">
+        </div>
+
+        <div class="card" style="padding:14px 18px;">
+          <strong style="color:#0f172a; font-size:16px; display:block; margin-bottom:4px;">Workspace Đa Tác Tử</strong>
+          <span style="color:#64748b; font-size:14px; line-height:1.4;">Tự động phân tích Brand DNA, lập Gantt Chart, sinh Content Lab và triển khai Mộc Assistant.</span>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>SẢN PHẨM</span>
+        <span>09 / 12</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: Kết & QR Code -->
+    <div class="slide" id="slide-12">
+      <div style="display:flex; align-items:center; gap:20px; margin-top:20px;">
+        <img src="public/assets/official/logo-ky-niem-70-nam.svg" style="height:64px;" alt="BK70">
+        <div style="width:1.5px; height:48px; background:#cbd5e1;"></div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <img src="public/assets/brand/brandflow_icon.svg" style="height:44px;" alt="BrandFlow">
+          <span style="font-family:'Dancing Script', cursive; font-size:32px; font-weight:700; color:#0f172a;">BrandFlow</span>
+        </div>
+      </div>
+
+      <div style="margin: auto 0; text-align:center;">
+        <h1 class="display-title" style="font-size:36px; margin-bottom:28px;">Trải nghiệm hệ thống tại gian trưng bày</h1>
+        
+        <!-- Khung QR code có viền trắng rộng -->
+        <div style="background:#ffffff; padding:24px; border-radius:18px; border:2px solid #e2e8f0; display:inline-block; box-shadow:0 15px 35px rgba(0,0,0,0.06); margin-bottom:20px;">
+          <!-- SVG QR Code chuẩn trỏ về https://brand-flow-hust.vercel.app/ -->
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://brand-flow-hust.vercel.app/" style="width:190px; height:190px; display:block;" alt="QR Code">
+          <div style="font-family:'Space Grotesk'; font-size:13px; font-weight:700; color:#2563eb; text-transform:uppercase; letter-spacing:0.06em; margin-top:12px;">
+            Quét mã để truy cập
+          </div>
+        </div>
+
+        <div style="font-size:17px; font-weight:600; color:#0f172a;">https://brand-flow-hust.vercel.app/</div>
+      </div>
+
+      <div class="slide-footer">
+        <span>ĐH BÁCH KHOA HÀ NỘI · 1956 – 2026</span>
+        <span>KẾT THÚC · 12 / 12</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bảng điều khiển Kiosk -->
+  <div id="kiosk-controls">
+    <button class="ctrl-btn" onclick="prevSlide()">◀ Trước</button>
+    <button class="ctrl-btn" id="btn-play" onclick="togglePlay()">❚❚ Tạm dừng</button>
+    <button class="ctrl-btn" onclick="nextSlide()">Sau ▶</button>
+    <button class="ctrl-btn" onclick="toggleFullscreen()">⛶ Toàn màn hình</button>
+  </div>
+
+  <script>
+    // 1. Particle Canvas Physics Loop
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+      width = canvas.width = canvas.parentElement.clientWidth;
+      height = canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const particles = [];
+    const count = 42;
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: (Math.random() - 0.5) * 0.45,
+        r: 1.8 + Math.random() * 2.2
+      });
+    }
+
+    function renderParticles() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw subtle connections
+      for (let i = 0; i < count; i++) {
+        for (let j = i + 1; j < count; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.strokeStyle = `rgba(59, 130, 246, ${(1 - dist / 120) * 0.22})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw nodes
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        ctx.fillStyle = 'rgba(6, 182, 212, 0.4)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(renderParticles);
+    }
+    renderParticles();
+
+    // 2. Slide Rotation Timer
+    const slides = document.querySelectorAll('.slide');
+    let currentIndex = 0;
+    let isPlaying = true;
+    const slideDuration = 10000; // 10 giây mỗi slide
+    let timerStart = Date.now();
+    let animId;
+
+    function showSlide(idx) {
+      slides.forEach((s, i) => {
+        s.classList.toggle('active', i === idx);
+      });
+      currentIndex = idx;
+      timerStart = Date.now();
+    }
+
+    function nextSlide() {
+      showSlide((currentIndex + 1) % slides.length);
+    }
+    function prevSlide() {
+      showSlide((currentIndex - 1 + slides.length) % slides.length);
+    }
+
+    function updateProgress() {
+      if (isPlaying) {
+        const elapsed = Date.now() - timerStart;
+        const progress = Math.min(100, (elapsed / slideDuration) * 100);
+        document.getElementById('progress-bar').style.width = progress + '%';
+        if (elapsed >= slideDuration) {
+          nextSlide();
+        }
+      }
+      requestAnimationFrame(updateProgress);
+    }
+    updateProgress();
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      document.getElementById('btn-play').textContent = isPlaying ? '❚❚ Tạm dừng' : '▶ Tiếp tục';
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // Phím tắt điều khiển
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === 'f' || e.key === 'F11') toggleFullscreen();
+    });
+  </script>
+</body>
+</html>

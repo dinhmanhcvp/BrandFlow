@@ -1,0 +1,43 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+  <g filter="url(#glow)">
+    <path d="M 15 35 C 30 35, 35 20, 50 20" stroke="url(#lineGrad)" stroke-width="1.8" fill="none" stroke-linecap="round" />
+    <path d="M 8 45 C 25 45, 30 40, 45 40" stroke="url(#lineGrad)" stroke-width="1.8" fill="none" stroke-linecap="round" />
+    <path d="M 8 55 C 25 55, 30 60, 45 60" stroke="url(#lineGrad)" stroke-width="1.8" fill="none" stroke-linecap="round" />
+    <path d="M 15 65 C 30 65, 35 80, 50 80" stroke="url(#lineGrad)" stroke-width="1.8" fill="none" stroke-linecap="round" />
+    <line x1="50" y1="20" x2="80" y2="50" stroke="#06B6D4" stroke-opacity="0.6" stroke-width="1.2" />
+    <line x1="50" y1="20" x2="65" y2="50" stroke="#06B6D4" stroke-opacity="0.6" stroke-width="1.2" />
+    <line x1="50" y1="20" x2="45" y2="40" stroke="#06B6D4" stroke-opacity="0.6" stroke-width="1.2" />
+    <line x1="50" y1="80" x2="80" y2="50" stroke="#06B6D4" stroke-opacity="0.6" stroke-width="1.2" />
+    <line x1="50" y1="80" x2="65" y2="50" stroke="#06B6D4" stroke-opacity="0.6" stroke-width="1.2" />
+    <line x1="50" y1="80" x2="45" y2="60" stroke="#06B6D4" stroke-opacity="0.6" stroke-width="1.2" />
+    <line x1="80" y1="50" x2="65" y2="50" stroke="#06B6D4" stroke-opacity="0.6" stroke-width="1.2" />
+    <line x1="80" y1="50" x2="45" y2="40" stroke="#06B6D4" stroke-opacity="0.6" stroke-width="1.2" />
+    <line x1="80" y1="50" x2="45" y2="60" stroke="#06B6D4" stroke-opacity="0.6" stroke-width="1.2" />
+    <line x1="45" y1="40" x2="65" y2="50" stroke="#06B6D4" stroke-opacity="0.6" stroke-width="1.2" />
+    <line x1="45" y1="40" x2="45" y2="60" stroke="#06B6D4" stroke-opacity="0.6" stroke-width="1.2" />
+    <line x1="45" y1="60" x2="65" y2="50" stroke="#06B6D4" stroke-opacity="0.6" stroke-width="1.2" />
+    <circle cx="50" cy="20" r="3.5" fill="#06B6D4" />
+    <circle cx="50" cy="80" r="3.5" fill="#06B6D4" />
+    <circle cx="80" cy="50" r="4" fill="#06B6D4" />
+    <circle cx="65" cy="50" r="3" fill="#06B6D4" />
+    <circle cx="45" cy="40" r="3" fill="#06B6D4" />
+    <circle cx="45" cy="60" r="3" fill="#06B6D4" />
+    <circle cx="15" cy="35" r="3" fill="#06B6D4" />
+    <circle cx="8" cy="45" r="2.5" fill="#06B6D4" />
+    <circle cx="8" cy="55" r="2.5" fill="#06B6D4" />
+    <circle cx="15" cy="65" r="3" fill="#06B6D4" />
+  </g>
+</svg>

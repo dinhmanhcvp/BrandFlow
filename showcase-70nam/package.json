@@ -1,0 +1,28 @@
+{
+  "name": "brandflow-showcase-70nam",
+  "version": "1.0.0",
+  "description": "BrandFlow Vertical Editorial Showcase 9:16 for HUST 70th Anniversary",
+  "private": true,
+  "scripts": {
+    "dev": "remotion studio src/index.ts",
+    "build": "remotion bundle src/index.ts",
+    "render:video": "remotion render src/index.ts Showcase70Nam out/brandflow-showcase-70nam.mp4 --codec=h264",
+    "stills": "node scripts/export-stills.mjs",
+    "check:content": "node scripts/check-content.mjs"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.532",
+    "@remotion/google-fonts": "4.0.532",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.52.0",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.532"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.7",
+    "@types/web": "0.0.166",
+    "typescript": "5.9.3"
+  }
+}
