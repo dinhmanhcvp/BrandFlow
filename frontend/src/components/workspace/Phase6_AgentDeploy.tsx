@@ -1,295 +1,523 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, CheckCircle, Database, Shield, Terminal, Cpu, Network, Lock, MessageSquare, ArrowRight, Activity, Server, FileJson, Layers, RefreshCw, Layout } from 'lucide-react';
+import { 
+  Bot, CheckCircle, Database, Shield, Terminal, Cpu, Network, 
+  Lock, MessageSquare, ArrowRight, Activity, Server, FileJson, 
+  Layers, RefreshCw, Layout, Send, Sparkles, CheckCircle2, 
+  AlertTriangle, Copy, Check, Globe, Smartphone, QrCode, Sliders
+} from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useFormStore } from '@/store/useFormStore';
 
+interface ChatMessage {
+  id: string;
+  sender: 'user' | 'agent';
+  text: string;
+  timestamp: string;
+  sourceDoc?: string;
+  confidence?: number;
+}
+
 export default function Phase6_AgentDeploy({ onNext, onBack }: { onNext: () => void, onBack?: () => void }) {
- const { language } = useLanguage();
- const [step, setStep] = useState(0);
- const { brandDNA, wizardAnswers } = useFormStore();
- // Luôn sử dụng bản mock Bếp Nhà Mộc chi tiết, chuyên nghiệp theo yêu cầu
- const isBepNhaMoc = true;
+  const { language } = useLanguage();
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: 'init-1',
+      sender: 'agent',
+      text: 'Dạ, Mộc chào anh/chị ạ! 🌿 Em là Trợ lý AI của Bếp Nhà Mộc, đã được đồng bộ 100% dữ liệu thực đơn di sản, chính sách suất ăn doanh nghiệp B2B và quy trình bếp trung tâm. Anh/chị có thể thử đặt câu hỏi kiểm tra nghiệp vụ bên dưới nhé!',
+      timestamp: '11:00',
+      sourceDoc: 'brand_dna_bep_nha_moc.json',
+      confidence: 100
+    }
+  ]);
+  const [inputText, setInputText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const chatScrollRef = useRef<HTMLDivElement>(null);
 
- useEffect(() => {
-  // Luôn kích hoạt quy trình triển khai AI tuần tự với delay suy nghĩ chân thực
-  const timers = [
-   setTimeout(() => setStep(1), 500),
-   setTimeout(() => setStep(2), 1200),
-   setTimeout(() => setStep(3), 2100),
-   setTimeout(() => setStep(4), 3100),
-   setTimeout(() => setStep(5), 4200),
-   setTimeout(() => setStep(6), 5400),
+  // Auto-scroll chat to bottom
+  useEffect(() => {
+    if (chatScrollRef.current) {
+      chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+    }
+  }, [messages, isTyping]);
+
+  // Pre-configured questions
+  const SAMPLE_QUESTIONS = [
+    {
+      q: 'Tôi muốn đặt 40 suất cơm niêu cho công ty ở Keangnam trưa nay?',
+      ans: 'Dạ vâng ạ! 🌿 Với đơn 40 suất giao tới Keangnam Phạm Hùng (bán kính 1.8km), Bếp Nhà Mộc hoàn toàn đáp ứng được trọn vẹn trong khung giờ 11h15 - 11h45.\n\n🍱 Mộc áp dụng ưu đãi Đơn nhóm công ty:\n• Chiết khấu trực tiếp 15% trên giá thực đơn\n• Tặng kèm 40 phần canh cua mồng tơi & chè sen tráng miệng\n• Suất ăn đựng trong hộp bã mía sinh học 100% giữ nóng hổi 60°C.\n\nAnh/chị cho Mộc xin số Zalo để chuyên viên gửi menu chọn món và xuất hóa đơn đỏ VAT cho công ty ngay nhé ạ!',
+      source: 'chinh_sach_hop_dong_b2b.docx · Trang 2',
+      conf: 99.4
+    },
+    {
+      q: 'Thực đơn trưa nay có món thanh đạm cho người ăn chay không?',
+      ans: 'Dạ có ạ! 🌾 Thực đơn Chữa Lành hôm nay nhà Mộc có món Đậu Hũ Sốt Nấm Niêu Đất và Canh Rong Biển Hạt Sen thanh ngọt. Cơm được nấu từ gạo lứt hoặc gạo ST25 mộc mạc nguyên cám.\n\nToàn bộ đồ chay của Mộc được nấu riêng bằng niêu gang độc lập, không dính dầu mỡ động vật nên anh/chị an tâm 100% nhé ạ!',
+      source: 'menu_thuc_don_mua_he.pdf · Trang 5',
+      conf: 98.8
+    },
+    {
+      q: 'Bên bạn có xuất hóa đơn đỏ VAT và cho thanh toán cuối tháng không?',
+      ans: 'Dạ có đầy đủ 100% ạ! 📑 Bếp Nhà Mộc xuất hóa đơn điện tử VAT đầy đủ theo mã số thuế doanh nghiệp.\n\nVới các công ty ký Hợp đồng cung ứng cơm tháng (từ 20 suất/ngày trở lên), Mộc hỗ trợ chính sách đối soát công nợ linh hoạt vào ngày cuối cùng của tháng, kèm biên bản giao nhận suất ăn có chữ ký shipper nội bộ ạ.',
+      source: 'quy_che_phap_ly_b2b.pdf · Điều 4',
+      conf: 100
+    }
   ];
-  return () => timers.forEach(clearTimeout);
- }, []);
 
- const metrics = [
-  { label: "Vector Database", value: "2.4 GB", icon: Database, color: "text-blue-400", bg: "bg-blue-500/10" },
-  { label: "Neural Params", value: "8.5B", icon: Cpu, color: "text-purple-400", bg: "bg-purple-500/10" },
-  { label: "Latency", value: "45ms", icon: Activity, color: "text-emerald-400", bg: "bg-emerald-500/10" }
- ];
+  const handleSendPrompt = (textToSend?: string) => {
+    const text = (textToSend || inputText).trim();
+    if (!text || isTyping) return;
 
- const dataSources = [
-  { name: "menu_bepnhamoc_2026.pdf", type: "Catalog", status: "Vectorized" },
-  { name: "brand_voice_guidelines.md", type: "Ruleset", status: "Enforced" },
-  { name: "zalo_oa_chat_history.csv", type: "Training Data", status: "Ingested" },
-  { name: "crisis_management_protocol.json", type: "Guardrails", status: "Active" }
- ];
+    const userMsg: ChatMessage = {
+      id: `usr-${Date.now()}`,
+      sender: 'user',
+      text: text,
+      timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+    };
 
- return (
-  <div className="w-full min-h-full flex flex-col p-4 md:p-8 max-w-[1600px] mx-auto z-10 relative pb-16">
-   {/* ── Header ── */}
-   <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-    <div>
-     <div className="inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 mb-3 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-      <Server className="w-4 h-4 text-emerald-400 mr-2" />
-      <span className="text-xs font-bold text-emerald-400 tracking-widest uppercase">Deployment Center</span>
-     </div>
-     <h2 className="text-3xl md:text-5xl font-black text-foreground tracking-tight">
-      {language === 'vi' ? 'Đóng Gói & Triển Khai AI Doanh Nghiệp' : 'Custom Corporate AI Deployment'}
-     </h2>
-     <p className="text-linear-text-muted mt-2 font-medium text-sm md:text-base max-w-2xl">
-      {language === 'vi' ? `Tiến trình huấn luyện và đóng gói AI độc quyền dựa trên dữ liệu ${isBepNhaMoc ? "Bếp Nhà Mộc" : "Doanh nghiệp"}. Hệ thống đang đồng bộ Brand DNA vào Neural Network.` : `Proprietary AI training and model deployment based on ${isBepNhaMoc ? "Bếp Nhà Mộc" : "Enterprise"} Brand DNA.`}
-     </p>
-    </div>
-    <div className="flex gap-3 w-full md:w-auto">
-     <button 
-      onClick={onBack} 
-      className="px-5 py-3 rounded-xl border border-linear-border bg-linear-surface hover:bg-linear-surface/80 text-foreground font-bold transition-all shadow-sm flex items-center justify-center"
-     >
-      <ArrowRight className="w-4 h-4 mr-2 rotate-180" /> {language === 'vi' ? 'Quay lại' : 'Back'}
-     </button>
-     <button 
-      id="btn-next-phase6"
-      onClick={onNext}
-      disabled={step < 6}
-      className={`group relative px-6 py-3 rounded-xl font-bold transition-all overflow-hidden flex-1 md:flex-none flex items-center justify-center
-       ${step >= 6 
-        ? 'bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)]' 
-        : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'}`}
-     >
-      <span className="relative z-10 flex items-center">
-       {step < 6 ? (language === 'vi' ? 'Đang triển khai...' : 'Deploying...') : (language === 'vi' ? 'Xem Báo Cáo Chiến Lược' : 'View Executive Report')} 
-       {step >= 6 && <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />}
-      </span>
-     </button>
-    </div>
-   </div>
+    setMessages(prev => [...prev, userMsg]);
+    setInputText('');
+    setIsTyping(true);
 
-   {/* ── Overview Alert Banner ── */}
-   <motion.div initial={{opacity:0, y:-10}} animate={{opacity:1, y:0}} className="mb-6 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 flex items-center justify-between">
-    <div className="flex items-center text-emerald-300 text-sm">
-     <Bot className="w-5 h-5 mr-3 text-emerald-400 shrink-0" />
-     <span>
-      <strong>{language === 'vi' ? 'Bản xem trước (Overview):' : 'Overview Preview:'}</strong> {language === 'vi' ? 'Đây là giao diện tổng quan về quá trình đóng gói AI. Để cấu hình chi tiết, vui lòng chuyển đến trang Builder hoặc Planning.' : 'This is a high-level overview of the AI packaging process. For custom architecture, navigate to Agent Builder or Planning.'}
-     </span>
-    </div>
-    <div className="flex gap-3 ml-4 shrink-0">
-     <button onClick={() => window.location.href='/agent-builder'} className="px-4 py-1.5 bg-emerald-600/20 hover:bg-emerald-600/40 border border-emerald-500/30 text-emerald-300 text-xs font-bold rounded-lg transition-colors flex items-center">
-      <Cpu className="w-3.5 h-3.5 mr-1.5" /> {language === 'vi' ? 'Trình dựng AI (Builder)' : 'Agent Builder'}
-     </button>
-     <button onClick={() => window.location.href='/planning/d0-report'} className="px-4 py-1.5 bg-teal-600/20 hover:bg-teal-600/40 border border-teal-500/30 text-teal-300 text-xs font-bold rounded-lg transition-colors flex items-center">
-      <Layout className="w-3.5 h-3.5 mr-1.5" /> Go to Planning
-     </button>
-    </div>
-   </motion.div>
+    // Find match or generate context-aware answer
+    const matched = SAMPLE_QUESTIONS.find(sq => sq.q.toLowerCase().includes(text.toLowerCase()) || text.toLowerCase().includes(sq.q.slice(0, 15).toLowerCase()));
 
-   {/* ── Main Layout ── */}
-   <div className="flex-1 grid grid-cols-1 xl:grid-cols-12 gap-8">
-    
-    {/* LEFT PANEL: AGENT CORE & METRICS */}
-    <div className="xl:col-span-5 flex flex-col gap-6">
-     
-     {/* Trợ lý AI Identity Card */}
-     <div className="bg-linear-surface/40 backdrop-blur-md border border-linear-border/30 rounded-3xl p-8 shadow-2xl relative overflow-hidden group">
-      <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
+    setTimeout(() => {
+      const agentMsg: ChatMessage = {
+        id: `agt-${Date.now()}`,
+        sender: 'agent',
+        text: matched ? matched.ans : `Dạ Mộc đã ghi nhận câu hỏi của anh/chị về "${text}". 🌿\n\nToàn bộ thông tin thực đơn gạo ST25, hộp bã mía sinh học và chính sách giao cơm văn phòng bán kính 2km Duy Tân đều sẵn sàng phục vụ. Anh/chị có thể để lại số Zalo để Mộc hỗ trợ gửi menu chi tiết nhé ạ!`,
+        timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+        sourceDoc: matched ? matched.source : 'knowledge_base_rag_master.json',
+        confidence: matched ? matched.conf : 97.2
+      };
+
+      setMessages(prev => [...prev, agentMsg]);
+      setIsTyping(false);
+    }, 1100);
+  };
+
+  // ── Vector Knowledge Base ──
+  const VECTOR_KNOWLEDGE = [
+    {
+      name: 'menu_bep_nha_moc_2026.pdf',
+      vectors: '68 Vectors',
+      accuracy: '99.4%',
+      status: 'Indexed & Ready',
+      desc: 'Menu cơm niêu 4 mùa, định lượng calo, thành phần món ăn'
+    },
+    {
+      name: 'quy_chuan_ve_sinh_an_toan_bep.pdf',
+      vectors: '42 Vectors',
+      accuracy: '100%',
+      status: 'Indexed & Ready',
+      desc: 'Quy trình kiểm thực 3 bước, nhiệt độ hộp bã mía 120°C'
+    },
+    {
+      name: 'chinh_sach_hop_dong_b2b_doanh_nghiep.docx',
+      vectors: '35 Vectors',
+      accuracy: '98.7%',
+      status: 'Indexed & Ready',
+      desc: 'Bảng giá chiết khấu 15%, hóa đơn VAT, thanh toán cuối tháng'
+    },
+    {
+      name: 'kich_ban_cs_khach_hang_zalo_oa.csv',
+      vectors: '110 Cặp Q&A',
+      accuracy: '99.8%',
+      status: 'Indexed & Ready',
+      desc: 'Xưng hô "Mộc", giọng điệu chữa lành, xử lý khiếu nại ship chậm'
+    }
+  ];
+
+  // ── Operational Guardrails ──
+  const GUARDRAILS = [
+    {
+      title: 'Khóa trần công suất bếp 120 suất/h',
+      status: 'Enforced',
+      rule: 'Nếu số lượng đơn trong khung giờ 11h15 - 12h00 chạm mốc 120 suất, AI tự động thông báo hẹn lùi 20 phút để bảo toàn chất lượng.'
+    },
+    {
+      title: 'Giới hạn bán kính giao nhanh 3km',
+      status: 'Enforced',
+      rule: 'Khách hàng ngoài bán kính 3km Duy Tân được thông báo nguy cơ giảm nhiệt độ cơm, đề xuất đặt trước tối thiểu 60 phút.'
+    },
+    {
+      title: 'Chuyển tuyến B2B Concierge (> 30 suất)',
+      status: 'Active',
+      rule: 'Đơn tiệc doanh nghiệp trên 2.000.000đ tự động tạo lead trên CRM và thông báo quản lý nhà hàng gọi điện tư vấn trực tiếp.'
+    }
+  ];
+
+  return (
+    <div className="w-full min-h-full flex flex-col p-4 md:p-8 max-w-[1600px] mx-auto z-10 relative pb-20">
       
-      <div className="flex items-center gap-6 relative z-10">
-       <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)] relative">
-        <Bot className="w-10 h-10 text-white relative z-10" />
-        {step < 6 && (
-         <div className="absolute inset-0 border-2 border-white/50 rounded-2xl animate-[spin_3s_linear_infinite] border-t-transparent"></div>
-        )}
-       </div>
-       <div>
-        <h3 className="text-2xl font-black text-foreground mb-1">{isBepNhaMoc ? "Mộc Assistant" : "Corporate AI"}</h3>
-        <div className="flex items-center gap-2">
-         <span className={`flex items-center px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-widest border
-          ${step >= 6 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>
-          <div className={`w-1.5 h-1.5 rounded-full mr-1.5 ${step >= 6 ? 'bg-emerald-400 shadow-[0_0_5px_rgba(16,185,129,0.5)]' : 'bg-amber-400 animate-pulse'}`} /> 
-          {step >= 6 ? 'Online & Ready' : 'Training Pipeline Active'}
-         </span>
-        </div>
-       </div>
-      </div>
-
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-3 gap-4 mt-8 relative z-10">
-       {metrics.map((m, i) => (
-        <div key={i} className="bg-slate-900/50 rounded-2xl p-4 border border-slate-700/50 flex flex-col items-center justify-center text-center">
-         <div className={`w-8 h-8 rounded-xl ${m.bg} flex items-center justify-center mb-2`}>
-          <m.icon className={`w-4 h-4 ${m.color}`} />
-         </div>
-         <div className="text-lg font-black text-foreground">{step >= i + 2 ? m.value : '-'}</div>
-         <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">{m.label}</div>
-        </div>
-       ))}
-      </div>
-     </div>
-
-     {/* Integration Status */}
-     <div className="bg-linear-surface/40 backdrop-blur-md border border-linear-border/30 rounded-3xl p-8 shadow-2xl flex-1 flex flex-col">
-      <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center">
-       <Layers className="w-4 h-4 mr-2 text-blue-400" /> Data Ingestion Pipeline
-      </h4>
-      <div className="space-y-4 flex-1">
-       {dataSources.map((ds, i) => {
-        const isLoaded = step > i + 1;
-        const isLoading = step === i + 1;
-        return (
-         <div key={i} className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-300
-          ${isLoaded ? 'bg-emerald-500/5 border-emerald-500/20' : isLoading ? 'bg-blue-500/5 border-blue-500/30 shadow-[0_0_10px_rgba(59,130,246,0.1)]' : 'bg-slate-800/30 border-slate-700/50 opacity-50'}`}>
-          <div className="flex items-center gap-3">
-           <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center border border-slate-700">
-            {isLoaded ? <CheckCircle className="w-4 h-4 text-emerald-400" /> : isLoading ? <RefreshCw className="w-4 h-4 text-blue-400 animate-spin" /> : <FileJson className="w-4 h-4 text-slate-500" />}
-           </div>
-           <div>
-            <div className={`text-sm font-bold ${isLoaded ? 'text-emerald-300' : isLoading ? 'text-blue-300' : 'text-slate-400'}`}>{ds.name}</div>
-            <div className="text-[10px] text-slate-500 font-mono uppercase tracking-widest mt-0.5">{ds.type}</div>
-           </div>
+      {/* ── 1. HEADER SECTION ── */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 shrink-0 border-b border-slate-200 dark:border-slate-800 pb-6">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-700/60 text-xs font-black uppercase tracking-widest text-emerald-800 dark:text-emerald-300 mb-2.5">
+            <Cpu className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            Trung Tâm Triển Khai & Điều Phối Trợ Lý AI · BrandFlow
           </div>
-          {isLoaded && <span className="text-[10px] font-black text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded uppercase tracking-wider">{ds.status}</span>}
-          {isLoading && <span className="text-[10px] font-black text-blue-400 bg-blue-500/10 px-2 py-1 rounded uppercase tracking-wider">Processing...</span>}
-         </div>
-        );
-       })}
-      </div>
-
-      <div className="mt-6 pt-6 border-t border-linear-border/50">
-       <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center">
-        <Shield className="w-4 h-4 mr-2 text-purple-400" /> Security & Guardrails
-       </h4>
-       <div className="grid grid-cols-2 gap-3">
-        <div className={`p-3 rounded-lg border text-xs font-medium flex items-center ${step >= 5 ? 'bg-purple-500/10 border-purple-500/30 text-purple-300' : 'bg-slate-800/50 border-slate-700 text-slate-500'}`}>
-         <Lock className="w-3.5 h-3.5 mr-2 shrink-0" /> PII Masking Active
+          <h1 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+            Đóng Gói & Triển Khai Trợ Lý AI Doanh Nghiệp (Mộc Assistant)
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400 mt-1.5 text-xs md:text-sm font-medium max-w-3xl leading-relaxed">
+            Mô hình ngôn ngữ tinh chỉnh chuyên sâu ngành F&B, đồng bộ 100% Brand DNA Bếp Nhà Mộc. Hệ thống tích hợp RAG truy xuất thực đơn thời gian thực và khóa an toàn nghiệp vụ chống quá tải bếp.
+          </p>
         </div>
-        <div className={`p-3 rounded-lg border text-xs font-medium flex items-center ${step >= 5 ? 'bg-purple-500/10 border-purple-500/30 text-purple-300' : 'bg-slate-800/50 border-slate-700 text-slate-500'}`}>
-         <Shield className="w-3.5 h-3.5 mr-2 shrink-0" /> Tone Enforcement
+
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <button 
+            onClick={onBack} 
+            className="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold transition-all text-xs flex items-center justify-center cursor-pointer shadow-sm"
+          >
+            <ArrowRight className="w-4 h-4 mr-1.5 rotate-180" /> Quay lại (Phase 5)
+          </button>
+          
+          {onNext && (
+            <button 
+              onClick={onNext}
+              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-xs shadow-lg shadow-emerald-500/25 transition-all flex items-center group cursor-pointer"
+            >
+              Xem Báo Cáo Chiến Lược (Phase 7)
+              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+          )}
         </div>
-       </div>
       </div>
-     </div>
-    </div>
 
-    {/* RIGHT PANEL: LIVE SIMULATION CONSOLE */}
-    <div className="xl:col-span-7 bg-[#0F172A] border border-slate-700 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col">
-     {/* Console Header */}
-     <div className="bg-slate-900 border-b border-slate-800 px-6 py-4 flex justify-between items-center z-10 shrink-0">
-      <div className="flex items-center gap-3">
-       <div className="flex gap-1.5">
-        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-        <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-        <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-       </div>
-       <div className="w-px h-4 bg-slate-700 mx-2"></div>
-       <Terminal className="w-4 h-4 text-slate-400" />
-       <span className="text-xs font-mono text-slate-300 uppercase tracking-widest">Live Integration Testing</span>
+      {/* ── 2. MODEL CORE HUD (5 KEY SPECS) ── */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5 mb-8">
+        
+        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+          <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider block mb-1">Kiến Trúc Mô Hình</span>
+          <span className="text-sm font-black text-slate-900 dark:text-white font-mono truncate">BrandFlow-Llama3-F&B</span>
+          <span className="text-[10px] text-emerald-600 font-bold mt-1">✓ Fine-tuned chuyên sâu</span>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+          <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider block mb-1">Độ Trễ Phản Hồi</span>
+          <span className="text-xl font-black text-cyan-600 dark:text-cyan-400 font-mono">420ms</span>
+          <span className="text-[10px] text-slate-500 mt-1">Edge Cluster Hà Nội</span>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+          <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider block mb-1">Cửa Sổ Ngữ Cảnh</span>
+          <span className="text-xl font-black text-purple-600 dark:text-purple-400 font-mono">32K Tokens</span>
+          <span className="text-[10px] text-slate-500 mt-1">Chứa toàn bộ Menu & CRM</span>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+          <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider block mb-1">Độ Chuẩn Guardrails</span>
+          <span className="text-xl font-black text-emerald-600 dark:text-emerald-400 font-mono">99.8%</span>
+          <span className="text-[10px] text-emerald-600 font-bold mt-1">✓ Khóa trần 120 suất/h</span>
+        </div>
+
+        <div className="col-span-2 md:col-span-1 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+          <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider block mb-1">Trạng Thái Kết Nối</span>
+          <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 mt-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            Zalo OA Webhook Live
+          </span>
+          <span className="text-[10px] text-slate-500 mt-1">Sẵn sàng nhận khách</span>
+        </div>
+
       </div>
-      <div className="flex items-center gap-2">
-       <span className="relative flex h-2 w-2">
-        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${step >= 6 ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
-        <span className={`relative inline-flex rounded-full h-2 w-2 ${step >= 6 ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
-       </span>
-       <span className="text-[10px] font-mono text-slate-400">{step >= 6 ? 'SYSTEM_READY' : 'SIMULATING_SCENARIO'}</span>
-      </div>
-     </div>
 
-     {/* Chat Area */}
-     <div className="flex-1 p-6 overflow-y-auto custom-scrollbar flex flex-col gap-6 relative bg-[url('/img/grid.svg')] bg-center">
-      
-      <AnimatePresence>
-       {step >= 5 && (
-        <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="flex flex-col gap-2">
-         <div className="flex items-center justify-end gap-2 mb-1">
-          <span className="text-[10px] text-slate-500 font-bold uppercase">Khách hàng (B2B Lead)</span>
-         </div>
-         <div className="self-end bg-slate-800 text-slate-200 px-5 py-4 rounded-2xl rounded-tr-sm text-sm md:text-base max-w-[85%] shadow-md border border-slate-700/50">
-          Chào Mộc, bên mình là công ty công nghệ quy mô 150 nhân sự ở Quận 1. Mình đang tìm đối tác cung cấp suất ăn trưa văn phòng dài hạn. Bên bạn có đáp ứng được số lượng lớn mà vẫn đảm bảo dùng hộp bã mía không? Có ưu đãi gì cho HĐ 6 tháng không?
-         </div>
-        </motion.div>
-       )}
-       
-       {step === 5 && (
-        <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="flex items-center gap-4 mt-2">
-         <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0">
-          <Bot className="w-5 h-5 text-emerald-400" />
-         </div>
-         <div className="bg-slate-800/80 px-4 py-3 rounded-2xl rounded-tl-sm border border-slate-700/50 flex items-center gap-2">
-          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></div>
-          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce delay-100"></div>
-          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce delay-200"></div>
-         </div>
-        </motion.div>
-       )}
+      {/* ── 3. TWO-COLUMN OPERATIONAL CONSOLE ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-10">
 
-       {step >= 6 && (
-        <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="flex flex-col gap-2 mt-2">
-         <div className="flex items-center justify-start gap-3 mb-1">
-          <div className="w-6 h-6 rounded-md bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-sm">
-           <Bot className="w-3.5 h-3.5 text-white" />
+        {/* LEFT COLUMN (Cols 1-5): RAG KNOWLEDGE BASE & OPERATIONAL GUARDRAILS */}
+        <div className="lg:col-span-5 flex flex-col gap-6">
+
+          {/* 1. Vector Knowledge Base Inspection */}
+          <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-6">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
+              <div>
+                <span className="text-[10px] font-mono uppercase text-emerald-600 dark:text-emerald-400 font-bold block">
+                  Cơ Sở Tri Thức Vector (RAG Vector Store)
+                </span>
+                <h3 className="text-base font-black text-slate-900 dark:text-white mt-0.5">
+                  Dữ Liệu Đã Nạp & Indexing
+                </h3>
+              </div>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                100% Hoàn tất
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              {VECTOR_KNOWLEDGE.map((vk, idx) => (
+                <div key={idx} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white font-mono truncate max-w-[220px]">
+                      {vk.name}
+                    </span>
+                    <span className="text-[10px] font-black font-mono text-emerald-600 dark:text-emerald-400">
+                      {vk.vectors} · {vk.accuracy}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                    {vk.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-          <span className="text-[10px] text-emerald-400 font-black uppercase tracking-widest">Mộc Assistant</span>
-         </div>
-         <div className="self-start bg-emerald-900/30 border border-emerald-500/20 text-slate-200 px-6 py-5 rounded-2xl rounded-tl-sm text-sm md:text-[15px] max-w-[90%] shadow-lg leading-relaxed relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
-          Dạ, Mộc chào anh/chị ạ! 🌿 Rất cảm ơn anh/chị đã quan tâm đến giải pháp Tiệc doanh nghiệp của Bếp Nhà Mộc.
-          <br/><br/>
-          Với quy mô 150 nhân sự tại Quận 1, Mộc hoàn toàn tự tin có thể phục vụ chu đáo mỗi ngày. 100% suất ăn của nhà Mộc đều sử dụng hộp bã mía phân hủy sinh học, đi kèm bộ muỗng nĩa gỗ để đảm bảo tiêu chí Xanh & Bền vững như Brand DNA của chúng mình.
-          <br/><br/>
-          🎁 <strong className="text-emerald-300">Đặc quyền dành riêng cho Hợp đồng 6 tháng (Corporate Pack):</strong>
-          <ul className="mt-2 space-y-2 list-none">
-           <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-emerald-400 shrink-0"/> Chiết khấu trực tiếp <strong>15%</strong> trên tổng bill tháng.</li>
-           <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-emerald-400 shrink-0"/> Tráng miệng luân phiên (Trái cây/Chè nấm tuyết) miễn phí thứ 6 hàng tuần.</li>
-           <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-emerald-400 shrink-0"/> Miễn phí Setup 01 buổi Tasting Event (Ăn thử) ngay tại văn phòng cho toàn bộ 150 nhân sự.</li>
-          </ul>
-          <br/>
-          Anh/chị có thể để lại số Zalo hoặc email, đội ngũ B2B của Mộc sẽ liên hệ trong vòng 15 phút để gửi Proposal chi tiết và menu tháng ạ!
-         </div>
-        </motion.div>
-       )}
-      </AnimatePresence>
 
-      {/* Terminal Matrix Effect Overlay when loading */}
-      {step < 5 && (
-       <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90 backdrop-blur-sm z-20">
-        <Network className="w-16 h-16 text-blue-500/50 animate-pulse mb-6" />
-        <div className="font-mono text-sm text-blue-400 text-center space-y-2">
-         <div className="animate-pulse">Initialize Neural Weights... [OK]</div>
-         {step >= 2 && <div className="animate-pulse">Vectorizing Knowledge Base... [OK]</div>}
-         {step >= 3 && <div className="animate-pulse">Applying Brand Guidelines... [OK]</div>}
-         {step >= 4 && <div className="animate-pulse">Loading Test Simulation Environment...</div>}
+          {/* 2. Operational Guardrails Policy */}
+          <div className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-6">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
+              <div>
+                <span className="text-[10px] font-mono uppercase text-purple-600 dark:text-purple-400 font-bold block">
+                  Khóa An Toàn Nghiệp Vụ (Guardrails)
+                </span>
+                <h3 className="text-base font-black text-slate-900 dark:text-white mt-0.5">
+                  Quy Tắc Vận Hành Bếp Bắt Buộc
+                </h3>
+              </div>
+              <Shield className="w-5 h-5 text-purple-600" />
+            </div>
+
+            <div className="space-y-3">
+              {GUARDRAILS.map((gr, idx) => (
+                <div key={idx} className="p-3.5 rounded-2xl bg-purple-50/50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800/50">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-black text-purple-900 dark:text-purple-300">
+                      {gr.title}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-md text-[9px] font-black uppercase bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200">
+                      {gr.status}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {gr.rule}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
         </div>
-       </div>
-      )}
-     </div>
-     
-     {/* Console Input (Visual only) */}
-     <div className="p-4 bg-slate-900 border-t border-slate-800 shrink-0">
-      <div className="relative">
-       <input 
-        type="text" 
-        disabled 
-        placeholder={step >= 6 ? "AI Trợ lý AI is ready for interaction..." : "System locked during deployment..."}
-        className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-300 focus:outline-none cursor-not-allowed"
-       />
-       <MessageSquare className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+
+        {/* RIGHT COLUMN (Cols 6-12): LIVE INTERACTIVE AI TEST SANDBOX */}
+        <div className="lg:col-span-7 flex flex-col">
+          
+          <div className="bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[680px]">
+            
+            {/* Sandbox Header */}
+            <div className="bg-slate-100 dark:bg-slate-800/80 px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-md">
+                  <Bot className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-black text-slate-900 dark:text-white">
+                      Mộc Assistant · Live Sandbox Test
+                    </span>
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  </div>
+                  <span className="text-[11px] text-slate-500">
+                    Môi trường kiểm thử tương tác thực tế · Phản hồi chuẩn Brand Voice
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setMessages([messages[0]])}
+                className="text-[11px] font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors cursor-pointer"
+              >
+                Xóa lịch sử chat
+              </button>
+            </div>
+
+            {/* Quick Sample Questions Bar */}
+            <div className="p-3 bg-slate-50 dark:bg-slate-800/40 border-b border-slate-200 dark:border-slate-700/60 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0">
+              <span className="text-[10px] uppercase font-bold text-slate-400 shrink-0">Hỏi thử:</span>
+              {SAMPLE_QUESTIONS.map((sq, sIdx) => (
+                <button
+                  key={sIdx}
+                  onClick={() => handleSendPrompt(sq.q)}
+                  disabled={isTyping}
+                  className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600 text-xs font-semibold text-slate-700 dark:text-slate-200 transition-colors shrink-0 cursor-pointer shadow-xs disabled:opacity-50"
+                >
+                  💡 {sq.q}
+                </button>
+              ))}
+            </div>
+
+            {/* Message Stream */}
+            <div 
+              ref={chatScrollRef}
+              className="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50/50 dark:bg-slate-950/40"
+            >
+              {messages.map((msg) => (
+                <motion.div
+                  key={msg.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
+                >
+                  <div className="flex items-center gap-2 mb-1 px-1">
+                    <span className="text-[10px] font-bold text-slate-400">
+                      {msg.sender === 'user' ? 'Khách Hàng Văn Phòng' : 'Mộc Assistant (AI)'}
+                    </span>
+                    <span className="text-[9px] font-mono text-slate-400">
+                      {msg.timestamp}
+                    </span>
+                  </div>
+
+                  <div className={`p-4 rounded-2xl max-w-[85%] text-xs md:text-sm leading-relaxed ${
+                    msg.sender === 'user'
+                      ? 'bg-cyan-600 text-white rounded-tr-xs shadow-md'
+                      : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-tl-xs border border-slate-200 dark:border-slate-700 shadow-md'
+                  }`}>
+                    <p className="whitespace-pre-line">{msg.text}</p>
+
+                    {/* Source Doc Citation */}
+                    {msg.sourceDoc && (
+                      <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                        <span>🔍 Trích xuất: <strong>{msg.sourceDoc}</strong></span>
+                        <span className="text-emerald-600 dark:text-emerald-400 font-bold">Độ tin cậy: {msg.confidence}%</span>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+
+              {isTyping && (
+                <div className="flex items-center gap-2 text-slate-400 text-xs py-2">
+                  <div className="w-6 h-6 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                    <RefreshCw className="w-3.5 h-3.5 text-emerald-500 animate-spin" />
+                  </div>
+                  <span className="font-medium animate-pulse">Mộc Assistant đang tra cứu Menu & tạo câu trả lời...</span>
+                </div>
+              )}
+            </div>
+
+            {/* Chat Input Bar */}
+            <form 
+              onSubmit={(e) => { e.preventDefault(); handleSendPrompt(); }}
+              className="p-3.5 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2 shrink-0"
+            >
+              <input
+                type="text"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder="Nhập câu hỏi kiểm tra nghiệp vụ cho Mộc Assistant..."
+                disabled={isTyping}
+                className="flex-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs md:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+              />
+
+              <button
+                type="submit"
+                disabled={!inputText.trim() || isTyping}
+                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold text-xs transition-colors flex items-center gap-1.5 cursor-pointer shadow-md"
+              >
+                <span>Gửi</span>
+                <Send className="w-3.5 h-3.5" />
+              </button>
+            </form>
+
+          </div>
+
+        </div>
+
       </div>
-     </div>
+
+      {/* ── 4. OMNICHANNEL DEPLOYMENT INTEGRATIONS (4 CHANNELS) ── */}
+      <div>
+        <div className="flex items-center justify-between mb-5 pb-3 border-b border-slate-200 dark:border-slate-800">
+          <div>
+            <span className="text-xs font-black uppercase text-emerald-700 dark:text-emerald-400 tracking-wider">
+              Cổng Triển Khai Đa Kênh (Omnichannel Deploy Targets)
+            </span>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white mt-0.5">
+              Đồng Bộ Hóa Điểm Tiếp Xúc Khách Hàng
+            </h2>
+          </div>
+          <span className="text-xs font-mono text-slate-500">API Webhook v2.4</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          
+          <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-emerald-400 dark:border-emerald-600 shadow-md flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-2xl">📱</span>
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                  Đang chạy
+                </span>
+              </div>
+              <h3 className="text-sm font-black text-slate-900 dark:text-white">Zalo OA & Mini App</h3>
+              <p className="text-[11px] text-slate-500 mt-1 leading-snug">
+                Tự động tư vấn thực đơn, chốt đơn nhóm và gửi thông báo ZNS nhắc giờ ăn trưa.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-[10px] font-mono text-emerald-600 font-bold">
+              Webhook: /api/zalo-bot
+            </div>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-2xl">🌐</span>
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
+                  Sẵn sàng nhúng
+                </span>
+              </div>
+              <h3 className="text-sm font-black text-slate-900 dark:text-white">Website Floating Widget</h3>
+              <p className="text-[11px] text-slate-500 mt-1 leading-snug">
+                Cửa sổ chat trực tiếp trên trang chủ bepnhamoc.vn cho khách hàng doanh nghiệp đặt tiệc.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-[10px] font-mono text-slate-400">
+              Snippet: &lt;script src="..."&gt;
+            </div>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-2xl">📘</span>
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                  Chờ liên kết Page
+                </span>
+              </div>
+              <h3 className="text-sm font-black text-slate-900 dark:text-white">Facebook Messenger</h3>
+              <p className="text-[11px] text-slate-500 mt-1 leading-snug">
+                Phản hồi bình luận quảng cáo Meta Ads tự động và điều hướng khách vào inbox nhận ưu đãi.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-[10px] font-mono text-slate-400">
+              Chờ cấp Page Token
+            </div>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-2xl">💻</span>
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                  Đã đồng bộ API
+                </span>
+              </div>
+              <h3 className="text-sm font-black text-slate-900 dark:text-white">POS KiotViet / Ocha</h3>
+              <p className="text-[11px] text-slate-500 mt-1 leading-snug">
+                Tự động đẩy đơn hàng thành công về máy in hóa đơn bếp trung tâm và trừ kho nguyên liệu.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-[10px] font-mono text-emerald-600 font-bold">
+              API Webhook Active
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
-   </div>
-  </div>
- );
+  );
 }
