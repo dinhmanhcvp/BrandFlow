@@ -62,7 +62,7 @@ export default function Phase1_Ingestion({ onGoToHub, onGoToWorkspace }: { onGoT
  animate={{ opacity: 1, x: 0 }}
  exit={{ opacity: 0, x: -50 }}
  transition={{ duration: 0.4 }}
- className="absolute inset-0 z-50 bg-black/50 backdrop-blur-md"
+ className="absolute inset-0 z-50 bg-background/80 dark:bg-black/50 backdrop-blur-md"
  >
  <Screen3_Dashboard onGoToHub={onGoToHub} onGoToNext={() => setCurrentScreen(1.5)} />
  </motion.div>
@@ -89,7 +89,7 @@ export default function Phase1_Ingestion({ onGoToHub, onGoToWorkspace }: { onGoT
  animate={{ opacity: 1, x: 0 }}
  exit={{ opacity: 0, x: -50 }}
  transition={{ duration: 0.4 }}
- className="absolute inset-0 z-50 bg-black/50 backdrop-blur-md"
+ className="absolute inset-0 z-50 bg-background/80 dark:bg-black/50 backdrop-blur-md"
  >
  <ScreenFeatureSelector 
   onBack={() => setCurrentScreen(1.5)} 
@@ -105,7 +105,7 @@ export default function Phase1_Ingestion({ onGoToHub, onGoToWorkspace }: { onGoT
  animate={{ opacity: 1, x: 0 }}
  exit={{ opacity: 0, x: -50 }}
  transition={{ duration: 0.4 }}
- className="absolute inset-0 z-50 bg-black/50 backdrop-blur-md"
+ className="absolute inset-0 z-50 bg-background/80 dark:bg-black/50 backdrop-blur-md"
  >
  <Screen4_ObjectiveSetting onBack={() => setCurrentScreen(3.5)} onGoToWorkspace={onGoToWorkspace} />
  </motion.div>

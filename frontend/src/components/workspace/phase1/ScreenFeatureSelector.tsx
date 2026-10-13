@@ -93,9 +93,9 @@ export default function ScreenFeatureSelector({ onBack, onGoToCampaign }: Props)
     animate={{ opacity: 1, y: 0 }}
     className="text-center mb-12 relative z-10"
    >
-    <div className="inline-flex items-center px-4 py-2 rounded-full border border-cyan-500/20 bg-cyan-500/5 backdrop-blur-sm mb-6">
-     <Sparkles className="w-4 h-4 text-cyan-400 mr-2" />
-     <span className="text-sm font-semibold text-cyan-400 tracking-wide">
+    <div className="inline-flex items-center px-4 py-2 rounded-full border border-cyan-300 dark:border-cyan-500/20 bg-cyan-100/60 dark:bg-cyan-500/5 backdrop-blur-sm mb-6">
+     <Sparkles className="w-4 h-4 text-cyan-700 dark:text-cyan-400 mr-2" />
+     <span className="text-sm font-bold text-cyan-800 dark:text-cyan-300 tracking-wide">
       DNA đã sẵn sàng — {companyName}
      </span>
     </div>

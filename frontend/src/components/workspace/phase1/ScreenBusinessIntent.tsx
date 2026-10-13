@@ -88,7 +88,7 @@ export default function ScreenBusinessIntent({ onNext }: { onNext: () => void })
       onClick={() => setMode('budget_first')}
       className={`relative group flex flex-col p-7 rounded-2xl cursor-pointer transition-all duration-300 border backdrop-blur-xl overflow-hidden ${
        mode === 'budget_first'
-        ? 'bg-emerald-500/10 border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.12)]'
+        ? 'bg-emerald-50/80 dark:bg-emerald-500/10 border-emerald-500 shadow-[0_0_25px_rgba(16,185,129,0.15)]'
         : 'bg-linear-surface hover:bg-linear-surface/80 border-linear-border hover:border-emerald-500/30'
       }`}
      >
@@ -97,7 +97,7 @@ export default function ScreenBusinessIntent({ onNext }: { onNext: () => void })
         ? 'bg-emerald-500/20 border border-emerald-500/40'
         : 'bg-linear-surface/60 border border-linear-border'
       }`}>
-       <Wallet className={`w-7 h-7 ${mode === 'budget_first' ? 'text-emerald-400' : 'text-linear-text-muted'}`} />
+       <Wallet className={`w-7 h-7 ${mode === 'budget_first' ? 'text-emerald-700 dark:text-emerald-400' : 'text-linear-text-muted'}`} />
       </div>
       <h3 className="text-lg font-bold text-foreground mb-2">
        {language === 'vi' ? 'Tôi có Ngân sách' : 'I Have a Budget'}
@@ -124,7 +124,7 @@ export default function ScreenBusinessIntent({ onNext }: { onNext: () => void })
       onClick={() => setMode('idea_first')}
       className={`relative group flex flex-col p-7 rounded-2xl cursor-pointer transition-all duration-300 border backdrop-blur-xl overflow-hidden ${
        mode === 'idea_first'
-        ? 'bg-violet-500/10 border-violet-500/50 shadow-[0_0_25px_rgba(139,92,246,0.12)]'
+        ? 'bg-violet-50/80 dark:bg-violet-500/10 border-violet-500 shadow-[0_0_25px_rgba(139,92,246,0.15)]'
         : 'bg-linear-surface hover:bg-linear-surface/80 border-linear-border hover:border-violet-500/30'
       }`}
      >
@@ -133,7 +133,7 @@ export default function ScreenBusinessIntent({ onNext }: { onNext: () => void })
         ? 'bg-violet-500/20 border border-violet-500/40'
         : 'bg-linear-surface/60 border border-linear-border'
       }`}>
-       <Lightbulb className={`w-7 h-7 ${mode === 'idea_first' ? 'text-violet-400' : 'text-linear-text-muted'}`} />
+       <Lightbulb className={`w-7 h-7 ${mode === 'idea_first' ? 'text-violet-700 dark:text-violet-400' : 'text-linear-text-muted'}`} />
       </div>
       <h3 className="text-lg font-bold text-foreground mb-2">
        {language === 'vi' ? 'Tôi có Ý tưởng' : 'I Have an Idea'}
@@ -180,8 +180,8 @@ export default function ScreenBusinessIntent({ onNext }: { onNext: () => void })
              onClick={() => { setBudget(p.value); setCustomBudget(''); }}
              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
               budget === p.value
-               ? 'bg-emerald-500/20 border border-emerald-500/50 text-emerald-400'
-               : 'bg-linear-surface border border-linear-border text-linear-text-muted hover:border-emerald-500/30'
+               ? 'bg-emerald-100 dark:bg-emerald-500/20 border-2 border-emerald-600 dark:border-emerald-400 text-emerald-950 dark:text-emerald-300 font-bold shadow-sm'
+               : 'bg-white dark:bg-linear-surface border border-slate-200 dark:border-linear-border text-slate-700 dark:text-linear-text-muted hover:border-emerald-500/40'
              }`}
             >
              {p.label}
@@ -223,16 +223,16 @@ export default function ScreenBusinessIntent({ onNext }: { onNext: () => void })
                setGoal("Tái định vị (Brand Repositioning) thương hiệu Bếp Nhà Mộc lọt Top 3 'Must-visit F&B' dành cho giới chuyên gia/quản lý tại trung tâm TP.HCM. Tập trung vào 'Corporate Lunch' và triển khai Loyalty App.");
               }}
               className={`p-4 rounded-xl border cursor-pointer transition-all ${
-               budget === 350000000 
-                ? 'bg-emerald-500/20 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]' 
-                : 'bg-slate-900/40 border-emerald-500/30 hover:border-emerald-500/80'
+               budget === 350000000
+                ? 'bg-emerald-50 dark:bg-emerald-500/20 border-2 border-emerald-600 dark:border-emerald-500 shadow-md'
+                : 'bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-emerald-500/30 hover:border-emerald-400'
               }`}
              >
               <div className="flex justify-between items-start mb-2">
-               <h4 className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">Gói 1: Aggressive Scale</h4>
-               <span className="text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">350M VNĐ</span>
+               <h4 className="text-[11px] text-emerald-800 dark:text-emerald-400 font-bold uppercase tracking-wider">Gói 1: Aggressive Scale</h4>
+               <span className="text-[9px] bg-emerald-100 dark:bg-emerald-500/20 text-emerald-900 dark:text-emerald-300 px-2 py-0.5 rounded font-mono font-bold">350M VNĐ</span>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed mb-2">
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed mb-2 font-medium">
                Thống lĩnh ngách 'Mindful Dining' tại TP.HCM. Kích hoạt Corporate Lunch Combo, Zalo Mini App và Booking 30 KOLs. (Mục tiêu: Đạt 2.5 Tỷ MRR).
               </p>
               <div className="text-[10px] font-bold text-emerald-500 mt-2">
@@ -257,7 +257,7 @@ export default function ScreenBusinessIntent({ onNext }: { onNext: () => void })
                <h4 className="text-[11px] text-blue-400 font-bold uppercase tracking-wider">Gói 2: O2O & Loyalty</h4>
                <span className="text-[9px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded font-mono">150M VNĐ</span>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed mb-2">
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed mb-2 font-medium">
                Tập trung giảm CAC bằng cách xây dựng hệ thống Zalo Mini App (CRM) và quay 1 Video Cinematic mộc mạc để tối ưu Word-of-Mouth.
               </p>
               <div className="text-[10px] font-bold text-blue-500 mt-2">

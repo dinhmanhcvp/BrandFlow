@@ -284,16 +284,14 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
     setUploadStatus('success');
     setUploadMessage(
      <div className="flex flex-col gap-2.5 mt-1 w-full">
-      <div className="flex items-center gap-2 text-foreground font-medium bg-linear-surface border border-linear-border rounded-lg px-3 py-2 w-full shadow-sm">
-       <FileDigit className="w-4 h-4 text-cyan-400 shrink-0" />
+      <div className="flex items-center gap-2 text-slate-900 dark:text-foreground font-semibold bg-white dark:bg-linear-surface border border-slate-200 dark:border-linear-border rounded-lg px-3 py-2 w-full shadow-sm">
        <span className="truncate font-bold">BepNhaMoc_BrandFlow.docx</span>
-       <span className="text-xs text-linear-text-muted font-normal bg-background px-2 py-0.5 rounded-full border border-linear-border shrink-0 ml-2">62 KB · 4 trang · 12.5k ký tự</span>
-       <span className="text-[10px] font-black text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-1.5 py-0.5 rounded shrink-0 ml-auto flex items-center gap-1">
-        <Sparkles className="w-3 h-3" /> AI Extracted
+       <span className="text-xs text-slate-600 dark:text-linear-text-muted font-normal bg-slate-100 dark:bg-background px-2 py-0.5 rounded-full border border-slate-200 dark:border-linear-border shrink-0 ml-2">62 KB · 4 trang · 12.5k ký tự</span>
+       <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-400/10 border border-emerald-300 dark:border-emerald-400/20 px-2 py-0.5 rounded shrink-0 ml-auto">
+        AI Extracted
        </span>
       </div>
-      <div className="flex items-center gap-2 text-cyan-400 font-medium text-[11px] uppercase tracking-wider bg-cyan-500/10 px-3 py-1.5 rounded-lg border border-cyan-500/20 w-fit">
-       <BrainCircuit className="w-4 h-4" />
+      <div className="text-cyan-900 dark:text-cyan-300 font-bold text-[11px] uppercase tracking-wider bg-cyan-100/80 dark:bg-cyan-500/10 px-3 py-1.5 rounded-lg border border-cyan-300 dark:border-cyan-500/20 w-fit">
        Math Engine & Cross-Validation: Hoàn tất (0.8s)
       </div>
      </div>
@@ -367,10 +365,9 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
     setUploadMessage(
      <div className="flex flex-col gap-2.5 mt-1 w-full">
       <div className="flex items-center gap-2 text-foreground font-medium bg-linear-surface border border-linear-border rounded-lg px-3 py-2 w-full shadow-sm">
-       <FileDigit className="w-4 h-4 text-cyan-400 shrink-0" />
-       <span className="truncate">bepnhamoc.docx</span>
-       <span className="text-xs text-linear-text-muted font-normal bg-background px-2 py-0.5 rounded-full border border-linear-border shrink-0 ml-2">12.5k ký tự · 4 trang</span>
-       <span className="text-[10px] font-black text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-1.5 py-0.5 rounded shrink-0 ml-auto flex items-center gap-1"><Sparkles className="w-3 h-3"/> AI Extracted</span>
+       <span className="truncate font-bold">bepnhamoc.docx</span>
+        <span className="text-xs text-slate-600 dark:text-linear-text-muted font-normal bg-slate-100 dark:bg-background px-2 py-0.5 rounded-full border border-slate-200 dark:border-linear-border shrink-0 ml-2">12.5k ký tự · 4 trang</span>
+        <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-400/10 border border-emerald-300 dark:border-emerald-400/20 px-1.5 py-0.5 rounded shrink-0 ml-auto">AI Extracted</span>
       </div>
       <div className="flex items-center gap-2 text-cyan-400 font-medium text-[11px] uppercase tracking-wider bg-cyan-500/10 px-3 py-1.5 rounded-lg border border-cyan-500/20 w-fit">
        <BrainCircuit className="w-4 h-4" />
@@ -607,13 +604,13 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
           ? "bg-cyan-500/20 border border-cyan-500/30"
           : "bg-linear-surface/50 border border-linear-border dark:bg-slate-800 group-hover:border-cyan-500/30"
         )}>
-         <card.icon className={cn("w-6 h-6", isSelected ? "text-cyan-400" : "text-linear-text-muted group-hover:text-cyan-500/70")} />
+         <card.icon className={cn("w-6 h-6", isSelected ? "text-cyan-700 dark:text-cyan-400" : "text-linear-text-muted group-hover:text-cyan-700 dark:group-hover:text-cyan-400")} />
         </div>
-        <h3 className="text-lg font-bold text-foreground mb-2">{card.title}</h3>
+        <h3 className={cn("text-lg font-bold mb-2", isSelected ? "text-cyan-950 dark:text-white" : "text-foreground")}>{card.title}</h3>
         <p className="text-xs text-linear-text-muted leading-relaxed">{card.description}</p>
 
         {isSelected && (
-         <div className="absolute top-4 right-4 text-cyan-400">
+         <div className="absolute top-4 right-4 text-cyan-700 dark:text-cyan-400">
           <CheckCircle2 className="w-5 h-5 animate-in fade-in" />
          </div>
         )}
@@ -667,30 +664,29 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
           className={cn(
            "w-full mb-5 p-5 rounded-3xl border transition-all duration-300 relative overflow-hidden backdrop-blur-xl shadow-lg",
            uploadStatus === 'success' && selectedFiles.some(f => f.name.toLowerCase().includes('bepnhamoc'))
-            ? "bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-teal-500/10 border-emerald-500/40 shadow-emerald-500/10"
-            : "bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-indigo-500/10 border-cyan-500/30 hover:border-cyan-500/60"
+            ? "bg-emerald-50/80 dark:bg-gradient-to-r dark:from-emerald-500/10 dark:via-cyan-500/10 dark:to-teal-500/10 border-emerald-400 dark:border-emerald-500/40 shadow-emerald-500/10"
+            : "bg-cyan-50/50 dark:bg-gradient-to-r dark:from-cyan-500/10 dark:via-blue-500/10 dark:to-indigo-500/10 border-cyan-200 dark:border-cyan-500/30 hover:border-cyan-400 dark:hover:border-cyan-500/60"
           )}
          >
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
            <div className="flex items-center gap-4 min-w-0">
-            <div className="w-14 h-14 rounded-2xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center shrink-0 shadow-inner">
-             <FileText className="w-7 h-7 text-cyan-400" />
-            </div>
             <div className="min-w-0">
              <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 flex items-center gap-1">
-               <Sparkles className="w-3 h-3 text-cyan-400" /> TV Showcase Demo · Admin
+              <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-500/20 border border-cyan-300 dark:border-cyan-500/30 text-cyan-800 dark:text-cyan-300">
+               TV Showcase Demo · Admin
               </span>
-              <span className="text-[11px] font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
-               ✓ Tích hợp sẵn trên Web (Không cần upload từ thiết bị)
+              <span className="text-[11px] font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-500/30 px-2 py-0.5 rounded-full">
+               Tài liệu mẫu có sẵn
               </span>
              </div>
-             <h4 className="text-base font-black text-foreground flex items-center gap-2 truncate">
+             <h4 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2 truncate">
               BepNhaMoc_BrandFlow.docx
-              <span className="text-xs font-normal text-linear-text-muted bg-background/60 border border-linear-border px-2 py-0.5 rounded-full">62 KB · Word Document</span>
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 px-2 py-0.5 rounded-full">
+               62 KB · Word Document
+              </span>
              </h4>
-             <p className="text-xs text-linear-text-muted mt-1">
-              Hồ sơ thương hiệu & Báo cáo chiến lược F&B Bếp Nhà Mộc (Tự động sẵn sàng cho màn hình TV).
+             <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 font-medium">
+              Hồ sơ thương hiệu & Báo cáo chiến lược F&B Bếp Nhà Mộc.
              </p>
             </div>
            </div>
@@ -703,9 +699,9 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
               const mockDoc = new File(['Hồ sơ Bếp Nhà Mộc'], 'BepNhaMoc_BrandFlow.docx');
               setPreviewFile(mockDoc);
              }}
-             className="px-4 py-2.5 rounded-xl border border-linear-border bg-background/80 hover:bg-background text-xs font-bold text-foreground flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+             className="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-linear-border bg-white dark:bg-background/80 hover:bg-slate-50 dark:hover:bg-background text-xs font-bold text-slate-800 dark:text-foreground transition-all shadow-sm cursor-pointer"
             >
-             <Eye className="w-4 h-4 text-cyan-400" /> Xem trước
+             Xem trước
             </button>
 
             <button
@@ -716,23 +712,15 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
               handleSelectBepNhaMocFile(true);
              }}
              className={cn(
-              "px-5 py-2.5 rounded-xl font-black text-xs transition-all flex items-center gap-2 shadow-lg cursor-pointer",
+              "px-5 py-2.5 rounded-xl font-bold text-xs transition-all shadow-md cursor-pointer",
               uploadStatus === 'success' && selectedFiles.some(f => f.name.toLowerCase().includes('bepnhamoc'))
-               ? "bg-emerald-500 text-white shadow-emerald-500/25"
-               : "bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-500 hover:from-blue-500 hover:to-teal-400 text-white shadow-cyan-500/25 hover:scale-[1.02]"
+               ? "bg-emerald-600 dark:bg-emerald-500 text-white shadow-emerald-500/25"
+               : "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/25 hover:scale-[1.02]"
              )}
             >
-             {uploadStatus === 'success' && selectedFiles.some(f => f.name.toLowerCase().includes('bepnhamoc')) ? (
-              <>
-               <CheckCircle2 className="w-4 h-4" />
-               Đã chọn (Coi như đã upload)
-              </>
-             ) : (
-              <>
-               <Sparkles className="w-4 h-4 animate-pulse" />
-               Chọn file này (Coi như đã upload)
-              </>
-             )}
+             {uploadStatus === 'success' && selectedFiles.some(f => f.name.toLowerCase().includes('bepnhamoc'))
+              ? "Đã chọn tài liệu"
+              : "Chọn tài liệu này"}
             </button>
            </div>
           </div>
@@ -768,7 +756,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
            ? 'Hỗ trợ: PDF, DOCX, TXT, MD, CSV, XLSX, XLS, HTML — tối đa 100MB/file'
            : 'Supports: PDF, DOCX, TXT, MD, CSV, XLSX, XLS, HTML — max 100MB/file'}
          </p>
-         <p className="text-xs text-cyan-500/70 mt-2 font-medium">
+         <p className="text-xs text-blue-600 dark:text-cyan-400 mt-2 font-bold">
           {language === 'vi' ? 'hoặc nhấp để chọn file' : 'or click to browse files'}
          </p>
         </div>
@@ -803,19 +791,18 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
              className="flex items-center gap-3 p-3 rounded-xl bg-linear-surface/70 border border-linear-border hover:border-cyan-500/30 transition-all cursor-pointer group"
             >
              <div className="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0">
-              <span className="text-[9px] font-black text-cyan-400">{getFileExt(file.name)}</span>
+              <span className="text-[10px] font-black text-cyan-800 dark:text-cyan-300">{getFileExt(file.name)}</span>
              </div>
              <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{file.name}</p>
+              <p className="text-sm font-bold text-slate-900 dark:text-foreground truncate">{file.name}</p>
               <p className="text-xs text-linear-text-muted flex items-center gap-2">
                {formatFileSize(file.size)}
-               <span className="opacity-0 group-hover:opacity-100 transition-opacity text-cyan-400 flex items-center gap-1">
-                <Eye className="w-3 h-3" /> Preview
+               <span className="opacity-0 group-hover:opacity-100 transition-opacity text-cyan-700 dark:text-cyan-400 font-bold">Preview
                </span>
               </p>
              </div>
              {uploadStatus === 'success'
-              ? <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              ? <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
               : (
                <button
                 onClick={(e) => { e.stopPropagation(); removeFile(idx); }}
@@ -838,8 +825,8 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
              className={cn(
               "w-full mt-3 py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2",
               uploadStatus === 'uploading'
-               ? "bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 cursor-not-allowed"
-               : "bg-cyan-500 hover:bg-cyan-400 text-white shadow-lg hover:shadow-cyan-500/30 hover:scale-[1.01]"
+               ? "bg-cyan-100 dark:bg-cyan-500/10 border border-cyan-300 dark:border-cyan-500/30 text-cyan-800 dark:text-cyan-400 cursor-not-allowed font-bold"
+               : "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 hover:scale-[1.01]"
              )}
             >
              {uploadStatus === 'uploading' ? (
@@ -1048,8 +1035,8 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
               className={cn(
                "flex items-start gap-2 p-3 rounded-xl text-xs",
                r.status === 'success'
-                ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
-                : "bg-red-500/10 border border-red-500/20 text-red-400"
+                ? "bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-300 dark:border-emerald-500/20 text-emerald-800 dark:text-emerald-400 font-medium"
+                : "bg-red-50 dark:bg-red-500/10 border border-red-300 dark:border-red-500/20 text-red-800 dark:text-red-400 font-medium"
               )}
              >
               {r.status === 'success'
@@ -1076,10 +1063,10 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
             className={cn(
              "flex items-center gap-2 p-3 rounded-xl text-sm font-medium",
              crawlStatus === 'success'
-              ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
+              ? "bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-300 dark:border-emerald-500/30 text-emerald-800 dark:text-emerald-400 font-bold"
               : crawlStatus === 'partial'
-              ? "bg-amber-500/10 border border-amber-500/30 text-amber-400"
-              : "bg-red-500/10 border border-red-500/30 text-red-400"
+              ? "bg-amber-50 dark:bg-amber-500/10 border border-amber-300 dark:border-amber-500/30 text-amber-800 dark:text-amber-400 font-bold"
+              : "bg-red-50 dark:bg-red-500/10 border border-red-300 dark:border-red-500/30 text-red-800 dark:text-red-400 font-bold"
             )}
            >
             {crawlStatus === 'success'

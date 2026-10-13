@@ -226,10 +226,9 @@ function LoginForm() {
         localStorage.removeItem('bf_doc_text');
         window.location.href = '/onboarding';
        }}
-       className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-500 hover:from-blue-500 hover:to-teal-400 text-white rounded-xl text-xs font-black shadow-lg shadow-cyan-500/20 hover:scale-[1.01] transition-all cursor-pointer"
+       className="w-full flex items-center justify-center py-3.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 hover:scale-[1.01] transition-all cursor-pointer"
       >
-       <Sparkles className="w-4 h-4 text-cyan-200 animate-pulse" />
-       Đăng nhập Admin TV Showcase (Vào Onboarding)
+       Đăng nhập Admin (Onboarding)
       </button>
 
       <button
