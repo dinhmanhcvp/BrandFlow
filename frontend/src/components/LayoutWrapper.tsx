@@ -11,7 +11,7 @@ import SystemIntro from "./landing/SystemIntro";
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
  const pathname = usePathname();
- const { language, toggleLanguage } = useLanguage();
+ const { language, setLanguage, toggleLanguage } = useLanguage();
  const isLandingPage = pathname === "/";
  const isLoginPage = pathname === "/login";
  const isOnePager = pathname === "/onepager";
@@ -151,11 +151,11 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     <ThemeToggle />
     <div className="flex bg-background/50 rounded-lg p-1 border ultra-thin-border h-10 w-[120px]">
      <button 
-      onClick={toggleLanguage}
+      onClick={() => setLanguage('en')}
       className={`flex-1 text-xs font-bold rounded-md transition-all flex items-center justify-center ${language === 'en' ? "bg-linear-surface text-cyan-400 shadow-sm border border-cyan-500/20" : "text-linear-text-muted hover:text-foreground"}`}
      >🇺🇸 EN</button>
      <button 
-      onClick={toggleLanguage}
+      onClick={() => setLanguage('vi')}
       className={`flex-1 text-xs font-bold rounded-md transition-all flex items-center justify-center ${language === 'vi' ? "bg-linear-surface text-cyan-400 shadow-sm border border-cyan-500/20" : "text-linear-text-muted hover:text-foreground"}`}
      >🇻🇳 VI</button>
     </div>

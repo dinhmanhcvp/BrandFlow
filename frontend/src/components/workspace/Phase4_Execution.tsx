@@ -60,7 +60,7 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
    color: "from-blue-500 to-cyan-400",
    bgLight: "bg-blue-500/10",
    borderLight: "border-blue-500/20",
-   textLight: "text-blue-400",
+   textLight: "text-blue-700 dark:text-blue-400",
    platforms: ["TikTok", "Facebook", "PR", "KOLs"],
    activities: [
     "Booking 10 Micro-KOLs (Vlog văn phòng, Food Review) trải nghiệm 'Cơm trưa chữa lành'.",
@@ -79,7 +79,7 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
    color: "from-amber-500 to-orange-500",
    bgLight: "bg-amber-500/10",
    borderLight: "border-amber-500/20",
-   textLight: "text-amber-400",
+   textLight: "text-amber-800 dark:text-amber-400",
    platforms: ["Facebook Ads", "Zalo Ads", "LinkedIn B2B"],
    activities: [
     "Chạy Ads Conversion đổ traffic về Zalo Mini App chốt đơn (Target: Toà nhà hạng A).",
@@ -98,7 +98,7 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
    color: "from-emerald-500 to-teal-400",
    bgLight: "bg-emerald-500/10",
    borderLight: "border-emerald-500/20",
-   textLight: "text-emerald-400",
+   textLight: "text-emerald-700 dark:text-emerald-400",
    platforms: ["Zalo ZNS", "Email", "App Push"],
    activities: [
     "Gửi ZNS CSKH sau 3 ngày mua, tặng mã giảm giá cá nhân hoá.",
@@ -119,16 +119,16 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
       <LayoutDashboard className="w-3.5 h-3.5" /> Campaign Master Plan
      </div>
      <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
-      Kế Hoạch Thực Thi Tích Hợp (IMC)
+      {language === 'vi' ? 'Kế Hoạch Thực Thi Tích Hợp (IMC)' : 'Integrated Marketing Campaign (IMC) Master Plan'}
      </h2>
      <p className="text-linear-text-muted mt-2 text-sm md:text-base max-w-2xl">
-      Chiến dịch: <strong className="text-cyan-400 font-semibold">{isBepNhaMoc ? "Trạm Sạc Chữa Lành - Nạp Năng Lượng" : "Tăng Trưởng Đột Phá 2026"}</strong><br/>
+      {language === 'vi' ? 'Chiến dịch: ' : 'Campaign: '}<strong className="text-cyan-400 font-semibold">{isBepNhaMoc ? (language === 'vi' ? "Trạm Sạc Chữa Lành - Nạp Năng Lượng" : "Mindful Energy Recharge") : (language === 'vi' ? "Tăng Trưởng Đột Phá 2026" : "Breakthrough Growth 2026")}</strong><br/>
       {businessIntent?.mode === 'idea_first' ? (
-       <span className="text-emerald-400 font-medium">Đề xuất ngân sách tối ưu: {formatCurrency(totalBudget)} VNĐ dựa trên năng lực tài chính và Idea cung cấp.</span>
+       <span className="text-emerald-600 dark:text-emerald-400 font-medium">{language === 'vi' ? `Đề xuất ngân sách tối ưu: ${formatCurrency(totalBudget)} VNĐ dựa trên năng lực tài chính và Idea cung cấp.` : `Optimized Budget: ${formatCurrency(totalBudget)} VND based on business capacity & concept.`}</span>
       ) : (
-       <span className="text-blue-400 font-medium">Ngân sách triển khai: {formatCurrency(totalBudget)} VNĐ (Phân bổ tự động theo mục tiêu doanh nghiệp).</span>
+       <span className="text-blue-600 dark:text-blue-400 font-medium">{language === 'vi' ? `Ngân sách triển khai: ${formatCurrency(totalBudget)} VNĐ (Phân bổ tự động theo mục tiêu doanh nghiệp).` : `Execution Budget: ${formatCurrency(totalBudget)} VND (Allocated automatically from corporate goals).`}</span>
       )}
-      <br/>Kế hoạch phân bổ ngân sách, chiến thuật đa kênh và bộ KPI cam kết chi tiết. Dành cho C-Level Marketing duyệt.
+      <br/>{language === 'vi' ? 'Kế hoạch phân bổ ngân sách, chiến thuật đa kênh và bộ KPI cam kết chi tiết. Dành cho C-Level Marketing duyệt.' : 'Detailed omnichannel tactics, budget distribution, and committed KPIs for C-Level review.'}
      </p>
     </div>
     <div className="flex gap-3">
@@ -136,7 +136,7 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
       onClick={onBack} 
       className="px-5 py-2.5 rounded-xl border border-linear-border bg-linear-surface hover:bg-linear-surface/80 text-foreground font-bold transition-all shadow-sm flex items-center justify-center"
      >
-      <ArrowRight className="w-4 h-4 mr-2 rotate-180" /> Quay lại
+      <ArrowRight className="w-4 h-4 mr-2 rotate-180" /> {language === 'vi' ? 'Quay lại' : 'Back'}
      </button>
      <button 
       onClick={onNext}
@@ -237,7 +237,7 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
          <div className="flex items-center justify-between mb-6">
           <div>
            <h3 className="text-lg font-black text-foreground">Target P&L Secured</h3>
-           <p className="text-xs text-linear-text-muted mt-0.5">Dự phóng hiệu quả chiến dịch 8 tuần</p>
+           <p className="text-xs text-linear-text-muted mt-0.5">{language === 'vi' ? 'Dự phóng hiệu quả chiến dịch 8 tuần' : '8-week campaign performance projection'}</p>
           </div>
           <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
            <BarChart3 className="w-5 h-5 text-emerald-500" />
@@ -246,12 +246,12 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
          
          <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-background/50 rounded-2xl p-4 border border-linear-border">
-           <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1 flex items-center gap-1"><DollarSign className="w-3 h-3"/> Est. Revenue</p>
-           <p className="text-xl font-black text-emerald-400">{isBepNhaMoc ? "2.5 Tỷ" : "1.8 Tỷ"}</p>
+           <p className="text-slate-600 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1 flex items-center gap-1"><DollarSign className="w-3 h-3"/> Est. Revenue</p>
+           <p className="text-xl font-black text-emerald-600 dark:text-emerald-400">{isBepNhaMoc ? (language === 'vi' ? "2.5 Tỷ" : "2.5B VND") : (language === 'vi' ? "1.8 Tỷ" : "1.8B VND")}</p>
           </div>
           <div className="bg-background/50 rounded-2xl p-4 border border-linear-border">
-           <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1 flex items-center gap-1"><Users className="w-3 h-3"/> CPA Target</p>
-           <p className="text-xl font-black text-blue-400">{isBepNhaMoc ? "22K" : "35K"} VNĐ</p>
+           <p className="text-slate-600 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1 flex items-center gap-1"><Users className="w-3 h-3"/> CPA Target</p>
+           <p className="text-xl font-black text-blue-600 dark:text-blue-400">{isBepNhaMoc ? "22K" : "35K"} VNĐ</p>
           </div>
          </div>
          
@@ -274,7 +274,7 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
              itemStyle={{ color: '#fff', fontWeight: 'bold' }}
             />
             <Area type="monotone" dataKey="reach" name="Reach (K)" stroke="#06b6d4" strokeWidth={2} fillOpacity={1} fill="url(#colorReach)" />
-            <Area type="monotone" dataKey="conversion" name="Đơn hàng" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorConv)" />
+            <Area type="monotone" dataKey="conversion" name={language === 'vi' ? 'Đơn hàng' : 'Orders'} stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorConv)" />
            </AreaChart>
           </ResponsiveContainer>
          </div>
@@ -291,8 +291,8 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
           <FileText className="w-5 h-5 text-white" />
          </div>
          <div>
-          <h4 className="text-base font-black text-foreground">Xuất Master Plan PDF</h4>
-          <p className="text-xs text-linear-text-muted mt-0.5">Báo cáo C-Level • 45 Trang</p>
+          <h4 className="text-base font-black text-foreground">{language === 'vi' ? 'Xuất Master Plan PDF' : 'Export Master Plan PDF'}</h4>
+          <p className="text-xs text-linear-text-muted mt-0.5">{language === 'vi' ? 'Báo cáo C-Level • 45 Trang' : 'C-Level Report • 45 Pages'}</p>
          </div>
         </div>
         <Download className="w-5 h-5 text-orange-500 group-hover:scale-110 transition-transform relative z-10" />

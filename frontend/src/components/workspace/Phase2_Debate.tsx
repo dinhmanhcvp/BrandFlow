@@ -30,11 +30,7 @@ function BudgetCutHighlight({ text }: { text: string }) {
     <motion.span
      initial={{ opacity: 0, scale: 0.8 }}
      animate={{ opacity: 1, scale: 1 }}
-     className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-semibold ${
-      isCut
-       ? 'bg-red-500/15 text-red-400 border border-red-500/20'
-       : 'bg-orange-500/15 text-orange-400 border border-orange-500/20'
-     }`}
+     className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-semibold ${isCut ? 'bg-red-100 dark:bg-red-500/15 text-red-700 dark:text-red-400 border border-red-300 dark:border-red-500/20' : 'bg-orange-100 dark:bg-orange-500/15 text-orange-800 dark:text-orange-400 border border-orange-300 dark:border-orange-500/20'}`}
     >
      {isCut ? <XCircle className="w-3 h-3" /> : <Scissors className="w-3 h-3" />}
      <span className={isCut ? 'line-through decoration-red-500/80' : ''}>
@@ -70,7 +66,7 @@ function TypewriterEffect({ text }: { text: string }) {
 }
 
 export default function Phase2_Debate({ onNext, onBack }: { onNext: () => void, onBack: () => void }) {
- const { t } = useLanguage();
+ const { t, language } = useLanguage();
  const { debateLogs, runDebateAndPlanning } = useFormStore();
  const [messages, setMessages] = useState<any[]>([]);
  const [isLocked, setIsLocked] = useState(false);
@@ -132,25 +128,25 @@ export default function Phase2_Debate({ onNext, onBack }: { onNext: () => void, 
  }, [messages.length]);
 
  const getAgentTheme = (agent: string, type: string) => {
-  if (type === 'warning') return { bg: 'bg-red-500/5', border: 'border-red-500/20', text: 'text-red-400', iconBg: 'bg-red-500/20', icon: AlertTriangle };
-  if (type === 'budget_cut') return { bg: 'bg-amber-500/5', border: 'border-amber-500/20', text: 'text-amber-400', iconBg: 'bg-amber-500/20', icon: Scissors };
-  if (agent === 'CMO') return { bg: 'bg-blue-500/5', border: 'border-blue-500/20', text: 'text-blue-400', iconBg: 'bg-blue-500/20', icon: Bot };
-  if (agent === 'Customer') return { bg: 'bg-cyan-500/5', border: 'border-cyan-500/20', text: 'text-cyan-400', iconBg: 'bg-cyan-500/20', icon: Bot };
-  if (agent === 'CFO') return { bg: 'bg-orange-500/5', border: 'border-orange-500/20', text: 'text-orange-400', iconBg: 'bg-orange-500/20', icon: TrendingDown };
-  if (agent === 'COO') return { bg: 'bg-purple-500/5', border: 'border-purple-500/20', text: 'text-purple-400', iconBg: 'bg-purple-500/20', icon: Bot };
-  if (agent === 'SALES') return { bg: 'bg-emerald-500/5', border: 'border-emerald-500/20', text: 'text-emerald-400', iconBg: 'bg-emerald-500/20', icon: Bot };
-  return { bg: 'bg-slate-800/20', border: 'border-linear-border', text: 'text-foreground', iconBg: 'bg-slate-800/50 border border-linear-border', icon: ShieldCheck };
- };
+   if (type === 'warning') return { bg: 'bg-red-50 dark:bg-red-500/10', border: 'border-red-300 dark:border-red-500/30', text: 'text-red-700 dark:text-red-400', iconBg: 'bg-red-100 dark:bg-red-500/20', icon: AlertTriangle };
+   if (type === 'budget_cut') return { bg: 'bg-amber-50 dark:bg-amber-500/10', border: 'border-amber-300 dark:border-amber-500/30', text: 'text-amber-800 dark:text-amber-400', iconBg: 'bg-amber-100 dark:bg-amber-500/20', icon: Scissors };
+   if (agent === 'CMO') return { bg: 'bg-blue-50 dark:bg-blue-500/10', border: 'border-blue-300 dark:border-blue-500/30', text: 'text-blue-800 dark:text-blue-400', iconBg: 'bg-blue-100 dark:bg-blue-500/20', icon: Bot };
+   if (agent === 'Customer') return { bg: 'bg-cyan-50 dark:bg-cyan-500/10', border: 'border-cyan-300 dark:border-cyan-500/30', text: 'text-cyan-800 dark:text-cyan-400', iconBg: 'bg-cyan-100 dark:bg-cyan-500/20', icon: Bot };
+   if (agent === 'CFO') return { bg: 'bg-orange-50 dark:bg-orange-500/10', border: 'border-orange-300 dark:border-orange-500/30', text: 'text-orange-800 dark:text-orange-400', iconBg: 'bg-orange-100 dark:bg-orange-500/20', icon: TrendingDown };
+   if (agent === 'COO') return { bg: 'bg-purple-50 dark:bg-purple-500/10', border: 'border-purple-300 dark:border-purple-500/30', text: 'text-purple-800 dark:text-purple-400', iconBg: 'bg-purple-100 dark:bg-purple-500/20', icon: Bot };
+   if (agent === 'SALES') return { bg: 'bg-emerald-50 dark:bg-emerald-500/10', border: 'border-emerald-300 dark:border-emerald-500/30', text: 'text-emerald-800 dark:text-emerald-400', iconBg: 'bg-emerald-100 dark:bg-emerald-500/20', icon: Bot };
+   return { bg: 'bg-slate-100 dark:bg-slate-800/40', border: 'border-slate-300 dark:border-linear-border', text: 'text-slate-900 dark:text-foreground', iconBg: 'bg-slate-200 dark:bg-slate-800/50 border border-slate-300 dark:border-linear-border', icon: ShieldCheck };
+  };
 
  const getStatusBadge = (type: string) => {
-  switch (type) {
-   case 'rejected': return <span className="flex items-center text-[9px] uppercase font-bold text-red-400 bg-red-900/30 px-1.5 py-0.5 rounded ml-2 border border-red-800/50"><XCircle className="w-2.5 h-2.5 mr-1" /> REJECTED</span>;
-   case 'warning': return <span className="flex items-center text-[9px] uppercase font-bold text-orange-400 bg-orange-900/30 px-1.5 py-0.5 rounded ml-2 border border-orange-800/50"><AlertTriangle className="w-2.5 h-2.5 mr-1" /> WARNING</span>;
-   case 'budget_cut': return <span className="flex items-center text-[9px] uppercase font-bold text-amber-400 bg-amber-900/30 px-1.5 py-0.5 rounded ml-2 border border-amber-800/50"><Scissors className="w-2.5 h-2.5 mr-1" /> CUT</span>;
-   case 'approved': return <span className="flex items-center text-[9px] uppercase font-bold text-cyan-400 bg-cyan-900/30 px-1.5 py-0.5 rounded ml-2 border border-cyan-800/50"><CheckCircle2 className="w-2.5 h-2.5 mr-1" /> APPROVED</span>;
-   default: return null;
-  }
- };
+   switch (type) {
+    case 'rejected': return <span className="flex items-center text-[9px] uppercase font-bold text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 px-1.5 py-0.5 rounded ml-2 border border-red-300 dark:border-red-800/50"><XCircle className="w-2.5 h-2.5 mr-1" /> REJECTED</span>;
+    case 'warning': return <span className="flex items-center text-[9px] uppercase font-bold text-orange-700 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 px-1.5 py-0.5 rounded ml-2 border border-orange-300 dark:border-orange-800/50"><AlertTriangle className="w-2.5 h-2.5 mr-1" /> WARNING</span>;
+    case 'budget_cut': return <span className="flex items-center text-[9px] uppercase font-bold text-amber-800 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30 px-1.5 py-0.5 rounded ml-2 border border-amber-300 dark:border-amber-800/50"><Scissors className="w-2.5 h-2.5 mr-1" /> CUT</span>;
+    case 'approved': return <span className="flex items-center text-[9px] uppercase font-bold text-teal-800 dark:text-cyan-400 bg-teal-100 dark:bg-cyan-900/30 px-1.5 py-0.5 rounded ml-2 border border-teal-300 dark:border-cyan-800/50"><CheckCircle2 className="w-2.5 h-2.5 mr-1" /> APPROVED</span>;
+    default: return null;
+   }
+  };
 
  const currentMsg = messages.length > 0 ? messages[messages.length - 1] : null;
  const historyMsgs = messages.slice(0, -1);
@@ -162,12 +158,12 @@ export default function Phase2_Debate({ onNext, onBack }: { onNext: () => void, 
    <div className="flex-none p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full z-10">
     <div className="flex items-center justify-between mb-4">
      <button onClick={onBack} className="text-linear-text-muted hover:text-foreground transition-colors flex items-center text-sm font-semibold bento-card !py-2 !px-4 !rounded-lg !shadow-sm">
-      <ArrowLeft className="w-4 h-4 mr-2" /> <span>Back</span>
+      <ArrowLeft className="w-4 h-4 mr-2" /> <span>{language === 'vi' ? 'Quay lại' : 'Back'}</span>
      </button>
      
-     <div className="flex items-center space-x-2 bg-slate-900/50 border border-slate-700/50 backdrop-blur-md px-4 py-1.5 rounded-full shadow-lg">
+     <div className="flex items-center space-x-2 bg-white/90 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-700/50 backdrop-blur-md px-4 py-1.5 rounded-full shadow-lg">
       <Activity className="w-4 h-4 text-cyan-500 animate-pulse" />
-      <span className="text-xs font-bold uppercase tracking-wider text-cyan-400">Trợ lý AI Network Active</span>
+      <span className="text-xs font-bold uppercase tracking-wider text-cyan-800 dark:text-cyan-400">{language === 'vi' ? 'Mạng Lưới AI Đang Hoạt Động' : 'AI Agent Network Active'}</span>
      </div>
     </div>
     
@@ -182,17 +178,17 @@ export default function Phase2_Debate({ onNext, onBack }: { onNext: () => void, 
     
     {/* Left Panel: Active Speaker Spotlight */}
     <div className="w-full lg:w-3/5 h-full flex flex-col relative">
-     <div className="flex-1 bento-card border border-linear-border/50 relative overflow-hidden flex flex-col bg-slate-900/40 shadow-2xl rounded-2xl">
+     <div className="flex-1 bento-card border border-slate-200 dark:border-linear-border/50 relative overflow-hidden flex flex-col bg-white/90 dark:bg-slate-900/40 shadow-2xl rounded-2xl">
       {/* Ambient Background */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
        <div className="absolute top-[-20%] left-[-10%] w-3/4 h-3/4 bg-cyan-500/10 blur-[100px] rounded-full"></div>
        <div className="absolute bottom-[-20%] right-[-10%] w-1/2 h-1/2 bg-blue-500/10 blur-[80px] rounded-full"></div>
       </div>
 
-      <div className="p-4 border-b border-linear-border/40 bg-slate-900/60 flex items-center justify-between z-10">
+      <div className="p-4 border-b border-slate-200 dark:border-linear-border/40 bg-slate-100/90 dark:bg-slate-900/60 flex items-center justify-between z-10">
        <div className="flex items-center gap-2">
         <Cpu className="w-4 h-4 text-cyan-500" />
-        <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">Live Analysis Node</span>
+        <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Live Analysis Node</span>
        </div>
        <div className="flex gap-1">
         <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
@@ -236,15 +232,15 @@ export default function Phase2_Debate({ onNext, onBack }: { onNext: () => void, 
            </div>
            <div className="ml-4">
             <div className="flex items-center">
-             <h3 className={`text-xl font-black uppercase tracking-wider ${getAgentTheme(currentMsg.agent, currentMsg.type).text}`}>{currentMsg.agent} Trợ lý AI</h3>
+             <h3 className={`text-xl font-black uppercase tracking-wider ${getAgentTheme(currentMsg.agent, currentMsg.type).text}`}>{currentMsg.agent} {language === 'vi' ? 'Trợ lý AI' : 'Agent'}</h3>
              {getStatusBadge(currentMsg.type)}
             </div>
-            <p className="text-xs font-mono text-slate-500">Executing evaluation protocol...</p>
+            <p className="text-xs font-mono text-slate-600 dark:text-slate-400 font-medium">Executing evaluation protocol...</p>
            </div>
           </div>
           
           <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
-           <div className={`text-lg md:text-xl font-medium leading-relaxed text-foreground whitespace-pre-wrap ${currentMsg.type === 'budget_cut' ? 'text-amber-100' : ''}`}>
+           <div className={`text-lg md:text-xl font-medium leading-relaxed text-foreground whitespace-pre-wrap ${currentMsg.type === 'budget_cut' ? 'text-amber-800 dark:text-amber-200 font-semibold' : 'text-slate-900 dark:text-white'}`}>
             <TypewriterEffect text={currentMsg.text} />
            </div>
           </div>
@@ -258,11 +254,11 @@ export default function Phase2_Debate({ onNext, onBack }: { onNext: () => void, 
          <div className="w-20 h-20 rounded-full bg-cyan-500/20 border border-cyan-500/50 flex items-center justify-center mb-6">
           <CheckCircle2 className="w-10 h-10 text-cyan-400" />
          </div>
-         <h3 className="text-2xl font-black text-white mb-2">Debate Concluded</h3>
-         <p className="text-slate-400 mb-8 max-w-sm">All sub-agents have reached consensus. The strategic plan is ready for final review.</p>
+         <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2">{language === 'vi' ? 'Tranh Luận Hoàn Tất' : 'Debate Concluded'}</h3>
+         <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-sm">{language === 'vi' ? 'Các AI Agents đã đạt đồng thuận chiến lược. Bản kế hoạch sẵn sàng chuyển sang triển khai.' : 'All sub-agents have reached consensus. The strategic plan is ready for final review.'}</p>
          <button onClick={onNext} className="px-8 py-3 rounded-xl gradient-ai-bg font-bold shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all flex items-center">
-          Proceed to Execution
-          <ArrowLeft className="w-5 h-5 ml-2 rotate-180" />
+          {language === 'vi' ? 'Tiến hành Triển khai' : 'Proceed to Execution'}
+           <ArrowLeft className="w-5 h-5 ml-2 rotate-180" />
          </button>
         </motion.div>
        ) : null}
@@ -271,10 +267,10 @@ export default function Phase2_Debate({ onNext, onBack }: { onNext: () => void, 
     </div>
 
     {/* Right Panel: Debate Transcript */}
-    <div className="w-full lg:w-2/5 h-64 lg:h-full flex flex-col bg-slate-900/30 border border-linear-border/40 rounded-2xl overflow-hidden backdrop-blur-sm">
-     <div className="p-3 border-b border-linear-border/30 bg-slate-900/50 flex items-center justify-between">
-      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Communication Log</span>
-      <span className="text-[10px] font-mono text-slate-500">{historyMsgs.length} Entries</span>
+    <div className="w-full lg:w-2/5 h-64 lg:h-full flex flex-col bg-white/95 dark:bg-slate-900/60 border border-slate-300 dark:border-linear-border/40 rounded-2xl overflow-hidden backdrop-blur-xl shadow-xl">
+     <div className="p-3.5 border-b border-slate-200 dark:border-linear-border/30 bg-slate-100 dark:bg-slate-900/80 flex items-center justify-between">
+      <span className="text-xs font-black text-slate-900 dark:text-slate-100 uppercase tracking-wider">{language === 'vi' ? 'Nhật Ký Tranh Luận (Communication Log)' : 'Communication Log'}</span>
+      <span className="text-[10px] font-mono text-slate-700 dark:text-slate-300 font-bold">{historyMsgs.length} {language === 'vi' ? 'Bản ghi' : 'Entries'}</span>
      </div>
      
      <div 
@@ -289,7 +285,7 @@ export default function Phase2_Debate({ onNext, onBack }: { onNext: () => void, 
           key={msg.id}
           initial={{ opacity: 0, x: -20, height: 0 }}
           animate={{ opacity: 1, x: 0, height: 'auto' }}
-          className={`p-3 rounded-xl border ${theme.border} ${theme.bg} flex gap-3 opacity-60 hover:opacity-100 transition-opacity`}
+          className={`p-3 rounded-xl border ${theme.border} ${theme.bg} flex gap-3 opacity-100 dark:opacity-85 hover:opacity-100 transition-opacity shadow-sm`}
          >
           <div className={`w-8 h-8 rounded-lg ${theme.iconBg} flex items-center justify-center shrink-0`}>
            {React.createElement(theme.icon, { className: `w-4 h-4 ${theme.text}` })}
@@ -297,9 +293,9 @@ export default function Phase2_Debate({ onNext, onBack }: { onNext: () => void, 
           <div className="min-w-0 flex-1">
            <div className="flex justify-between items-center mb-1">
             <span className={`text-[10px] font-bold uppercase ${theme.text}`}>{msg.agent}</span>
-            <span className="text-[9px] font-mono text-slate-600">Archived</span>
+            <span className="text-[9px] font-mono text-slate-600 dark:text-slate-400 font-semibold">{language === 'vi' ? 'Đã lưu' : 'Archived'}</span>
            </div>
-           <div className="text-xs text-slate-300 line-clamp-3 leading-relaxed">
+           <div className="text-xs text-slate-900 dark:text-slate-100 font-medium line-clamp-3 leading-relaxed">
             {msg.text}
            </div>
           </div>

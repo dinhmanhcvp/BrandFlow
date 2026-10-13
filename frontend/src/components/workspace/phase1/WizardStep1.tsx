@@ -148,7 +148,7 @@ export default function WizardStep1({ onNext }: { onNext?: () => void }) {
       onClick={(e) => { e.stopPropagation(); setWizardAnswer('selectedIndustry', ''); }}
       className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white bg-slate-800/50 hover:bg-slate-700 rounded-lg transition-colors border border-slate-700"
      >
-      Đổi Ngành
+      {language === 'vi' ? 'Đổi Ngành' : 'Change Industry'}
      </button>
     </div>
 
@@ -158,29 +158,29 @@ export default function WizardStep1({ onNext }: { onNext?: () => void }) {
        <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800 flex items-center gap-3">
         <Globe className="w-5 h-5 text-blue-500 animate-spin-slow" />
         <div>
-         <div className="text-xs text-slate-500">Nguồn dữ liệu</div>
+         <div className="text-xs text-slate-500">{language === 'vi' ? 'Nguồn dữ liệu' : 'Data Sources'}</div>
          <div className="text-sm text-slate-300 font-mono">Google, G2, MXH</div>
         </div>
        </div>
        <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800 flex items-center gap-3">
         <Search className="w-5 h-5 text-purple-500 animate-pulse" />
         <div>
-         <div className="text-xs text-slate-500">Trạng thái Phân tích</div>
-         <div className="text-sm text-slate-300 font-mono">Đang trích xuất...</div>
+         <div className="text-xs text-slate-500">{language === 'vi' ? 'Trạng thái Phân tích' : 'Analysis Status'}</div>
+         <div className="text-sm text-slate-300 font-mono">{language === 'vi' ? 'Đang trích xuất...' : 'Extracting...'}</div>
         </div>
        </div>
        <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800 flex items-center gap-3">
         <Zap className="w-5 h-5 text-amber-500 animate-pulse" />
         <div>
-         <div className="text-xs text-slate-500">Mục tiêu</div>
-         <div className="text-sm text-slate-300 font-mono">Insight Đối thủ & TT</div>
+         <div className="text-xs text-slate-500">{language === 'vi' ? 'Mục tiêu' : 'Target Objective'}</div>
+         <div className="text-sm text-slate-300 font-mono">{language === 'vi' ? 'Insight Đối thủ & TT' : 'Competitor & Market Insights'}</div>
         </div>
        </div>
       </div>
       
       <div className="space-y-2">
        <div className="flex justify-between text-xs font-mono">
-        <span className="text-cyan-400">Đang đồng bộ hóa dữ liệu ngầm...</span>
+        <span className="text-cyan-400">{language === 'vi' ? 'Đang đồng bộ hóa dữ liệu ngầm...' : 'Synchronizing background intelligence...'}</span>
         <span className="text-slate-500">60%</span>
        </div>
        <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800">
@@ -188,7 +188,7 @@ export default function WizardStep1({ onNext }: { onNext?: () => void }) {
          <div className="absolute top-0 right-0 bottom-0 w-10 bg-white/20 -skew-x-12 translate-x-full animate-[shimmer_2s_infinite]"></div>
         </div>
        </div>
-       <p className="text-slate-500 text-xs italic mt-2 text-center">AI đang tổng hợp và phân tích 100,000+ điểm dữ liệu từ thị trường của bạn.</p>
+       <p className="text-slate-500 text-xs italic mt-2 text-center">{language === 'vi' ? 'AI đang tổng hợp và phân tích 100,000+ điểm dữ liệu từ thị trường của bạn.' : 'AI is aggregating and parsing 100,000+ real-time market data points.'}</p>
       </div>
      </div>
     )}
@@ -204,7 +204,7 @@ export default function WizardStep1({ onNext }: { onNext?: () => void }) {
       <div className="lg:col-span-5 space-y-4">
        <div className="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 h-full hover:border-cyan-500/30 transition-colors">
         <h4 className="text-xs uppercase text-cyan-500 font-bold mb-4 flex items-center">
-         <Target className="w-4 h-4 mr-2" /> Chỉ số Vĩ mô (Dự phóng)
+         <Target className="w-4 h-4 mr-2" /> {language === 'vi' ? 'Chỉ số Vĩ mô (Dự phóng)' : 'Macro Indicators (Projected)'}
         </h4>
         <div className="grid grid-cols-2 gap-4">
          <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 hover:bg-slate-800 transition-colors">
@@ -216,7 +216,7 @@ export default function WizardStep1({ onNext }: { onNext?: () => void }) {
           <div className="text-lg font-bold text-blue-400 tracking-tight">{marketResearchData.tam_sam_som?.SAM || "---"}</div>
          </div>
          <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 hover:bg-slate-800 transition-colors">
-          <div className="text-xs text-slate-400 mb-1">SOM Mục tiêu</div>
+          <div className="text-xs text-slate-400 mb-1">{language === 'vi' ? 'SOM Mục tiêu' : 'Target SOM'}</div>
           <div className="text-lg font-bold text-emerald-400 tracking-tight">{marketResearchData.tam_sam_som?.SOM || "---"}</div>
          </div>
          <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 hover:bg-slate-800 transition-colors">

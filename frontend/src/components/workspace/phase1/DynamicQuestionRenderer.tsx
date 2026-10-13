@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from 'framer-motion';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -37,6 +38,7 @@ export interface DynamicQuestionRendererProps {
 }
 
 export default function DynamicQuestionRenderer({ title, questions, wizardAnswers, onAnswerChange }: DynamicQuestionRendererProps) {
+  const { language } = useLanguage();
  if (!questions || questions.length === 0) return null;
 
  return (
@@ -61,7 +63,7 @@ export default function DynamicQuestionRenderer({ title, questions, wizardAnswer
       >
        <div>
         <h4 className="font-bold text-lg text-foreground leading-snug">{q.question}</h4>
-        {q.type === 'checkbox' && <p className="text-xs text-blue-500 mt-1 font-medium">* Có thể chọn nhiều đáp án</p>}
+        {q.type === 'checkbox' && <p className="text-xs text-blue-500 mt-1 font-medium">{language === 'vi' ? '* Có thể chọn nhiều đáp án' : '* Multiple selections allowed'}</p>}
        </div>
 
        {/* Style 0: CARDS (giống Archetypes) */}

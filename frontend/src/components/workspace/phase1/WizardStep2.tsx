@@ -56,7 +56,7 @@ import DynamicQuestionRenderer from './DynamicQuestionRenderer';
     <div>
      <h3 className="font-black text-xl mb-1">BrandFlow Strategic Audit 2024</h3>
      <p className="text-sm text-blue-100">
-      Hệ thống AI đã quét và phân tích sâu tài liệu của bạn theo mô hình Quản trị Chiến lược chuẩn xác.
+      {language === 'vi' ? 'Hệ thống AI đã quét và phân tích sâu tài liệu của bạn theo mô hình Quản trị Chiến lược chuẩn xác.' : 'AI has deeply analyzed your documentation according to strategic governance frameworks.'}
      </p>
     </div>
    </div>
@@ -65,7 +65,7 @@ import DynamicQuestionRenderer from './DynamicQuestionRenderer';
     {/* PESTLE */}
     <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 shadow-xl hover:border-blue-500/30 transition-colors">
      <h4 className="text-sm uppercase text-blue-400 font-black mb-4 flex items-center">
-      <Globe className="w-5 h-5 mr-2" /> Vĩ mô (PESTLE)
+      <Globe className="w-5 h-5 mr-2" /> {language === 'vi' ? 'Vĩ mô (PESTLE)' : 'Macro Environment (PESTLE)'}
      </h4>
      <ul className="space-y-3">
       {Array.isArray(audit.macro_environment_pestle) && audit.macro_environment_pestle.map((item: string, idx: number) => (
@@ -81,7 +81,7 @@ import DynamicQuestionRenderer from './DynamicQuestionRenderer';
     <div className="space-y-6">
      <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 shadow-xl hover:border-emerald-500/30 transition-colors">
       <h4 className="text-sm uppercase text-emerald-400 font-black mb-4 flex items-center">
-       <ShieldCheck className="w-5 h-5 mr-2" /> Năng lực Cốt lõi (VRIO)
+       <ShieldCheck className="w-5 h-5 mr-2" /> {language === 'vi' ? 'Năng lực Cốt lõi (VRIO)' : 'Core Competencies (VRIO)'}
       </h4>
       <ul className="space-y-3">
        {Array.isArray(audit.core_competences) && audit.core_competences.map((item: string, idx: number) => (
@@ -95,7 +95,7 @@ import DynamicQuestionRenderer from './DynamicQuestionRenderer';
 
      <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 shadow-xl hover:border-purple-500/30 transition-colors">
       <h4 className="text-sm uppercase text-purple-400 font-black mb-4 flex items-center">
-       <Target className="w-5 h-5 mr-2" /> Mục tiêu MKT (Ansoff)
+       <Target className="w-5 h-5 mr-2" /> {language === 'vi' ? 'Mục tiêu MKT (Ansoff)' : 'Marketing Objectives (Ansoff)'}
       </h4>
       <ul className="space-y-3">
        {Array.isArray(audit.marketing_objectives) && audit.marketing_objectives.map((item: string, idx: number) => (
@@ -112,7 +112,7 @@ import DynamicQuestionRenderer from './DynamicQuestionRenderer';
     <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
      <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 p-6 rounded-2xl border border-amber-500/20 shadow-xl">
       <h4 className="text-sm uppercase text-amber-500 font-black mb-3 flex items-center">
-       <Crosshair className="w-5 h-5 mr-2" /> Vị thế Cạnh tranh
+       <Crosshair className="w-5 h-5 mr-2" /> {language === 'vi' ? 'Vị thế Cạnh tranh' : 'Competitive Positioning'}
       </h4>
       <p className="text-sm text-slate-300 leading-relaxed font-medium">
        {audit.competitive_positioning}

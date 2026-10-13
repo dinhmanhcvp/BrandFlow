@@ -228,7 +228,7 @@ export default function Screen3_Dashboard({ onGoToHub, onGoToNext }: { onGoToHub
  transition={{ delay: 0.2 }}
  className="bento-card p-6 border-linear-border"
  >
- <h3 className="text-xs font-bold text-linear-text-muted uppercase tracking-widest mb-4">🎨 Bản sắc Hình ảnh (Visual DNA)</h3>
+ <h3 className="text-xs font-bold text-linear-text-muted uppercase tracking-widest mb-4">🎨 {language === 'vi' ? 'Bản sắc Hình ảnh (Visual DNA)' : 'Visual Brand Identity (Visual DNA)'}</h3>
  <div className="flex items-center mb-6">
  <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mr-4 shadow-sm border border-orange-100">
  <Shield className="w-6 h-6 text-orange-600" />
@@ -286,7 +286,7 @@ export default function Screen3_Dashboard({ onGoToHub, onGoToNext }: { onGoToHub
  </div>
  
  <div className="mb-4">
- <h4 className="text-[10px] text-amber-500 font-bold uppercase tracking-wider mb-2">{language === 'vi' ? 'Điểm chưa hoàn thiện (Weaknesses)' : 'Areas for Refinement'}</h4>
+ <h4 className="text-[10px] text-amber-500 font-bold uppercase tracking-wider mb-2">{language === 'vi' ? 'Điểm chưa hoàn thiện (Weaknesses)' : 'Areas for Refinement (Weaknesses)'}</h4>
  <ul className="space-y-2">
  {weaknesses.map((w: string, idx: number) => (
   <li key={idx} className="flex items-start text-sm text-foreground"><div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 mr-2 shrink-0"></div> {w}</li>
@@ -295,7 +295,7 @@ export default function Screen3_Dashboard({ onGoToHub, onGoToNext }: { onGoToHub
  </div>
  
  <div>
- <h4 className="text-[10px] text-blue-600 font-bold uppercase tracking-wider mb-2">{language === 'vi' ? 'Khuyến nghị Định hướng' : t('dashboard.radar_2')}</h4>
+ <h4 className="text-[10px] text-blue-600 font-bold uppercase tracking-wider mb-2">{language === 'vi' ? 'Khuyến nghị Định hướng' : 'Strategic Directions'}</h4>
  <ul className="space-y-2">
  {radar2.map((r: string, idx: number) => (
   <li key={idx} className="flex items-start text-sm text-foreground"><div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 mr-2 shrink-0"></div> {r}</li>

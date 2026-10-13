@@ -292,7 +292,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
        </span>
       </div>
       <div className="text-cyan-900 dark:text-cyan-300 font-bold text-[11px] uppercase tracking-wider bg-cyan-100/80 dark:bg-cyan-500/10 px-3 py-1.5 rounded-lg border border-cyan-300 dark:border-cyan-500/20 w-fit">
-       Math Engine & Cross-Validation: Hoàn tất (0.8s)
+       {language === 'vi' ? 'Math Engine & Cross-Validation: Hoàn tất (0.8s)' : 'Math Engine & Cross-Validation: Complete (0.8s)'}
       </div>
      </div>
     );
@@ -482,7 +482,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
     const lines: string[] = [data.message || ''];
     data.results.forEach((r: any) => {
      if (r.status === 'success') {
-      const chars = r.char_count ? ` · ${(r.char_count / 1000).toFixed(1)}k ký tự` : '';
+      const chars = r.char_count ? (language === 'vi' ? ` · ${(r.char_count / 1000).toFixed(1)}k ký tự` : ` · ${(r.char_count / 1000).toFixed(1)}k chars`) : '';
       const pages = r.pages ? ` · ${r.pages} trang` : '';
       const sheets = r.sheets ? ` · ${r.sheets} sheet` : '';
       lines.push(`✅ ${r.filename}${chars}${pages}${sheets} [${r.method}]`);
@@ -499,7 +499,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
     setUploadMessage(
      data.message ||
      (language === 'vi'
-      ? `Đã xử lý ${selectedFiles.length} tài liệu.`
+      ? (language === 'vi' ? `Đã xử lý ${selectedFiles.length} tài liệu.` : `Processed ${selectedFiles.length} documents.`)
       : `Processed ${selectedFiles.length} file(s).`)
     );
    }
@@ -676,7 +676,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
                TV Showcase Demo · Admin
               </span>
               <span className="text-[11px] font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-500/30 px-2 py-0.5 rounded-full">
-               Tài liệu mẫu có sẵn
+               {language === 'vi' ? 'Tài liệu mẫu có sẵn' : 'Pre-loaded Sample Document'}
               </span>
              </div>
              <h4 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2 truncate">
@@ -686,7 +686,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
               </span>
              </h4>
              <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 font-medium">
-              Hồ sơ thương hiệu & Báo cáo chiến lược F&B Bếp Nhà Mộc.
+              {language === 'vi' ? 'Hồ sơ thương hiệu & Báo cáo chiến lược F&B Bếp Nhà Mộc.' : 'Brand Identity & Strategic F&B Report for Bếp Nhà Mộc.'}
              </p>
             </div>
            </div>
@@ -701,7 +701,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
              }}
              className="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-linear-border bg-white dark:bg-background/80 hover:bg-slate-50 dark:hover:bg-background text-xs font-bold text-slate-800 dark:text-foreground transition-all shadow-sm cursor-pointer"
             >
-             Xem trước
+             {language === 'vi' ? 'Xem trước' : 'Preview'}
             </button>
 
             <button
@@ -719,8 +719,8 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
              )}
             >
              {uploadStatus === 'success' && selectedFiles.some(f => f.name.toLowerCase().includes('bepnhamoc'))
-              ? "Đã chọn tài liệu"
-              : "Chọn tài liệu này"}
+              ? (language === 'vi' ? "Đã chọn tài liệu" : "Document Selected")
+              : (language === 'vi' ? "Chọn tài liệu này" : "Select Document")}
             </button>
            </div>
           </div>
@@ -753,7 +753,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
          </p>
          <p className="text-xs text-linear-text-muted">
           {language === 'vi'
-           ? 'Hỗ trợ: PDF, DOCX, TXT, MD, CSV, XLSX, XLS, HTML — tối đa 100MB/file'
+           ? (language === 'vi' ? 'Hỗ trợ: PDF, DOCX, TXT, MD, CSV, XLSX, XLS, HTML — tối đa 100MB/file' : 'Supports: PDF, DOCX, TXT, MD, CSV, XLSX, XLS, HTML — up to 100MB/file')
            : 'Supports: PDF, DOCX, TXT, MD, CSV, XLSX, XLS, HTML — max 100MB/file'}
          </p>
          <p className="text-xs text-blue-600 dark:text-cyan-400 mt-2 font-bold">
@@ -772,7 +772,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
           >
            <p className="text-xs font-bold text-linear-text-muted uppercase tracking-wider mb-3">
             {language === 'vi'
-             ? `${selectedFiles.length} tài liệu đã chọn`
+             ? (language === 'vi' ? `${selectedFiles.length} tài liệu đã chọn` : `${selectedFiles.length} documents selected`)
              : `${selectedFiles.length} file(s) selected`}
            </p>
 
@@ -838,7 +838,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
               <>
                <UploadCloud className="w-4 h-4" />
                {language === 'vi'
-                ? `Tải lên ${selectedFiles.length} tài liệu`
+                ? (language === 'vi' ? `Tải lên ${selectedFiles.length} tài liệu` : `Upload ${selectedFiles.length} documents`)
                 : `Upload ${selectedFiles.length} file(s)`}
               </>
              )}
@@ -985,7 +985,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
          {getAllValidUrls().length > 0 && (
           <p className="text-xs text-linear-text-muted">
            {language === 'vi'
-            ? `${getAllValidUrls().length} URL sẽ được thu thập`
+            ? (language === 'vi' ? `${getAllValidUrls().length} URL sẽ được thu thập` : `${getAllValidUrls().length} URLs will be crawled`)
             : `${getAllValidUrls().length} URL(s) will be crawled`}
           </p>
          )}
@@ -1013,7 +1013,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
             <>
              <Globe className="w-4 h-4" />
              {language === 'vi'
-              ? `Thu thập ${getAllValidUrls().length} trang web`
+              ? (language === 'vi' ? `Thu thập ${getAllValidUrls().length} trang web` : `Crawl ${getAllValidUrls().length} web pages`)
               : `Crawl ${getAllValidUrls().length} URL(s)`}
             </>
            )}
@@ -1089,7 +1089,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
          <p className="text-[11px] text-linear-text-muted flex items-start gap-1.5">
           <AlertCircle className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
           {language === 'vi'
-           ? 'Lưu ý: Facebook và Instagram thường chặn crawler. Website doanh nghiệp sẽ cho kết quả tốt nhất.'
+           ? (language === 'vi' ? 'Lưu ý: Facebook và Instagram thường chặn crawler. Website doanh nghiệp sẽ cho kết quả tốt nhất.' : 'Note: Facebook and Instagram often block crawlers. Business websites yield the best results.')
            : 'Note: Facebook & Instagram often block crawlers. Company websites work best.'}
          </p>
         </div>

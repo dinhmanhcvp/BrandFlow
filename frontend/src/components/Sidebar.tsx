@@ -254,7 +254,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
                 : "text-linear-text-muted hover:text-foreground hover:bg-linear-surface border border-transparent"
               )}
              >
-              <item.icon className={cn("w-4 h-4 mr-3 shrink-0 transition-transform group-hover:scale-110", active ? "text-cyan-400" : "text-linear-text-muted")} />
+              <item.icon className={cn("w-4 h-4 mr-3 shrink-0 transition-transform group-hover:scale-110", active ? "text-cyan-700 dark:text-cyan-400 font-bold" : "text-linear-text-muted")} />
               <div className="flex-1 min-w-0 z-10">
                <div className="text-sm font-medium truncate">{t(item.langKey as TranslationKey)}</div>
                <div className="text-[9px] text-linear-text-muted/60 truncate group-hover:text-linear-text-muted transition-colors">{item.desc[language]}</div>
@@ -292,7 +292,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
                 : "text-linear-text-muted hover:text-foreground hover:bg-linear-surface border border-transparent"
               )}
              >
-              <item.icon className={cn("w-4 h-4 mr-3 shrink-0 transition-transform group-hover:scale-110", active ? "text-cyan-400" : "text-linear-text-muted")} />
+              <item.icon className={cn("w-4 h-4 mr-3 shrink-0 transition-transform group-hover:scale-110", active ? "text-cyan-700 dark:text-cyan-400 font-bold" : "text-linear-text-muted")} />
               <div className="flex-1 min-w-0 z-10">
                <div className="text-sm font-medium truncate">{t(item.langKey as TranslationKey)}</div>
                <div className="text-[9px] text-linear-text-muted/60 truncate group-hover:text-linear-text-muted transition-colors">{item.desc[language]}</div>

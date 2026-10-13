@@ -184,7 +184,7 @@ export default function ScreenBusinessIntent({ onNext }: { onNext: () => void })
                : 'bg-white dark:bg-linear-surface border border-slate-200 dark:border-linear-border text-slate-700 dark:text-linear-text-muted hover:border-emerald-500/40'
              }`}
             >
-             {p.label}
+             {language === "vi" ? p.label_vi : p.label_en}
             </button>
            ))}
           </div>
@@ -212,7 +212,7 @@ export default function ScreenBusinessIntent({ onNext }: { onNext: () => void })
            <div className="mt-6 pt-6 border-t border-linear-border/50">
             <div className="flex items-center mb-4">
              <Lightbulb className="w-4 h-4 text-emerald-400 mr-2" />
-             <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">AI CMO Đề xuất riêng cho Bếp Nhà Mộc</span>
+             <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">{language === "vi" ? "AI CMO Đề xuất riêng cho Bếp Nhà Mộc" : "AI CMO Tailored Recommendations for Bếp Nhà Mộc"}</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
              {/* Package 1 */}
@@ -220,7 +220,7 @@ export default function ScreenBusinessIntent({ onNext }: { onNext: () => void })
               onClick={() => {
                setBudget(350_000_000);
                setCustomBudget('');
-               setGoal("Tái định vị (Brand Repositioning) thương hiệu Bếp Nhà Mộc lọt Top 3 'Must-visit F&B' dành cho giới chuyên gia/quản lý tại trung tâm TP.HCM. Tập trung vào 'Corporate Lunch' và triển khai Loyalty App.");
+               setGoal(language === 'vi' ? "Tái định vị (Brand Repositioning) thương hiệu Bếp Nhà Mộc lọt Top 3 'Must-visit F&B' dành cho giới chuyên gia/quản lý tại trung tâm TP.HCM. Tập trung vào 'Corporate Lunch' và triển khai Loyalty App." : "Reposition Bếp Nhà Mộc brand into Top 3 'Must-visit F&B' for corporate professionals in downtown HCMC. Focus on 'Corporate Lunch' and deploy Loyalty App.");
               }}
               className={`p-4 rounded-xl border cursor-pointer transition-all ${
                budget === 350000000
@@ -229,14 +229,14 @@ export default function ScreenBusinessIntent({ onNext }: { onNext: () => void })
               }`}
              >
               <div className="flex justify-between items-start mb-2">
-               <h4 className="text-[11px] text-emerald-800 dark:text-emerald-400 font-bold uppercase tracking-wider">Gói 1: Aggressive Scale</h4>
+               <h4 className="text-[11px] text-emerald-800 dark:text-emerald-400 font-bold uppercase tracking-wider">{language === "vi" ? "Gói 1: Aggressive Scale" : "Package 1: Aggressive Scale"}</h4>
                <span className="text-[9px] bg-emerald-100 dark:bg-emerald-500/20 text-emerald-900 dark:text-emerald-300 px-2 py-0.5 rounded font-mono font-bold">350M VNĐ</span>
               </div>
               <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed mb-2 font-medium">
-               Thống lĩnh ngách 'Mindful Dining' tại TP.HCM. Kích hoạt Corporate Lunch Combo, Zalo Mini App và Booking 30 KOLs. (Mục tiêu: Đạt 2.5 Tỷ MRR).
+               {language === "vi" ? "Thống lĩnh ngách 'Mindful Dining' tại TP.HCM. Kích hoạt Corporate Lunch Combo, Zalo Mini App và Booking 30 KOLs. (Mục tiêu: Đạt 2.5 Tỷ MRR)." : "Dominate the 'Mindful Dining' niche in HCMC. Launch Corporate Lunch Combo, Zalo Mini App, and engage 30 key KOLs (Target: 2.5B VND MRR)."}
               </p>
               <div className="text-[10px] font-bold text-emerald-500 mt-2">
-               {budget === 350000000 ? '✓ Đang chọn' : 'Nhấn để áp dụng'}
+               {budget === 350000000 ? (language === 'vi' ? '✓ Đang chọn' : '✓ Selected') : (language === 'vi' ? 'Nhấn để áp dụng' : 'Click to apply')}
               </div>
              </div>
              
@@ -245,7 +245,7 @@ export default function ScreenBusinessIntent({ onNext }: { onNext: () => void })
               onClick={() => {
                setBudget(150_000_000);
                setCustomBudget('');
-               setGoal("Mục tiêu chính là nén chi phí thu hút khách (CAC) và giữ chân khách hàng cũ (Retention Rate) thông qua Zalo O2O CRM. Ngừng giảm giá, tập trung vào Value-added.");
+               setGoal(language === 'vi' ? "Mục tiêu chính là nén chi phí thu hút khách (CAC) và giữ chân khách hàng cũ (Retention Rate) thông qua Zalo O2O CRM. Ngừng giảm giá, tập trung vào Value-added." : "Primary goal: compress customer acquisition cost (CAC) and boost retention rate via Zalo O2O CRM. Stop discounts, focus on value-added services.");
               }}
               className={`p-4 rounded-xl border cursor-pointer transition-all ${
                budget === 150000000 
@@ -254,14 +254,14 @@ export default function ScreenBusinessIntent({ onNext }: { onNext: () => void })
               }`}
              >
               <div className="flex justify-between items-start mb-2">
-               <h4 className="text-[11px] text-blue-400 font-bold uppercase tracking-wider">Gói 2: O2O & Loyalty</h4>
+               <h4 className="text-[11px] text-blue-400 font-bold uppercase tracking-wider">{language === "vi" ? "Gói 2: O2O & Loyalty" : "Package 2: O2O & Loyalty"}</h4>
                <span className="text-[9px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded font-mono">150M VNĐ</span>
               </div>
               <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed mb-2 font-medium">
-               Tập trung giảm CAC bằng cách xây dựng hệ thống Zalo Mini App (CRM) và quay 1 Video Cinematic mộc mạc để tối ưu Word-of-Mouth.
+               {language === "vi" ? "Tập trung giảm CAC bằng cách xây dựng hệ thống Zalo Mini App (CRM) và quay 1 Video Cinematic mộc mạc để tối ưu Word-of-Mouth." : "Focus on lowering CAC via Zalo Mini App (CRM) and produce 1 Cinematic heritage video to optimize organic Word-of-Mouth."}
               </p>
               <div className="text-[10px] font-bold text-blue-500 mt-2">
-               {budget === 150000000 ? '✓ Đang chọn' : 'Nhấn để áp dụng'}
+               {budget === 150000000 ? (language === 'vi' ? '✓ Đang chọn' : '✓ Selected') : (language === 'vi' ? 'Nhấn để áp dụng' : 'Click to apply')}
               </div>
              </div>
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from 'framer-motion';
 import { Palette, FileText, Image as ImageIcon, Wand2, Type, Layout } from 'lucide-react';
 
@@ -36,14 +37,14 @@ export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void
      >
       <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-      </svg> Quay lại
+      </svg> {language === 'vi' ? 'Quay lại' : 'Back'}
      </button>
      <button 
       id="btn-next-phase5"
       onClick={onNext}
       className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-lg font-bold shadow-lg shadow-blue-500/25 transition-all flex items-center group"
      >
-      Deploy Custom Trợ lý AI
+      {language === 'vi' ? 'Triển khai Trợ lý AI Tùy chỉnh' : 'Deploy Custom Agent'}
       <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
       </svg>
@@ -56,7 +57,7 @@ export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void
     <div className="flex items-center text-blue-300 text-sm">
      <Wand2 className="w-5 h-5 mr-3 text-blue-400 shrink-0" />
      <span>
-      <strong>Bản xem trước (Overview):</strong> Đây là giao diện tổng quan về quá trình tự động sinh nội dung và thiết kế. Để chỉnh sửa chuyên sâu, vui lòng truy cập các phân hệ chuyên biệt.
+      <strong>{language === 'vi' ? 'Bản xem trước (Overview):' : 'Overview Preview:'}</strong> {language === 'vi' ? 'Đây là giao diện tổng quan về quá trình tự động sinh nội dung và thiết kế. Để chỉnh sửa chuyên sâu, vui lòng truy cập các phân hệ chuyên biệt.' : 'This is an aggregate overview of automated copywriting and visual generation. For in-depth editing, visit dedicated modules.'}
      </span>
     </div>
     <div className="flex gap-3 ml-4 shrink-0">
@@ -71,20 +72,20 @@ export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void
 
    <div className="flex-1 grid grid-cols-12 gap-6">
     {/* Left: Copywriting Lab */}
-    <div className="col-span-5 bg-slate-900/50 border border-slate-700/50 rounded-2xl p-6 backdrop-blur-sm flex flex-col">
-     <h3 className="text-lg font-semibold text-slate-200 mb-4 flex items-center">
+    <div className="col-span-5 bg-white/80 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 backdrop-blur-sm shadow-md flex flex-col">
+     <h3 className="text-lg font-bold text-slate-900 dark:text-slate-200 mb-4 flex items-center">
       <FileText className="w-5 h-5 mr-2 text-pink-400" />
       Copywriting Lab
      </h3>
      
      <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
       {step >= 1 && (
-       <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+       <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm">
         <div className="flex justify-between items-start mb-2">
          <span className="text-xs font-bold text-pink-400 uppercase tracking-wider bg-pink-500/10 px-2 py-1 rounded">Facebook Post</span>
-         <span className="text-xs text-slate-400">Target: Housewives, 25-45</span>
+         <span className="text-xs text-slate-600 dark:text-slate-400 font-semibold">Target: Housewives, 25-45</span>
         </div>
-        <p className="text-sm text-slate-300 leading-relaxed">
+        <p className="text-sm text-slate-800 dark:text-slate-300 leading-relaxed font-medium">
          "Mọi căn bếp không chỉ là nơi thưởng thức món ngon, mà còn là nơi câu chuyện yêu thương được kể bằng những góc phẳng gỗ mộc mạc..."
         </p>
         <div className="mt-3 flex gap-2">
@@ -95,12 +96,12 @@ export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void
       )}
 
       {step >= 2 && (
-       <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay:0.2}} className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+       <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay:0.2}} className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700/50">
         <div className="flex justify-between items-start mb-2">
          <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider bg-indigo-500/10 px-2 py-1 rounded">PR Article (Intro)</span>
         </div>
-        <h4 className="text-sm font-bold text-slate-200 mb-2">Bếp Nhà Mộc - Bồi Giữ Giá Trị Truyền Thống Trong Từng Thớ Gỗ</h4>
-        <p className="text-sm text-slate-400 leading-relaxed">
+        <h4 className="text-sm font-bold text-slate-900 dark:text-slate-200 mb-2">Bếp Nhà Mộc - Bồi Giữ Giá Trị Truyền Thống Trong Từng Thớ Gỗ</h4>
+        <p className="text-sm text-slate-700 dark:text-slate-400 leading-relaxed font-medium">
          Trước làn sóng của hàng loạt xu hướng nội thất hiện đại, việc tìm về với thiên nhiên và những giá trị gốc rễ đang trở thành một sự lựa chọn...
         </p>
        </motion.div>
@@ -109,8 +110,8 @@ export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void
     </div>
 
     {/* Right: Design Studio */}
-    <div className="col-span-7 bg-slate-900/50 border border-slate-700/50 rounded-2xl p-6 backdrop-blur-sm flex flex-col">
-     <h3 className="text-lg font-semibold text-slate-200 mb-6 flex items-center">
+    <div className="col-span-7 bg-white/80 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 backdrop-blur-sm shadow-md flex flex-col">
+     <h3 className="text-lg font-bold text-slate-900 dark:text-slate-200 mb-6 flex items-center">
       <Palette className="w-5 h-5 mr-2 text-purple-400" />
       Brand Identity Generator
      </h3>
@@ -118,7 +119,7 @@ export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void
      <div className="grid grid-cols-2 gap-6">
       {/* Colors */}
       <div>
-       <h4 className="text-sm font-medium text-slate-400 mb-3 flex items-center"><Palette className="w-4 h-4 mr-1.5"/> Color Palette</h4>
+       <h4 className="text-sm font-bold text-slate-700 dark:text-slate-400 mb-3 flex items-center"><Palette className="w-4 h-4 mr-1.5"/> Color Palette</h4>
        {step >= 2 && (
         <div className="flex gap-3">
          {[
@@ -142,17 +143,17 @@ export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void
 
       {/* Typography */}
       <div>
-       <h4 className="text-sm font-medium text-slate-400 mb-3 flex items-center"><Type className="w-4 h-4 mr-1.5"/> Typography</h4>
+       <h4 className="text-sm font-bold text-slate-700 dark:text-slate-400 mb-3 flex items-center"><Type className="w-4 h-4 mr-1.5"/> Typography</h4>
        {step >= 3 && (
-        <motion.div initial={{opacity:0, x:20}} animate={{opacity:1, x:0}} className="space-y-3 bg-slate-800/40 p-3 rounded-lg">
+        <motion.div initial={{opacity:0, x:20}} animate={{opacity:1, x:0}} className="space-y-3 bg-slate-50 dark:bg-slate-800/40 p-3 rounded-lg border border-slate-200 dark:border-slate-700/50">
          <div>
           <span className="text-[10px] text-slate-500 uppercase">Primary / Headings</span>
-          <p className="text-2xl font-serif text-slate-200">Playfair Display</p>
+          <p className="text-2xl font-serif text-slate-900 dark:text-slate-200 font-bold">Playfair Display</p>
          </div>
          <div className="h-px w-full bg-slate-700/50" />
          <div>
           <span className="text-[10px] text-slate-500 uppercase">Secondary / Body</span>
-          <p className="text-base font-sans text-slate-300">Inter / Roboto</p>
+          <p className="text-base font-sans text-slate-800 dark:text-slate-300 font-medium">Inter / Roboto</p>
          </div>
         </motion.div>
        )}
@@ -160,7 +161,7 @@ export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void
 
       {/* Moodboard */}
       <div className="col-span-2 mt-2">
-        <h4 className="text-sm font-medium text-slate-400 mb-3 flex items-center"><ImageIcon className="w-4 h-4 mr-1.5"/> Moodboard & Layouts</h4>
+        <h4 className="text-sm font-bold text-slate-700 dark:text-slate-400 mb-3 flex items-center"><ImageIcon className="w-4 h-4 mr-1.5"/> Moodboard & Layouts</h4>
         {step >= 3 && (
          <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="grid grid-cols-3 gap-3">
           <div className="h-24 bg-slate-800 rounded-lg overflow-hidden relative group">

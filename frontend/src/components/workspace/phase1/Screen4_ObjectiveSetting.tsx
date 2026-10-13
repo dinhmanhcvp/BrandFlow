@@ -11,7 +11,7 @@ export default function Screen4_ObjectiveSetting({ onBack, onGoToWorkspace }: { 
  const { wizardAnswers, brandDNA, setWizardAnswer } = useFormStore();
  const isBepNhaMoc = brandDNA?.brand_name?.includes('Nhà Mộc') || wizardAnswers?.company_name?.includes('Nhà Mộc');
  
- const [objectives, setObjectives] = useState(isBepNhaMoc ? "Thương hiệu: Bếp Nhà Mộc\nTôi muốn xây dựng chiến lược truyền thông cực kỳ chi tiết về không gian ẩm thực chữa lành (Mindful Dining). Đối tượng là Gen Z và dân văn phòng đang kiệt sức (Burnout/Toxic Productivity). Cần kế hoạch cho PR, Social Media, Influencer, với mục tiêu bùng nổ doanh thu." : "");
+ const [objectives, setObjectives] = useState(isBepNhaMoc ? (language === 'vi' ? "Thương hiệu: Bếp Nhà Mộc\nTôi muốn xây dựng chiến lược truyền thông cực kỳ chi tiết về không gian ẩm thực chữa lành (Mindful Dining). Đối tượng là Gen Z và dân văn phòng đang kiệt sức (Burnout/Toxic Productivity). Cần kế hoạch cho PR, Social Media, Influencer, với mục tiêu bùng nổ doanh thu." : "Brand: Bếp Nhà Mộc\nI want to build an in-depth marketing campaign for a Mindful Dining concept targeting Gen Z and burned-out corporate professionals. Need a comprehensive plan for PR, Social Media, and Influencers to drive revenue growth.") : "");
  const [budget, setBudget] = useState("150,000,000");
 
  const handleContinue = () => {
@@ -119,35 +119,35 @@ export default function Screen4_ObjectiveSetting({ onBack, onGoToWorkspace }: { 
           {/* Package 1: The Master Plan */}
           <div className="p-4 bg-slate-900/60 border border-emerald-500/30 hover:border-emerald-500/80 rounded-xl transition-all group">
            <div className="flex justify-between items-start mb-2">
-            <h4 className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">Package 1: Aggressive Scale</h4>
+            <h4 className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">{language === "vi" ? "Gói 1: Aggressive Scale" : "Package 1: Aggressive Scale"}</h4>
             <span className="text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">350M VNĐ</span>
            </div>
            <p className="text-xs text-slate-300 leading-relaxed mb-3">
-            Thống lĩnh ngách 'Mindful Dining' tại TP.HCM. Kích hoạt Corporate Lunch Combo, Zalo Mini App và Booking 30 KOLs. (Mục tiêu: Đạt 2.5 Tỷ MRR).
+            {language === "vi" ? "Thống lĩnh ngách 'Mindful Dining' tại TP.HCM. Kích hoạt Corporate Lunch Combo, Zalo Mini App và Booking 30 KOLs. (Mục tiêu: Đạt 2.5 Tỷ MRR)." : "Dominate the 'Mindful Dining' niche in HCMC. Launch Corporate Lunch Combo, Zalo Mini App, and engage 30 key KOLs (Target: 2.5B VND MRR)."}
            </p>
            <button 
             onClick={() => {
-             setObjectives("Tái định vị (Brand Repositioning) thương hiệu Bếp Nhà Mộc lọt Top 3 'Must-visit F&B' dành cho giới chuyên gia/quản lý tại trung tâm TP.HCM. Tập trung vào 'Corporate Lunch' và triển khai Loyalty App.");
+             setObjectives(language === 'vi' ? "Tái định vị (Brand Repositioning) thương hiệu Bếp Nhà Mộc lọt Top 3 'Must-visit F&B' dành cho giới chuyên gia/quản lý tại trung tâm TP.HCM. Tập trung vào 'Corporate Lunch' và triển khai Loyalty App." : "Reposition Bếp Nhà Mộc brand into Top 3 'Must-visit F&B' for corporate professionals in downtown HCMC. Focus on 'Corporate Lunch' and deploy Loyalty App.");
              setBudget("350,000,000");
             }}
             className="w-full py-1.5 bg-emerald-500/10 hover:bg-emerald-500/30 border border-emerald-500/50 rounded-lg text-[10px] font-bold text-emerald-300 transition-colors"
            >
-            Áp dụng Gói này (Apply)
+            {language === 'vi' ? 'Áp dụng Gói này' : 'Apply Package'}
            </button>
           </div>
 
           {/* Package 2: Retention Focus */}
           <div className="p-4 bg-slate-900/60 border border-blue-500/30 hover:border-blue-500/80 rounded-xl transition-all group">
            <div className="flex justify-between items-start mb-2">
-            <h4 className="text-[11px] text-blue-400 font-bold uppercase tracking-wider">Package 2: O2O & Loyalty</h4>
+            <h4 className="text-[11px] text-blue-400 font-bold uppercase tracking-wider">{language === "vi" ? "Gói 2: O2O & Loyalty" : "Package 2: O2O & Loyalty"}</h4>
             <span className="text-[9px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded font-mono">150M VNĐ</span>
            </div>
            <p className="text-xs text-slate-300 leading-relaxed mb-3">
-            Tập trung giảm CAC bằng cách xây dựng hệ thống Zalo Mini App (CRM) và quay 1 Video Cinematic mộc mạc để tối ưu Word-of-Mouth.
+            {language === "vi" ? "Tập trung giảm CAC bằng cách xây dựng hệ thống Zalo Mini App (CRM) và quay 1 Video Cinematic mộc mạc để tối ưu Word-of-Mouth." : "Focus on lowering CAC via Zalo Mini App (CRM) and produce 1 Cinematic heritage video to optimize organic Word-of-Mouth."}
            </p>
            <button 
             onClick={() => {
-             setObjectives("Mục tiêu chính là nén chi phí thu hút khách (CAC) và giữ chân khách hàng cũ (Retention Rate) thông qua Zalo O2O CRM. Ngừng giảm giá, tập trung vào Value-added.");
+             setObjectives(language === 'vi' ? "Mục tiêu chính là nén chi phí thu hút khách (CAC) và giữ chân khách hàng cũ (Retention Rate) thông qua Zalo O2O CRM. Ngừng giảm giá, tập trung vào Value-added." : "Primary goal: compress customer acquisition cost (CAC) and boost retention rate via Zalo O2O CRM. Stop discounts, focus on value-added services.");
              setBudget("150,000,000");
             }}
             className="w-full py-1.5 bg-blue-500/10 hover:bg-blue-500/30 border border-blue-500/50 rounded-lg text-[10px] font-bold text-blue-300 transition-colors"
@@ -159,16 +159,16 @@ export default function Screen4_ObjectiveSetting({ onBack, onGoToWorkspace }: { 
         ) : (
          <div className="p-4 bg-slate-900/60 border border-amber-500/30 rounded-xl">
           <p className="text-xs text-slate-300 leading-relaxed mb-3">
-           Hệ thống tự động phát hiện quy mô doanh nghiệp SME. Mức ngân sách phù hợp để chạy Pilot (Thử nghiệm) trên Digital là khoảng 50 Triệu VNĐ.
+           {language === "vi" ? "Hệ thống tự động phát hiện quy mô doanh nghiệp SME. Mức ngân sách phù hợp để chạy Pilot (Thử nghiệm) trên Digital là khoảng 50 Triệu VNĐ." : "System auto-detected SME business scale. Recommended pilot digital marketing budget is 50M VND (~$2,000)."}
           </p>
           <button 
            onClick={() => {
-            setObjectives("Tôi muốn chạy thử nghiệm các kênh Digital Marketing (Facebook/Tiktok) để đo lường CPA trước khi scale up.");
+            setObjectives(language === 'vi' ? "Tôi muốn chạy thử nghiệm các kênh Digital Marketing (Facebook/Tiktok) để đo lường CPA trước khi scale up." : "I want to run a pilot test on digital channels (Facebook/TikTok) to measure CPA before scaling up.");
             setBudget("50,000,000");
            }}
            className="w-full py-1.5 bg-amber-500/10 hover:bg-amber-500/30 border border-amber-500/50 rounded-lg text-[10px] font-bold text-amber-300 transition-colors"
           >
-           Dùng mẫu Pilot (50M)
+           {language === 'vi' ? 'Dùng mẫu Pilot (50M)' : 'Use Pilot Template (50M)'}
           </button>
          </div>
         )}

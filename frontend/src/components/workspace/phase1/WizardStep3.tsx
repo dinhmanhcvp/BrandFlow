@@ -50,7 +50,7 @@ export default function WizardStep3() {
  {hasQuestions && (
   <div className="max-w-4xl mx-auto relative mb-12">
    <DynamicQuestionRenderer 
-    title="THÔNG TIN DOANH NGHIỆP" 
+    title={language === 'vi' ? "THÔNG TIN DOANH NGHIỆP" : "BUSINESS PROFILE"} 
     questions={enterprise} 
     wizardAnswers={wizardAnswers} 
     onAnswerChange={handleAnswerChange} 
@@ -60,14 +60,14 @@ export default function WizardStep3() {
 
  <div className="max-w-4xl mx-auto pt-8 border-t border-linear-border mt-8">
   <label className="text-lg font-bold text-foreground flex items-center mb-4">
-   <MessageSquareText className="w-5 h-5 mr-2 text-blue-500" /> Chia sẻ thêm ý tưởng của bạn
+   <MessageSquareText className="w-5 h-5 mr-2 text-blue-500" /> {language === 'vi' ? 'Chia sẻ thêm ý tưởng của bạn' : 'Share more of your business ideas'}
   </label>
-  <p className="text-xs text-linear-text-muted mb-4">Bạn có thể mô tả chi tiết hơn về sản phẩm, ý tưởng kinh doanh sắp tới, hoặc bất kỳ điều gì bạn muốn AI lưu ý khi lập chiến lược.</p>
+  <p className="text-xs text-linear-text-muted mb-4">{language === 'vi' ? 'Bạn có thể mô tả chi tiết hơn về sản phẩm, ý tưởng kinh doanh sắp tới, hoặc bất kỳ điều gì bạn muốn AI lưu ý khi lập chiến lược.' : 'Describe your products, upcoming campaign concepts, or specific instructions for AI calibration.'}</p>
   <textarea
    rows={5}
    value={wizardAnswers['additionalNotes'] || ''}
    onChange={(e) => setWizardAnswer('additionalNotes', e.target.value)}
-   placeholder="Ví dụ: Tôi dự định ra mắt tính năng AI mới vào tháng tới và muốn nhắm tới đối tượng sinh viên..."
+   placeholder={language === 'vi' ? "Ví dụ: Tôi dự định ra mắt tính năng AI mới vào tháng tới và muốn nhắm tới đối tượng sinh viên..." : "E.g., I plan to launch a new product next month targeting university students..."}
    className="w-full px-5 py-4 bg-linear-surface text-foreground border border-linear-border rounded-2xl shadow-sm focus:bg-white dark:focus:bg-[#0B1120] focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-500/50 focus:border-transparent outline-none transition-all resize-none placeholder:text-slate-400"
   />
  </div>

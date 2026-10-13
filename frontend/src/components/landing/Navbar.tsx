@@ -9,7 +9,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Navbar() {
- const { t, language, toggleLanguage } = useLanguage();
+ const { t, language, setLanguage, toggleLanguage } = useLanguage();
  const [scrolled, setScrolled] = useState(false);
  const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -60,13 +60,13 @@ export default function Navbar() {
      <div className="flex items-center space-x-3 sm:space-x-4">
       <div className="hidden sm:flex bg-background/50 rounded-full p-1 border ultra-thin-border h-9 items-center">
        <button 
-        onClick={toggleLanguage}
-        className={`px-3 py-1.5 text-xs font-bold rounded-full transition-all flex items-center ${language === 'en' ? "bg-linear-surface text-cyan-400 shadow-sm border border-cyan-500/20" : "text-linear-text-muted hover:text-foreground"}`}
-       >🇺🇸 EN</button>
-       <button 
-        onClick={toggleLanguage}
-        className={`px-3 py-1.5 text-xs font-bold rounded-full transition-all flex items-center ${language === 'vi' ? "bg-linear-surface text-cyan-400 shadow-sm border border-cyan-500/20" : "text-linear-text-muted hover:text-foreground"}`}
-       >🇻🇳 VI</button>
+         onClick={() => setLanguage('en')}
+         className={`px-3 py-1.5 text-xs font-bold rounded-full transition-all flex items-center ${language === 'en' ? "bg-linear-surface text-cyan-400 shadow-sm border border-cyan-500/20" : "text-linear-text-muted hover:text-foreground"}`}
+        >🇺🇸 EN</button>
+        <button 
+         onClick={() => setLanguage('vi')}
+         className={`px-3 py-1.5 text-xs font-bold rounded-full transition-all flex items-center ${language === 'vi' ? "bg-linear-surface text-cyan-400 shadow-sm border border-cyan-500/20" : "text-linear-text-muted hover:text-foreground"}`}
+        >🇻🇳 VI</button>
       </div>
       <ThemeToggle />
       <Link href="/login" className="text-sm font-medium text-foreground hover:text-blue-600 transition-colors hidden sm:block">
@@ -112,6 +112,17 @@ export default function Navbar() {
        className="fixed top-20 left-4 right-4 bg-linear-surface/95 backdrop-blur-2xl border border-linear-border/50 rounded-2xl p-6 z-50 md:hidden shadow-2xl"
       >
        <div className="flex flex-col space-y-4">
+        {/* Mobile Language Switcher */}
+        <div className="flex bg-background/50 rounded-xl p-1 border ultra-thin-border mb-2">
+         <button 
+          onClick={() => setLanguage('en')}
+          className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center ${language === 'en' ? "bg-linear-surface text-cyan-400 shadow-sm border border-cyan-500/20" : "text-linear-text-muted hover:text-foreground"}`}
+         >🇺🇸 English</button>
+         <button 
+          onClick={() => setLanguage('vi')}
+          className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center ${language === 'vi' ? "bg-linear-surface text-cyan-400 shadow-sm border border-cyan-500/20" : "text-linear-text-muted hover:text-foreground"}`}
+         >🇻🇳 Tiếng Việt</button>
+        </div>
         {navLinks.map((link) => (
          <Link 
           key={link.href} 

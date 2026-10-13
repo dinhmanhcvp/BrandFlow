@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Hexagon, Loader2, Sparkles } from 'lucide-react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
@@ -21,6 +23,7 @@ const providerLabels: Record<SocialProvider, string> = {
 };
 
 function LoginForm() {
+  const { language, setLanguage } = useLanguage();
  const [email, setEmail] = useState('');
  const [password, setPassword] = useState('');
  const [inviteCode, setInviteCode] = useState('');
@@ -206,7 +209,7 @@ function LoginForm() {
       Welcome to BrandFlow
      </h2>
      <p className="text-slate-500 dark:text-slate-400 text-sm">
-      {isRegister ? 'Tạo tài khoản mới để bắt đầu' : 'Đăng nhập để tiếp tục vào Workspace'}
+      {isRegister ? (language === 'vi' ? 'Tạo tài khoản mới để bắt đầu' : 'Create an account to get started') : (language === 'vi' ? 'Đăng nhập để tiếp tục vào Workspace' : 'Sign in to access your Workspace')}
      </p>
     </div>
 
@@ -228,7 +231,7 @@ function LoginForm() {
        }}
        className="w-full flex items-center justify-center py-3.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 hover:scale-[1.01] transition-all cursor-pointer"
       >
-       Đăng nhập Admin (Onboarding)
+       {language === 'vi' ? 'Đăng nhập Admin (Onboarding)' : 'Admin Login (Onboarding)'}
       </button>
 
       <button
@@ -254,7 +257,7 @@ function LoginForm() {
          </g>
         </svg>
        )}
-       Tiếp tục với Google
+       {language === 'vi' ? 'Tiếp tục với Google' : 'Continue with Google'}
       </button>
 
 
@@ -269,7 +272,7 @@ function LoginForm() {
          <path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
         </svg>
        )}
-       Tiếp tục với Facebook
+       {language === 'vi' ? 'Tiếp tục với Facebook' : 'Continue with Facebook'}
       </button>
 
       <button
@@ -283,7 +286,7 @@ function LoginForm() {
          <path fill="#0A66C2" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
         </svg>
        )}
-       Tiếp tục với LinkedIn
+       {language === 'vi' ? 'Tiếp tục với LinkedIn' : 'Continue with LinkedIn'}
       </button>
      </div>
 
@@ -292,7 +295,7 @@ function LoginForm() {
        <div className="w-full border-t border-slate-200 dark:border-slate-800" />
       </div>
       <div className="relative flex justify-center text-xs uppercase tracking-widest font-semibold">
-       <span className="px-3 bg-white dark:bg-[#111827] text-slate-400">Hoặc email</span>
+       <span className="px-3 bg-white dark:bg-[#111827] text-slate-400">{language === 'vi' ? 'Hoặc email' : 'Or with email'}</span>
       </div>
      </div>
 
@@ -318,7 +321,7 @@ function LoginForm() {
           type="email"
           required
           className="block w-full pl-11 pr-4 py-3.5 bg-slate-50/50 dark:bg-[#0B1120]/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-medium"
-          placeholder="Địa chỉ Email"
+          placeholder={language === 'vi' ? "Địa chỉ Email" : "Email Address"}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
          />
@@ -334,7 +337,7 @@ function LoginForm() {
           type="password"
           required
           className="block w-full pl-11 pr-4 py-3.5 bg-slate-50/50 dark:bg-[#0B1120]/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-medium"
-          placeholder="Mật khẩu"
+          placeholder={language === 'vi' ? "Mật khẩu" : "Password"}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
          />
@@ -350,7 +353,7 @@ function LoginForm() {
           <input
            type="text"
            className="block w-full pl-11 pr-4 py-3.5 bg-slate-50/50 dark:bg-[#0B1120]/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-medium"
-           placeholder="Mã Beta Invite (Tùy chọn)"
+           placeholder={language === 'vi' ? "Mã Beta Invite (Tùy chọn)" : "Beta Invite Code (Optional)"}
            value={inviteCode}
            onChange={(e) => setInviteCode(e.target.value)}
           />
@@ -367,11 +370,11 @@ function LoginForm() {
        {loading ? (
         <div className="flex items-center gap-2">
          <Loader2 className="w-4 h-4 animate-spin" />
-         <span>Đang xử lý...</span>
+         <span>{language === 'vi' ? 'Đang xử lý...' : 'Processing...'}</span>
         </div>
        ) : (
         <div className="flex items-center gap-2">
-         {isRegister ? 'Đăng ký ngay' : 'Đăng nhập'}
+         {isRegister ? (language === 'vi' ? 'Đăng ký ngay' : 'Sign Up') : (language === 'vi' ? 'Đăng nhập' : 'Sign In')}
         </div>
        )}
       </button>
@@ -385,7 +388,7 @@ function LoginForm() {
          setError('');
         }}
        >
-        {isRegister ? 'Đã có tài khoản? Đăng nhập' : 'Chưa có tài khoản? Tạo mới'}
+        {isRegister ? (language === 'vi' ? 'Đã có tài khoản? Đăng nhập' : 'Already have an account? Sign in') : (language === 'vi' ? 'Chưa có tài khoản? Tạo mới' : "Don't have an account? Sign up")}
        </button>
       </div>
      </form>

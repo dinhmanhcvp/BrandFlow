@@ -9,7 +9,7 @@ import BrandAssetsCard from '@/components/dashboard/BrandAssetsCard';
 import FinancialRiskAlert from '@/components/dashboard/FinancialRiskAlert';
 
 export default function DashboardPage() {
- const { t } = useLanguage();
+ const { t, language } = useLanguage();
  const [mounted, setMounted] = useState(false);
 
  useEffect(() => {
@@ -47,21 +47,21 @@ export default function DashboardPage() {
        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
        <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">All Systems Nominal</span>
       </div>
-      <h1 className="text-3xl md:text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 font-heading tracking-tight mb-2">
+      <h1 className="text-3xl md:text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-slate-950 via-slate-800 to-slate-700 dark:from-white dark:to-slate-400 font-heading tracking-tight mb-2">
        Command Center
       </h1>
-      <p className="text-slate-400 font-medium text-sm md:text-base">
-       Tổng hợp toàn diện hoạt động kinh doanh, tài sản thương hiệu và hiệu suất Hệ thống AI.
+      <p className="text-slate-600 dark:text-slate-400 font-medium text-sm md:text-base">
+       {language === 'vi' ? 'Tổng hợp toàn diện hoạt động kinh doanh, tài sản thương hiệu và hiệu suất Hệ thống AI.' : 'Comprehensive overview of business operations, brand assets, and AI Agent performance.'}
       </p>
      </div>
      <div className="flex gap-3">
       <button className="glassbox-card !px-5 !py-2.5 flex items-center gap-2 hover:bg-white/5 transition-colors group">
        <BarChart3 className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
-       <span className="text-sm font-bold text-slate-200">Xuất Báo Cáo</span>
+       <span className="text-sm font-bold text-slate-200">{language === 'vi' ? 'Xuất Báo Cáo' : 'Export Report'}</span>
       </button>
       <button className="glassbox-card !px-5 !py-2.5 flex items-center gap-2 hover:bg-white/5 transition-colors group bg-blue-600/20 border-blue-500/30">
        <Zap className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
-       <span className="text-sm font-bold text-slate-200">Tạo Chiến dịch Mới</span>
+       <span className="text-sm font-bold text-slate-200">{language === 'vi' ? 'Tạo Chiến dịch Mới' : 'Create Campaign'}</span>
       </button>
      </div>
     </div>
@@ -86,8 +86,8 @@ export default function DashboardPage() {
          <ArrowUpRight className="w-4 h-4 text-slate-600 group-hover:text-white transition-colors" />
         </div>
         <div>
-         <h3 className="text-3xl font-black text-white mb-1 tracking-tight">{stat.value}</h3>
-         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">{stat.label}</p>
+         <h3 className="text-3xl font-black text-slate-900 dark:text-white mb-1 tracking-tight">{stat.value}</h3>
+         <p className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-3">{stat.label}</p>
          <div className="flex items-center gap-2">
           <span className="flex items-center text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
            <TrendingUp className="w-3 h-3 mr-1" /> {stat.trend.split(' ')[0]}
@@ -107,19 +107,19 @@ export default function DashboardPage() {
      <div className="xl:col-span-2 flex flex-col gap-6">
       
       {/* ROI & Budget Utilization Panel */}
-      <div className="glassbox-card !p-6 flex flex-col md:flex-row gap-8 bg-gradient-to-br from-slate-900/80 to-slate-800/50">
+      <div className="glassbox-card !p-6 flex flex-col md:flex-row gap-8 bg-white/95 dark:bg-gradient-to-br dark:from-slate-900/80 dark:to-slate-800/50 border border-slate-200 dark:border-white/10 shadow-lg">
        <div className="flex-1">
-        <h3 className="text-sm font-bold text-slate-300 uppercase tracking-widest mb-6 flex items-center gap-2">
+        <h3 className="text-sm font-bold text-slate-800 dark:text-slate-300 uppercase tracking-widest mb-6 flex items-center gap-2">
          <Target className="w-4 h-4 text-purple-400" /> Tiến độ Giải ngân vs ROI
         </h3>
         
         <div className="space-y-6">
          <div>
           <div className="flex justify-between text-sm mb-2">
-           <span className="font-bold text-slate-200">Chiến dịch Mùa Hè</span>
+           <span className="font-bold text-slate-800 dark:text-slate-200">Chiến dịch Mùa Hè</span>
            <span className="text-cyan-400 font-mono">65% / 80% ROI</span>
           </div>
-          <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden flex">
+          <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden flex">
            <div className="h-full bg-cyan-500 w-[65%]" />
            <div className="h-full bg-blue-500 w-[15%]" />
           </div>
@@ -127,20 +127,20 @@ export default function DashboardPage() {
          
          <div>
           <div className="flex justify-between text-sm mb-2">
-           <span className="font-bold text-slate-200">Zalo O2O Loyalty</span>
+           <span className="font-bold text-slate-800 dark:text-slate-200">Zalo O2O Loyalty</span>
            <span className="text-emerald-400 font-mono">30% / Đang test</span>
           </div>
-          <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+          <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
            <div className="h-full bg-emerald-500 w-[30%]" />
           </div>
          </div>
          
          <div>
           <div className="flex justify-between text-sm mb-2">
-           <span className="font-bold text-slate-200">Brand Awareness Q3</span>
+           <span className="font-bold text-slate-800 dark:text-slate-200">Brand Awareness Q3</span>
            <span className="text-pink-400 font-mono">90% / Hoàn tất</span>
           </div>
-          <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+          <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
            <div className="h-full bg-pink-500 w-[90%]" />
           </div>
          </div>
@@ -149,11 +149,11 @@ export default function DashboardPage() {
 
        <div className="w-full md:w-64 border-t md:border-t-0 md:border-l border-white/10 pt-6 md:pt-0 md:pl-8 flex flex-col justify-center">
          <div className="text-center mb-6">
-          <div className="text-4xl font-black text-white mb-2">248%</div>
-          <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Average ROAS</div>
+          <div className="text-4xl font-black text-slate-900 dark:text-white mb-2">248%</div>
+          <div className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">Average ROAS</div>
          </div>
          <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-          <span className="text-xs font-bold text-slate-300">Net Profit Của AI</span>
+          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Net Profit Của AI</span>
           <span className="text-sm font-black text-emerald-400">+1.2 Tỷ</span>
          </div>
        </div>
@@ -162,14 +162,14 @@ export default function DashboardPage() {
       {/* Trợ lý AI Activity Feed */}
       <div className="glassbox-card !p-0 overflow-hidden flex flex-col border border-cyan-500/20 shadow-[0_0_30px_rgba(6,182,212,0.05)]">
        <div className="p-5 border-b border-white/5 flex justify-between items-center bg-gradient-to-r from-transparent to-cyan-500/10">
-        <h3 className="font-bold text-slate-200 flex items-center gap-2">
+        <h3 className="font-bold text-slate-900 dark:text-slate-200 flex items-center gap-2">
          <Activity className="w-4 h-4 text-cyan-400" /> Luồng thực thi AI Multi-Trợ lý AI (Live)
         </h3>
         <span className="text-xs font-mono text-cyan-400/80 flex items-center gap-2 bg-cyan-500/10 px-3 py-1 rounded-full">
          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" /> Đang giám sát
         </span>
        </div>
-       <div className="p-6 flex-1 flex flex-col gap-6 bg-black/40">
+       <div className="p-6 flex-1 flex flex-col gap-6 bg-slate-50/90 dark:bg-black/40 border-t border-slate-200 dark:border-white/5">
         {agentLogs.map((log, i) => (
          <motion.div 
           initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + i * 0.1 }}
@@ -186,7 +186,7 @@ export default function DashboardPage() {
             <span className={`text-xs font-black uppercase tracking-widest ${log.color}`}>{log.agent} Trợ lý AI</span>
             <span className="text-[10px] font-mono text-slate-500 flex items-center gap-1"><Clock className="w-3 h-3" /> {log.time}</span>
            </div>
-           <p className="text-sm font-medium text-slate-300 leading-relaxed group-hover:text-white transition-colors">{log.action}</p>
+           <p className="text-sm font-medium text-slate-700 dark:text-slate-300 leading-relaxed group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{log.action}</p>
           </div>
          </motion.div>
         ))}
@@ -199,22 +199,22 @@ export default function DashboardPage() {
      <div className="flex flex-col gap-6">
       <FinancialRiskAlert />
       
-      <div className="glassbox-card !p-6 flex-1 bg-gradient-to-b from-blue-900/40 to-slate-900/60 border-blue-500/30 shadow-[0_0_40px_rgba(59,130,246,0.1)] relative overflow-hidden group hover:border-blue-500/50 transition-colors">
+      <div className="glassbox-card !p-6 flex-1 bg-white/95 dark:bg-gradient-to-b dark:from-blue-900/40 dark:to-slate-900/60 border border-slate-200 dark:border-blue-500/30 shadow-lg shadow-[0_0_40px_rgba(59,130,246,0.1)] relative overflow-hidden group hover:border-blue-500/50 transition-colors">
        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 blur-[50px]" />
        
-       <h3 className="text-sm font-bold text-slate-200 mb-6 flex items-center gap-2 uppercase tracking-widest">
+       <h3 className="text-sm font-bold text-slate-900 dark:text-slate-200 mb-6 flex items-center gap-2 uppercase tracking-widest">
         <ShieldCheck className="w-4 h-4 text-blue-400" /> Cần Phê Duyệt Khẩn Cấp
        </h3>
        
        <div className="flex flex-col gap-4">
-        <div className="p-4 rounded-xl bg-black/40 border border-white/10 hover:bg-black/60 transition-colors">
+        <div className="p-4 rounded-xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-black/60 transition-colors">
          <div className="flex justify-between items-start mb-2">
-          <p className="text-sm font-bold text-white">Zalo Mini App O2O</p>
+          <p className="text-sm font-bold text-slate-900 dark:text-white">Zalo Mini App O2O</p>
           <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400">High Priority</span>
          </div>
-         <p className="text-xs text-slate-400 mb-4 leading-relaxed">CFO Trợ lý AI đề xuất tăng 15% ngân sách do tỷ lệ chuyển đổi đang vượt mức kỳ vọng.</p>
+         <p className="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">CFO Trợ lý AI đề xuất tăng 15% ngân sách do tỷ lệ chuyển đổi đang vượt mức kỳ vọng.</p>
          <div className="flex justify-between items-center text-xs">
-           <span className="text-slate-500">Ngân sách mới:</span>
+           <span className="text-slate-600 dark:text-slate-500">Ngân sách mới:</span>
            <span className="font-bold text-blue-400">65,000,000đ</span>
          </div>
         </div>
@@ -223,7 +223,7 @@ export default function DashboardPage() {
          <button className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold shadow-lg shadow-blue-500/20 transition-transform hover:-translate-y-0.5">
           Phê duyệt
          </button>
-         <button className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-sm font-bold transition-colors">
+         <button className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 text-sm font-bold transition-colors border border-slate-200 dark:border-transparent">
           Từ chối
          </button>
         </div>

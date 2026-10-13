@@ -21,7 +21,7 @@ function BudgetCutHighlight({ text }: { text: string }) {
 
   parts.push(
    <span key={`cut-${idx}`} className="relative inline-flex items-center group cursor-help mx-1">
-    <motion.span initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-semibold ${isCut ? 'bg-red-500/15 text-red-400 border border-red-500/20' : 'bg-orange-500/15 text-orange-400 border border-orange-500/20'}`}>
+    <motion.span initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-semibold ${isCut ? 'bg-red-100 dark:bg-red-500/15 text-red-700 dark:text-red-400 border border-red-300 dark:border-red-500/20' : 'bg-orange-100 dark:bg-orange-500/15 text-orange-800 dark:text-orange-400 border border-orange-300 dark:border-orange-500/20'}`}>
      {isCut ? <XCircle className="w-3 h-3" /> : <Scissors className="w-3 h-3" />}
      <span className={isCut ? 'line-through decoration-red-500/80' : ''}>{itemName.trim()}</span>
      <span className="font-mono opacity-70">-{amount}đ</span>
@@ -86,14 +86,14 @@ export default function CinematicDebateMock({ onNext }: { onNext: () => void }) 
  }, [messages.length]);
 
  const getAgentTheme = (agent: string, type: string) => {
-  if (type === 'warning') return { bg: 'bg-red-500/5', border: 'border-red-500/20', text: 'text-red-400', iconBg: 'bg-red-500/20', icon: AlertTriangle };
-  if (type === 'budget_cut') return { bg: 'bg-amber-500/5', border: 'border-amber-500/20', text: 'text-amber-400', iconBg: 'bg-amber-500/20', icon: Scissors };
-  if (agent === 'CMO') return { bg: 'bg-blue-500/5', border: 'border-blue-500/20', text: 'text-blue-400', iconBg: 'bg-blue-500/20', icon: Bot };
-  if (agent === 'Customer') return { bg: 'bg-cyan-500/5', border: 'border-cyan-500/20', text: 'text-cyan-400', iconBg: 'bg-cyan-500/20', icon: Bot };
-  if (agent === 'CFO') return { bg: 'bg-orange-500/5', border: 'border-orange-500/20', text: 'text-orange-400', iconBg: 'bg-orange-500/20', icon: TrendingDown };
-  if (agent === 'COO') return { bg: 'bg-purple-500/5', border: 'border-purple-500/20', text: 'text-purple-400', iconBg: 'bg-purple-500/20', icon: Bot };
-  if (agent === 'SALES') return { bg: 'bg-emerald-500/5', border: 'border-emerald-500/20', text: 'text-emerald-400', iconBg: 'bg-emerald-500/20', icon: Bot };
-  return { bg: 'bg-slate-800/20', border: 'border-slate-700/50', text: 'text-slate-300', iconBg: 'bg-slate-800/50 border border-slate-700', icon: ShieldCheck };
+  if (type === 'warning') return { bg: 'bg-red-50 dark:bg-red-500/10', border: 'border-red-300 dark:border-red-500/30', text: 'text-red-700 dark:text-red-400', iconBg: 'bg-red-100 dark:bg-red-500/20', icon: AlertTriangle };
+  if (type === 'budget_cut') return { bg: 'bg-amber-50 dark:bg-amber-500/10', border: 'border-amber-300 dark:border-amber-500/30', text: 'text-amber-800 dark:text-amber-400', iconBg: 'bg-amber-100 dark:bg-amber-500/20', icon: Scissors };
+  if (agent === 'CMO') return { bg: 'bg-blue-50 dark:bg-blue-500/10', border: 'border-blue-300 dark:border-blue-500/30', text: 'text-blue-800 dark:text-blue-400', iconBg: 'bg-blue-100 dark:bg-blue-500/20', icon: Bot };
+  if (agent === 'Customer') return { bg: 'bg-cyan-50 dark:bg-cyan-500/10', border: 'border-cyan-300 dark:border-cyan-500/30', text: 'text-cyan-800 dark:text-cyan-400', iconBg: 'bg-cyan-100 dark:bg-cyan-500/20', icon: Bot };
+  if (agent === 'CFO') return { bg: 'bg-orange-50 dark:bg-orange-500/10', border: 'border-orange-300 dark:border-orange-500/30', text: 'text-orange-800 dark:text-orange-400', iconBg: 'bg-orange-100 dark:bg-orange-500/20', icon: TrendingDown };
+  if (agent === 'COO') return { bg: 'bg-purple-50 dark:bg-purple-500/10', border: 'border-purple-300 dark:border-purple-500/30', text: 'text-purple-800 dark:text-purple-400', iconBg: 'bg-purple-100 dark:bg-purple-500/20', icon: Bot };
+  if (agent === 'SALES') return { bg: 'bg-emerald-50 dark:bg-emerald-500/10', border: 'border-emerald-300 dark:border-emerald-500/30', text: 'text-emerald-800 dark:text-emerald-400', iconBg: 'bg-emerald-100 dark:bg-emerald-500/20', icon: Bot };
+  return { bg: 'bg-slate-100 dark:bg-slate-800/40', border: 'border-slate-300 dark:border-slate-700/50', text: 'text-slate-900 dark:text-slate-300', iconBg: 'bg-slate-200 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700', icon: ShieldCheck };
  };
 
  const getStatusBadge = (type: string) => {
@@ -222,26 +222,26 @@ export default function CinematicDebateMock({ onNext }: { onNext: () => void }) 
       </div>
      </div>
 
-     <div className="w-full lg:w-2/5 h-64 lg:h-full flex flex-col bg-slate-900/30 border border-slate-700/40 rounded-2xl overflow-hidden backdrop-blur-sm">
-      <div className="p-3 border-b border-slate-700/30 bg-slate-900/50 flex items-center justify-between">
-       <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Communication Log</span>
-       <span className="text-[10px] font-mono text-slate-500">{historyMsgs.length} Entries</span>
+     <div className="w-full lg:w-2/5 h-64 lg:h-full flex flex-col bg-white/95 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/40 rounded-2xl overflow-hidden backdrop-blur-sm shadow-xl">
+      <div className="p-3.5 border-b border-slate-200 dark:border-slate-700/30 bg-slate-100 dark:bg-slate-900/50 flex items-center justify-between">
+       <span className="text-xs font-black text-slate-900 dark:text-slate-200 uppercase tracking-wider">Communication Log</span>
+       <span className="text-[10px] font-mono text-slate-700 dark:text-slate-400 font-bold">{historyMsgs.length} Entries</span>
       </div>
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
        <AnimatePresence initial={false}>
         {historyMsgs.map((msg) => {
          const theme = getAgentTheme(msg.agent, msg.type);
          return (
-          <motion.div key={msg.id} initial={{ opacity: 0, x: -20, height: 0 }} animate={{ opacity: 1, x: 0, height: 'auto' }} className={`p-3 rounded-xl border ${theme.border} ${theme.bg} flex gap-3 opacity-60 hover:opacity-100 transition-opacity`}>
+          <motion.div key={msg.id} initial={{ opacity: 0, x: -20, height: 0 }} animate={{ opacity: 1, x: 0, height: 'auto' }} className={`p-3 rounded-xl border ${theme.border} ${theme.bg} flex gap-3 opacity-100 dark:opacity-75 hover:opacity-100 transition-opacity shadow-sm`}>
            <div className={`w-8 h-8 rounded-lg ${theme.iconBg} flex items-center justify-center shrink-0`}>
             {React.createElement(theme.icon, { className: `w-4 h-4 ${theme.text}` })}
            </div>
            <div className="min-w-0 flex-1">
             <div className="flex justify-between items-center mb-1">
              <span className={`text-[10px] font-bold uppercase ${theme.text}`}>{msg.agent}</span>
-             <span className="text-[9px] font-mono text-slate-600">Archived</span>
+             <span className="text-[9px] font-mono text-slate-600 dark:text-slate-400 font-semibold">Archived</span>
             </div>
-            <div className="text-xs text-slate-300 line-clamp-3 leading-relaxed">{msg.text}</div>
+            <div className="text-xs text-slate-900 dark:text-slate-200 font-medium line-clamp-3 leading-relaxed">{msg.text}</div>
            </div>
           </motion.div>
          );

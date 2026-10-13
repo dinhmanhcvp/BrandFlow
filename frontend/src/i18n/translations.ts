@@ -27,7 +27,7 @@ export const translations = {
  b2b: {
   title: { en: "B2B Planning", vi: "Kế hoạch Marketing B2B" },
   phase1: { en: "Data Ingestion", vi: "Thu thập Dữ liệu" },
-  phase2: { en: "Trợ lý AI Debate", vi: "AI Phân tích Chiến lược" },
+  phase2: { en: "AI Strategy Debate", vi: "AI Phân tích Chiến lược" },
   phase3: { en: "Budgeting", vi: "Phân bổ Ngân sách" },
   phase4: { en: "Blueprint", vi: "Kế hoạch Tổng thể" },
   module_sources: { en: "Data Sources", vi: "Nguồn Dữ liệu" },
@@ -137,7 +137,7 @@ export const translations = {
   step_c3: { en: "Business", vi: "Trọng tâm" },
  },
  dashboard: {
-  loading1: { en: "CMO Trợ lý AI is analyzing your market positioning...", vi: "AI CMO đang phân tích vị thế thương hiệu trên thị trường..." },
+  loading1: { en: "AI CMO is analyzing your market positioning...", vi: "AI CMO đang phân tích vị thế thương hiệu trên thị trường..." },
   loading2: { en: "Synthesizing competitive threats...", vi: "Đang rà soát các đối thủ cạnh tranh..." },
   loading3: { en: "Calculating brand health vectors...", vi: "Đang tính toán chỉ số sức khỏe thương hiệu..." },
   loading4: { en: "Finalizing Hồ sơ Thương hiệu...", vi: "Đang hoàn thiện Hồ sơ Thương hiệu..." },
@@ -177,7 +177,7 @@ export const translations = {
   // Financial Risk Alert
   risk_warn: { en: "Warning", vi: "Cảnh báo Hệ thống" },
   risk_title: { en: "Financial Hallucination Risk", vi: "Rủi ro Sai lệch Ngân sách" },
-  risk_desc: { en: 'Trợ lý AI "Tactical Budgeter" attempted to allocate $5,000 to an unverified channel. The Math Engine has blocked this transaction.', vi: 'Trợ lý "Lập ngân sách" vừa ghi nhận đề xuất phân bổ ngân quỹ 5,000 USD vào một kênh có rủi ro ROI kém. Máy tính Động lực (Math Engine) đã tự động tạm ngưng giao dịch để đảm bảo lợi nhuận ròng cho hệ thống.' },
+  risk_desc: { en: 'AI Agent "Tactical Budgeter" attempted to allocate $5,000 to an unverified channel. The Math Engine has blocked this transaction.', vi: 'Trợ lý "Lập ngân sách" vừa ghi nhận đề xuất phân bổ ngân quỹ 5,000 USD vào một kênh có rủi ro ROI kém. Máy tính Động lực (Math Engine) đã tự động tạm ngưng giao dịch để đảm bảo lợi nhuận ròng cho hệ thống.' },
   risk_btn: { en: "Review Blocked Budget", vi: "Kiểm tra Dòng tiền Tạm ngưng" }
  },
  // === WORKSPACE FLOW ===
@@ -188,9 +188,9 @@ export const translations = {
  // === B2B PAGES ===
  b2b_tools: {
   save_draft: { en: "Save Draft", vi: "Lưu Bản nháp" },
-  export_pdf: { en: "Xuất PDF", vi: "Xuất file PDF" },
+  export_pdf: { en: "Export PDF", vi: "Xuất file PDF" },
   mascot_purpose: { en: "Purpose", vi: "Mục đích" },
-  mascot_thinking: { en: "Trợ lý AI is thinking...", vi: "Trợ lý AI đang phân tích..." },
+  mascot_thinking: { en: "AI Agent is thinking...", vi: "Trợ lý AI đang phân tích..." },
   alert_default: { en: "Instruction", vi: "Hướng dẫn" },
  },
  b2b_report: {
@@ -283,13 +283,13 @@ export const translations = {
  // === WORKSPACE PHASE 2 ===
  workspace_phase2: {
   title: { en: "Strategic Debate Board", vi: "Bàn Phân tích Chiến lược" },
-  desc: { en: "AI Agents are evaluating strategy based on the Master Profile. Dynamic constraints detect risk violations continuously.", vi: "Các AI Trợ lý AI đang đánh giá chiến lược dựa trên Hồ sơ Thương hiệu. Hệ thống kiểm soát rủi ro hoạt động liên tục." },
+  desc: { en: "AI Agents are evaluating strategy based on the Master Profile. Dynamic constraints detect risk violations continuously.", vi: "Các AI Agents đang đánh giá chiến lược dựa trên Hồ sơ Thương hiệu. Hệ thống kiểm soát rủi ro hoạt động liên tục." },
   rejected: { en: "Rejected", vi: "Từ chối" },
   warning: { en: "Risk Warning", vi: "Cảnh báo Rủi ro" },
   approved: { en: "Approved", vi: "Đã duyệt" },
   analyzing: { en: "Analyzing parameters...", vi: "Đang phân tích..." },
   locked_title: { en: "Strategic Blueprint Locked", vi: "Chiến lược đã được Chốt" },
-  locked_desc: { en: "All Agents have reached absolute consensus (100%). The 3-month strategy prioritizing LinkedIn Whitepapers and Organic SEO is firmly established and appended to Blockchain Logs.", vi: "Các AI Trợ lý AI đã đạt đồng thuận 100%. Chiến lược 3 tháng tới đã được chốt và lưu vào hệ thống." },
+  locked_desc: { en: "All Agents have reached absolute consensus (100%). The 3-month strategy prioritizing LinkedIn Whitepapers and Organic SEO is firmly established and appended to Blockchain Logs.", vi: "Các AI Agents đã đạt đồng thuận 100%. Chiến lược 3 tháng tới đã được chốt và lưu vào hệ thống." },
   proceed: { en: "Proceed to Tactical Budgeting", vi: "Chuyển sang Phân bổ Ngân sách" }
  },
  // === WORKSPACE PHASE 3 ===
@@ -323,7 +323,7 @@ export const translations = {
   start_free: { en: "Start for free", vi: "Bắt đầu miễn phí" }
  },
  landing_hero: {
-  badge: { en: "BrandFlow Multi-Trợ lý AI System", vi: "BrandFlow Multi-Trợ lý AI System" },
+  badge: { en: "BrandFlow Multi-Agent AI System", vi: "Hệ thống BrandFlow Đa Tác tử (Multi-Agent)" },
   title_1: { en: "Absolute precision.", vi: "Tuyệt đối chính xác." },
   title_2: { en: "Fully automated.", vi: "Hoàn toàn tự động." },
   desc: { en: "Every marketing strategy is vetted by the \"Math Engine\" to prevent financial hallucinations, ensuring your ad budget is strictly controlled by real data.", vi: "Mỗi chiến lược marketing đều được thẩm định bởi \"Math Engine\" chống ảo giác tài chính, đảm bảo ngân sách quảng cáo của bạn luôn được kiểm soát tuyệt đối bằng dữ liệu thực." },
@@ -338,7 +338,7 @@ export const translations = {
   tier1_desc: { en: "Experience the basic power of AI in planning.", vi: "Trải nghiệm cơ bản sức mạnh của AI trong việc lập kế hoạch." },
   tier1_f1: { en: "Basic Dashboard Access", vi: "Sử dụng Dashboard Cơ Bản" },
   tier1_f2: { en: "Limit 10 prompts / day", vi: "Giới hạn 10 câu lệnh (Prompts) / ngày" },
-  tier1_f3: { en: "1 AI Trợ lý AI Approach (Strategy)", vi: "Tiếp cận 1 AI Trợ lý AI (Strategy)" },
+  tier1_f3: { en: "1 AI Agent Access (Strategy)", vi: "Tiếp cận 1 AI Agent (Chiến lược)" },
   tier1_f4: { en: "No advanced exports", vi: "Không bao gồm xuất file nâng cao" },
   tier1_cta: { en: "Start for free", vi: "Bắt đầu miễn phí" },
   
@@ -364,7 +364,7 @@ export const translations = {
   tier3_cta: { en: "Contact Sales", vi: "Liên hệ tư vấn" },
  },
  landing_footer: {
-  desc: { en: "B2B Marketing AI Platform. We build Multi-Trợ lý AI architecture to automate the entire media planning and execution flow.", vi: "B2B Marketing AI Platform. Chúng tôi xây dựng mô hình Multi-Trợ lý AI để tự động hóa toàn bộ luồng quy trình hoạch định và thực thi ngân sách truyền thông." },
+  desc: { en: "B2B Marketing AI Platform. We build Multi-Agent architecture to automate the entire media planning and execution flow.", vi: "B2B Marketing AI Platform. Chúng tôi xây dựng mô hình Multi-Agent để tự động hóa toàn bộ luồng quy trình hoạch định và thực thi ngân sách truyền thông." },
   col1_title: { en: "Products", vi: "Sản Phẩm" },
   col1_l1: { en: "AI Agents", vi: "AI Agents" },
   col1_l2: { en: "Workspace", vi: "Không Gian Mạng" },
@@ -402,22 +402,22 @@ export const translations = {
   s3_desc: { en: "Create consistent brand identity based on real data.", vi: "Sáng tạo nhận diện thương hiệu nhất quán dựa trên dữ liệu thật." },
   s4_title: { en: "Data & Strategy Controller", vi: "Data & Strategy Controller" },
   s4_desc: { en: "Real-time data and strategy analysis, zero emotion, zero bias.", vi: "Phân tích số liệu và chiến lược thời gian thực, không cảm tính, không bias." },
-  connect: { en: "Connect Trợ lý AI", vi: "Kết nối Trợ lý AI" }
+  connect: { en: "Connect Agent", vi: "Kết nối AI Agent" }
  },
  
  landing_metrics: {
-  m1: { en: "Autonomous AI Agents", vi: "AI Trợ lý AI tự hành" },
+  m1: { en: "Autonomous AI Agents", vi: "AI Agents Tự hành" },
   m2: { en: "Data Processing Speed", vi: "Tốc độ xử lý dữ liệu" },
   m3: { en: "Marketing Platforms", vi: "Nền tảng Marketing" },
   m4: { en: "Transparent Simulation", vi: "Mô phỏng minh bạch" },
  },
 
  landing_live: {
-  agent_cortex: { en: "Trợ lý AI Cortex", vi: "Trợ lý AI Cortex" },
+  agent_cortex: { en: "Agent Cortex", vi: "Trung tâm Điều phối AI Cortex" },
   online: { en: "Active", vi: "Đang hoạt động" },
-  agent1: { en: "Market Trợ lý AI", vi: "Market Trợ lý AI" },
-  agent2: { en: "Trợ lý AI Sáng tạo", vi: "Trợ lý AI Sáng tạo" },
-  agent3: { en: "Copywriter Trợ lý AI", vi: "Copywriter Trợ lý AI" },
+  agent1: { en: "Market Intelligence Agent", vi: "Chuyên gia Thị trường AI" },
+  agent2: { en: "Creative Strategy Agent", vi: "Chuyên gia Sáng tạo AI" },
+  agent3: { en: "Content & Copywriter Agent", vi: "Chuyên gia Content & Copywriter AI" },
   agent4: { en: "Math Engine", vi: "Math Engine" },
   msg1: { en: "Analyzed 10,000+ competitor data points", vi: "Phân tích xong 10,000+ dữ liệu đối thủ" },
   msg2: { en: "Proposed Minimalist design style", vi: "Đề xuất phong cách thiết kế Minimalist" },
@@ -435,7 +435,7 @@ export const translations = {
   topic: { en: "Post Topic", vi: "Chủ đề bài viết" },
   topic_ph: { en: "e.g., Launching a new feature to optimize costs...", vi: "VD: Ra mắt tính năng mới giúp tối ưu hóa chi phí..." },
   platform: { en: "Platform", vi: "Nền tảng" },
-  tone: { en: "Giọng điệu", vi: "Giọng văn (Tone)" },
+  tone: { en: "Tone of Voice", vi: "Giọng văn (Tone)" },
   tone_1: { en: "Professional", vi: "Chuyên nghiệp" },
   tone_2: { en: "Humorous & Friendly", vi: "Hài hước, gần gũi" },
   tone_3: { en: "Inspirational", vi: "Truyền cảm hứng" },
@@ -457,7 +457,7 @@ export const translations = {
  design_studio: {
   title: { en: "Design Studio", vi: "Studio Thiết Kế" },
   desc: { en: "B2B Visual Asset & Brand Identity Generator", vi: "Hệ thống Sinh Nội dung Hình ảnh & Bộ Nhận diện Thương hiệu B2B" },
-  agent0_title: { en: "Trợ lý AI 0: Master DNA", vi: "Đặc vụ 0: Bộ DNA Gốc" },
+  agent0_title: { en: "Agent 0: Master DNA", vi: "Đặc vụ 0: Bộ DNA Gốc" },
   synced: { en: "SYNCED", vi: "ĐÃ ĐỒNG BỘ" },
   ind_lbl: { en: "Industry", vi: "Lĩnh Vực" },
   usps_lbl: { en: "Core USPs", vi: "Lợi Thế Cốt Lõi" },
@@ -529,6 +529,55 @@ export const translations = {
   strategic_planning: { en: "Strategic Planning", vi: "Lập Kế hoạch Chiến lược" },
   strategic_desc: { en: "Full AI-driven marketing strategy with budget allocation.", vi: "Chiến lược marketing toàn diện với AI phân bổ ngân sách." },
  },
+  // === AUTH & LOGIN ===
+  auth: {
+    welcome: { en: "Welcome to BrandFlow", vi: "Chào mừng đến với BrandFlow" },
+    login_subtitle: { en: "Sign in to access your Workspace", vi: "Đăng nhập để tiếp tục vào Workspace" },
+    register_subtitle: { en: "Create a new account to get started", vi: "Tạo tài khoản mới để bắt đầu" },
+    admin_btn: { en: "Admin Login (Onboarding)", vi: "Đăng nhập Admin (Onboarding)" },
+    continue_google: { en: "Continue with Google", vi: "Tiếp tục với Google" },
+    continue_facebook: { en: "Continue with Facebook", vi: "Tiếp tục với Facebook" },
+    continue_linkedin: { en: "Continue with LinkedIn", vi: "Tiếp tục với LinkedIn" },
+    or_email: { en: "Or continue with email", vi: "Hoặc tiếp tục bằng email" },
+    email_label: { en: "Work Email", vi: "Email Công việc" },
+    password_label: { en: "Password", vi: "Mật khẩu" },
+    invite_code: { en: "Invite Code (Optional)", vi: "Mã mời (Tùy chọn)" },
+    signin_btn: { en: "Sign In", vi: "Đăng nhập" },
+    signup_btn: { en: "Create Account", vi: "Tạo tài khoản" },
+    no_account: { en: "Don't have an account? Sign up", vi: "Chưa có tài khoản? Tạo mới" },
+    have_account: { en: "Already have an account? Sign in", vi: "Đã có tài khoản? Đăng nhập" },
+    back_home: { en: "Back to Home", vi: "Trở về Trang chủ" },
+  },
+
+  // === FEATURE SELECTOR ===
+  feature_selector: {
+    badge_prefix: { en: "Brand DNA Ready — ", vi: "DNA đã sẵn sàng — " },
+    title: { en: "What would you like to do next?", vi: "Bạn muốn làm gì tiếp theo?" },
+    subtitle: { en: "Choose a feature below. Brand DNA is automatically synchronized across all modules.", vi: "Chọn tính năng phù hợp. DNA thương hiệu sẽ được tự động áp dụng vào mọi module." },
+    launch: { en: "Launch", vi: "Khởi chạy" },
+    back: { en: "Back to DNA Dashboard", vi: "Quay lại DNA Dashboard" },
+    content_title: { en: "Daily Content", vi: "Viết Content" },
+    content_desc: { en: "Generate social posts, video scripts, and marketing copy based on your Brand DNA.", vi: "Tạo bài đăng MXH, kịch bản video, email marketing dựa trên DNA thương hiệu." },
+    design_title: { en: "Design Studio", vi: "Thiết Kế" },
+    design_desc: { en: "Design logos, banners, and complete visual brand identity with AI.", vi: "Studio thiết kế logo, banner, bộ nhận diện thương hiệu với AI." },
+    campaign_title: { en: "Campaign Planner", vi: "Kế Hoạch Chiến Dịch" },
+    campaign_desc: { en: "Detailed campaign planning with Multi-Agent AI (CMO, CFO, Persona Validator).", vi: "Lập kế hoạch chi tiết cho 1 chiến dịch riêng lẻ với AI đa tác tử (CMO, CFO, Persona)." },
+    longterm_title: { en: "Long-term Marketing Plan", vi: "Kế Hoạch Marketing Dài Hạn" },
+    longterm_desc: { en: "Build a comprehensive 10-step Marketing Plan following Malcolm McDonald's standard.", vi: "Xây dựng bản kế hoạch Marketing toàn diện theo chuẩn Malcolm McDonald (10 bước)." },
+    lab_title: { en: "Content Lab", vi: "Content Lab" },
+    lab_desc: { en: "Analyze competitor content and create data-driven content strategies.", vi: "Phân tích nội dung đối thủ, tạo chiến lược nội dung dựa trên dữ liệu." },
+  },
+
+  // === ONBOARDING ADMIN SHOWCASE ===
+  onboarding_admin: {
+    badge_showcase: { en: "TV Showcase Demo · Admin", vi: "TV Showcase Demo · Admin" },
+    sample_doc: { en: "Pre-loaded Sample Document", vi: "Tài liệu mẫu có sẵn" },
+    sample_doc_desc: { en: "Brand Profile & F&B Strategic Report for Bếp Nhà Mộc.", vi: "Hồ sơ thương hiệu & Báo cáo chiến lược F&B Bếp Nhà Mộc." },
+    preview: { en: "Preview", vi: "Xem trước" },
+    select_doc: { en: "Select this document", vi: "Chọn tài liệu này" },
+    selected_doc: { en: "Document selected", vi: "Đã chọn tài liệu" },
+  },
+
 } as const;
 
 // Typescript Magic for autocomplete

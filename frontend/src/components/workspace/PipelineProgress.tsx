@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from 'framer-motion';
 import { Search, ClipboardList, ShieldCheck, BarChart3, Award, Loader2, CheckCircle2, Circle } from 'lucide-react';
 
@@ -18,19 +19,19 @@ export type PipelineStage = 0 | 1 | 2 | 3 | 4 | 5; // 0 = not started, 5 = all d
 
 interface PipelineStep {
  id: number;
- label: string;
- agentName: string;
+ label: { en: string; vi: string };
+ agentName: { en: string; vi: string };
  icon: React.ElementType;
  color: string;
  glowColor: string;
 }
 
 const PIPELINE_STEPS: PipelineStep[] = [
- { id: 1, label: 'Chẩn đoán', agentName: 'CMO Trợ lý AI', icon: Search, color: 'text-blue-400', glowColor: 'bg-blue-500' },
- { id: 2, label: 'Hoạch định', agentName: 'Strategy Trợ lý AI', icon: ClipboardList, color: 'text-cyan-400', glowColor: 'bg-cyan-500' },
- { id: 3, label: 'Kiểm duyệt', agentName: 'CFO Firewall', icon: ShieldCheck, color: 'text-orange-400', glowColor: 'bg-orange-500' },
- { id: 4, label: 'Đối soát', agentName: 'Persona Validator', icon: BarChart3, color: 'text-purple-400', glowColor: 'bg-purple-500' },
- { id: 5, label: 'Thẩm định', agentName: 'COO & Sales', icon: Award, color: 'text-emerald-400', glowColor: 'bg-emerald-500' },
+ { id: 1, label: { en: 'Diagnosis', vi: 'Chẩn đoán' }, agentName: { en: 'AI CMO', vi: 'AI CMO' }, icon: Search, color: 'text-blue-700 dark:text-blue-400', glowColor: 'bg-blue-500' },
+ { id: 2, label: { en: 'Strategy', vi: 'Hoạch định' }, agentName: { en: 'Strategy Agent', vi: 'Strategy Agent' }, icon: ClipboardList, color: 'text-cyan-700 dark:text-cyan-400', glowColor: 'bg-cyan-500' },
+ { id: 3, label: { en: 'CFO Audit', vi: 'Kiểm duyệt' }, agentName: { en: 'CFO Firewall', vi: 'CFO Firewall' }, icon: ShieldCheck, color: 'text-orange-700 dark:text-orange-400', glowColor: 'bg-orange-500' },
+ { id: 4, label: { en: 'Persona Check', vi: 'Đối soát' }, agentName: { en: 'Persona Validator', vi: 'Persona Validator' }, icon: BarChart3, color: 'text-purple-700 dark:text-purple-400', glowColor: 'bg-purple-500' },
+ { id: 5, label: { en: 'Validation', vi: 'Thẩm định' }, agentName: { en: 'COO & Sales', vi: 'COO & Sales' }, icon: Award, color: 'text-emerald-700 dark:text-emerald-400', glowColor: 'bg-emerald-500' },
 ];
 
 interface PipelineProgressProps {
@@ -39,6 +40,7 @@ interface PipelineProgressProps {
 }
 
 export default function PipelineProgress({ currentStage, className = '' }: PipelineProgressProps) {
+ const { language } = useLanguage();
  const progressPercent = currentStage === 0 ? 0 : ((currentStage) / PIPELINE_STEPS.length) * 100;
 
  return (
@@ -118,7 +120,7 @@ export default function PipelineProgress({ currentStage, className = '' }: Pipel
          mt-1.5 text-[9px] md:text-[10px] font-bold uppercase tracking-wider text-center leading-tight
          ${isActive ? step.color : isComplete ? 'text-emerald-400/80' : 'text-linear-text-muted/40'}
         `}>
-         {step.label}
+         {step.label[language]}
         </span>
 
         {/* Tooltip with agent name */}
@@ -131,12 +133,12 @@ export default function PipelineProgress({ currentStage, className = '' }: Pipel
          {isActive ? (
           <span className="flex items-center gap-1.5">
            <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
-           {step.agentName} đang xử lý...
+           {step.agentName[language]} {language === 'vi' ? 'đang xử lý...' : 'processing...'}
           </span>
          ) : isComplete ? (
-          <span>✅ {step.agentName} — Hoàn tất</span>
+          <span>✅ {step.agentName[language]} — {language === 'vi' ? 'Hoàn tất' : 'Complete'}</span>
          ) : (
-          <span className="text-slate-400">{step.agentName} — Chờ</span>
+          <span className="text-slate-400">{step.agentName[language]} — {language === 'vi' ? 'Chờ' : 'Pending'}</span>
          )}
          <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 bg-slate-900/95 rotate-45 border-r border-b border-slate-700/50" />
         </div>
@@ -165,7 +167,7 @@ export default function PipelineProgress({ currentStage, className = '' }: Pipel
         <Loader2 className={`w-3.5 h-3.5 ${PIPELINE_STEPS[currentStage - 1].color}`} />
        </motion.div>
        <span className={`text-[11px] font-bold tracking-widest uppercase ${PIPELINE_STEPS[currentStage - 1].color}`}>
-        {PIPELINE_STEPS[currentStage - 1].agentName} đang phân tích
+        {PIPELINE_STEPS[currentStage - 1].agentName[language]} {language === 'vi' ? 'đang phân tích' : 'analyzing'}
        </span>
        <span className="text-[10px] text-linear-text-muted font-mono">
         ({currentStage}/{PIPELINE_STEPS.length})
@@ -175,7 +177,7 @@ export default function PipelineProgress({ currentStage, className = '' }: Pipel
       <>
        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
        <span className="text-[11px] font-bold tracking-widest uppercase text-emerald-400">
-        Pipeline hoàn tất — Sẵn sàng xuất báo cáo
+        {language === 'vi' ? 'Pipeline hoàn tất — Sẵn sàng xuất báo cáo' : 'Pipeline complete — Ready to export report'}
        </span>
       </>
      )}

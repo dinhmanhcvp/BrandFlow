@@ -29,7 +29,7 @@ export default function Phase7_Report({ onExport, onBack }: { onExport: () => vo
     >
      <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-     </svg> Quay lại
+     </svg> {language === 'vi' ? 'Quay lại' : 'Back'}
     </button>
    </div>
    <div className="max-w-2xl w-full text-center">
@@ -41,8 +41,8 @@ export default function Phase7_Report({ onExport, onBack }: { onExport: () => vo
      <CheckCircle className="w-12 h-12 text-white" />
     </motion.div>
 
-    <h2 className="text-4xl font-bold text-white mb-4">Master Plan Generated</h2>
-    <p className="text-lg text-slate-400 mb-12">
+    <h2 className="text-4xl font-black text-slate-900 dark:text-white mb-4">{language === 'vi' ? 'Kế Hoạch Tổng Thể Đã Sẵn Sàng' : 'Master Plan Generated'}</h2>
+    <p className="text-lg text-slate-600 dark:text-slate-400 mb-12 font-medium">
      BrandFlow has successfully analyzed Bếp Nhà Mộc's DNA, debated strategy, modeled financials, created brand assets, and deployed your custom AI agent.
     </p>
 
@@ -50,11 +50,11 @@ export default function Phase7_Report({ onExport, onBack }: { onExport: () => vo
      {/* Action 1 */}
      <motion.div 
       initial={{y: 20, opacity: 0}} animate={step >= 1 ? {y: 0, opacity: 1} : {}} 
-      className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700/50 hover:bg-slate-800 transition-all cursor-pointer group"
+      className="bg-white/95 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-md hover:bg-slate-800 transition-all cursor-pointer group"
      >
       <Presentation className="w-8 h-8 text-blue-400 mx-auto mb-4 group-hover:scale-110 transition-transform" />
-      <h3 className="text-sm font-bold text-slate-200 mb-1">Pitch Deck</h3>
-      <p className="text-xs text-slate-500">12 Slides (PPTX)</p>
+      <h3 className="text-sm font-bold text-slate-900 dark:text-slate-200 mb-1">Pitch Deck</h3>
+      <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">12 Slides (PPTX)</p>
      </motion.div>
 
      {/* Action 2 */}
@@ -72,11 +72,11 @@ export default function Phase7_Report({ onExport, onBack }: { onExport: () => vo
      {/* Action 3 */}
      <motion.div 
       initial={{y: 20, opacity: 0}} animate={step >= 3 ? {y: 0, opacity: 1} : {}} transition={{delay: 0.2}}
-      className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700/50 hover:bg-slate-800 transition-all cursor-pointer group"
+      className="bg-white/95 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-md hover:bg-slate-800 transition-all cursor-pointer group"
      >
       <Mail className="w-8 h-8 text-purple-400 mx-auto mb-4 group-hover:scale-110 transition-transform" />
-      <h3 className="text-sm font-bold text-slate-200 mb-1">Email C-Level</h3>
-      <p className="text-xs text-slate-500">Share via Outlook</p>
+      <h3 className="text-sm font-bold text-slate-900 dark:text-slate-200 mb-1">Email C-Level</h3>
+      <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Share via Outlook</p>
      </motion.div>
     </div>
 

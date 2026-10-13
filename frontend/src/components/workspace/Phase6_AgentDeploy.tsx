@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, CheckCircle, Database, Shield, Terminal, Cpu, Network, Lock, MessageSquare, ArrowRight, Activity, Server, FileJson, Layers, RefreshCw, Layout } from 'lucide-react';
 import { useFormStore } from '@/store/useFormStore';
@@ -50,10 +51,10 @@ export default function Phase6_AgentDeploy({ onNext, onBack }: { onNext: () => v
       <span className="text-xs font-bold text-emerald-400 tracking-widest uppercase">Deployment Center</span>
      </div>
      <h2 className="text-3xl md:text-5xl font-black text-foreground tracking-tight">
-      Personal Trợ lý AI Deployment
+      {language === 'vi' ? 'Đóng Gói & Triển Khai AI Doanh Nghiệp' : 'Custom Corporate AI Deployment'}
      </h2>
      <p className="text-linear-text-muted mt-2 font-medium text-sm md:text-base max-w-2xl">
-      Tiến trình huấn luyện và đóng gói AI độc quyền dựa trên dữ liệu {isBepNhaMoc ? "Bếp Nhà Mộc" : "Doanh nghiệp"}. Hệ thống đang đồng bộ Brand DNA vào Neural Network.
+      {language === 'vi' ? `Tiến trình huấn luyện và đóng gói AI độc quyền dựa trên dữ liệu ${isBepNhaMoc ? "Bếp Nhà Mộc" : "Doanh nghiệp"}. Hệ thống đang đồng bộ Brand DNA vào Neural Network.` : `Proprietary AI training and model deployment based on ${isBepNhaMoc ? "Bếp Nhà Mộc" : "Enterprise"} Brand DNA.`}
      </p>
     </div>
     <div className="flex gap-3 w-full md:w-auto">
@@ -61,7 +62,7 @@ export default function Phase6_AgentDeploy({ onNext, onBack }: { onNext: () => v
       onClick={onBack} 
       className="px-5 py-3 rounded-xl border border-linear-border bg-linear-surface hover:bg-linear-surface/80 text-foreground font-bold transition-all shadow-sm flex items-center justify-center"
      >
-      <ArrowRight className="w-4 h-4 mr-2 rotate-180" /> Quay lại
+      <ArrowRight className="w-4 h-4 mr-2 rotate-180" /> {language === 'vi' ? 'Quay lại' : 'Back'}
      </button>
      <button 
       id="btn-next-phase6"
@@ -73,7 +74,7 @@ export default function Phase6_AgentDeploy({ onNext, onBack }: { onNext: () => v
         : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'}`}
      >
       <span className="relative z-10 flex items-center">
-       {step < 6 ? 'Deploying...' : 'View Executive Report'} 
+       {step < 6 ? (language === 'vi' ? 'Đang triển khai...' : 'Deploying...') : (language === 'vi' ? 'Xem Báo Cáo Chiến Lược' : 'View Executive Report')} 
        {step >= 6 && <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />}
       </span>
      </button>
@@ -85,12 +86,12 @@ export default function Phase6_AgentDeploy({ onNext, onBack }: { onNext: () => v
     <div className="flex items-center text-emerald-300 text-sm">
      <Bot className="w-5 h-5 mr-3 text-emerald-400 shrink-0" />
      <span>
-      <strong>Bản xem trước (Overview):</strong> Đây là giao diện tổng quan về quá trình đóng gói AI. Để cấu hình chi tiết, vui lòng chuyển đến trang Builder hoặc Planning.
+      <strong>{language === 'vi' ? 'Bản xem trước (Overview):' : 'Overview Preview:'}</strong> {language === 'vi' ? 'Đây là giao diện tổng quan về quá trình đóng gói AI. Để cấu hình chi tiết, vui lòng chuyển đến trang Builder hoặc Planning.' : 'This is a high-level overview of the AI packaging process. For custom architecture, navigate to Agent Builder or Planning.'}
      </span>
     </div>
     <div className="flex gap-3 ml-4 shrink-0">
      <button onClick={() => window.location.href='/agent-builder'} className="px-4 py-1.5 bg-emerald-600/20 hover:bg-emerald-600/40 border border-emerald-500/30 text-emerald-300 text-xs font-bold rounded-lg transition-colors flex items-center">
-      <Cpu className="w-3.5 h-3.5 mr-1.5" /> Trợ lý AI Builder
+      <Cpu className="w-3.5 h-3.5 mr-1.5" /> {language === 'vi' ? 'Trình dựng AI (Builder)' : 'Agent Builder'}
      </button>
      <button onClick={() => window.location.href='/planning/d0-report'} className="px-4 py-1.5 bg-teal-600/20 hover:bg-teal-600/40 border border-teal-500/30 text-teal-300 text-xs font-bold rounded-lg transition-colors flex items-center">
       <Layout className="w-3.5 h-3.5 mr-1.5" /> Go to Planning
