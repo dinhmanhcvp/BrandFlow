@@ -392,12 +392,12 @@ export const useFormStore = create<FormStore>((set, get) => ({
     // Giả lập thời gian AI Agents tranh luận
     await new Promise(resolve => setTimeout(resolve, 4500));
     const fallbackLogs = [
-     { agent: "CMO", role: "Giám đốc Marketing", message: "Dựa trên định hướng tối ưu doanh thu giờ Off-peak và chuyển đổi khách sang Zalo, tôi đề xuất chiến dịch 'Bữa Cơm Cuối Năm' tập trung vào B2B. Cắt hoàn toàn ngân sách KOLs/Reviewers ảo, dồn lực in ấn Flyer và Sampling trực tiếp tại các toà nhà văn phòng Cầu Giấy." },
-     { agent: "SYSTEM", role: "Hệ thống AI Kiểm toán", message: "CẢNH BÁO RỦI RO: Ngân sách Marketing đề xuất chỉ có 35 triệu. Tuyệt đối không được sử dụng Performance Ads (Meta/TikTok) quá đà vì sẽ đốt hết ngân sách trong 3 ngày mà không có chuyển đổi." },
-     { agent: "CFO", role: "Giám đốc Tài chính", message: "Đồng ý với System. Net Margin đang ở mức 9%. Bắt buộc phải giảm sự phụ thuộc vào App giao đồ ăn (phí 25%). Đề nghị dồn 80% ngân sách marketing vào việc Remarketing trên tệp Zalo khách cũ và phát tờ rơi." },
-     { agent: "COO", role: "Giám đốc Vận hành", message: "Về vận hành, bếp đang bị nghẽn giờ trưa. Nếu đẩy Marketing quá mạnh mà không có chuẩn bị, chúng ta sẽ vỡ trận. Tôi yêu cầu chỉ tung chiến dịch vào tuần mà bếp đã chuẩn bị xong nhân sự đóng gói riêng cho đơn Zalo." },
-     { agent: "CEO", role: "Tổng Giám đốc", message: "Quyết định cuối cùng:\n1. Bắt đầu chiến dịch chuyển đổi Zalo bằng tờ rơi kẹp vào hộp cơm App.\n2. Phát triển tệp B2B với Sampling dùng thử.\n3. Ngừng toàn bộ Flash sale trên App.\nBrandFlow, hãy xuất bản Master Plan ngay!" }
-    ];
+      { agent: "STRATEGY", role: "Trợ lý chiến lược", message: "Dựa trên mật độ 15.000 nhân sự văn phòng bán kính 2km Duy Tân - Cầu Giấy, đề xuất phân bổ 50.000.000đ chạy Meta Broad Ads và hợp tác 3 Mega-TikTokers ẩm thực để tạo cú hích nhận diện cho thực đơn Cơm Niêu Mùa Hè. Kỳ vọng đạt 25.000 lượt tiếp cận và lấp đầy 80% công suất chỗ ngồi." },
+      { agent: "SYSTEM", role: "Công cụ tính toán tài chính", message: "CẢNH BÁO KIỂM TOÁN: Mức chi phí 50.000.000đ vượt 15.000.000đ so với định mức dòng tiền an toàn (Trần 35 triệu). Dòng tiền lưu động sẽ bị âm nếu tỷ lệ chuyển đổi ban đầu thấp." },
+      { agent: "FINANCE", role: "Trợ lý tài chính", message: "Bác bỏ kịch bản 50 triệu! Báo cáo tài chính cho thấy Net Margin của Bếp Nhà Mộc chỉ đạt 8.4% do chiết khấu App giao hàng ngốn tới 25%. Đốt 50 triệu vào Ads đại trà sẽ lập tức làm âm dòng tiền. Yêu cầu thiết lập trần chi phí tối đa 25.000.000đ." },
+      { agent: "OPERATIONS", role: "Trợ lý vận hành", message: "Cảnh báo rủi ro tắc nghẽn bếp: Đội ngũ 28 nhân sự tại 2 cơ sở chỉ đạt công suất tối đa 120 suất/khung giờ cao điểm (11h30 - 12h30). Bắt buộc ưu tiên đơn đặt trước theo bàn qua Zalo và giới hạn 120 suất/khung giờ để giữ vững chất lượng." },
+      { agent: "DECIDER", role: "Người quyết định", message: "Chính thức thông qua nghị quyết! Chốt ngân sách Marketing 35.000.000đ, tập trung toàn lực vào kênh Zalo O2O và hợp đồng suất ăn B2B. Triển khai Thẻ thành viên trả trước (Prepaid) và Combo tuần để khóa dòng tiền trước." }
+     ];
     
     const fallbackPlan = {
      executive_summary: {

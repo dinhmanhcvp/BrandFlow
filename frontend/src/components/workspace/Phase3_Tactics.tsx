@@ -11,15 +11,17 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
  const [activePanel, setActivePanel] = useState(0);
  const [isGenerating, setIsGenerating] = useState(false);
  const [hasGenerated, setHasGenerated] = useState<Record<number, boolean>>({});
+ const [generatingStepText, setGeneratingStepText] = useState('Khởi tạo phân tích AI...');
 
  const { brandDNA, wizardAnswers, businessIntent } = useFormStore();
- const isBepNhaMoc = brandDNA?.brand_name?.includes('Nhà Mộc') || wizardAnswers?.company_name?.includes('Nhà Mộc');
+ // Luôn sử dụng bản mock Bếp Nhà Mộc chi tiết, chuyên nghiệp theo yêu cầu người dùng
+ const isBepNhaMoc = true;
 
- let totalBudget = 500000000; 
+ let totalBudget = 35000000; // Khớp với ngân sách 35 triệu chốt từ phiên tranh luận Bếp Nhà Mộc
  if (businessIntent?.mode === 'budget_first' && businessIntent?.budget) {
   totalBudget = businessIntent.budget;
  } else if (businessIntent?.mode === 'idea_first') {
-  totalBudget = 1500000000; 
+  totalBudget = 50000000; 
  }
 
  const formatCurrency = (val: number) => {
@@ -190,13 +192,24 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
  useEffect(() => {
   if (!hasGenerated[activePanel]) {
    setIsGenerating(true);
+   setGeneratingStepText('1/3. Trợ lý chiến lược đang bóc tách kết luận phòng họp & ngân sách 35 triệu Bếp Nhà Mộc...');
+   const t1 = setTimeout(() => {
+    setGeneratingStepText('2/3. Trợ lý nội dung đang cấu trúc trụ cột Mindful Dining & chân dung khách hàng F&B...');
+   }, 800);
+   const t2 = setTimeout(() => {
+    setGeneratingStepText('3/3. Đang lập ma trận thực thi đa kênh & tối ưu cấu trúc chi phí...');
+   }, 1700);
    const timer = setTimeout(() => {
     setIsGenerating(false);
     setHasGenerated(prev => ({...prev, [activePanel]: true}));
-   }, 2500); 
-   return () => clearTimeout(timer);
+   }, 2600); 
+   return () => {
+    clearTimeout(t1);
+    clearTimeout(t2);
+    clearTimeout(timer);
+   };
   }
- }, [activePanel]);
+ }, [activePanel, hasGenerated]);
 
  const tabs = [
   { id: 0, title: "Content Matrix", icon: PenSquare, color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/30" },
@@ -286,7 +299,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
        {isGenerating ? (
         <div className="flex-1 flex flex-col items-center justify-center py-20">
          <RefreshCw className="w-10 h-10 text-pink-500 animate-spin mb-4" />
-         <p className="text-pink-400 font-bold tracking-widest uppercase text-sm animate-pulse">Phân tích Insight & Khởi tạo Matrix...</p>
+         <p className="text-pink-400 font-bold tracking-widest uppercase text-sm animate-pulse">{generatingStepText}</p>
         </div>
        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-6">
@@ -364,7 +377,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
        {isGenerating ? (
         <div className="flex-1 flex flex-col items-center justify-center py-20">
          <RefreshCw className="w-10 h-10 text-purple-500 animate-spin mb-4" />
-         <p className="text-purple-400 font-bold tracking-widest uppercase text-sm animate-pulse">Thiết lập Brand Guidelines & Moodboard...</p>
+         <p className="text-purple-400 font-bold tracking-widest uppercase text-sm animate-pulse">{generatingStepText}</p>
         </div>
        ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -466,7 +479,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
        {isGenerating ? (
         <div className="flex-1 flex flex-col items-center justify-center py-20">
          <RefreshCw className="w-10 h-10 text-blue-500 animate-spin mb-4" />
-         <p className="text-blue-400 font-bold tracking-widest uppercase text-sm animate-pulse">Deploying Trợ lý AI Swarm & Assigning Tasks...</p>
+         <p className="text-blue-400 font-bold tracking-widest uppercase text-sm animate-pulse">{generatingStepText}</p>
         </div>
        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -530,7 +543,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
        {isGenerating ? (
         <div className="flex-1 flex flex-col items-center justify-center py-20">
          <RefreshCw className="w-10 h-10 text-emerald-500 animate-spin mb-4" />
-         <p className="text-emerald-400 font-bold tracking-widest uppercase text-sm animate-pulse">Scheduling Tasks, KPIs & Budgeting...</p>
+         <p className="text-emerald-400 font-bold tracking-widest uppercase text-sm animate-pulse">{generatingStepText}</p>
         </div>
        ) : (
         <div className="flex-1 pr-2 space-y-6">

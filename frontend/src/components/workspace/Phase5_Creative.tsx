@@ -3,22 +3,19 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from 'framer-motion';
-import { Palette, FileText, Image as ImageIcon, Wand2, Type, Layout } from 'lucide-react';
+import { Palette, FileText, Image as ImageIcon, Wand2, Type, Layout, RefreshCw } from 'lucide-react';
 
 export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void, onBack?: () => void }) {
  const [step, setStep] = useState(0);
 
  useEffect(() => {
-  if (window && (window as any).__DEMO_MODE__) {
-   const timers = [
-    setTimeout(() => setStep(1), 500), // Show copy
-    setTimeout(() => setStep(2), 1000), // Show colors
-    setTimeout(() => setStep(3), 1500), // Show typography
-   ];
-   return () => timers.forEach(clearTimeout);
-  } else {
-   setStep(3); // Fully loaded if not demo
-  }
+  // Luôn kích hoạt delay suy nghĩ AI tuần tự để tạo cảm giác chân thực
+  const timers = [
+   setTimeout(() => setStep(1), 600),
+   setTimeout(() => setStep(2), 1400),
+   setTimeout(() => setStep(3), 2200),
+  ];
+  return () => timers.forEach(clearTimeout);
  }, []);
 
  return (
@@ -70,7 +67,18 @@ export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void
     </div>
    </motion.div>
 
-   <div className="flex-1 grid grid-cols-12 gap-6">
+   
+   {step < 3 && (
+    <div className="mb-6 p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center gap-3 text-purple-700 dark:text-purple-300 font-bold text-sm animate-pulse">
+     <RefreshCw className="w-5 h-5 animate-spin text-purple-500 shrink-0" />
+     <span>
+      {step === 0 && "1/3. AI Copywriter đang sáng tạo thông điệp truyền thông Bếp Nhà Mộc..."}
+      {step === 1 && "2/3. AI Art Director đang trích xuất bảng màu di sản và moodboard mâm cơm..."}
+      {step === 2 && "3/3. Hoàn tất bộ nhận diện đa phương tiện & Typography!"}
+     </span>
+    </div>
+   )}
+<div className="flex-1 grid grid-cols-12 gap-6">
     {/* Left: Copywriting Lab */}
     <div className="col-span-5 bg-white/80 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 backdrop-blur-sm shadow-md flex flex-col">
      <h3 className="text-lg font-bold text-slate-900 dark:text-slate-200 mb-4 flex items-center">
@@ -86,11 +94,11 @@ export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void
          <span className="text-xs text-slate-600 dark:text-slate-400 font-semibold">Target: Housewives, 25-45</span>
         </div>
         <p className="text-sm text-slate-800 dark:text-slate-300 leading-relaxed font-medium">
-         "Mọi căn bếp không chỉ là nơi thưởng thức món ngon, mà còn là nơi câu chuyện yêu thương được kể bằng những góc phẳng gỗ mộc mạc..."
+         "POV: 11h30 trưa sếp dí 3 deadline, bụng réo rắt. Bỏ lại ồn ào công sở, ghé Bếp Nhà Mộc thưởng thức niêu cơm thơm phức gạo ST25, cá kho tộ đậm vị mộc mạc..."
         </p>
         <div className="mt-3 flex gap-2">
          <span className="text-[10px] text-slate-500 border border-slate-600/50 px-2 py-0.5 rounded-full">#BepNhaMoc</span>
-         <span className="text-[10px] text-slate-500 border border-slate-600/50 px-2 py-0.5 rounded-full">#Noithatgo</span>
+         <span className="text-[10px] text-slate-500 border border-slate-600/50 px-2 py-0.5 rounded-full">#ComNieuGiaDinh</span>
         </div>
        </motion.div>
       )}

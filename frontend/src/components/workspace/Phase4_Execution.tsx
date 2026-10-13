@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Calculator, Download, CheckCircle, ArrowRight, Target, BarChart3, Users, Zap, Calendar, DollarSign, LayoutDashboard, Share2 } from 'lucide-react';
+import { FileText, Calculator, Download, CheckCircle, ArrowRight, Target, BarChart3, Users, Zap, Calendar, DollarSign, LayoutDashboard, Share2, RefreshCw } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFormStore } from '@/store/useFormStore';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
@@ -11,9 +11,10 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
  const { language } = useLanguage();
  const [step, setStep] = useState(0); 
  const { brandDNA, wizardAnswers, businessIntent } = useFormStore();
- const isBepNhaMoc = brandDNA?.brand_name?.includes('Nhà Mộc') || wizardAnswers?.company_name?.includes('Nhà Mộc');
+ // Luôn sử dụng bản mock Bếp Nhà Mộc chi tiết, chuyên nghiệp theo yêu cầu
+ const isBepNhaMoc = true;
 
- let totalBudget = 500000000; 
+ let totalBudget = 35000000; 
  if (businessIntent?.mode === 'budget_first' && businessIntent?.budget) {
   totalBudget = businessIntent.budget;
  } else if (businessIntent?.mode === 'idea_first') {
@@ -38,16 +39,13 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
  ];
 
  useEffect(() => {
-  if (window && (window as any).__DEMO_MODE__) {
-   const timers = [
-    setTimeout(() => setStep(1), 500), 
-    setTimeout(() => setStep(2), 1500), 
-    setTimeout(() => setStep(3), 2500), 
-   ];
-   return () => timers.forEach(clearTimeout);
-  } else {
-   setStep(3);
-  }
+  // Luôn kích hoạt delay suy nghĩ AI tuần tự để tạo cảm giác chân thực
+  const timers = [
+   setTimeout(() => setStep(1), 600),
+   setTimeout(() => setStep(2), 1400),
+   setTimeout(() => setStep(3), 2200),
+  ];
+  return () => timers.forEach(clearTimeout);
  }, []);
 
  const campaignPhases = [
@@ -147,7 +145,18 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
     </div>
    </div>
 
-   <div className="flex flex-col xl:flex-row gap-6 pb-10">
+   
+   {step < 3 && (
+    <div className="mb-6 p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center gap-3 text-cyan-700 dark:text-cyan-300 font-bold text-sm animate-pulse">
+     <RefreshCw className="w-5 h-5 animate-spin text-cyan-500 shrink-0" />
+     <span>
+      {step === 0 && "1/3. AI đang phân tích dữ liệu Bếp Nhà Mộc & cấu trúc 3 giai đoạn chiến dịch IMC..."}
+      {step === 1 && "2/3. AI đang phân bổ ngân sách 35 triệu & dự phóng mô hình tăng trưởng tuần 1 - 8..."}
+      {step === 2 && "3/3. Hoàn tất kế hoạch thực thi IMC và dự toán dòng tiền doanh thu 2.5 Tỷ VNĐ!"}
+     </span>
+    </div>
+   )}
+<div className="flex flex-col xl:flex-row gap-6 pb-10">
     {/* Left: Detailed Campaign Phases */}
     <div className="flex-1 flex flex-col gap-5">
      <AnimatePresence>

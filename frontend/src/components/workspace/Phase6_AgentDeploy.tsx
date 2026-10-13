@@ -9,23 +9,20 @@ import { useFormStore } from '@/store/useFormStore';
 export default function Phase6_AgentDeploy({ onNext, onBack }: { onNext: () => void, onBack?: () => void }) {
  const [step, setStep] = useState(0);
  const { brandDNA, wizardAnswers } = useFormStore();
- const isBepNhaMoc = brandDNA?.brand_name?.includes('Nhà Mộc') || wizardAnswers?.company_name?.includes('Nhà Mộc');
+ // Luôn sử dụng bản mock Bếp Nhà Mộc chi tiết, chuyên nghiệp theo yêu cầu
+ const isBepNhaMoc = true;
 
  useEffect(() => {
-  if (typeof window !== 'undefined' && (window as any).__DEMO_MODE__) {
-   const timers = [
-    setTimeout(() => setStep(1), 500),
-    setTimeout(() => setStep(2), 1500),
-    setTimeout(() => setStep(3), 2800),
-    setTimeout(() => setStep(4), 4000),
-    setTimeout(() => setStep(5), 5500),
-    setTimeout(() => setStep(6), 7000),
-   ];
-   return () => timers.forEach(clearTimeout);
-  } else {
-   const timer = setTimeout(() => setStep(6), 0);
-   return () => clearTimeout(timer);
-  }
+  // Luôn kích hoạt quy trình triển khai AI tuần tự với delay suy nghĩ chân thực
+  const timers = [
+   setTimeout(() => setStep(1), 500),
+   setTimeout(() => setStep(2), 1200),
+   setTimeout(() => setStep(3), 2100),
+   setTimeout(() => setStep(4), 3100),
+   setTimeout(() => setStep(5), 4200),
+   setTimeout(() => setStep(6), 5400),
+  ];
+  return () => timers.forEach(clearTimeout);
  }, []);
 
  const metrics = [

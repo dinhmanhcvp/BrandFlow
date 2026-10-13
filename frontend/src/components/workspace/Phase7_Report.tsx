@@ -2,22 +2,22 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Download, CheckCircle, FileBarChart, Presentation, Mail } from 'lucide-react';
+import { Download, CheckCircle, FileBarChart, Presentation, Mail, RefreshCw } from 'lucide-react';
+
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Phase7_Report({ onExport, onBack }: { onExport: () => void, onBack?: () => void }) {
+ const { language } = useLanguage();
  const [step, setStep] = useState(0);
 
  useEffect(() => {
-  if (window && (window as any).__DEMO_MODE__) {
-   const timers = [
-    setTimeout(() => setStep(1), 300),
-    setTimeout(() => setStep(2), 600),
-    setTimeout(() => setStep(3), 900),
-   ];
-   return () => timers.forEach(clearTimeout);
-  } else {
-   setStep(3);
-  }
+  // Luôn kích hoạt delay suy nghĩ AI tuần tự khi tổng hợp báo cáo
+  const timers = [
+   setTimeout(() => setStep(1), 600),
+   setTimeout(() => setStep(2), 1400),
+   setTimeout(() => setStep(3), 2200),
+  ];
+  return () => timers.forEach(clearTimeout);
  }, []);
 
  return (
@@ -46,7 +46,18 @@ export default function Phase7_Report({ onExport, onBack }: { onExport: () => vo
      BrandFlow has successfully analyzed Bếp Nhà Mộc's DNA, debated strategy, modeled financials, created brand assets, and deployed your custom AI agent.
     </p>
 
-    <div className="grid grid-cols-3 gap-6 mb-12">
+    
+    {step < 3 && (
+     <div className="mb-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center gap-3 text-emerald-700 dark:text-emerald-300 font-bold text-sm animate-pulse">
+      <RefreshCw className="w-5 h-5 animate-spin text-emerald-500 shrink-0" />
+      <span>
+       {step === 0 && "1/3. Đang xuất bản Pitch Deck 12 Slides Bếp Nhà Mộc..."}
+       {step === 1 && "2/3. Đang tổng hợp báo cáo kiểm toán tài chính & chỉ số ROI 2.8x..."}
+       {step === 2 && "3/3. Hoàn tất đóng gói toàn bộ hồ sơ chiến lược Master Plan!"}
+      </span>
+     </div>
+    )}
+<div className="grid grid-cols-3 gap-6 mb-12">
      {/* Action 1 */}
      <motion.div 
       initial={{y: 20, opacity: 0}} animate={step >= 1 ? {y: 0, opacity: 1} : {}} 
