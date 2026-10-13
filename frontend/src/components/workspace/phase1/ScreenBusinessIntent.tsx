@@ -13,11 +13,11 @@ const TIMELINES = [
 ];
 
 const BUDGET_PRESETS = [
- { value: 50_000_000, label: '50 triệu' },
- { value: 100_000_000, label: '100 triệu' },
- { value: 300_000_000, label: '300 triệu' },
- { value: 500_000_000, label: '500 triệu' },
- { value: 1_000_000_000, label: '1 tỷ' },
+ { value: 50_000_000, label_vi: '50 triệu', label_en: '50M VND' },
+ { value: 100_000_000, label_vi: '100 triệu', label_en: '100M VND' },
+ { value: 300_000_000, label_vi: '300 triệu', label_en: '300M VND' },
+ { value: 500_000_000, label_vi: '500 triệu', label_en: '500M VND' },
+ { value: 1_000_000_000, label_vi: '1 tỷ', label_en: '1B VND' },
 ];
 
 export default function ScreenBusinessIntent({ onNext }: { onNext: () => void }) {

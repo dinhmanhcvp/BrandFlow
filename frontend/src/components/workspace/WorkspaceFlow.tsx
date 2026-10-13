@@ -103,7 +103,7 @@ export default function WorkspaceFlow() {
 
    {/* ── Main Content Area ── */}
    <div className="flex-1 w-full h-full overflow-hidden relative">
-    <div className="absolute inset-0 transition-opacity duration-300">
+    <div className={`absolute inset-0 transition-opacity duration-300 ${currentStage > 1 ? 'overflow-y-auto overflow-x-hidden' : 'overflow-hidden'}`}>
      {currentStage === 1 && <Phase2_Debate onNext={() => goToState(2)} onBack={() => window.location.href = '/onboarding'} />}
      {currentStage === 2 && <Phase3_Tactics onNext={() => goToState(3)} onBack={() => goToState(1)} globalBudget={globalBudget} />}
      {currentStage === 3 && <Phase4_Execution onNext={() => goToState(4)} onBack={() => goToState(2)} />}

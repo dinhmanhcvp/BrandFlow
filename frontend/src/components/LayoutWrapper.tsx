@@ -29,6 +29,16 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // null = đang kiểm tra
  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+ const [isShowcase, setIsShowcase] = useState(false);
+
+ useEffect(() => {
+  if (typeof window !== "undefined") {
+   const search = window.location.search;
+   if (search.includes("trungbay=1") || search.includes("showcase=1")) {
+    setIsShowcase(true);
+   }
+  }
+ }, []);
 
  useEffect(() => {
   setIsSidebarOpen(false);
@@ -101,6 +111,9 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
  // Landing page → full width, không Sidebar
  if (isLandingPage) {
+  if (isShowcase) {
+   return <main className="w-full min-h-screen bg-[#FBF9F4] text-[#1C1917]">{children}</main>;
+  }
   return (
    <div className="relative min-h-screen w-full overflow-x-hidden text-foreground bg-slate-50 dark:bg-[#0B1120]">
     <SystemIntro />

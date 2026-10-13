@@ -7,6 +7,7 @@ import { Bot, CheckCircle, Database, Shield, Terminal, Cpu, Network, Lock, Messa
 import { useFormStore } from '@/store/useFormStore';
 
 export default function Phase6_AgentDeploy({ onNext, onBack }: { onNext: () => void, onBack?: () => void }) {
+ const { language } = useLanguage();
  const [step, setStep] = useState(0);
  const { brandDNA, wizardAnswers } = useFormStore();
  // Luôn sử dụng bản mock Bếp Nhà Mộc chi tiết, chuyên nghiệp theo yêu cầu
@@ -39,7 +40,7 @@ export default function Phase6_AgentDeploy({ onNext, onBack }: { onNext: () => v
  ];
 
  return (
-  <div className="h-full w-full flex flex-col p-4 md:p-8 max-w-[1600px] mx-auto z-10 relative">
+  <div className="w-full min-h-full flex flex-col p-4 md:p-8 max-w-[1600px] mx-auto z-10 relative pb-16">
    {/* ── Header ── */}
    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
     <div>

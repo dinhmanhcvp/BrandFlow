@@ -10,6 +10,7 @@ import {
 import { DebateTurn, IndustryScenario, TargetFieldKey, StanceType } from './debateTypes';
 import { SHOWCASE_SCENARIOS } from './showcaseScenarios';
 import { convertRealLogsToDebateTurns, getScenario } from './debateAdapter';
+import DebateSpeechCard from './DebateSpeechCard';
 
 interface BoardroomDebateProps {
   onNext?: () => void;
@@ -33,13 +34,14 @@ export default function BoardroomDebate({
   const [currentTurnIndex, setCurrentTurnIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
-  // Typewriter & AI Thinking effect state
-  const [displayedText, setDisplayedText] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [isThinking, setIsThinking] = useState(true);
-  const [thinkingMessage, setThinkingMessage] = useState('');
+  // Control state
   const [isCalculating, setIsCalculating] = useState(false);
   const [isTransitioningNext, setIsTransitioningNext] = useState(false);
+
+  // Timers refs to guarantee clean cancellation without memory/timer leak
+  const advanceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const loopTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const calcTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // 60-second Touch Idle Timer for showcase display
   const lastTouchTimeRef = useRef<number>(Date.now());
@@ -65,23 +67,6 @@ export default function BoardroomDebate({
 
   const currentTurn = turns[currentTurnIndex] || turns[0];
 
-  // Helper để sinh thông điệp suy nghĩ AI theo vai trò
-  const getAgentThinkingMessage = (speaker?: string) => {
-    switch (speaker) {
-      case 'strategy':
-        return 'Trợ lý chiến lược đang phân tích dung lượng thị trường F&B & đối thủ Cloud Kitchen...';
-      case 'finance':
-        return 'Trợ lý tài chính đang rà soát điểm hòa vốn, biên lợi nhuận ròng 8.4% & chiết khấu App 25%...';
-      case 'customer':
-        return 'Trợ lý góc nhìn khách hàng đang bóc tách hành vi đặt cơm trưa văn phòng & khảo sát thực tế...';
-      case 'operations':
-        return 'Trợ lý vận hành đang đối chiếu công suất bếp 120 suất/giờ & năng lực giao hàng 2 chi nhánh...';
-      case 'decider':
-        return 'Người quyết định đang tổng hợp ý kiến Hội đồng và phê duyệt nghị quyết cuối cùng...';
-      default:
-        return 'Công cụ tính toán tài chính đang thẩm định số liệu...';
-    }
-  };
 
   // ── Plan Sheet Accumulator ──
   const planState = useMemo(() => {
@@ -119,57 +104,36 @@ export default function BoardroomDebate({
     return list;
   }, [turns, currentTurnIndex]);
 
-  // ── AI Thinking & Typing Effect Simulation ──
+  // ── Financial Audit Engine Delay (Resolves cleanly per turn) ──
   useEffect(() => {
-    if (!currentTurn) return;
-
-    setDisplayedText('');
-    setIsThinking(true);
-    setIsTyping(false);
     setIsCalculating(true);
-    setThinkingMessage(getAgentThinkingMessage(currentTurn.speaker));
+    if (calcTimerRef.current) clearTimeout(calcTimerRef.current);
 
-    // Simulated AI Thinking Delay: 1200ms trước khi bắt đầu nói
-    const thinkTimer = setTimeout(() => {
-      setIsThinking(false);
-      setIsTyping(true);
-
-      const fullText = currentTurn.message;
-      let charIndex = 0;
-
-      // Typewriter interval (~33 chars / sec)
-      const intervalTime = 30;
-      const typeTimer = setInterval(() => {
-        if (charIndex <= fullText.length) {
-          setDisplayedText(fullText.slice(0, charIndex));
-          charIndex++;
-        } else {
-          clearInterval(typeTimer);
-          setIsTyping(false);
-        }
-      }, intervalTime);
-
-      return () => clearInterval(typeTimer);
-    }, 1200);
-
-    // Calculate delay: thinking before financial check resolves (2200ms)
-    const calcTimer = setTimeout(() => {
+    calcTimerRef.current = setTimeout(() => {
       setIsCalculating(false);
-    }, 2200);
+    }, 2000);
 
     return () => {
-      clearTimeout(thinkTimer);
-      clearTimeout(calcTimer);
+      if (calcTimerRef.current) clearTimeout(calcTimerRef.current);
     };
-  }, [currentTurnIndex, currentTurn]);
+  }, [currentTurnIndex]);
 
-  // ── Step Auto-Advance (Minimum 6s per turn including thinking) ──
+  // ── Step Auto-Advance (Calculated smoothly so user finishes reading without rushing) ──
   useEffect(() => {
+    if (advanceTimerRef.current) {
+      clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
+
     if (isPaused || isFinished) return;
 
-    const turnHoldMs = ((currentTurn?.durationSeconds || 5) + 1.8) * 1000;
+    // Estimate typing duration: 800ms think + ~20ms/char + 2800ms pause for comfortable reading
+    const messageLen = currentTurn?.message?.length || 120;
+    const typingEstMs = 800 + (messageLen * 20);
+    const readingPauseMs = 2800;
+    const turnHoldMs = Math.max(7200, typingEstMs + readingPauseMs);
 
-    const nextTimeout = setTimeout(() => {
+    advanceTimerRef.current = setTimeout(() => {
       if (currentTurnIndex < turns.length - 1) {
         setCurrentTurnIndex(prev => prev + 1);
       } else {
@@ -177,15 +141,18 @@ export default function BoardroomDebate({
 
         // In showcase mode: after 10s on final screen, auto-loop
         if (isShowcase) {
-          setTimeout(() => {
+          if (loopTimerRef.current) clearTimeout(loopTimerRef.current);
+          loopTimerRef.current = setTimeout(() => {
             handleResetLoop();
           }, 10000);
         }
       }
     }, turnHoldMs);
 
-    return () => clearTimeout(nextTimeout);
-  }, [currentTurnIndex, turns.length, isPaused, isFinished, isShowcase, currentTurn]);
+    return () => {
+      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+    };
+  }, [currentTurnIndex, turns.length, isPaused, isFinished, isShowcase, currentTurn?.id, currentTurn?.message]);
 
   // ── Touch Activity Watcher (60s Idle Reset) ──
   const registerTouchActivity = () => {
@@ -209,6 +176,14 @@ export default function BoardroomDebate({
   }, [isShowcase]);
 
   const handleResetLoop = () => {
+    if (advanceTimerRef.current) {
+      clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
+    if (loopTimerRef.current) {
+      clearTimeout(loopTimerRef.current);
+      loopTimerRef.current = null;
+    }
     setCurrentTurnIndex(0);
     setIsFinished(false);
     setIsPaused(false);
@@ -555,50 +530,14 @@ export default function BoardroomDebate({
                 </div>
               </div>
 
-              {/* 2. THẺ LỜI NÓI CỦA NGƯỜI ĐANG NÓI (Speech Card) */}
-              <motion.div 
-                key={currentTurn.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: shouldReduceMotion ? 0 : 0.35, ease: transitionEasing }}
-                className="bg-white dark:bg-slate-900 border-2 border-cyan-500/40 dark:border-cyan-500/30 p-5 rounded-3xl shadow-xl relative overflow-hidden"
-              >
-                {/* Visual Connector Wire indication */}
-                <div className="flex items-center justify-between mb-3 border-b border-slate-100 dark:border-slate-800 pb-3">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
-                      {currentTurn.speakerName}
-                    </span>
-                    <span className="text-xs text-slate-500 font-medium">({currentTurn.speakerTitle})</span>
-                  </div>
-                  <div>
-                    {getStanceBadge(currentTurn.stance)}
-                  </div>
-                </div>
-
-                {/* Speech Message (Thinking Delay & Typewriter Effect) */}
-                {isThinking ? (
-                  <div className="flex items-center gap-3 py-3.5 text-cyan-700 dark:text-cyan-400 font-semibold text-sm md:text-base animate-pulse">
-                    <RefreshCw className="w-4 h-4 animate-spin text-cyan-500 shrink-0" />
-                    <span>{thinkingMessage || 'AI đang suy nghĩ và đối chiếu dữ liệu...'}</span>
-                  </div>
-                ) : (
-                  <p className={`${isShowcase ? 'text-lg md:text-xl' : 'text-base md:text-lg'} font-medium leading-relaxed text-slate-800 dark:text-slate-100`}>
-                    "{displayedText}"
-                    {isTyping && <span className="inline-block w-1.5 h-4 ml-1 bg-cyan-500 animate-pulse" />}
-                  </p>
-                )}
-
-                {/* Direct Impact Notice */}
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-                  <span className="text-slate-500 font-medium">
-                    Tác động trực tiếp lên mục: <strong className="text-slate-800 dark:text-slate-200">{currentTurn.targetFieldLabel}</strong>
-                  </span>
-                  <span className="font-mono text-cyan-700 dark:text-cyan-400 font-bold">
-                    Lời nói tạo ra hệ quả số liệu ➔
-                  </span>
-                </div>
-              </motion.div>
+              {/* 2. THẺ LỜI NÓI CỦA NGƯỜI ĐANG NÓI (Speech Card - Isolated, Zero Layout Shift) */}
+              <DebateSpeechCard
+                currentTurn={currentTurn}
+                isShowcase={isShowcase}
+                isPaused={isPaused}
+                shouldReduceMotion={shouldReduceMotion ?? false}
+                getStanceBadge={getStanceBadge}
+              />
 
               {/* 3. TỜ KẾ HOẠCH Ở GIỮA (Centerpiece Plan Sheet) */}
               <div className="bg-white dark:bg-slate-900/95 border-2 border-slate-300 dark:border-slate-700 p-6 rounded-3xl shadow-xl flex-1 flex flex-col relative overflow-hidden">

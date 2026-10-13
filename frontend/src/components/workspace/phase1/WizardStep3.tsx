@@ -8,7 +8,7 @@ import DynamicQuestionRenderer from './DynamicQuestionRenderer';
 import { MessageSquareText } from 'lucide-react';
 
 export default function WizardStep3() {
- const { t } = useLanguage();
+ const { t, language } = useLanguage();
 
  const wizardAnswers = useFormStore(state => state.wizardAnswers);
  const setWizardAnswer = useFormStore(state => state.setWizardAnswer);

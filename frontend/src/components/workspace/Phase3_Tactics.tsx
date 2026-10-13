@@ -219,7 +219,7 @@ export default function Phase3_Tactics({ onNext, onBack, globalBudget }: { onNex
  ];
 
  return (
-  <div className="w-full flex flex-col p-4 md:p-8 max-w-[1600px] mx-auto z-10 relative">
+  <div className="w-full min-h-full flex flex-col p-4 md:p-8 max-w-[1600px] mx-auto z-10 relative pb-16">
    {/* ── Header ── */}
    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
     <div>

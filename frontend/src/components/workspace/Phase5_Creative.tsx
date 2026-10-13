@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Palette, FileText, Image as ImageIcon, Wand2, Type, Layout, RefreshCw } from 'lucide-react';
 
 export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void, onBack?: () => void }) {
+ const { language } = useLanguage();
  const [step, setStep] = useState(0);
 
  useEffect(() => {
@@ -19,7 +20,7 @@ export default function Phase5_Creative({ onNext, onBack }: { onNext: () => void
  }, []);
 
  return (
-  <div className="h-full w-full flex flex-col p-6 max-w-[90rem] mx-auto z-10 relative">
+  <div className="w-full min-h-full flex flex-col p-4 md:p-6 max-w-[90rem] mx-auto z-10 relative pb-16">
    <div className="flex justify-between items-center mb-6">
     <div>
      <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">

@@ -21,7 +21,7 @@ const INDUSTRIES = [
 ];
 
 export default function WizardStep1({ onNext }: { onNext?: () => void }) {
- const { t } = useLanguage();
+ const { t, language } = useLanguage();
  const runMarketResearch = useFormStore(state => state.runMarketResearch);
  const marketResearchStatus = useFormStore(state => state.marketResearchStatus);
  const marketResearchData = useFormStore(state => state.marketResearchData);

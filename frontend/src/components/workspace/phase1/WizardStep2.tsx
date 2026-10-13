@@ -5,7 +5,7 @@ import { useFormStore } from '@/store/useFormStore';
 import DynamicQuestionRenderer from './DynamicQuestionRenderer';
 
  export default function WizardStep2() {
- const { t } = useLanguage();
+ const { t, language } = useLanguage();
  
  const wizardAnswers = useFormStore(state => state.wizardAnswers);
  const setWizardAnswer = useFormStore(state => state.setWizardAnswer);
