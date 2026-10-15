@@ -442,11 +442,13 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
 
    const formData = new FormData();
    selectedFiles.forEach(f => formData.append('files', f));
-   formData.append('tenant_id', 'default');
+   // Tenant do backend lấy từ JWT — không gửi tenant_id từ client
+   const token = localStorage.getItem('brandflow_token');
 
    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://brandflow-jfha.onrender.com';
    const res = await fetch(`${API_URL}/api/v1/onboarding/upload`, {
     method: 'POST',
+    headers: token ? { 'Authorization': `Bearer ${token}` } : {},
     body: formData,
    });
 
@@ -485,11 +487,14 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
       const chars = r.char_count ? (language === 'vi' ? ` · ${(r.char_count / 1000).toFixed(1)}k ký tự` : ` · ${(r.char_count / 1000).toFixed(1)}k chars`) : '';
       const pages = r.pages ? ` · ${r.pages} trang` : '';
       const sheets = r.sheets ? ` · ${r.sheets} sheet` : '';
-      lines.push(`✅ ${r.filename}${chars}${pages}${sheets} [${r.method}]`);
+      const rows = r.rows ? ` · ${r.rows.toLocaleString()} dòng` : '';
+      lines.push(`✅ ${r.filename}${chars}${pages}${sheets}${rows} [${r.method}]`);
       
       if (r.raw_text_for_ai) {
        appendRawIngestedContent(`\n--- TÀI LIỆU UPLOAD: ${r.filename} ---\n${r.raw_text_for_ai}`);
       }
+     } else if (r.status === 'skipped') {
+      lines.push(`⏭️ ${r.filename}: ${r.error}`);
      } else {
       lines.push(`❌ ${r.filename}: ${r.error}`);
      }

@@ -78,6 +78,12 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> str:
       headers={"WWW-Authenticate": "Bearer"},
     )
 
+def get_optional_user(token: Optional[str] = Depends(oauth2_scheme)) -> Optional[str]:
+  """Như get_current_user nhưng cho phép ẩn danh (trả None). Token sai/hết hạn vẫn 401."""
+  if not token:
+    return None
+  return get_current_user(token)
+
 def get_admin_user(user_id: str = Depends(get_current_user), db: Session = Depends(get_db)) -> str:
   """Xác minh user hiện tại có phải là Admin hay không."""
   user = db.query(User).filter(User.id == user_id).first()

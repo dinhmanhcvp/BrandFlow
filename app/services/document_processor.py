@@ -42,6 +42,9 @@ class FileParseResult:
   char_count: int = 0
   page_count: int = 0
   sheet_count: int = 0
+  row_count: int = 0
+  # Bảng số (CSV/Excel): text chỉ là bản mô tả + thống kê, KHÔNG embed vào VectorDB
+  is_tabular: bool = False
   method: str = ""
   error: Optional[str] = None
 
@@ -233,8 +236,59 @@ def _parse_txt_md(path: str, ext: str) -> FileParseResult:
     )
 
 
+# Số dòng mẫu đưa cho AI mỗi bảng. Thống kê luôn tính trên TOÀN BỘ dòng,
+# mẫu chỉ để AI hiểu cấu trúc — không cắt dữ liệu im lặng.
+TABULAR_SAMPLE_ROWS = 20
+
+
+def _describe_dataframe(df, title: str) -> str:
+  """
+  Mô tả một bảng cho AI: kích thước, cột, thống kê trên toàn bộ dòng, vài dòng mẫu.
+  Bảng số không đọc được bằng mắt LLM khi có hàng nghìn dòng — AI cần cấu trúc + số tổng hợp.
+  """
+  df = df.dropna(how="all").dropna(axis=1, how="all")
+  lines = [f"--- {title} ({len(df)} dòng × {len(df.columns)} cột) ---"]
+  if df.empty:
+    lines.append("(Bảng trống)")
+    return "\n".join(lines)
+
+  lines.append(f"Các cột: {', '.join(str(c) for c in df.columns)}")
+
+  numeric_cols = df.select_dtypes(include=["number"]).columns
+  if len(numeric_cols):
+    lines.append(f"Thống kê cột số (trên toàn bộ {len(df)} dòng):")
+    for col in numeric_cols:
+      s = df[col].dropna()
+      if s.empty:
+        continue
+      lines.append(
+        f"  • {col}: tổng={s.sum():,.2f} · TB={s.mean():,.2f} · "
+        f"min={s.min():,.2f} · max={s.max():,.2f} · có giá trị={len(s)}"
+      )
+
+  text_cols = [c for c in df.columns if c not in numeric_cols]
+  if text_cols:
+    lines.append("Giá trị phổ biến (cột chữ):")
+    for col in text_cols:
+      s = df[col].dropna().astype(str)
+      if s.empty:
+        continue
+      top = s.value_counts().head(5)
+      top_str = ", ".join(f"{k[:40]} ({v})" for k, v in top.items())
+      lines.append(f"  • {col}: {s.nunique()} giá trị khác nhau — {top_str}")
+
+  n_sample = min(TABULAR_SAMPLE_ROWS, len(df))
+  lines.append(f"Dòng mẫu ({n_sample}/{len(df)} dòng đầu):")
+  # Dạng "a | b | c" thay vì to_string(): to_string đệm khoảng trắng theo ô dài nhất → phình hàng chục lần
+  sample = df.head(n_sample).astype(object).where(df.head(n_sample).notna(), "").astype(str)
+  lines.append(" | ".join(str(c)[:40] for c in df.columns))
+  for row in sample.itertuples(index=False):
+    lines.append(" | ".join(v.replace("\n", " ")[:60] for v in row))
+  return "\n".join(lines)
+
+
 def _parse_csv(path: str) -> FileParseResult:
-  """CSV — đọc bằng pandas, convert sang dạng text bảng."""
+  """CSV — đọc TOÀN BỘ bằng pandas, trả về bản mô tả + thống kê cho AI."""
   try:
     import pandas as pd
     # Thử nhiều encoding
@@ -248,20 +302,11 @@ def _parse_csv(path: str) -> FileParseResult:
     if df is None:
       raise ValueError("Không thể đọc CSV với các encoding phổ biến.")
 
-    lines = []
-    lines.append(f"[CSV File: {os.path.basename(path)}]")
-    lines.append(f"Số dòng: {len(df)}, Số cột: {len(df.columns)}")
-    lines.append(f"Các cột: {', '.join(str(c) for c in df.columns)}")
-    lines.append("")
-
-    # Chuyển thành text dạng bảng (tối đa 500 dòng để tránh quá lớn)
-    lines.append(df.head(500).to_string(index=False))
-
-    text = "\n".join(lines)
-    print(f"  ✅ [CSV] {len(df)} dòng × {len(df.columns)} cột, {len(text)} ký tự")
+    text = f"[CSV File: {os.path.basename(path)}]\n" + _describe_dataframe(df, "Bảng")
+    print(f"  ✅ [CSV] {len(df)} dòng × {len(df.columns)} cột, {len(text)} ký tự mô tả")
     return FileParseResult(
       filename=os.path.basename(path), ext="csv", success=True,
-      text=text, method="pandas-csv",
+      text=text, row_count=len(df), is_tabular=True, method="pandas-csv",
     )
   except Exception as e:
     return FileParseResult(
@@ -271,24 +316,32 @@ def _parse_csv(path: str) -> FileParseResult:
 
 
 def _parse_excel(path: str, ext: str) -> FileParseResult:
-  """XLSX / XLS — đọc từng sheet bằng pandas."""
+  """XLSX / XLS — đọc TOÀN BỘ từng sheet, trả về bản mô tả + thống kê cho AI."""
   try:
     import pandas as pd
     xl = pd.ExcelFile(path)
     sheet_names = xl.sheet_names
     sections = [f"[Excel File: {os.path.basename(path)}]", f"Số sheet: {len(sheet_names)}"]
+    total_rows = 0
+    empty_sheets = []
 
     for sheet_name in sheet_names:
       df = xl.parse(sheet_name)
-      sections.append(f"\n--- Sheet: {sheet_name} ({len(df)} dòng × {len(df.columns)} cột) ---")
-      sections.append(f"Các cột: {', '.join(str(c) for c in df.columns)}")
-      sections.append(df.head(500).to_string(index=False))
+      if df.dropna(how="all").empty and df.columns.astype(str).str.startswith("Unnamed").all():
+        empty_sheets.append(str(sheet_name))
+        continue
+      total_rows += len(df.dropna(how="all"))
+      sections.append("\n" + _describe_dataframe(df, f"Sheet: {sheet_name}"))
+
+    if empty_sheets:
+      sections.append(f"\nSheet trống (bỏ qua): {', '.join(empty_sheets)}")
 
     text = "\n".join(sections)
-    print(f"  ✅ [Excel] {len(sheet_names)} sheet(s), {len(text)} ký tự")
+    print(f"  ✅ [Excel] {len(sheet_names)} sheet(s), {total_rows} dòng, {len(text)} ký tự mô tả")
     return FileParseResult(
       filename=os.path.basename(path), ext=ext, success=True,
-      text=text, sheet_count=len(sheet_names), method="pandas-excel",
+      text=text, sheet_count=len(sheet_names), row_count=total_rows,
+      is_tabular=True, method="pandas-excel",
     )
   except Exception as e:
     return FileParseResult(
@@ -429,7 +482,23 @@ class DocumentIngestor:
     print(f"  ✅ Đã phân thành {len(chunks)} chunks.")
     return chunks
 
-  def process_and_store_text(self, raw_text: str, filename: str, category: str):
+  def _vectorstore(self) -> Chroma:
+    return Chroma(
+      collection_name=f"brandflow_memory_{self.tenant_id}",
+      embedding_function=self.embeddings,
+      persist_directory=self.persist_directory,
+    )
+
+  def is_already_stored(self, file_hash: str) -> bool:
+    """Tenant đã lưu file có cùng nội dung (sha256) vào VectorDB chưa."""
+    try:
+      found = self._vectorstore().get(where={"file_hash": file_hash}, limit=1)
+      return bool(found.get("ids"))
+    except Exception as e:
+      print(f"  ⚠️ Không kiểm tra được trùng lặp: {e}")
+      return False
+
+  def process_and_store_text(self, raw_text: str, filename: str, category: str, file_hash: Optional[str] = None):
     """Pipeline: Cleansing → Chunking → VectorDB."""
     current_date = datetime.now().isoformat()
     try:
@@ -439,27 +508,16 @@ class DocumentIngestor:
         print(f"  ⚠️ Không có chunk nào để lưu cho [{filename}].")
         return
 
+      base_metadata = {"source": filename, "category": category, "date": current_date}
+      if file_hash:
+        base_metadata["file_hash"] = file_hash
       documents = [
-        Document(
-          page_content=chunk,
-          metadata={
-            "source": filename,
-            "category": category,
-            "date": current_date,
-            "index": i,
-          },
-        )
+        Document(page_content=chunk, metadata={**base_metadata, "index": i})
         for i, chunk in enumerate(chunks)
       ]
 
       print(f"💾 [Storage] Đang lưu {len(documents)} bản ghi vào ChromaDB...")
-      collection_name = f"brandflow_memory_{self.tenant_id}"
-      vectorstore = Chroma(
-        collection_name=collection_name,
-        embedding_function=self.embeddings,
-        persist_directory=self.persist_directory,
-      )
-      vectorstore.add_documents(documents)
+      self._vectorstore().add_documents(documents)
       print(f"🎉 Đã lưu thành công [{filename}] vào bộ não.")
     except Exception as e:
       print(f"🔴 [Storage Lỗi]: {e}")

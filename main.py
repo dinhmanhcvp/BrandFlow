@@ -219,7 +219,8 @@ async def system_info():
 
 
 # ── Đăng ký Form Data CRUD Router ─────────────────────────────────
-from app.api.auth_routes import router as auth_router, get_admin_user, get_current_user
+from app.api.auth_routes import router as auth_router, get_admin_user, get_current_user, get_optional_user
+from app.services.file_utils import compute_file_hash, normalize_filename
 from app.api.research_routes import router as research_router
 from app.api.agent_builder_routes import router as agent_builder_router
 from app.agents.intake.upload_analyzer import UploadAnalyzer
@@ -1208,71 +1209,103 @@ def onboarding_upload_url(request: UrlRequestCustom):
 
 
 @app.post("/api/v1/onboarding/upload")
-async def onboarding_upload(files: List[UploadFile] = File(...), tenant_id: str = Form("default")):
+async def onboarding_upload(
+    files: List[UploadFile] = File(...),
+    user_id: Optional[str] = Depends(get_optional_user),
+):
     """
     Nhận file (PDF, DOCX, TXT, CSV, XLSX, HTML...), băm nhỏ và lưu vào ChromaDB.
     Trả về kết quả chi tiết từng file, bao gồm lỗi nếu có.
+
+    - tenant lấy từ JWT (không nhận từ client). Ẩn danh → chỉ phân tích, không lưu VectorDB.
+    - Bảng số (CSV/Excel) không embed: vector search không cộng/lọc được số.
+    - File trùng nội dung (sha256) trong cùng lượt bị bỏ qua; đã lưu từ trước thì không embed lại.
     """
     if not files:
         raise HTTPException(status_code=400, detail="Không có file nào được tải lên.")
 
     temp_dir = "./temp_uploads"
     os.makedirs(temp_dir, exist_ok=True)
-    ingestor = DocumentIngestor(tenant_id=tenant_id)
+    tenant_id = user_id
+    ingestor = DocumentIngestor(tenant_id=tenant_id or "anonymous")
 
     results = []
     ok_count = 0
     fail_count = 0
+    skipped_count = 0
+    seen_hashes: Dict[str, str] = {}
 
     for file in files:
-        unique_filename = f"{uuid.uuid4()}_{file.filename}"
-        temp_file_path = os.path.join(temp_dir, unique_filename)
-
-        # Ghi file tạm
+        display_name = normalize_filename(os.path.basename(file.filename or "upload"))
         try:
             content = await file.read()
-            with open(temp_file_path, "wb") as buf:
-                buf.write(content)
         except Exception as e:
-            results.append({"filename": file.filename, "status": "error", "error": f"Không ghi được file tạm: {e}"})
+            results.append({"filename": display_name, "status": "error", "error": f"Không đọc được file: {e}"})
             fail_count += 1
             continue
 
+        file_hash = compute_file_hash(content)
+        if file_hash in seen_hashes:
+            results.append({
+                "filename": display_name,
+                "status": "skipped",
+                "error": f"Trùng nội dung với '{seen_hashes[file_hash]}' — bỏ qua.",
+            })
+            skipped_count += 1
+            continue
+        seen_hashes[file_hash] = display_name
+
+        temp_file_path = os.path.join(temp_dir, f"{uuid.uuid4()}_{display_name}")
         try:
+            with open(temp_file_path, "wb") as buf:
+                buf.write(content)
+
             # Parse đa định dạng
             parse_result = ingestor.parse_file(temp_file_path)
 
             if not parse_result.success:
                 results.append({
-                    "filename": file.filename,
+                    "filename": display_name,
                     "status": "error",
                     "error": parse_result.error,
                     "method": parse_result.method,
                 })
                 fail_count += 1
-            else:
-                # Lưu vào ChromaDB
+                continue
+
+            stored = "skipped_anonymous"
+            if parse_result.is_tabular:
+                stored = "skipped_tabular"
+            elif tenant_id:
                 try:
-                    ingestor.process_and_store_text(
-                        raw_text=parse_result.text,
-                        filename=file.filename,
-                        category="brand_guidelines",
-                    )
+                    if ingestor.is_already_stored(file_hash):
+                        stored = "already_stored"
+                    else:
+                        ingestor.process_and_store_text(
+                            raw_text=parse_result.text,
+                            filename=display_name,
+                            category="brand_guidelines",
+                            file_hash=file_hash,
+                        )
+                        stored = "stored"
                 except Exception as embed_e:
+                    stored = "failed"
                     print(f"⚠️ [UPLOAD] Bỏ qua lưu ChromaDB do lỗi (thường do Embedding API rate limit/quota): {embed_e}")
-                
-                results.append({
-                    "filename": file.filename,
-                    "status": "success",
-                    "char_count": parse_result.char_count,
-                    "method": parse_result.method,
-                    "pages": parse_result.page_count or None,
-                    "sheets": parse_result.sheet_count or None,
-                    "raw_text_for_ai": parse_result.text[:10000] # Giới hạn mỗi file 10k ký tự cho AI
-                })
-                ok_count += 1
+
+            results.append({
+                "filename": display_name,
+                "status": "success",
+                "char_count": parse_result.char_count,
+                "method": parse_result.method,
+                "pages": parse_result.page_count or None,
+                "sheets": parse_result.sheet_count or None,
+                "rows": parse_result.row_count or None,
+                "vector_store": stored,
+                "raw_text_for_ai": parse_result.text[:10000] # Giới hạn mỗi file 10k ký tự cho AI
+            })
+            ok_count += 1
         except Exception as e:
-            results.append({"filename": file.filename, "status": "error", "error": str(e)})
+            results.append({"filename": display_name, "status": "error", "error": str(e)})
             fail_count += 1
         finally:
             # Zero-Data Retention: tiêu hủy file tạm ngay lập tức
@@ -1281,10 +1314,12 @@ async def onboarding_upload(files: List[UploadFile] = File(...), tenant_id: str 
 
     status = "success" if fail_count == 0 else ("partial" if ok_count > 0 else "error")
     message = (
-        f"Đã lưu thành công {ok_count}/{len(files)} tài liệu vào ChromaDB."
+        f"Đã xử lý thành công {ok_count}/{len(files)} tài liệu."
         if ok_count > 0
         else f"Tất cả {fail_count} file đều thất bại."
     )
+    if skipped_count:
+        message += f" Bỏ qua {skipped_count} file trùng nội dung."
     
     # ─── Phân tích file bằng AI để tự động điền Form ───
     extracted_answers = {}
@@ -1294,14 +1329,12 @@ async def onboarding_upload(files: List[UploadFile] = File(...), tenant_id: str 
             # Gộp text của các file thành công
             all_text = ""
             has_bep_nha_moc = False
-            for file in files:
-                fname = file.filename
+            for res in results:
+                fname = res["filename"]
                 if "bepnhamoc" in fname.lower() or "bếp nhà mộc" in fname.lower():
                     has_bep_nha_moc = True
-                
-                # Tìm result tương ứng
-                res = next((r for r in results if r["filename"] == fname and r["status"] == "success"), None)
-                if res and "raw_text_for_ai" in res:
+
+                if res["status"] == "success" and "raw_text_for_ai" in res:
                     all_text += f"\\n--- TÀI LIỆU: {fname} ---\\n" + res.get("raw_text_for_ai", "")
             
             if all_text:
@@ -1373,9 +1406,13 @@ async def onboarding_upload(files: List[UploadFile] = File(...), tenant_id: str 
     return {"status": status, "message": message, "results": results, "extracted_answers": extracted_answers, "completeness": completeness}
 
 @app.post("/api/v1/onboarding/extract-summary")
-async def onboarding_extract_summary(files: List[UploadFile] = File(...), tenant_id: str = Form("default")):
+async def onboarding_extract_summary(
+    files: List[UploadFile] = File(...),
+    user_id: Optional[str] = Depends(get_optional_user),
+):
     """
     Nhận file, đọc nội dung và trả về tóm tắt ngắn gọn thông qua Gemini.
+    Không lưu VectorDB; tenant chỉ lấy từ JWT.
     """
     if not files:
         raise HTTPException(status_code=400, detail="Không có file nào được tải lên.")
@@ -1385,16 +1422,20 @@ async def onboarding_extract_summary(files: List[UploadFile] = File(...), tenant
             raise HTTPException(status_code=503, detail="Dịch vụ xử lý tài liệu chưa sẵn sàng (thiếu thư viện AI).")
         temp_dir = "./temp_uploads"
         os.makedirs(temp_dir, exist_ok=True)
-        from app.services.document_processor import DocumentIngestor
-        ingestor = DocumentIngestor(tenant_id=tenant_id)
+        ingestor = DocumentIngestor(tenant_id=user_id or "anonymous")
         
         combined_text = ""
+        seen_hashes = set()
         for file in files:
-            unique_filename = f"{uuid.uuid4()}_{file.filename}"
-            temp_file_path = os.path.join(temp_dir, unique_filename)
-            
+            content = await file.read()
+            file_hash = compute_file_hash(content)
+            if file_hash in seen_hashes:
+                continue
+            seen_hashes.add(file_hash)
+
+            display_name = normalize_filename(os.path.basename(file.filename or "upload"))
+            temp_file_path = os.path.join(temp_dir, f"{uuid.uuid4()}_{display_name}")
             with open(temp_file_path, "wb") as buffer:
-                content = await file.read()
                 buffer.write(content)
             
             try:
