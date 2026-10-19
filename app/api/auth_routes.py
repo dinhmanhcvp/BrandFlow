@@ -10,8 +10,11 @@ import jwt # PyJWT
 
 from app.models.models import User
 from app.core.database import get_db
+from app.core import totp
+from app.core.persistent_store import PersistentStore
 
 import requests
+import time
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
@@ -119,10 +122,56 @@ class UserCreate(BaseModel):
 class UserLogin(BaseModel):
   email: EmailStr
   password: str
+  otp_code: Optional[str] = None  # bắt buộc khi tài khoản bật 2FA
 
 class SocialLoginRequest(BaseModel):
   token: str
   provider: str # 'google' | 'facebook'
+  otp_code: Optional[str] = None
+
+class OtpCode(BaseModel):
+  code: str
+
+
+# ── Xác thực 2 lớp (TOTP) ─────────────────────────────────────────
+_2FA_FAILURES = PersistentStore("2fa_failures")
+_2FA_LAST_STEP = PersistentStore("2fa_last_step")
+MAX_2FA_FAILURES = 5
+LOCKOUT_SECONDS = 15 * 60
+
+
+def _check_otp(user: User, code: Optional[str]) -> None:
+  """
+  Kiểm tra mã TOTP của user. Sai quá 5 lần → khóa 15 phút; mã đã dùng không dùng lại được.
+  Ném HTTPException 401 với detail.error = 2FA_REQUIRED | 2FA_INVALID | 2FA_LOCKED.
+  """
+  now = time.time()
+  failures = _2FA_FAILURES.get(user.id, {"count": 0, "locked_until": 0})
+  if failures.get("locked_until", 0) > now:
+    raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail={
+      "error": "2FA_LOCKED", "message": "Nhập sai mã quá nhiều lần. Thử lại sau 15 phút.",
+    })
+  if not code:
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={
+      "error": "2FA_REQUIRED", "message": "Nhập mã 6 số từ ứng dụng xác thực.",
+    })
+  step = totp.verify(user.two_factor_secret or "", code, now=now, last_used_step=_2FA_LAST_STEP.get(user.id))
+  if step is None:
+    def _fail(state):
+      state["count"] = state.get("count", 0) + 1
+      if state["count"] >= MAX_2FA_FAILURES:
+        state["count"], state["locked_until"] = 0, now + LOCKOUT_SECONDS
+    _2FA_FAILURES.update(user.id, _fail, default=lambda: {"count": 0, "locked_until": 0})
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={
+      "error": "2FA_INVALID", "message": "Mã xác thực không đúng hoặc đã hết hạn.",
+    })
+  _2FA_LAST_STEP[user.id] = step
+  _2FA_FAILURES[user.id] = {"count": 0, "locked_until": 0}
+
+
+def _require_second_factor(user: User, code: Optional[str]) -> None:
+  if user.is_2fa_enabled:
+    _check_otp(user, code)
 
 def verify_password(plain_password: str, hashed_password: str):
   if not hashed_password: return False
@@ -146,8 +195,9 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
   
   hashed_password = get_password_hash(user.password)
   
-  # Tự động set admin cho email nội bộ
-  is_admin = True if user.email == "admin@brandflow.ai" else False
+  # Không tự cấp quyền admin theo email: email không được xác minh nên ai cũng đăng ký được.
+  # Tạo admin bằng `python create_admin.py` (đọc thông tin từ biến môi trường).
+  is_admin = False
   
   # Xác định Tier cho người dùng
   tier = "FREE"
@@ -184,17 +234,13 @@ def login_user(user: UserLogin, db: Session = Depends(get_db)):
   db_user = db.query(User).filter(User.email == user.email).first()
   if not db_user or not verify_password(user.password, db_user.password_hash):
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Sai email hoặc mật khẩu")
+  _require_second_factor(db_user, user.otp_code)
   
   access_token = create_access_token(
     data={"sub": db_user.id},
     expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
   )
   
-  # Đảm bảo admin@brandflow.ai luôn là admin kể cả khi db lỗi sync
-  if db_user.email == "admin@brandflow.ai" and not db_user.is_admin:
-    db_user.is_admin = True
-    db.commit()
-    
   return {
     "access_token": access_token, 
     "token_type": "bearer",
@@ -270,6 +316,7 @@ def social_login(request: SocialLoginRequest, db: Session = Depends(get_db)):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+  _require_second_factor(db_user, request.otp_code)
 
   # Cấp phát Token
   access_token = create_access_token(
@@ -277,11 +324,6 @@ def social_login(request: SocialLoginRequest, db: Session = Depends(get_db)):
     expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
   )
   
-  # Đảm bảo admin@brandflow.ai luôn là admin kể cả khi db lỗi sync
-  if db_user.email == "admin@brandflow.ai" and not db_user.is_admin:
-    db_user.is_admin = True
-    db.commit()
-    
   return {
     "access_token": access_token, 
     "token_type": "bearer",
@@ -289,6 +331,63 @@ def social_login(request: SocialLoginRequest, db: Session = Depends(get_db)):
     "email": db_user.email,
     "is_admin": db_user.is_admin
   }
+
+# ═══════════════════════════════════════════════════════════════════
+# XÁC THỰC 2 LỚP (TOTP) — bật/tắt cho tài khoản hiện tại
+# ═══════════════════════════════════════════════════════════════════
+
+def _load_user(db: Session, user_id: str) -> User:
+  user = db.query(User).filter(User.id == user_id).first()
+  if not user:
+    raise HTTPException(status_code=404, detail="Tài khoản không tồn tại (tài khoản khách không dùng được 2FA)")
+  return user
+
+
+@router.get("/2fa/status")
+def two_factor_status(db: Session = Depends(get_db), current_user_id: str = Depends(get_current_user)):
+  user = _load_user(db, current_user_id)
+  return {"enabled": bool(user.is_2fa_enabled), "pending_setup": bool(user.two_factor_secret and not user.is_2fa_enabled)}
+
+
+@router.post("/2fa/setup")
+def two_factor_setup(db: Session = Depends(get_db), current_user_id: str = Depends(get_current_user)):
+  """Tạo secret mới (chưa bật). Người dùng quét QR rồi gọi /2fa/enable với mã 6 số để bật."""
+  user = _load_user(db, current_user_id)
+  if user.is_2fa_enabled:
+    raise HTTPException(status_code=400, detail="2FA đã bật. Tắt trước khi thiết lập lại.")
+  user.two_factor_secret = totp.generate_secret()
+  db.commit()
+  return {
+    "secret": user.two_factor_secret,
+    "otpauth_uri": totp.provisioning_uri(user.two_factor_secret, user.email or user.id),
+  }
+
+
+@router.post("/2fa/enable")
+def two_factor_enable(body: OtpCode, db: Session = Depends(get_db), current_user_id: str = Depends(get_current_user)):
+  user = _load_user(db, current_user_id)
+  if user.is_2fa_enabled:
+    return {"enabled": True}
+  if not user.two_factor_secret:
+    raise HTTPException(status_code=400, detail="Chưa thiết lập 2FA. Gọi /2fa/setup trước.")
+  _check_otp(user, body.code)
+  user.is_2fa_enabled = True
+  db.commit()
+  return {"enabled": True}
+
+
+@router.post("/2fa/disable")
+def two_factor_disable(body: OtpCode, db: Session = Depends(get_db), current_user_id: str = Depends(get_current_user)):
+  """Tắt 2FA — vẫn phải nhập mã hiện tại để kẻ chiếm phiên đăng nhập không tắt được."""
+  user = _load_user(db, current_user_id)
+  if not user.is_2fa_enabled:
+    return {"enabled": False}
+  _check_otp(user, body.code)
+  user.is_2fa_enabled = False
+  user.two_factor_secret = None
+  db.commit()
+  return {"enabled": False}
+
 
 # ═══════════════════════════════════════════════════════════════════
 # GDPR & COMPLIANCE APIs (Right to be Forgotten & Data Portability)

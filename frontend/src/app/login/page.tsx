@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Hexagon, Loader2, Sparkles } from 'lucide-react';
+import { Mail, Lock, Hexagon, Loader2, Sparkles, ShieldCheck } from 'lucide-react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 
 
@@ -16,6 +16,13 @@ const FACEBOOK_REDIRECT_URI = typeof window !== 'undefined'
 
 type SocialProvider = 'google' | 'facebook';
 type SocialLoadingProvider = SocialProvider | 'linkedin';
+
+// Backend trả detail dạng chuỗi, hoặc object {error, message} cho các lỗi 2FA
+type AuthErrorDetail = string | { error?: string; message?: string } | undefined;
+const detailMessage = (detail: AuthErrorDetail, fallback: string) =>
+ typeof detail === 'string' ? detail : detail?.message || fallback;
+const needsOtp = (detail: AuthErrorDetail) =>
+ typeof detail === 'object' && (detail?.error === '2FA_REQUIRED' || detail?.error === '2FA_INVALID');
 
 const providerLabels: Record<SocialProvider, string> = {
  google: 'Google',
@@ -31,19 +38,27 @@ function LoginForm() {
  const [error, setError] = useState('');
  const [loading, setLoading] = useState(false);
  const [socialLoading, setSocialLoading] = useState<SocialLoadingProvider | null>(null);
+ const [otpCode, setOtpCode] = useState('');
+ const [otpRequired, setOtpRequired] = useState(false);
+ const [pendingSocial, setPendingSocial] = useState<{ token: string; provider: SocialProvider } | null>(null);
 
- const handleSocialBackendAuth = React.useCallback(async (token: string, provider: SocialProvider) => {
+ const handleSocialBackendAuth = React.useCallback(async (token: string, provider: SocialProvider, otp?: string) => {
   try {
    const res = await fetch('/api/v1/auth/social', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token, provider })
+    body: JSON.stringify({ token, provider, otp_code: otp || undefined })
    });
 
    const data = await res.json();
    if (!res.ok) {
-    setError(data.detail || `Lỗi xác thực ${providerLabels[provider]}`);
+    if (needsOtp(data.detail)) {
+     setOtpRequired(true);
+     setPendingSocial({ token, provider });
+    }
+    setError(detailMessage(data.detail, `Lỗi xác thực ${providerLabels[provider]}`));
     setSocialLoading(null);
+    setLoading(false);
     return;
    }
 
@@ -148,12 +163,18 @@ function LoginForm() {
    return;
   }
 
+  if (pendingSocial) {
+   // Tài khoản social có bật 2FA: gửi lại token kèm mã OTP
+   await handleSocialBackendAuth(pendingSocial.token, pendingSocial.provider, otpCode);
+   return;
+  }
+
   const endpoint = isRegister ? '/api/v1/auth/register' : '/api/v1/auth/login';
 
   try {
    const payload = isRegister 
     ? { email, password, invite_code: inviteCode || undefined }
-    : { email, password };
+    : { email, password, otp_code: otpRequired ? otpCode : undefined };
 
    const res = await fetch(endpoint, {
     method: 'POST',
@@ -164,7 +185,8 @@ function LoginForm() {
    const data = await res.json();
 
    if (!res.ok) {
-    setError(data.detail || 'Có lỗi xảy ra');
+    if (!isRegister && needsOtp(data.detail)) setOtpRequired(true);
+    setError(detailMessage(data.detail, 'Có lỗi xảy ra'));
     setLoading(false);
     return;
    }
@@ -319,7 +341,7 @@ function LoginForm() {
          </div>
          <input
           type="email"
-          required
+          required={!pendingSocial}
           className="block w-full pl-11 pr-4 py-3.5 bg-slate-50/50 dark:bg-[#0B1120]/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-medium"
           placeholder={language === 'vi' ? "Địa chỉ Email" : "Email Address"}
           value={email}
@@ -335,7 +357,7 @@ function LoginForm() {
          </div>
          <input
           type="password"
-          required
+          required={!pendingSocial}
           className="block w-full pl-11 pr-4 py-3.5 bg-slate-50/50 dark:bg-[#0B1120]/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-medium"
           placeholder={language === 'vi' ? "Mật khẩu" : "Password"}
           value={password}
@@ -343,6 +365,28 @@ function LoginForm() {
          />
         </div>
        </div>
+
+       {otpRequired && !isRegister && (
+        <div>
+         <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+           <ShieldCheck className="h-4 w-4 text-slate-400" />
+          </div>
+          <input
+           type="text"
+           inputMode="numeric"
+           autoComplete="one-time-code"
+           maxLength={6}
+           required
+           autoFocus
+           className="block w-full pl-11 pr-4 py-3.5 bg-slate-50/50 dark:bg-[#0B1120]/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-medium tracking-[0.4em] placeholder:tracking-normal"
+           placeholder={language === 'vi' ? "Mã xác thực 6 số" : "6-digit authentication code"}
+           value={otpCode}
+           onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+          />
+         </div>
+        </div>
+       )}
 
        {isRegister && (
         <div>

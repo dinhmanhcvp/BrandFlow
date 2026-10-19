@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Settings, User, Key, CreditCard, Bell, Shield, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TranslationKey } from '@/i18n/translations';
+import TwoFactorCard from '@/components/settings/TwoFactorCard';
 
 export default function SettingsPage() {
  const { t } = useLanguage();
@@ -42,6 +43,8 @@ export default function SettingsPage() {
  </div>
  </div>
  </section>
+
+ <TwoFactorCard />
 
  {/* Integrations & API Section */}
  <section>
