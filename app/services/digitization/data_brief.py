@@ -157,7 +157,7 @@ def build_data_brief(tenant_id: str) -> Dict[str, Any]:
     entity_rows = [(e.name, e.description, _count(con, e.name)) for e in ENTITIES.values()]
     custom = con.execute("SELECT COUNT(*), COALESCE(SUM(data_row_count), 0) FROM _tables "
                          "WHERE entity = 'custom' OR entity IS NULL").fetchone()
-    kv = con.execute("SELECT key, value FROM org_profile LIMIT 8").fetchall()
+    kv = con.execute("SELECT DISTINCT key, value FROM org_profile WHERE value IS NOT NULL LIMIT 8").fetchall()
 
   lines = [f"KHO DỮ LIỆU NỘI BỘ (cập nhật {datetime.now():%Y-%m-%d %H:%M}): {files} file, {int(rows):,} dòng dữ liệu đã số hóa.",
            "Bảng chuẩn có dữ liệu:"]
@@ -178,3 +178,24 @@ def build_data_brief(tenant_id: str) -> Dict[str, Any]:
                + (f", {readiness['pending_questions']} câu hỏi ánh xạ chờ xác nhận" if readiness["pending_questions"] else ""))
   lines.append("Cần số liệu chi tiết/mới nhất → gọi get_metric hoặc query_sql; không tự suy đoán số.")
   return {"text": "\n".join(lines), "insights": insights, "readiness": readiness, "files": files}
+
+
+def brief_for_agents(tenant_id: str) -> Dict[str, Any]:
+  """
+  Gói ngữ cảnh dữ liệu nội bộ cho các agent của luồng cũ (Brand DNA, CMO/CFO).
+  Không bao giờ ném lỗi: chưa có dữ liệu / lỗi kho → trả {} để luồng cũ chạy như trước.
+  """
+  if not tenant_id:
+    return {}
+  try:
+    brief = build_data_brief(tenant_id)
+  except Exception as e:
+    print(f"⚠️ [Data Brief] Không đọc được kho của tenant: {e}")
+    return {}
+  if not brief.get("files"):
+    return {}
+  return {
+    "text": brief["text"],
+    "insights": [{"key": i["key"], "text": i["text"]} for i in brief["insights"]],
+    "readiness_score": (brief.get("readiness") or {}).get("score"),
+  }

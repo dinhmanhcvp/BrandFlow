@@ -162,7 +162,21 @@ BRANDFLOW_FRONTEND_URLS=https://your-frontend.vercel.app
 # === BẢO MẬT ===
 JWT_SECRET_KEY=your_random_secret_key_at_least_32_chars
 BRANDFLOW_AUDIT_ADMIN_TOKEN=your_admin_token_for_audit_dashboard
+
+# === DATA FOUNDRY (Kho Dữ liệu — số hóa Excel/CSV) ===
+# Thư mục chứa file DuckDB của từng doanh nghiệp. PHẢI nằm trên ổ đĩa bền (persistent disk),
+# nếu không toàn bộ dữ liệu đã số hóa sẽ mất mỗi lần redeploy/restart.
+BRANDFLOW_WAREHOUSE_DIR=/var/data/brandflow_warehouse
+# Tùy chọn: model dùng để ánh xạ cột và cho Agent hỏi dữ liệu (mặc định gemini-2.5-flash)
+# DIGITIZATION_LLM_MODEL=gemini-2.5-flash
+# DATA_ANALYST_LLM_MODEL=gemini-2.5-flash
+# Tắt hẳn LLM khi ánh xạ cột (chỉ dùng từ điển heuristic) — hữu ích khi hết quota
+# BRANDFLOW_DISABLE_LLM_MAPPING=1
 ```
+
+> 🗄️ **Kho Dữ liệu cần ổ đĩa bền.** Trên Render: Service → **Disks** → Add Disk (vd. mount path `/var/data`, 1 GB), rồi đặt `BRANDFLOW_WAREHOUSE_DIR=/var/data/brandflow_warehouse`. Disk của Render chỉ gắn được cho 1 instance và cần gói trả phí. Trên Railway: thêm **Volume** và trỏ biến này vào mount path của volume.
+>
+> Không đặt `JWT_SECRET_KEY` thì backend dùng khóa mặc định viết trong code — ai đọc được code đều ký được token và đọc được Kho Dữ liệu của doanh nghiệp khác. Bắt buộc đặt trước khi go-live.
 
 ### 4.4. Kiểm tra Backend đã Live
 
@@ -258,6 +272,8 @@ BRANDFLOW_FRONTEND_URLS=https://brandflow.vercel.app,https://brandflow.com,https
 - [ ] Truy cập `/docs` thấy Swagger UI
 - [ ] Truy cập `/health` trả về `{"status": "ok"}`
 - [ ] Thư mục `temp_uploads/` được tạo tự động (kiểm tra logs)
+- [ ] `JWT_SECRET_KEY` đã set (không dùng khóa mặc định)
+- [ ] `BRANDFLOW_WAREHOUSE_DIR` trỏ vào persistent disk/volume; `duckdb` đã cài (có trong `requirements.txt`)
 
 ### Frontend ✅
 - [ ] `NEXT_PUBLIC_API_URL` đã set trên Vercel (KHÔNG có `/` cuối)
@@ -274,6 +290,8 @@ BRANDFLOW_FRONTEND_URLS=https://brandflow.vercel.app,https://brandflow.com,https
 - [ ] Design Studio gọi được API generate
 - [ ] Content Lab ingest URL hoạt động
 - [ ] Daily Content generate nội dung hoạt động
+- [ ] Kho Dữ liệu (`/data-hub`): đăng nhập tài khoản thật → thả file Excel → thấy điểm sức khỏe dữ liệu và bảng đã số hóa
+- [ ] Redeploy backend xong, Kho Dữ liệu vẫn còn dữ liệu cũ (chứng tỏ disk bền hoạt động)
 - [ ] Export Full Report (d0-report) render đúng
 
 ---

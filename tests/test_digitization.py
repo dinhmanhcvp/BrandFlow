@@ -163,7 +163,7 @@ def test_hitl_confirm_remaps_all_tables_with_same_template(tmp_path):
   wb.save(path)
   report = digitize_file("t", str(path), path.name, _hash(path))
   table = report["tables"][0]
-  assert table["entity"] == "custom"  # 'ABC' tối nghĩa → không đoán bừa
+  assert table["entity"] == "custom" and table["canonical_rows"] == 0  # 'ABC' tối nghĩa → không đoán bừa
 
   remap_recipe("t", table["recipe_id"], "marketing_spend", {"Hạng mục": "channel", "ABC": "amount"})
   assert qt.get_metric("t", "marketing_spend").rows[0]["value"] == pytest.approx(20_000_000)
@@ -328,3 +328,46 @@ def test_data_analyst_agent_reports_llm_failure_instead_of_crashing(tmp_path):
   digitize_file("t", str(path), path.name, _hash(path))
   result = DataAnalystAgent(llm=_BrokenLLM()).answer("t", "Doanh thu?")
   assert result["status"] == "llm_error" and "API key not valid" in result["answer"]
+
+
+def test_unmatched_table_gets_suggested_entity_and_one_tap_question(tmp_path):
+  """Kịch bản 'Cột ABC trong file chi phí có phải là ...?' — trả lời 1 lần, áp cho mọi file cùng mẫu."""
+  paths = []
+  for q in (3, 4):
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.append(["Tháng", "Kênh QC", "ABC", "Ghi chú"])
+    for m in range(1, 4):
+      ws.append([f"T{m + 3 * (q - 3)}/2026", "Facebook Ads", 10_000_000 * q, ""])
+      ws.append([f"T{m + 3 * (q - 3)}/2026", "TikTok Ads", 5_000_000 * q, ""])
+    path = tmp_path / f"chi_phi_Q{q}.xlsx"
+    wb.save(path)
+    paths.append(path)
+    digitize_file("t", str(path), path.name, _hash(path))
+
+  pending = qt.pending_questions("t")
+  assert len(pending) == 1 and pending[0]["entity"] == "marketing_spend"
+  assert pending[0]["column_map"] == {"Tháng": "period", "Kênh QC": "channel", "Ghi chú": "note"}
+  question = pending[0]["questions"][0]
+  assert question["column"] == "ABC" and "amount" in question["options"]
+  assert len(pending[0]["applies_to"]) == 2
+  assert qt.get_metric("t", "marketing_spend").rows[0]["value"] is None  # chưa xác nhận → chưa nạp
+
+  remap_recipe("t", pending[0]["recipe_id"], "marketing_spend", {**pending[0]["column_map"], "ABC": "amount"})
+  assert qt.get_metric("t", "marketing_spend").rows[0]["value"] == pytest.approx(3 * 15_000_000 * 3 + 3 * 15_000_000 * 4)
+  assert qt.pending_questions("t") == []
+
+
+def test_low_confidence_mapping_is_not_loaded_into_actuals(tmp_path):
+  """Bảng kế hoạch doanh thu (không phải số bán thực tế) ánh xạ kém tự tin → giữ ở bảng thô, hỏi người dùng."""
+  wb = openpyxl.Workbook()
+  ws = wb.active
+  ws.append(["Miền", "Tỉ trọng", "Doanh thu Q4", "Tháng 10", "Tháng 11"])
+  ws.append(["Miền Nam", 0.5, 30_000_000_000, 10_000_000_000, 10_000_000_000])
+  ws.append(["Miền Bắc", 0.5, 30_000_000_000, 10_000_000_000, 10_000_000_000])
+  path = tmp_path / "ke_hoach.xlsx"
+  wb.save(path)
+  table = digitize_file("t", str(path), path.name, _hash(path))["tables"][0]
+  if table["entity"] != "custom":
+    assert table["confidence"] < 0.8 and table["canonical_rows"] == 0 and table["needs_confirmation"]
+  assert qt.get_metric("t", "revenue").rows[0]["value"] is None

@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
  LayoutDashboard, MessageSquare, Briefcase, FolderGit2, Settings,
  Cpu, Network, PanelLeftClose, PenSquare, Palette, Shield,
- ChevronRight, Zap, ArrowRight, BookOpen, Printer, LineChart, Rocket, MonitorPlay
+ ChevronRight, Zap, ArrowRight, BookOpen, Printer, LineChart, Rocket, MonitorPlay, Database
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -90,6 +90,7 @@ const MENU_ITEMS = [
  { id: 'content-lab', langKey: 'sidebar.content_lab', icon: Cpu, href: '/content-lab', group: 'core', desc: { en: 'Advanced AI', vi: 'AI nâng cao' } },
  { id: 'b2b', langKey: 'b2b.title', icon: Briefcase, href: '/planning', group: 'advanced', desc: { en: 'Marketing Plan', vi: 'Kế hoạch MKT' } },
  { id: 'dashboard', langKey: 'sidebar.dashboard', icon: LayoutDashboard, href: '/dashboard', group: 'advanced', desc: { en: 'Dashboards', vi: 'Bảng theo dõi' } },
+ { id: 'data-hub', langKey: 'sidebar.data_hub', icon: Database, href: '/data-hub', group: 'advanced', desc: { en: 'Excel → AI-ready data', vi: 'Số hóa Excel cho AI' } },
  { id: 'agents', langKey: 'sidebar.agents', icon: Network, href: '/agents', group: 'system', desc: { en: 'Trợ lý AI Builder', vi: 'Xây Trợ lý AI' } },
  { id: 'assets', langKey: 'sidebar.assets', icon: FolderGit2, href: '/assets', group: 'system', desc: { en: 'Files', vi: 'Tài liệu' } },
  { id: 'settings', langKey: 'sidebar.settings', icon: Settings, href: '/settings', group: 'system', desc: { en: 'Config', vi: 'Cấu hình' } },

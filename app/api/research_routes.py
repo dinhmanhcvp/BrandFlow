@@ -2,7 +2,10 @@ from fastapi import APIRouter, HTTPException, Depends
 from app.agents.research.market_agent import MarketAgent
 from app.schemas.schemas import ExtractDNARequest, MarketResearchRequest
 from app.services.memory_rag import extract_unified_dna
-from app.api.auth_routes import get_current_user
+from typing import Optional
+
+from app.api.auth_routes import get_current_user, get_optional_user
+from app.services.digitization.data_brief import brief_for_agents
 
 router = APIRouter(prefix="/api/v1/research", tags=["Market Research"])
 
@@ -23,16 +26,22 @@ async def get_market_research(request: MarketResearchRequest, user_id: str = Dep
   return result.get("data")
 
 @router.post("/extract-dna")
-async def extract_brand_dna(request: ExtractDNARequest):
+async def extract_brand_dna(request: ExtractDNARequest, user_id: Optional[str] = Depends(get_optional_user)):
   """
   Extract Brand DNA and Design DNA from combined Form and Document inputs.
   Allows anonymous access so the frontend mock can trigger without login.
+  Tenant lấy từ JWT (không tin tenant_id client gửi); có kho dữ liệu nội bộ thì đưa số liệu đã kiểm chứng vào.
   """
   try:
+    tenant_id = user_id or "anonymous"
+    document_content = request.document_content or ""
+    internal_data = brief_for_agents(user_id)
+    if internal_data:
+      document_content += f"\n\n[KHO DỮ LIỆU NỘI BỘ — SỐ LIỆU ĐÃ KIỂM CHỨNG]\n{internal_data['text']}"
     result = extract_unified_dna(
       form_data=request.form_data,
-      document_content=request.document_content,
-      tenant_id=request.tenant_id
+      document_content=document_content,
+      tenant_id=tenant_id
     )
     if result.get("status") == "error":
       raise HTTPException(status_code=500, detail=result.get("message"))

@@ -93,4 +93,6 @@ Thiết kế: `ProjectDocs/DATA_DIGITIZATION_PROPOSAL.md`. Kho DuckDB per-tenant
 - `app/api/data_routes.py`: router `prefix=/api/v1/data` (upload, tables, query, metric, brief, questions, recipes/{id}/confirm, lineage, ask, validate-budget). Tenant = user trong JWT.
 - `app/agents/analytics/data_analyst_agent.py`: Business Analyst Agent #0 — trả lời câu hỏi bằng metric/SQL trên kho, LLM chỉ diễn giải.
 - `main.py` `/api/v1/onboarding/upload`: Excel/CSV của user đăng nhập được số hóa; AI nhận Data Brief.
+- Nối vào luồng cũ: `/api/v1/research/extract-dna` và `/api/v1/planning/intake` lấy tenant từ JWT (`get_optional_user`, token demo → ẩn danh) và đưa `brief_for_agents()` vào Brand DNA / prompt CMO.
+- Frontend: `frontend/src/app/data-hub/page.tsx` (Dropzone file/thư mục, sức khỏe dữ liệu, xác nhận ánh xạ 1 chạm, hỏi dữ liệu); mục `data-hub` trong `Sidebar.tsx`; `Screen1_Source.tsx` hiện kết quả số hóa + link Kho Dữ liệu.
 - Env: `BRANDFLOW_DISABLE_LLM_MAPPING=1` (chỉ heuristic), `DIGITIZATION_LLM_MODEL`, `DATA_ANALYST_LLM_MODEL`.

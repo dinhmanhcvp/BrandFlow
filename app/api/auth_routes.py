@@ -79,10 +79,17 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> str:
     )
 
 def get_optional_user(token: Optional[str] = Depends(oauth2_scheme)) -> Optional[str]:
-  """Như get_current_user nhưng cho phép ẩn danh (trả None). Token sai/hết hạn vẫn 401."""
+  """
+  Như get_current_user nhưng cho phép ẩn danh: không có token, token hết hạn hoặc token
+  demo không phải JWT (vd. 'mock_admin_token') → None. Dùng cho luồng onboarding/planning cũ
+  để không làm gãy trải nghiệm; dữ liệu chỉ được lưu theo tenant khi token hợp lệ.
+  """
   if not token:
     return None
-  return get_current_user(token)
+  try:
+    return get_current_user(token)
+  except HTTPException:
+    return None
 
 def get_admin_user(user_id: str = Depends(get_current_user), db: Session = Depends(get_db)) -> str:
   """Xác minh user hiện tại có phải là Admin hay không."""

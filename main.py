@@ -223,7 +223,7 @@ from app.api.auth_routes import router as auth_router, get_admin_user, get_curre
 from app.services.file_utils import compute_file_hash, normalize_filename
 from app.api.data_routes import router as data_router
 from app.services.digitization.pipeline import digitize_file, summarize_report
-from app.services.digitization.data_brief import build_data_brief
+from app.services.digitization.data_brief import brief_for_agents, build_data_brief
 from app.api.research_routes import router as research_router
 from app.api.agent_builder_routes import router as agent_builder_router
 from app.agents.intake.upload_analyzer import UploadAnalyzer
@@ -1801,14 +1801,16 @@ async def planning_orchestration_mock_run(
     raise HTTPException(status_code=410, detail=detail)
 
 @app.post("/api/v1/planning/intake")
-async def process_intake(request: RawInputRequest):
+async def process_intake(request: RawInputRequest, user_id: Optional[str] = Depends(get_optional_user)):
     """
     Intake Agent: Bóc tách ngôn ngữ tự nhiên, kiểm tra ràng buộc ngân sách/ngành hàng.
     Nếu đủ thì chạy Multi-Agent AI (Planner -> CFO -> Persona).
+    Tenant lấy từ JWT; nếu tenant có kho dữ liệu nội bộ, số liệu đã kiểm chứng được đưa cho các agent.
     """
     try:
         raw_text = request.raw_text
-        tenant_id = request.tenant_id
+        tenant_id = user_id
+        internal_data = brief_for_agents(tenant_id)
         
         comp_form = request.comprehensive_form or {}
         if comp_form:
@@ -1819,6 +1821,10 @@ async def process_intake(request: RawInputRequest):
         if brand_dna:
             dna_context = f"\n[BRAND DNA & DESIGN DNA TỪ BỘ NHỚ]\n{json.dumps(brand_dna, ensure_ascii=False)}\n[HẾT BRAND DNA]"
             raw_text += dna_context
+
+        if internal_data:
+            raw_text += f"\n[KHO DỮ LIỆU NỘI BỘ — SỐ LIỆU ĐÃ KIỂM CHỨNG BẰNG SQL]\n{internal_data['text']}\n[HẾT KHO DỮ LIỆU]"
+            brand_dna = {**brand_dna, "internal_data": internal_data}
 
         # --- SECRET MOCK MODE INTERCEPTOR ---
         secret_keywords = ["hương viên trà quán", "mã demo 1", "bếp nhà mộc", "bepnhamoc"]
@@ -1914,7 +1920,7 @@ async def process_intake(request: RawInputRequest):
             budget=int(parsed_data.get("budget") or 0),
             csfs=parsed_data.get("csfs", []),
             resources=parsed_data.get("resources", ""),
-            brand_dna=request.brand_dna,
+            brand_dna=brand_dna or None,
             scenario_type=parsed_data.get("scenario_type", "budget_driven"),
             target_profit=parsed_data.get("target_profit"),
             idea_description=parsed_data.get("idea_description"),
@@ -1927,7 +1933,8 @@ async def process_intake(request: RawInputRequest):
             "iteration_count": 1,
             "actual_total_cost": result.get("actual_total_cost", 0),
             "plan": result["final_plan"],
-            "agent_logs": result["agent_logs"]
+            "agent_logs": result["agent_logs"],
+            "internal_data_used": bool(internal_data),
         }
     except TimeoutError as e:
         print(f"🔴 [INTAKE] Timeout pipeline: {e}")

@@ -56,6 +56,10 @@ def digitize_file(tenant_id: str, path: str, filename: str, file_hash: str) -> D
             "file": filename, "sheet": t.sheet, "context": t.context[:3], "range": t.cell_range,
           })
           recipe_source = recipe.source
+          if len(t.period_columns) >= 2:
+            # Bảng ma trận theo tháng/quý thường là KẾ HOẠCH, không phải số thực tế → luôn hỏi trước khi nạp
+            recipe.confidence = min(recipe.confidence, 0.7)
+            recipe.questions = build_questions(recipe, t.columns, profiles)
           llm_calls += 1 if recipe.source == "llm" else 0
           wh.save_recipe(con, recipe)
         elif not recipe.confirmed:
@@ -66,7 +70,7 @@ def digitize_file(tenant_id: str, path: str, filename: str, file_hash: str) -> D
         raw_names = wh.create_raw_table(con, t, profiles, table_name)
         issues = check_table_integrity(t, profiles)
         wh.register_table(con, table_name, file_id, filename, t, profiles, raw_names, recipe, issues)
-        loaded = wh.load_canonical(con, table_name, recipe)
+        loaded = wh.load_canonical(con, table_name, recipe) if recipe.auto_loadable else 0
         if t.key_values:
           wh.insert_org_profile(con, t.key_values, filename, t.sheet)
 
@@ -75,6 +79,7 @@ def digitize_file(tenant_id: str, path: str, filename: str, file_hash: str) -> D
           "table_name": table_name, "sheet": t.sheet, "range": t.cell_range,
           "columns": t.columns, "rows": len(t.rows), "data_rows": t.data_row_count,
           "entity": recipe.entity, "canonical_rows": loaded, "recipe_id": recipe.recipe_id,
+          "needs_confirmation": not recipe.auto_loadable and bool(recipe.questions),
           "recipe_source": recipe_source, "confidence": recipe.confidence,
           "questions": recipe.questions if not recipe.confirmed else [], "issues": issues,
         })
@@ -131,6 +136,7 @@ def remap_recipe(tenant_id: str, recipe_id: str, entity: str, column_map: Dict[s
     recipe.column_map = dict(column_map)
     recipe.column_confidence = {k: 1.0 for k in column_map}
     recipe.confidence, recipe.source, recipe.confirmed, recipe.questions = 1.0, "human", True, []
+    recipe.suggested_entity, recipe.suggested_map = None, {}
 
     con.execute("BEGIN TRANSACTION")
     try:

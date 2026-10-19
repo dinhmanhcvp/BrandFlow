@@ -21,6 +21,7 @@ export const translations = {
   activePlan: { en: "Enterprise Plan Active", vi: "Gói Enterprise đang hoạt động" },
   usage: { en: "Usage", vi: "Dung lượng sử dụng" },
   content_lab: { en: "Content Lab", vi: "Phòng Nội dung" },
+  data_hub: { en: "Data Hub", vi: "Kho Dữ liệu" },
  },
 
  // === B2B SIDEBAR ===

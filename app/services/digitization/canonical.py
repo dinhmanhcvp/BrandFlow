@@ -23,6 +23,8 @@ class CanonicalEntity:
   columns: Dict[str, CanonicalColumn]
   key_columns: tuple   # phải map được ít nhất 1 cột trong nhóm này thì mới chọn thực thể
   min_matches: int = 2
+  # Ngoài cột khóa, phải có ít nhất 1 cột trong nhóm này (vd. dòng bán hàng thực tế phải có ngày/đơn/khách/SP)
+  required_any: tuple = ()
 
 
 def _c(type_: str, description: str, *synonyms: str) -> CanonicalColumn:
@@ -61,6 +63,7 @@ ENTITIES: Dict[str, CanonicalEntity] = {
       "salesperson": _c("text", "Nhân viên bán", "nhan vien", "nv ban", "nvkd", "sale", "salesman", "nguoi ban"),
     },
     key_columns=("revenue",),
+    required_any=("date", "period", "order_id", "customer_name", "customer_phone", "product_name", "sku"),
   ),
   "product": CanonicalEntity(
     name="product",
@@ -124,7 +127,7 @@ ENTITIES: Dict[str, CanonicalEntity] = {
     columns={
       "date": _c("date", "Ngày", "ngay", "date", "thoi gian"),
       "period": _c("period", "Kỳ", "thang", "ky", "month"),
-      "channel": _c("text", "Kênh", "kenh", "nen tang", "channel", "platform"),
+      "channel": _c("text", "Kênh", "kenh", "kenh qc", "kenh quang cao", "nen tang", "channel", "platform"),
       "campaign": _c("text", "Chiến dịch", "chien dich", "campaign", "ten chien dich"),
       "amount": _c("number", "Chi phí (VND)", "chi phi", "chi phi quang cao", "so tien chi", "spend", "cost",
                    "amount spent", "ngan sach da chi"),
@@ -133,6 +136,7 @@ ENTITIES: Dict[str, CanonicalEntity] = {
       "clicks": _c("number", "Lượt click", "click", "clicks", "luot click"),
       "leads": _c("number", "Lead / data", "lead", "leads", "data", "so data", "inbox", "tin nhan"),
       "orders": _c("number", "Đơn từ quảng cáo", "don", "so don", "orders", "conversions", "chuyen doi"),
+      "note": _c("text", "Ghi chú", "ghi chu", "note", "notes", "chu thich"),
     },
     key_columns=("amount",),
   ),

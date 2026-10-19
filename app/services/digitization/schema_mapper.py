@@ -40,10 +40,19 @@ class MappingRecipe:
   source: str = "heuristic"                                          # heuristic | llm | human
   questions: List[Dict[str, Any]] = field(default_factory=list)
   confirmed: bool = False
+  # Bảng chưa đủ điều kiện khớp thực thể nào: gợi ý thực thể gần nhất để người dùng xác nhận
+  suggested_entity: Optional[str] = None
+  suggested_map: Dict[str, str] = field(default_factory=dict)
   recipe_id: str = field(default_factory=lambda: f"rcp_{uuid.uuid4().hex[:12]}")
 
   def to_dict(self) -> Dict[str, Any]:
     return asdict(self)
+
+  @property
+  def auto_loadable(self) -> bool:
+    """Chỉ nạp vào bảng chuẩn khi đủ tự tin hoặc người dùng đã xác nhận — tránh trộn kế hoạch vào số thực tế."""
+    return self.entity != CUSTOM_ENTITY and bool(self.column_map) and (
+      self.confirmed or self.confidence >= AUTO_ACCEPT_CONFIDENCE)
 
   @classmethod
   def from_dict(cls, data: Dict[str, Any]) -> "MappingRecipe":
@@ -97,6 +106,7 @@ def _column_score(source: str, canonical_name: str, synonyms: tuple, col_type: s
 def heuristic_map(columns: List[str], profiles: List[ColumnProfile]) -> MappingRecipe:
   signature = header_signature(columns)
   best: Optional[Tuple[float, MappingRecipe]] = None
+  partial: Optional[Tuple[float, str, Dict[str, str], Dict[str, float]]] = None
 
   for entity in ENTITIES.values():
     scored = []
@@ -114,7 +124,12 @@ def heuristic_map(columns: List[str], profiles: List[ColumnProfile]) -> MappingR
       used_canon.add(canon)
       mapping[src], conf[src] = canon, round(s, 3)
 
-    if len(mapping) < entity.min_matches or not (set(mapping.values()) & set(entity.key_columns)):
+    mapped = set(mapping.values())
+    missing_required = entity.required_any and not (mapped & set(entity.required_any))
+    if len(mapping) < entity.min_matches or not (mapped & set(entity.key_columns)) or missing_required:
+      # Thiếu chiều bắt buộc (vd. 'dòng bán hàng' không có ngày/đơn/khách/SP) → không gợi ý thực thể đó
+      if mapping and not missing_required and (partial is None or sum(conf.values()) > partial[0]):
+        partial = (sum(conf.values()), entity.name, dict(mapping), dict(conf))
       continue
     coverage = min(1.0, len(mapping) / min(4, max(1, len(columns))))
     confidence = round(sum(conf.values()) / len(conf) * (0.6 + 0.4 * coverage), 3)
@@ -123,32 +138,40 @@ def heuristic_map(columns: List[str], profiles: List[ColumnProfile]) -> MappingR
       best = (total, MappingRecipe(signature, entity.name, mapping, conf, confidence, "heuristic"))
 
   if best is None:
-    return MappingRecipe(signature, CUSTOM_ENTITY, {}, {}, 0.0, "heuristic")
+    recipe = MappingRecipe(signature, CUSTOM_ENTITY, {}, {}, 0.0, "heuristic")
+    if partial:
+      # column_confidence giữ độ tin cậy của gợi ý (column_map vẫn rỗng nên chưa nạp gì)
+      recipe.suggested_entity, recipe.suggested_map, recipe.column_confidence = partial[1], partial[2], partial[3]
+    return recipe
   return best[1]
 
 
 def build_questions(recipe: MappingRecipe, columns: List[str], profiles: List[ColumnProfile]) -> List[Dict[str, Any]]:
   """Câu hỏi trắc nghiệm 1 chạm cho cột mơ hồ: 'Cột X có phải là Y không?'."""
-  if recipe.entity == CUSTOM_ENTITY:
-    return []
-  entity = ENTITIES[recipe.entity]
+  entity_name, column_map = recipe.entity, recipe.column_map
+  if entity_name == CUSTOM_ENTITY:
+    if not recipe.suggested_entity:
+      return []
+    entity_name, column_map = recipe.suggested_entity, recipe.suggested_map
+  entity = ENTITIES[entity_name]
   by_name = {p.name: p for p in profiles}
   questions = []
   for src in columns:
     profile = by_name.get(src)
-    mapped = recipe.column_map.get(src)
+    mapped = column_map.get(src)
     conf = recipe.column_confidence.get(src, 0.0)
     unmapped_number = (mapped is None and profile and profile.inferred_type == "number"
                        and not src.startswith("col_") and normalize_header(src) not in _ID_HEADERS)
     if (mapped and conf < QUESTION_THRESHOLD) or unmapped_number:
       options = [c for c, col in entity.columns.items()
-                 if c not in recipe.column_map.values() or c == mapped]
+                 if c not in column_map.values() or c == mapped]
       if profile and profile.inferred_type == "number":
         options = [c for c in options if entity.columns[c].type == "number"]
       questions.append({
         "column": src,
         "suggestion": mapped,
         "options": options[:6],
+        "option_labels": {c: entity.columns[c].description for c in options[:6]},
         "samples": (profile.samples if profile else [])[:3],
         "question": (f"Cột '{src}' có phải là '{entity.columns[mapped].description}' không?"
                      if mapped else f"Cột số '{src}' tương ứng với trường nào?"),

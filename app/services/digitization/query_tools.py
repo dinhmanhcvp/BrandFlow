@@ -15,6 +15,7 @@ from typing import Any, Dict, List, Optional
 from app.services.digitization import warehouse as wh
 from app.services.digitization.canonical import ENTITIES, ORG_PROFILE_TABLE
 from app.services.digitization.firewall import Lineage, MetricResult
+from app.services.digitization.schema_mapper import AUTO_ACCEPT_CONFIDENCE
 
 MAX_ROWS = 200
 QUERY_TIMEOUT_S = 10.0
@@ -244,17 +245,25 @@ def pending_questions(tenant_id: str) -> List[Dict[str, Any]]:
   """Câu hỏi ánh xạ chưa xác nhận, gom theo recipe (trả lời 1 lần → áp cho mọi file cùng template)."""
   with wh.connect(tenant_id, read_only=True) as con:
     recipes = con.execute(
-      "SELECT recipe_id, header_signature, entity, recipe_json FROM _recipes WHERE NOT confirmed").fetchall()
+      "SELECT recipe_id, header_signature, entity, recipe_json, updated_at FROM _recipes WHERE NOT confirmed "
+      "ORDER BY updated_at DESC").fetchall()
     out = []
-    for recipe_id, signature, entity, payload in recipes:
+    for recipe_id, signature, entity, payload, _ in recipes:
       recipe = json.loads(payload)
       if not recipe.get("questions"):
         continue
       tables = con.execute(
         "SELECT table_name, filename, sheet FROM _tables WHERE header_signature = ?", [signature]).fetchall()
+      suggested = entity == "custom" and recipe.get("suggested_entity")
       out.append({
-        "recipe_id": recipe_id, "entity": entity, "column_map": recipe.get("column_map", {}),
+        "recipe_id": recipe_id,
+        "entity": recipe["suggested_entity"] if suggested else entity,
+        "column_map": recipe.get("suggested_map", {}) if suggested else recipe.get("column_map", {}),
+        "loaded": entity != "custom" and recipe.get("confidence", 0) >= AUTO_ACCEPT_CONFIDENCE,
         "confidence": recipe.get("confidence"), "questions": recipe["questions"],
         "applies_to": [{"table": t, "file": f, "sheet": s} for t, f, s in tables],
       })
+  # Bảng chưa nạp (đang chờ người dùng) lên trước, rồi bảng áp dụng cho nhiều file nhất;
+  # sort ổn định nên cùng hạng thì recipe mới nhất (vừa upload) đứng trước
+  out.sort(key=lambda r: (r["loaded"], -len(r["applies_to"])))
   return out

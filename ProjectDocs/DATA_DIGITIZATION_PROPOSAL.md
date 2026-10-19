@@ -1,6 +1,6 @@
 # Đề xuất: BrandFlow Data Foundry — Số hóa dữ liệu SME cho Agentic AI
 
-> Ngày: 2026-10-15 · Trạng thái: P0 đã triển khai (commit `6aaecae`); P1 đã triển khai (`app/services/digitization/`); P2–P4 là đề xuất
+> Ngày: 2026-10-15 · Trạng thái: P0 đã triển khai (commit `6aaecae`); P1 đã triển khai (`app/services/digitization/`); P2 đã có UI Data Hub + HITL (chưa có Celery); P3–P4 là đề xuất
 
 ## 1. Bài toán
 
@@ -323,7 +323,9 @@ P4 quan trọng về chiến lược: nếu chỉ số hóa một lần, 3 thán
 Kết quả đo được (máy dev, chưa có LLM thật — ánh xạ chạy bằng heuristic):
 - File Bảo Ngọc (21 sheet): ~1,3 giây; 5 sheet trống và bảng copy `BUDGET!B2:H11` được bỏ qua; tổng ngân sách `PA Q4.2021` = 6.551.207.818,75 và `KPI& CRT%` = 7.034.368.817,25 — khớp dòng Total trong Excel.
 - 3 file bán hàng × 3.000 dòng: ~1 giây/file; file 2 và 3 dùng lại recipe (0 lần gọi LLM); tổng doanh thu khớp tuyệt đối.
-- Chưa làm (P2+): UI Dropzone/Health Check/HITL, Celery cho upload lớn, entity resolution, connector, Postgres + RLS.
+- Đã nối end-to-end với luồng cũ: Onboarding upload → Brand DNA (`extract-dna`) → lập kế hoạch (`planning/intake`) đều nhận số liệu nội bộ của tenant; trang `/data-hub` cho Dropzone (file + thư mục), sức khỏe dữ liệu, xác nhận ánh xạ 1 chạm và hỏi dữ liệu.
+- Quy tắc an toàn: ánh xạ < 80% hoặc bảng ma trận theo tháng không tự nạp vào bảng chuẩn; dòng bán hàng phải có ngày/kỳ/đơn/khách/SP — tránh trộn số kế hoạch vào số thực tế.
+- Chưa làm: Celery cho upload rất lớn, entity resolution, connector, Postgres + RLS, unpivot bảng ma trận theo tháng.
 
 ## 7. Đánh giá & rủi ro
 

@@ -488,7 +488,9 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
       const pages = r.pages ? ` · ${r.pages} trang` : '';
       const sheets = r.sheets ? ` · ${r.sheets} sheet` : '';
       const rows = r.rows ? ` · ${r.rows.toLocaleString()} dòng` : '';
-      lines.push(`✅ ${r.filename}${chars}${pages}${sheets}${rows} [${r.method}]`);
+      const digitized = r.vector_store === 'digitized' || r.vector_store === 'already_digitized'
+       ? (language === 'vi' ? ' · 📊 đã số hóa vào Kho Dữ liệu' : ' · 📊 digitized into Data Hub') : '';
+      lines.push(`✅ ${r.filename}${chars}${pages}${sheets}${rows}${digitized} [${r.method}]`);
       
       if (r.raw_text_for_ai) {
        appendRawIngestedContent(`\n--- TÀI LIỆU UPLOAD: ${r.filename} ---\n${r.raw_text_for_ai}`);
@@ -499,7 +501,18 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
       lines.push(`❌ ${r.filename}: ${r.error}`);
      }
     });
-    setUploadMessage(lines.join('\n'));
+    const readiness = data.data_readiness;
+    setUploadMessage(readiness ? (
+     <>
+      {lines.join('\n')}
+      {'\n'}
+      <a href="/data-hub" className="inline-flex items-center gap-1 mt-2 font-semibold text-cyan-700 dark:text-cyan-400 hover:underline">
+       {language === 'vi'
+        ? `Sức khỏe dữ liệu ${readiness.score}/100${readiness.pending_questions ? ` · ${readiness.pending_questions} cột cần xác nhận` : ''} → mở Kho Dữ liệu`
+        : `Data health ${readiness.score}/100${readiness.pending_questions ? ` · ${readiness.pending_questions} columns to confirm` : ''} → open Data Hub`}
+      </a>
+     </>
+    ) : lines.join('\n'));
    } else {
     setUploadMessage(
      data.message ||
@@ -867,7 +880,7 @@ export default function Screen1_Source({ onNext }: { onNext: (path: 'wizard' | '
               )}
              >
               {uploadStatus === 'success' ? (
-               <div className="w-full">{uploadMessage}</div>
+               <div className="w-full whitespace-pre-line">{uploadMessage}</div>
               ) : (
                <>
                 {uploadStatus === 'partial'

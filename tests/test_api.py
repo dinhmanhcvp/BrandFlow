@@ -724,3 +724,43 @@ def test_legacy_mock_run_endpoint_is_disabled():
     assert response.status_code == 410
     detail = response.json()["detail"]
     assert detail["error"]["code"] == "LEGACY_ENDPOINT_DISABLED"
+
+
+@patch("main.run_pipeline")
+@patch("main.check_required_info", return_value={"status": "ok"})
+@patch("main.analyze_raw_input", return_value={"goal": "Tăng doanh thu", "industry": "F&B", "budget": 50_000_000})
+@patch("main.brief_for_agents")
+def test_planning_intake_feeds_internal_data_to_agents(mock_brief, _analyze, _check, mock_pipeline):
+    """Tenant có kho dữ liệu → số liệu đã kiểm chứng đi vào brand_dna của pipeline CMO/CFO."""
+    from datetime import timedelta
+    from app.api.auth_routes import create_access_token
+
+    mock_brief.return_value = {"text": "Tổng doanh thu 4.59 tỷ", "insights": [], "readiness_score": 72}
+    mock_pipeline.return_value = {"final_plan": {}, "agent_logs": [], "actual_total_cost": 0}
+    token = create_access_token({"sub": "tenant-xyz"}, timedelta(minutes=5))
+
+    response = client.post(
+        "/api/v1/planning/intake",
+        json={"raw_text": "Lập kế hoạch", "brand_dna": {"brand_name": "ABC"}, "tenant_id": "spoofed"},
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == 200
+    assert response.json()["internal_data_used"] is True
+    mock_brief.assert_called_with("tenant-xyz")  # tenant từ JWT, không phải 'spoofed'
+    brand_dna = mock_pipeline.call_args.kwargs["brand_dna"]
+    assert brand_dna["brand_name"] == "ABC" and brand_dna["internal_data"]["text"] == "Tổng doanh thu 4.59 tỷ"
+
+
+@patch("main.run_pipeline")
+@patch("main.check_required_info", return_value={"status": "ok"})
+@patch("main.analyze_raw_input", return_value={"goal": "Tăng doanh thu", "industry": "F&B", "budget": 50_000_000})
+def test_planning_intake_demo_token_still_works(_analyze, _check, mock_pipeline):
+    """Token demo (không phải JWT) không được làm gãy luồng cũ — coi như ẩn danh, không có dữ liệu nội bộ."""
+    mock_pipeline.return_value = {"final_plan": {}, "agent_logs": [], "actual_total_cost": 0}
+    response = client.post(
+        "/api/v1/planning/intake",
+        json={"raw_text": "Lập kế hoạch"},
+        headers={"Authorization": "Bearer mock_admin_token"},
+    )
+    assert response.status_code == 200
+    assert response.json()["internal_data_used"] is False

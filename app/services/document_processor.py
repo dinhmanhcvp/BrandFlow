@@ -396,7 +396,14 @@ class DocumentIngestor:
   def __init__(self, persist_directory: str = "./chroma_db", tenant_id: str = "default"):
     self.persist_directory = persist_directory
     self.tenant_id = tenant_id
-    self.embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
+    self._embeddings = None
+
+  @property
+  def embeddings(self) -> GoogleGenerativeAIEmbeddings:
+    # Tạo khi cần: đọc/số hóa file không cần embedding, nên không bắt buộc GOOGLE_API_KEY lúc khởi tạo
+    if self._embeddings is None:
+      self._embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
+    return self._embeddings
 
   # ── Public API ────────────────────────────────────────────────────────────
 
