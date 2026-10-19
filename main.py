@@ -221,6 +221,9 @@ async def system_info():
 # ── Đăng ký Form Data CRUD Router ─────────────────────────────────
 from app.api.auth_routes import router as auth_router, get_admin_user, get_current_user, get_optional_user
 from app.services.file_utils import compute_file_hash, normalize_filename
+from app.api.data_routes import router as data_router
+from app.services.digitization.pipeline import digitize_file, summarize_report
+from app.services.digitization.data_brief import build_data_brief
 from app.api.research_routes import router as research_router
 from app.api.agent_builder_routes import router as agent_builder_router
 from app.agents.intake.upload_analyzer import UploadAnalyzer
@@ -229,6 +232,7 @@ app.include_router(research_router)
 app.include_router(agent_builder_router, prefix="/api/v1/agents")
 app.include_router(form_router)
 app.include_router(onboarding_router)
+app.include_router(data_router)
 # ── Đăng ký Design Module Router ──────────────────────────────────
 app.include_router(design_router)
 
@@ -1233,6 +1237,7 @@ async def onboarding_upload(
     ok_count = 0
     fail_count = 0
     skipped_count = 0
+    digitized_count = 0
     seen_hashes: Dict[str, str] = {}
 
     for file in files:
@@ -1274,8 +1279,27 @@ async def onboarding_upload(
                 continue
 
             stored = "skipped_anonymous"
+            text_for_ai = parse_result.text
             if parse_result.is_tabular:
                 stored = "skipped_tabular"
+                if tenant_id:
+                    # Data Foundry: bảng số vào kho DuckDB của tenant; AI chỉ nhận bản tóm tắt cấu trúc
+                    try:
+                        report = digitize_file(tenant_id, temp_file_path, display_name, file_hash)
+                        stored = "digitized" if report["status"] == "digitized" else "already_digitized"
+                        text_for_ai = summarize_report(report)
+                        digitized_count += 1
+                        if report.get("notes_text"):
+                            try:
+                                ingestor.process_and_store_text(
+                                    raw_text=report["notes_text"], filename=display_name,
+                                    category="brand_guidelines", file_hash=file_hash,
+                                )
+                            except Exception as embed_e:
+                                print(f"⚠️ [UPLOAD] Không lưu được ghi chú của {display_name} vào ChromaDB: {embed_e}")
+                    except Exception as dig_e:
+                        stored = "digitize_failed"
+                        print(f"⚠️ [UPLOAD] Số hóa {display_name} thất bại, dùng bản mô tả: {dig_e}")
             elif tenant_id:
                 try:
                     if ingestor.is_already_stored(file_hash):
@@ -1301,7 +1325,7 @@ async def onboarding_upload(
                 "sheets": parse_result.sheet_count or None,
                 "rows": parse_result.row_count or None,
                 "vector_store": stored,
-                "raw_text_for_ai": parse_result.text[:10000] # Giới hạn mỗi file 10k ký tự cho AI
+                "raw_text_for_ai": text_for_ai[:10000] # Giới hạn mỗi file 10k ký tự cho AI
             })
             ok_count += 1
         except Exception as e:
@@ -1320,14 +1344,22 @@ async def onboarding_upload(
     )
     if skipped_count:
         message += f" Bỏ qua {skipped_count} file trùng nội dung."
-    
+
+    data_brief = None
+    if digitized_count and tenant_id:
+        try:
+            data_brief = build_data_brief(tenant_id)
+            message += f" Đã số hóa {digitized_count} bảng tính vào kho dữ liệu."
+        except Exception as brief_e:
+            print(f"⚠️ [UPLOAD] Không tạo được Data Brief: {brief_e}")
+
     # ─── Phân tích file bằng AI để tự động điền Form ───
     extracted_answers = {}
     completeness = {}
     if ok_count > 0:
         try:
-            # Gộp text của các file thành công
-            all_text = ""
+            # Gộp text của các file thành công (kho dữ liệu nội bộ đi trước: số liệu đã kiểm chứng)
+            all_text = f"--- KHO DỮ LIỆU NỘI BỘ ---\n{data_brief['text']}\n" if data_brief else ""
             has_bep_nha_moc = False
             for res in results:
                 fname = res["filename"]
@@ -1335,7 +1367,7 @@ async def onboarding_upload(
                     has_bep_nha_moc = True
 
                 if res["status"] == "success" and "raw_text_for_ai" in res:
-                    all_text += f"\\n--- TÀI LIỆU: {fname} ---\\n" + res.get("raw_text_for_ai", "")
+                    all_text += f"\n--- TÀI LIỆU: {fname} ---\n" + res.get("raw_text_for_ai", "")
             
             if all_text:
                 if has_bep_nha_moc:
@@ -1403,7 +1435,12 @@ async def onboarding_upload(
         from app.agents.intake.input_validator import validate_input_completeness
         completeness = validate_input_completeness(extracted_data=extracted_answers)
             
-    return {"status": status, "message": message, "results": results, "extracted_answers": extracted_answers, "completeness": completeness}
+    return {
+        "status": status, "message": message, "results": results,
+        "extracted_answers": extracted_answers, "completeness": completeness,
+        "data_brief": data_brief["text"] if data_brief else None,
+        "data_readiness": data_brief["readiness"] if data_brief else None,
+    }
 
 @app.post("/api/v1/onboarding/extract-summary")
 async def onboarding_extract_summary(

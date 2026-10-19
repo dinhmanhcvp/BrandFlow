@@ -193,27 +193,29 @@ def test_api_onboarding_interview(mock_generate):
     assert response.json()["status"] == "success"
     assert "rules" in response.json()
 
-@patch("app.api.onboarding_routes.DocumentIngestor")
-@patch("app.api.onboarding_routes.extract_document_summary")
-def test_api_onboarding_upload(mock_analyze, MockIngestor):
+@patch("main.DocumentIngestor")
+@patch("main.UploadAnalyzer")
+def test_api_onboarding_upload(MockAnalyzer, MockIngestor):
     """
     Test 1.1: Kiểm tra endpoint /api/v1/onboarding/upload với mock file
+    (endpoint chạy thật nằm trong main.py; bản trùng trong onboarding_routes đã bị gỡ)
     """
     # Setup mock object cho DocumentIngestor
     mock_ingestor_instance = MagicMock()
-    mock_ingestor_instance.ingest_file.return_value = "Mocked PDF Document Content"
-    mock_ingestor_instance.clean_text.return_value = "Mocked PDF Document Content"
+    mock_ingestor_instance.parse_file.return_value = types.SimpleNamespace(
+        success=True, text="Mocked PDF Document Content", char_count=27, method="mock",
+        page_count=1, sheet_count=0, row_count=0, is_tabular=False, error=None,
+    )
     MockIngestor.return_value = mock_ingestor_instance
-    
-    mock_analyze.return_value = {
-        "status": "success",
-        "message": "Phân tích tài liệu thành công.",
-        "data": {
+
+    MockAnalyzer.return_value.extract_answers.return_value = {
+        "extracted": {
             "core_usps": ["USP 1", "USP 2"],
             "target_audience_insights": ["Insight 1"],
             "tone_of_voice": "Chuyên nghiệp",
             "strict_rules": ["Quy tắc 3 Không"]
-        }
+        },
+        "completeness": {"completeness_score": 80},
     }
     
     # Fake file payload using TestClient

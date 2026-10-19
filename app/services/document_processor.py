@@ -319,19 +319,21 @@ def _parse_excel(path: str, ext: str) -> FileParseResult:
   """XLSX / XLS — đọc TOÀN BỘ từng sheet, trả về bản mô tả + thống kê cho AI."""
   try:
     import pandas as pd
-    xl = pd.ExcelFile(path)
-    sheet_names = xl.sheet_names
-    sections = [f"[Excel File: {os.path.basename(path)}]", f"Số sheet: {len(sheet_names)}"]
+    sections = [f"[Excel File: {os.path.basename(path)}]"]
     total_rows = 0
     empty_sheets = []
 
-    for sheet_name in sheet_names:
-      df = xl.parse(sheet_name)
-      if df.dropna(how="all").empty and df.columns.astype(str).str.startswith("Unnamed").all():
-        empty_sheets.append(str(sheet_name))
-        continue
-      total_rows += len(df.dropna(how="all"))
-      sections.append("\n" + _describe_dataframe(df, f"Sheet: {sheet_name}"))
+    # Đóng file ngay sau khi đọc — trên Windows file đang mở thì không xóa được file tạm
+    with pd.ExcelFile(path) as xl:
+      sheet_names = xl.sheet_names
+      sections.append(f"Số sheet: {len(sheet_names)}")
+      for sheet_name in sheet_names:
+        df = xl.parse(sheet_name)
+        if df.dropna(how="all").empty and df.columns.astype(str).str.startswith("Unnamed").all():
+          empty_sheets.append(str(sheet_name))
+          continue
+        total_rows += len(df.dropna(how="all"))
+        sections.append("\n" + _describe_dataframe(df, f"Sheet: {sheet_name}"))
 
     if empty_sheets:
       sections.append(f"\nSheet trống (bỏ qua): {', '.join(empty_sheets)}")

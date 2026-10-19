@@ -86,3 +86,11 @@ This map tracks the organization of the Next.js B2B Marketing Planning interface
 - `scripts/generate_pdf_report.py`: PDF generator (ReportLab + Matplotlib charts).
 - `scripts/report_agent.py`: CLI orchestrator — `pdf` and `serve` commands.
 - `scripts/extract_pdf.py`: PDF text extractor (PyMuPDF).
+
+## Data Foundry — số hóa Excel/CSV (NEW — 2026-10-15)
+Thiết kế: `ProjectDocs/DATA_DIGITIZATION_PROPOSAL.md`. Kho DuckDB per-tenant tại `BRANDFLOW_WAREHOUSE_DIR` (mặc định `./data_warehouse`, gitignored).
+- `app/services/digitization/`: `workbook_reader` → `structure_detector` → `profiler` → `schema_mapper` (recipe) → `warehouse` → `query_tools` / `data_brief`; `firewall` (đối soát + BudgetProposal); `pipeline.digitize_file` là điểm vào.
+- `app/api/data_routes.py`: router `prefix=/api/v1/data` (upload, tables, query, metric, brief, questions, recipes/{id}/confirm, lineage, ask, validate-budget). Tenant = user trong JWT.
+- `app/agents/analytics/data_analyst_agent.py`: Business Analyst Agent #0 — trả lời câu hỏi bằng metric/SQL trên kho, LLM chỉ diễn giải.
+- `main.py` `/api/v1/onboarding/upload`: Excel/CSV của user đăng nhập được số hóa; AI nhận Data Brief.
+- Env: `BRANDFLOW_DISABLE_LLM_MAPPING=1` (chỉ heuristic), `DIGITIZATION_LLM_MODEL`, `DATA_ANALYST_LLM_MODEL`.

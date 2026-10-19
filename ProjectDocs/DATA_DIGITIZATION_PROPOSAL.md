@@ -1,6 +1,6 @@
 # Đề xuất: BrandFlow Data Foundry — Số hóa dữ liệu SME cho Agentic AI
 
-> Ngày: 2026-10-15 · Trạng thái: P0 đã triển khai (commit `6aaecae`); P1–P4 là đề xuất
+> Ngày: 2026-10-15 · Trạng thái: P0 đã triển khai (commit `6aaecae`); P1 đã triển khai (`app/services/digitization/`); P2–P4 là đề xuất
 
 ## 1. Bài toán
 
@@ -297,12 +297,33 @@ Thay đổi ở code cũ:
 | Giai đoạn | Thời lượng | Phạm vi | Tiêu chí xong |
 |---|---|---|---|
 | **P0 — Sửa rò rỉ** ✅ | xong | Bỏ `head(500)`; không embed bảng số; `tenant_id` từ JWT; NFC tên file + dedupe hash; gỡ route `/upload` trùng | Không còn mất dữ liệu im lặng |
-| **P1 — MVP Data Foundry** | 2–3 tuần | workbook_reader + structure_detector + profiler + normalizers_vi; DuckDB per-tenant; LLM mapping vào 4 thực thể (`sales_line`, `product`, `budget_plan`, `org_profile`); Data Brief; tool `describe_table` + `query_sql` cho 1 agent (CFO/Math Engine); Logic Firewall (Pydantic) cho JSON chỉ số | Upload file Bảo Ngọc → hỏi "tổng ngân sách theo ngành" ra đúng số, có lineage |
+| **P1 — MVP Data Foundry** ✅ | xong | workbook_reader + structure_detector + profiler + normalizers_vi; DuckDB per-tenant; LLM mapping vào 4 thực thể (`sales_line`, `product`, `budget_plan`, `org_profile`); Data Brief; tool `describe_table` + `query_sql` cho 1 agent (CFO/Math Engine); Logic Firewall (Pydantic) cho JSON chỉ số | Upload file Bảo Ngọc → hỏi "tổng ngân sách theo ngành" ra đúng số, có lineage |
 | **P2 — Recipe & HITL** | 2 tuần | Lưu recipe theo header signature; Smart Data Dropzone (kéo thả thư mục); Data Health Check; HITL 1 chạm; Data Readiness Score; xử lý nền bằng Celery cho 300+ file; circuit breaker LLM | 100 file cùng template xử lý với ≤ 1 lần gọi LLM |
 | **P3 — Semantic layer & agent** | 2 tuần | Định nghĩa metric; `get_metric` cho mọi agent; entity resolution khách hàng/sản phẩm; tính `BusinessMetric` từ dữ liệu thật; insight có lineage vào Brand DNA (tùy chọn LightRAG); Postgres + RLS cho prod | CMO/CRM/Media Buyer trả lời bằng số liệu thật |
 | **P4 — Connector liên tục** | liên tục | Google Sheets/Drive, KiotViet, Sapo, Haravan, MISA, Pancake, Meta/TikTok Ads | Dữ liệu tự cập nhật — số hóa không còn là việc "một lần" |
 
 P4 quan trọng về chiến lược: nếu chỉ số hóa một lần, 3 tháng sau DN lại quay về Excel. Connector biến BrandFlow thành **nơi dữ liệu sống**, tạo lock-in và mở đường cho agent tự hành (theo dõi KPI, cảnh báo, tự đề xuất điều chỉnh ngân sách).
+
+### 6.1. P1 đã làm gì (2026-10-15)
+
+| Thành phần | File | Ghi chú |
+|---|---|---|
+| Đọc workbook (giá trị + công thức + merge) | `app/services/digitization/workbook_reader.py` | xlsx/xlsm qua openpyxl; xls/csv qua pandas (không có thông tin merge) |
+| Nhận diện cấu trúc | `structure_detector.py` | vùng bảng, header 1–2 tầng, dòng Tổng/nhóm/chú thích, form key-value, ghi chú, bảng trùng giữa các sheet |
+| Profile + chuẩn hóa VN | `profiler.py`, `normalizers_vi.py` | số/tỷ/triệu/%, dải "10 - 25 tỷ", ngày/kỳ, SĐT giữ số 0 đầu |
+| CDM + ánh xạ | `canonical.py`, `schema_mapper.py`, `llm_json.py` | 7 thực thể; recipe cache → heuristic → LLM (circuit breaker); câu hỏi HITL cho cột mơ hồ |
+| Kho per-tenant | `warehouse.py` | 1 file DuckDB/tenant; raw_* + bảng chuẩn + `_files/_tables/_recipes/_notes`; lineage tới dòng Excel |
+| Logic Firewall | `firewall.py` | đối soát dòng Tổng/nhóm; `BudgetProposal` (tổng ≤ ngân sách, CAC, hòa vốn, cắt lỗ) |
+| Tool cho agent | `query_tools.py` | `list_tables`, `describe_table`, `get_metric`, `query_sql` (read-only, chặn file ngoài, timeout, LIMIT), `trace_lineage` |
+| Data Brief + Readiness | `data_brief.py` | insight tính bằng SQL; điểm 0–100 |
+| Business Analyst Agent #0 | `app/agents/analytics/data_analyst_agent.py` | LLM chọn metric/SQL → DuckDB tính → LLM diễn giải; tự sửa SQL lỗi 1 lần |
+| API | `app/api/data_routes.py` | `/api/v1/data/{upload,files,tables,query,metric,metrics,brief,questions,recipes/{id}/confirm,lineage,ask,validate-budget}` |
+| Nối onboarding | `main.py` `/api/v1/onboarding/upload` | Excel/CSV của user đăng nhập → số hóa; AI nhận Data Brief + tóm tắt thay vì text bảng |
+
+Kết quả đo được (máy dev, chưa có LLM thật — ánh xạ chạy bằng heuristic):
+- File Bảo Ngọc (21 sheet): ~1,3 giây; 5 sheet trống và bảng copy `BUDGET!B2:H11` được bỏ qua; tổng ngân sách `PA Q4.2021` = 6.551.207.818,75 và `KPI& CRT%` = 7.034.368.817,25 — khớp dòng Total trong Excel.
+- 3 file bán hàng × 3.000 dòng: ~1 giây/file; file 2 và 3 dùng lại recipe (0 lần gọi LLM); tổng doanh thu khớp tuyệt đối.
+- Chưa làm (P2+): UI Dropzone/Health Check/HITL, Celery cho upload lớn, entity resolution, connector, Postgres + RLS.
 
 ## 7. Đánh giá & rủi ro
 

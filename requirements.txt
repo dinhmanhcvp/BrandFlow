@@ -36,3 +36,4 @@ requests
 gunicorn
 uvicorn[standard]
 python-pptx>=1.0.0
+duckdb

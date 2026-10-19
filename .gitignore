@@ -10,3 +10,6 @@ video/out/
 scratch/
 recover_temp/
 scratch_repo/
+
+# Data Foundry: kho dữ liệu per-tenant
+data_warehouse/
