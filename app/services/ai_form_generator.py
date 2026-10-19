@@ -132,7 +132,7 @@ FORM_SCHEMAS = {
 }
 
 # Overview forms (generated summaries, no table data needed)
-OVERVIEW_FORMS = ["a0-overview", "b0-overview", "c0-overview", "b3-action", "b5-contingency", "b7-gantt", "c2-matrix"]
+OVERVIEW_FORMS = ["a0-overview", "b0-overview", "c0-overview"]
 
 # ═══════════════════════════════════════════════════════════════════
 # BATCHED GENERATION CONFIG

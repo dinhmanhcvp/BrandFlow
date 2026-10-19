@@ -315,10 +315,13 @@ PLANNING_FORM_MODEL_MAP = {
   "b1-objectives": {"required_models": [], "always_show": True, "label": "Mục tiêu Chi tiết"},
   "b2-action": {"required_models": [], "always_show": True, "label": "Chương trình Hành động"},
   "b3-budget": {"required_models": [], "always_show": True, "label": "Ngân sách Chi tiết"},
+  "b4-contingency": {"required_models": [], "always_show": True, "label": "Kế hoạch Dự phòng"},
   "b5-pnl": {"required_models": [], "always_show": True, "label": "Dự phóng P&L"},
   "b6-gantt": {"required_models": [], "always_show": True, "label": "Gantt Timeline"},
   "c1-direction": {"required_models": [], "always_show": True, "label": "Định hướng Kiểm soát"},
-  "c2-matrix": {"required_models": ["balanced_scorecard"], "always_show": False, "label": "Ma trận Kiểm soát"},
+  # Trang C.2 thật là c2-history (c2-matrix là bản trùng đã gỡ — trước đây khiến C.2 bị ẩn khỏi sidebar)
+  "c2-history": {"required_models": ["balanced_scorecard"], "always_show": False, "label": "Lịch sử Danh mục"},
+  "c3-issues": {"required_models": [], "always_show": True, "label": "Phân tích Vấn đề Chiến lược"},
   "c4-dashboard": {"required_models": [], "always_show": True, "label": "Dashboard KPIs"},
 }
 

@@ -1,6 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  /* Các trang planning trùng lặp đã gộp về trang chính — giữ link cũ hoạt động */
+  async redirects() {
+    return [
+      { source: "/planning/b3-action", destination: "/planning/b2-action", permanent: true },
+      { source: "/planning/b5-contingency", destination: "/planning/b4-contingency", permanent: true },
+      { source: "/planning/b7-gantt", destination: "/planning/b6-gantt", permanent: true },
+      { source: "/planning/c2-matrix", destination: "/planning/c2-history", permanent: true },
+    ];
+  },
   /* Proxy mọi request bắt đầu bằng /api/v1/ xuống BE Python (cổng 8000) */
   async rewrites() {
     return [
