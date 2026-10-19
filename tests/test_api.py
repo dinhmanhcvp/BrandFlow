@@ -138,6 +138,8 @@ core_module.messages = messages_module
 core_module.tools = tools_module
 
 import main
+from app.api import audit_routes
+from app.core import quota
 from app.core.access_audit import VisitorAuditStore
 from main import app
 
@@ -149,32 +151,32 @@ def isolated_audit_store(tmp_path):
     store = VisitorAuditStore(db_path=str(tmp_path / "visitor_audit_test.db"))
     store.init_db()
 
-    original_store = main.VISITOR_AUDIT_STORE
-    main.VISITOR_AUDIT_STORE = store
+    original_store = audit_routes.VISITOR_AUDIT_STORE
+    audit_routes.VISITOR_AUDIT_STORE = store
     try:
         yield store
     finally:
-        main.VISITOR_AUDIT_STORE = original_store
+        audit_routes.VISITOR_AUDIT_STORE = original_store
 
 
 @pytest.fixture
 def isolated_plan_registry():
-    main.WEEK1_PLAN_REGISTRY.clear()
+    quota.WEEK1_PLAN_REGISTRY.clear()
     try:
         yield
     finally:
-        main.WEEK1_PLAN_REGISTRY.clear()
+        quota.WEEK1_PLAN_REGISTRY.clear()
 
 
 @pytest.fixture
 def isolated_model_usage():
-    main.WEEK1_MODEL_USAGE.clear()
+    quota.WEEK1_MODEL_USAGE.clear()
     try:
         yield
     finally:
-        main.WEEK1_MODEL_USAGE.clear()
+        quota.WEEK1_MODEL_USAGE.clear()
 
-@patch("main.generate_guideline_from_qa")
+@patch("app.api.onboarding_ingest_routes.generate_guideline_from_qa")
 def test_api_onboarding_interview(mock_generate):
     """
     Test 1: Kiểm tra endpoint /api/v1/onboarding/interview đã có trong main.py
@@ -193,12 +195,12 @@ def test_api_onboarding_interview(mock_generate):
     assert response.json()["status"] == "success"
     assert "rules" in response.json()
 
-@patch("main.DocumentIngestor")
-@patch("main.UploadAnalyzer")
+@patch("app.api.onboarding_ingest_routes.DocumentIngestor")
+@patch("app.api.onboarding_ingest_routes.UploadAnalyzer")
 def test_api_onboarding_upload(MockAnalyzer, MockIngestor):
     """
     Test 1.1: Kiểm tra endpoint /api/v1/onboarding/upload với mock file
-    (endpoint chạy thật nằm trong main.py; bản trùng trong onboarding_routes đã bị gỡ)
+    (endpoint chạy thật nằm trong app/api/onboarding_ingest_routes.py)
     """
     # Setup mock object cho DocumentIngestor
     mock_ingestor_instance = MagicMock()
@@ -269,7 +271,7 @@ def test_api_create_project_tdd():
 
 
 def test_audit_api_forbidden_without_token(isolated_audit_store):
-    with patch.object(main, "AUDIT_ADMIN_TOKEN", "audit-secret"):
+    with patch.object(audit_routes, "AUDIT_ADMIN_TOKEN", "audit-secret"):
         response = client.get("/api/v1/audit/visitors/summary")
 
     assert response.status_code == 403
@@ -278,7 +280,7 @@ def test_audit_api_forbidden_without_token(isolated_audit_store):
 
 
 def test_audit_api_unavailable_when_server_token_missing(isolated_audit_store):
-    with patch.object(main, "AUDIT_ADMIN_TOKEN", ""):
+    with patch.object(audit_routes, "AUDIT_ADMIN_TOKEN", ""):
         response = client.get(
             "/api/v1/audit/visitors/summary",
             headers={"X-Audit-Admin-Token": "any-token"},
@@ -290,7 +292,7 @@ def test_audit_api_unavailable_when_server_token_missing(isolated_audit_store):
 
 
 def test_audit_api_reads_logged_visits_with_valid_token(isolated_audit_store):
-    with patch.object(main, "AUDIT_ADMIN_TOKEN", "audit-secret"):
+    with patch.object(audit_routes, "AUDIT_ADMIN_TOKEN", "audit-secret"):
         user_visit_headers = {
             "X-User-Id": "demo-user",
             "X-Tier": "FREE",
@@ -535,7 +537,7 @@ def test_planning_execute_blocks_sub_agent_question(isolated_plan_registry):
         "errors": [],
     }
 
-    with patch("main.run_week1_orchestration_contract", return_value=mocked_result):
+    with patch("app.api.planning_routes.run_week1_orchestration_contract", return_value=mocked_result):
         execute_response = client.post(
             "/api/v1/planning/execute",
             json={
@@ -726,10 +728,10 @@ def test_legacy_mock_run_endpoint_is_disabled():
     assert detail["error"]["code"] == "LEGACY_ENDPOINT_DISABLED"
 
 
-@patch("main.run_pipeline")
-@patch("main.check_required_info", return_value={"status": "ok"})
-@patch("main.analyze_raw_input", return_value={"goal": "Tăng doanh thu", "industry": "F&B", "budget": 50_000_000})
-@patch("main.brief_for_agents")
+@patch("app.api.planning_routes.run_pipeline")
+@patch("app.api.planning_routes.check_required_info", return_value={"status": "ok"})
+@patch("app.api.planning_routes.analyze_raw_input", return_value={"goal": "Tăng doanh thu", "industry": "F&B", "budget": 50_000_000})
+@patch("app.api.planning_routes.brief_for_agents")
 def test_planning_intake_feeds_internal_data_to_agents(mock_brief, _analyze, _check, mock_pipeline):
     """Tenant có kho dữ liệu → số liệu đã kiểm chứng đi vào brand_dna của pipeline CMO/CFO."""
     from datetime import timedelta
@@ -751,9 +753,9 @@ def test_planning_intake_feeds_internal_data_to_agents(mock_brief, _analyze, _ch
     assert brand_dna["brand_name"] == "ABC" and brand_dna["internal_data"]["text"] == "Tổng doanh thu 4.59 tỷ"
 
 
-@patch("main.run_pipeline")
-@patch("main.check_required_info", return_value={"status": "ok"})
-@patch("main.analyze_raw_input", return_value={"goal": "Tăng doanh thu", "industry": "F&B", "budget": 50_000_000})
+@patch("app.api.planning_routes.run_pipeline")
+@patch("app.api.planning_routes.check_required_info", return_value={"status": "ok"})
+@patch("app.api.planning_routes.analyze_raw_input", return_value={"goal": "Tăng doanh thu", "industry": "F&B", "budget": 50_000_000})
 def test_planning_intake_demo_token_still_works(_analyze, _check, mock_pipeline):
     """Token demo (không phải JWT) không được làm gãy luồng cũ — coi như ẩn danh, không có dữ liệu nội bộ."""
     mock_pipeline.return_value = {"final_plan": {}, "agent_logs": [], "actual_total_cost": 0}

@@ -227,3 +227,19 @@ class BrandDNA(Base):
 
   def __repr__(self):
     return f"<BrandDNA {self.brand_name or self.user_id}>"
+
+
+# ═══════════════════════════════════════════════════════════════════
+# KV_STORE — Trạng thái dùng chung giữa các worker (quota, plan registry, usage)
+# Thay cho dict in-memory: không mất khi restart, đúng khi chạy nhiều worker.
+# ═══════════════════════════════════════════════════════════════════
+class KeyValueEntry(Base):
+  __tablename__ = "kv_store"
+
+  namespace = Column(String(50), primary_key=True)
+  key = Column(String(255), primary_key=True)
+  value = Column(JSON, nullable=False, default=dict)
+  updated_at = Column(DateTime, default=_now, onupdate=_now, nullable=False, index=True)
+
+  def __repr__(self):
+    return f"<KeyValueEntry {self.namespace}:{self.key}>"
