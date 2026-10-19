@@ -13,3 +13,30 @@ scratch_repo/
 
 # Data Foundry: kho dữ liệu per-tenant
 data_warehouse/
+
+# Dữ liệu runtime / artefact build (SPECS 10.5) — không đưa lên git
+*.db
+*.sqlite3
+*.log
+logs/
+chroma_db/
+audit/*.db
+cache/
+outputs/
+output/
+temp_uploads/
+frontend/test-results/
+frontend/playwright-report/
+video/build/
+err*.html
+fix_diff.txt
+build_output.txt
+output*.txt
+input_content.txt
+expert_content.txt
+temp_*.txt
+test_layout.txt
+*.db-shm
+*.db-wal
+audit/
+!.env.example
