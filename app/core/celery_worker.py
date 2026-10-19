@@ -1,5 +1,4 @@
 import os
-import time
 from celery import Celery
 
 # Hệ thống lấy địa chỉ Redis từ file docker-compose.yml hoặc .env (nếu chạy local)
@@ -42,30 +41,19 @@ def digitize_upload_job(tenant_id: str, job_id: str):
 @celery.task(name="execute_heavy_ai_plan", bind=True)
 def execute_heavy_ai_plan(self, payload: dict):
   """
-  Worker sẽ bốc gói hàng này từ Redis ra xử lý.
-  Nếu hàm này chạy mất 1 tiếng thì API Webserver ở main.py vẫn rảnh rang đón luồng mượt mà.
+  Chạy pipeline lập kế hoạch thật (CMO → Interceptor → CFO/Persona) ngoài web server.
+  Logic nằm ở app/workflows/async_plan.run_plan_job; task này chỉ báo tiến độ cho /api/v1/tasks/{id}/status.
   """
+  from app.workflows.async_plan import run_plan_job
+
+  def report(progress: int, message: str) -> None:
+    try:
+      self.update_state(state="PROGRESS", meta={"progress": progress, "message": message})
+    except Exception:
+      pass  # chạy trực tiếp (không có broker) thì bỏ qua báo tiến độ
+
   try:
-    # THAY THẾ CHỖ NÀY BẰNG: run_plan_wizard_contract(payload["plan_hash"], payload["answers"], ...)
-    # Mô phỏng AI đang phân tích dữ liệu rất nặng (tốn 10 giây).
-    print(f"[Worker {self.request.id}] Đang vắt óc suy nghĩ gói hàng: {payload.get('plan_hash')}...")
-    
-    # Nhá hàng tiến độ cho Frontend (Polling progress 50%)
-    self.update_state(state='PROGRESS', meta={'progress': 50, 'message': 'Đang cào dữ liệu từ Internet'})
-    time.sleep(5)
-    
-    self.update_state(state='PROGRESS', meta={'progress': 80, 'message': 'Đang nạp vào LLM...'})
-    time.sleep(5)
-    
-    # Kết thúc và lưu kết quả vào Database hoặc thẳng Redis Backend.
-    return {
-      "status": "success",
-      "message": "Chiến lược đã hoạch định xong tuyệt đối!",
-      "ai_output": f"Đây là Brand Guidelines rút ra từ {payload.get('plan_hash', 'unknown_hash')}.",
-      "tokens_used": 1500
-    }
+    return run_plan_job(payload, report)
   except Exception as exc:
-    print(f"[Worker Error] {str(exc)}")
-    # Cập nhật trạng thái Thất bại để UI Frontend biết mà báo đỏ.
-    self.update_state(state='FAILURE', meta={'error': str(exc)})
-    raise exc
+    print(f"[Worker Error] {exc}")
+    raise
