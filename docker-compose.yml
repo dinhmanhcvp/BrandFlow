@@ -12,14 +12,17 @@ services:
     environment:
       # Database connection (SQLite requires a mounted volume, or use remote PostgreSQL)
       - DATABASE_URL=sqlite:///./data/brandflow.db
+      # Kho Dữ liệu (DuckDB per-tenant) nằm trong volume để không mất khi recreate container
+      - BRANDFLOW_WAREHOUSE_DIR=/app/data/warehouse
+      # 1 worker: DuckDB chỉ cho 1 tiến trình ghi mỗi file tenant (xem Dockerfile)
+      - WEB_CONCURRENCY=1
       # Frontend URL for CORS
       # - BRANDFLOW_FRONTEND_URLS=http://localhost:3000,http://localhost:3001
       # JWT Secrets
       # - JWT_SECRET_KEY=YOUR_SUPER_SECRET_KEY
     volumes:
       - brandflow_data:/app/data
-    # Sử dụng 8 Workers chia luồng để chịu tải đồng thời (Gunicorn + Uvicorn)
-    command: ["gunicorn", "main:app", "-w", "8", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
+    # Số worker lấy từ WEB_CONCURRENCY (CMD trong Dockerfile)
     restart: always
 
 volumes:

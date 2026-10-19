@@ -273,6 +273,9 @@ BRANDFLOW_FRONTEND_URLS=https://brandflow.vercel.app,https://brandflow.com,https
 - [ ] Truy cập `/health` trả về `{"status": "ok"}`
 - [ ] Thư mục `temp_uploads/` được tạo tự động (kiểm tra logs)
 - [ ] `JWT_SECRET_KEY` đã set (không dùng khóa mặc định)
+- [ ] Chạy `alembic upgrade head` (thêm bảng `kv_store` cho quota/plan registry/2FA; `init_db` cũng tự tạo nếu thiếu)
+- [ ] Tạo admin: `BRANDFLOW_ADMIN_EMAIL=... BRANDFLOW_ADMIN_PASSWORD=... python create_admin.py` (không còn tự cấp admin theo email)
+- [ ] `BRANDFLOW_FRONTEND_URLS` khớp domain frontend (mặc định chỉ localhost:3000 + brand-flow-hust.vercel.app)
 - [ ] `BRANDFLOW_WAREHOUSE_DIR` trỏ vào persistent disk/volume; `duckdb` đã cài (có trong `requirements.txt`)
 
 ### Frontend ✅

@@ -96,3 +96,11 @@ Thiết kế: `ProjectDocs/DATA_DIGITIZATION_PROPOSAL.md`. Kho DuckDB per-tenant
 - Nối vào luồng cũ: `/api/v1/research/extract-dna` và `/api/v1/planning/intake` lấy tenant từ JWT (`get_optional_user`, token demo → ẩn danh) và đưa `brief_for_agents()` vào Brand DNA / prompt CMO.
 - Frontend: `frontend/src/app/data-hub/page.tsx` (Dropzone file/thư mục, sức khỏe dữ liệu, xác nhận ánh xạ 1 chạm, hỏi dữ liệu); mục `data-hub` trong `Sidebar.tsx`; `Screen1_Source.tsx` hiện kết quả số hóa + link Kho Dữ liệu.
 - Env: `BRANDFLOW_DISABLE_LLM_MAPPING=1` (chỉ heuristic), `DIGITIZATION_LLM_MODEL`, `DATA_ANALYST_LLM_MODEL`.
+
+## Backend sau khi tách main.py (2026-10-19)
+- `main.py`: tạo app, middleware (security headers, CORS `resolve_cors_settings`, audit visitor), startup, đăng ký router.
+- `app/api/system_routes.py` (/, /health, system-info, industry-advisor, tasks Celery, design/generate, compliance) · `account_routes.py` (export/purge/tier) · `audit_routes.py` (audit visitor + `VISITOR_AUDIT_STORE`) · `planning_routes.py` (wizard, execute, intake, refine, micro-execute, history) · `onboarding_ingest_routes.py` (interview, upload, extract-summary, stats).
+- `app/core/quota.py`: quota theo tier, telemetry model, plan registry — lưu `kv_store` qua `app/core/persistent_store.py`.
+- `app/core/ai_pipeline.py`: import tùy chọn các thành phần LLM (thiếu thư viện thì là None).
+- `app/core/totp.py` + `/api/v1/auth/2fa/*`: xác thực 2 lớp; `frontend/src/components/settings/TwoFactorCard.tsx`.
+- `app/workflows/async_plan.py`: `run_plan_job` cho Celery `execute_heavy_ai_plan`.

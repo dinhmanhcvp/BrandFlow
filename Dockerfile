@@ -26,6 +26,8 @@ COPY . .
 # Mở cổng giao tiếp
 EXPOSE 8000
 
-# Lệnh khởi chạy API với Gunicorn xé nhỏ luồng (Workers)
-# Trong môi trường Docker Compose lệnh này sẽ bị override nếu cần
-CMD ["gunicorn", "main:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
+# Lệnh khởi chạy API với Gunicorn (số worker qua WEB_CONCURRENCY, mặc định 1).
+# Quota/plan registry đã lưu DB nên chạy nhiều worker được, NHƯNG Kho Dữ liệu (DuckDB, 1 file/tenant)
+# chỉ cho 1 tiến trình ghi tại một thời điểm → giữ 1 worker nếu dùng Data Hub, hoặc tách upload sang Celery.
+ENV WEB_CONCURRENCY=1
+CMD ["sh", "-c", "gunicorn main:app -w ${WEB_CONCURRENCY} -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:${PORT:-8000}"]
