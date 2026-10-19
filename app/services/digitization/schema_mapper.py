@@ -43,6 +43,9 @@ class MappingRecipe:
   # Bảng chưa đủ điều kiện khớp thực thể nào: gợi ý thực thể gần nhất để người dùng xác nhận
   suggested_entity: Optional[str] = None
   suggested_map: Dict[str, str] = field(default_factory=dict)
+  # Bảng ma trận theo kỳ: cột kỳ nguồn ('Tháng 10') → cột số chuẩn nhận giá trị ('planned_amount').
+  # Rỗng = bảng dạng dài bình thường. Kỳ của mỗi dòng lấy từ header cột lúc nạp (xem warehouse.unpivot_periods).
+  unpivot: Dict[str, str] = field(default_factory=dict)
   recipe_id: str = field(default_factory=lambda: f"rcp_{uuid.uuid4().hex[:12]}")
 
   def to_dict(self) -> Dict[str, Any]:
@@ -292,3 +295,117 @@ def map_table(columns: List[str], profiles: List[ColumnProfile], context: Dict[s
       recipe = llm_recipe
   recipe.questions = build_questions(recipe, columns, profiles)
   return recipe
+
+
+# ─── Bảng ma trận theo kỳ (Tháng 10 | Tháng 11 | ...) ─────────────────────────
+
+# Ma trận theo kỳ là số KẾ HOẠCH/CHỈ TIÊU → chỉ nạp vào 2 thực thể này, không bao giờ vào sales_line
+UNPIVOT_ENTITIES = ("budget_plan", "kpi_target")
+UNPIVOT_MAX_CONFIDENCE = 0.7
+_DEFAULT_VALUE_COLUMN = {"budget_plan": "planned_amount", "kpi_target": "target"}
+_KPI_HINTS = ("kpi", "chi tieu", "muc tieu", "target", "reach", "tiep can", "luot", "follower", "lead")
+_REVENUE_HINTS = ("doanh thu", "doanh so", "revenue", "income", "sales")
+_SPEND_HINTS = ("ngan sach", "chi phi", "budget", "kinh phi", "ns")
+
+
+def is_matrix_table(period_columns: List[str], profiles: List[ColumnProfile]) -> bool:
+  """≥ 2 cột kỳ chứa SỐ — timeline/Gantt có chữ trong cột tháng thì không phải ma trận số liệu."""
+  if len(period_columns) < 2:
+    return False
+  by_name = {p.name: p for p in profiles}
+  types = [by_name[c].inferred_type for c in period_columns if c in by_name]
+  return "number" in types and all(t in ("number", "range", "empty") for t in types)
+
+
+def _hinted(text: str, hints: tuple) -> bool:
+  return any(re.search(rf"(^|\s){re.escape(h)}($|\s)", text) for h in hints)
+
+
+def default_value_column(entity: str, source: str = "", context_text: str = "") -> str:
+  """Cột số chuẩn nhận giá trị của một cột kỳ: ưu tiên tầng header trên ('Ngân sách.Tháng 10'), rồi ngữ cảnh."""
+  target = ENTITIES[entity]
+  number_cols = {c: col for c, col in target.columns.items() if col.type == "number"}
+  prefix = source.rsplit(".", 1)[0] if "." in source else ""
+  if prefix:
+    scored = [(_column_score(prefix, c, col.synonyms, col.type, None), c) for c, col in number_cols.items()]
+    best = max(scored, default=(0.0, None))
+    if best[0] >= 0.75:
+      return best[1]
+  if entity == "budget_plan" and _hinted(context_text, _REVENUE_HINTS) and not _hinted(context_text, _SPEND_HINTS):
+    return "planned_revenue"
+  return _DEFAULT_VALUE_COLUMN[entity]
+
+
+def propose_matrix_recipe(columns: List[str], profiles: List[ColumnProfile], period_columns: List[str],
+                          context: List[str]) -> MappingRecipe:
+  """
+  Đề xuất recipe 'unpivot': cột định danh (hạng mục/kênh/chỉ số) map như thường, mỗi cột kỳ thành một dòng
+  (period, value). Luôn ≤ 0.7 tin cậy → chỉ nạp sau khi người dùng xác nhận.
+  """
+  period_set = set(period_columns)
+  id_cols = [c for c in columns if c not in period_set]
+  by_name = {p.name: p for p in profiles}
+  hint_text = normalize_header(" ".join(context + columns))
+
+  best: Optional[Tuple[float, str, Dict[str, str], Dict[str, float]]] = None
+  for name in UNPIVOT_ENTITIES:
+    entity = ENTITIES[name]
+    scored = []
+    for src in id_cols:
+      for canon, col in entity.columns.items():
+        if col.type == "number" or canon == "period":
+          continue  # số lấy từ các cột kỳ, kỳ lấy từ header
+        s = _column_score(src, canon, col.synonyms, col.type, by_name.get(src))
+        if s >= 0.6:
+          scored.append((s, src, canon))
+    scored.sort(key=lambda t: -t[0])
+    mapping, conf, used = {}, {}, set()
+    for s, src, canon in scored:
+      if src in mapping or canon in used:
+        continue
+      mapping[src], conf[src] = canon, round(s, 3)
+      used.add(canon)
+    total = sum(conf.values()) + (0.6 if name == "kpi_target" and _hinted(hint_text, _KPI_HINTS) else 0.0)
+    if best is None or total > best[0]:
+      best = (total, name, mapping, conf)
+
+  _, entity_name, mapping, conf = best
+  context_text = normalize_header(" ".join(context + id_cols))
+  unpivot = {c: default_value_column(entity_name, c, context_text) for c in period_columns}
+  confidence = round(min(UNPIVOT_MAX_CONFIDENCE, 0.5 + 0.1 * len(mapping)), 3)
+  recipe = MappingRecipe(header_signature(columns), entity_name, mapping, conf, confidence, "heuristic",
+                         unpivot=unpivot)
+  recipe.questions = build_matrix_questions(recipe, columns, profiles)
+  return recipe
+
+
+def build_matrix_questions(recipe: MappingRecipe, columns: List[str],
+                           profiles: List[ColumnProfile]) -> List[Dict[str, Any]]:
+  """Câu hỏi 'các cột kỳ chứa số gì?' + câu hỏi thường cho cột định danh mơ hồ."""
+  entity = ENTITIES[recipe.entity]
+  periods = list(recipe.unpivot)
+  by_name = {p.name: p for p in profiles}
+  current = recipe.unpivot[periods[0]]
+  options = [c for c, col in entity.columns.items() if col.type == "number"]
+  shown = ", ".join(periods[:4]) + (f" … (+{len(periods) - 4})" if len(periods) > 4 else "")
+  samples = [s for c in periods[:2] for s in (by_name[c].samples[:2] if c in by_name else [])]
+  questions = [{
+    "kind": "unpivot",
+    "column": periods[0],
+    "period_columns": periods,
+    "suggestion": current,
+    "options": options[:6],
+    "option_labels": {c: entity.columns[c].description for c in options[:6]},
+    "samples": samples[:3],
+    "question": (f"Bảng dạng ma trận theo kỳ ({shown}). Mỗi ô sẽ thành một dòng (kỳ, giá trị) — "
+                 f"giá trị là '{entity.columns[current].description}'?"),
+  }]
+  period_set = set(periods)
+  id_cols = [c for c in columns if c not in period_set]
+  id_recipe = MappingRecipe(recipe.header_signature, recipe.entity, recipe.column_map, recipe.column_confidence)
+  for q in build_questions(id_recipe, id_cols, [p for p in profiles if p.name not in period_set]):
+    # Cột số ngoài các cột kỳ (Tổng, Tỉ trọng...) thường là số suy ra → không hỏi, giữ ở bảng thô
+    if q["suggestion"] is None:
+      continue
+    questions.append(q)
+  return questions[:MAX_QUESTIONS_PER_TABLE]

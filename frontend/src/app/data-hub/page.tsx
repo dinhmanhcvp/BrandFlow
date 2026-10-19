@@ -10,7 +10,9 @@ import {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 const TABULAR = /\.(xlsx|xlsm|xls|csv)$/i;
-const BATCH_SIZE = 20;
+// Mỗi request chỉ tải file lên (server trả job_id ngay), số hóa chạy nền → batch chỉ để giới hạn dung lượng request
+const BATCH_SIZE = 50;
+const POLL_MS = 1500;
 
 type Lang = 'en' | 'vi';
 type Bi = { en: string; vi: string };
@@ -31,6 +33,8 @@ const TXT = {
  pickFiles: { en: "Choose files", vi: "Chọn file" },
  pickFolder: { en: "Choose a folder", vi: "Chọn cả thư mục" },
  uploading: { en: "Digitizing", vi: "Đang số hóa" },
+ sending: { en: "Uploading", vi: "Đang tải lên" },
+ matrix: { en: "Monthly matrix → one row per (period, value)", vi: "Bảng ma trận theo kỳ → mỗi ô thành một dòng (kỳ, giá trị)" },
  readiness: { en: "Data health", vi: "Sức khỏe dữ liệu" },
  missing: { en: "Missing", vi: "Còn thiếu" },
  present: { en: "Available", vi: "Đã có" },
@@ -75,8 +79,9 @@ const ASK_SUGGESTIONS: Bi[] = [
 
 interface TableReport { table_name: string; sheet: string; range: string; entity: string; data_rows: number; issues: { message: string }[] }
 interface FileReport { filename: string; status: string; error?: string; tables?: TableReport[]; data_rows?: number; empty_sheets?: string[] }
+interface UploadJob { job_id: string; status: 'queued' | 'running' | 'done' | 'failed'; total: number; processed: number; current_file: string | null; results: FileReport[]; error: string | null }
 interface Readiness { score: number; coverage: { present: string[]; missing: string[] }; pending_questions: number; integrity_issues: number }
-interface Question { column: string; suggestion: string | null; options: string[]; option_labels?: Record<string, string>; samples: string[]; question: string }
+interface Question { kind?: 'unpivot'; period_columns?: string[]; column: string; suggestion: string | null; options: string[]; option_labels?: Record<string, string>; samples: string[]; question: string }
 interface RecipeQuestions { recipe_id: string; entity: string; loaded: boolean; column_map: Record<string, string>; questions: Question[]; applies_to: { file: string; sheet: string }[] }
 interface Catalog { files: number; data_rows: number; canonical_tables: { table: string; rows: number; source_tables: number }[]; raw_tables: { table: string; file: string; sheet: string; range: string; entity: string | null; rows: number }[] }
 interface Brief { text: string; insights: { key: string; text: string }[]; readiness: Readiness | null; files: number }
@@ -133,7 +138,7 @@ export default function DataHubPage() {
  const [answers, setAnswers] = useState<Record<string, Record<string, string | null>>>({});
  const [showAllQuestions, setShowAllQuestions] = useState(false);
  const [reports, setReports] = useState<FileReport[]>([]);
- const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
+ const [progress, setProgress] = useState<{ phase: 'sending' | 'uploading'; done: number; total: number; current?: string | null } | null>(null);
  const [dragging, setDragging] = useState(false);
  const [question, setQuestion] = useState('');
  const [asking, setAsking] = useState(false);
@@ -169,20 +174,45 @@ export default function DataHubPage() {
   const files = fileList.filter(f => TABULAR.test(f.name));
   if (!files.length || !canWrite) return;
   setError('');
-  setProgress({ done: 0, total: files.length });
-  const collected: FileReport[] = [];
+  setReports([]);
+  // 1) Tải lên theo batch — mỗi batch được server xếp thành một job nền
+  setProgress({ phase: 'sending', done: 0, total: files.length });
+  const jobIds: string[] = [];
   for (let i = 0; i < files.length; i += BATCH_SIZE) {
    const form = new FormData();
    files.slice(i, i + BATCH_SIZE).forEach(f => form.append('files', f, f.name));
    try {
-    const res = await api<{ results: FileReport[] }>('/api/v1/data/upload', { method: 'POST', body: form });
-    collected.push(...res.results);
+    const job = await api<UploadJob>('/api/v1/data/upload', { method: 'POST', body: form });
+    jobIds.push(job.job_id);
    } catch (e) {
     setError((e as Error).message);
     break;
    }
-   setProgress({ done: Math.min(i + BATCH_SIZE, files.length), total: files.length });
-   setReports([...collected]);
+   setProgress({ phase: 'sending', done: Math.min(i + BATCH_SIZE, files.length), total: files.length });
+  }
+  // 2) Poll tiến độ số hóa của mọi job cho tới khi xong
+  const jobs: Record<string, UploadJob> = {};
+  while (jobIds.length) {
+   try {
+    const latest = await Promise.all(jobIds.map(id => api<UploadJob>(`/api/v1/data/jobs/${id}`)));
+    latest.forEach(j => { jobs[j.job_id] = j; });
+   } catch (e) {
+    setError((e as Error).message);
+    break;
+   }
+   const all = jobIds.map(id => jobs[id]);
+   const running = all.find(j => j.status === 'queued' || j.status === 'running');
+   setProgress({
+    phase: 'uploading',
+    done: all.reduce((n, j) => n + j.processed, 0),
+    total: all.reduce((n, j) => n + j.total, 0),
+    current: running?.current_file,
+   });
+   setReports(all.flatMap(j => j.results));
+   const failed = all.find(j => j.status === 'failed');
+   if (failed?.error) setError(failed.error);
+   if (!running) break;
+   await new Promise(r => setTimeout(r, POLL_MS));
   }
   setProgress(null);
   await refresh();
@@ -201,16 +231,25 @@ export default function DataHubPage() {
  const confirmRecipe = async (rq: RecipeQuestions) => {
   const chosen = answers[rq.recipe_id] || {};
   const columnMap: Record<string, string> = { ...rq.column_map };
+  let valueColumn: string | null = null;
   for (const q of rq.questions) {
    const value = q.column in chosen ? chosen[q.column] : q.suggestion;
+   if (q.kind === 'unpivot') {
+    // Cột kỳ không map trực tiếp: giá trị các ô tháng/quý đổ vào một cột số chuẩn
+    valueColumn = value;
+    continue;
+   }
    if (value) columnMap[q.column] = value;
    else delete columnMap[q.column];
   }
+  const unpivotSkipped = rq.questions.some(q => q.kind === 'unpivot') && !valueColumn;
   try {
    await api(`/api/v1/data/recipes/${rq.recipe_id}/confirm`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ entity: rq.entity, column_map: columnMap }),
+    body: JSON.stringify(unpivotSkipped
+     ? { entity: 'custom', column_map: {} }
+     : { entity: rq.entity, column_map: columnMap, value_column: valueColumn }),
    });
    await refresh();
   } catch (e) {
@@ -277,7 +316,11 @@ export default function DataHubPage() {
        {progress ? (
         <div className="flex flex-col items-center gap-2 text-slate-700 dark:text-slate-300">
          <Loader2 className="w-8 h-8 animate-spin text-cyan-600" />
-         <div className="text-sm font-medium">{tr('uploading')} {progress.done}/{progress.total} {tr('files')}…</div>
+         <div className="text-sm font-medium">{tr(progress.phase)} {progress.done}/{progress.total} {tr('files')}…</div>
+         <div className="w-full max-w-xs h-1.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+          <div className="h-full bg-cyan-500 transition-all" style={{ width: `${progress.total ? (100 * progress.done) / progress.total : 0}%` }} />
+         </div>
+         {progress.current && <div className="text-xs text-slate-500 truncate max-w-xs">{progress.current}</div>}
         </div>
        ) : (
         <>
@@ -376,6 +419,7 @@ export default function DataHubPage() {
            const current = chosen === undefined ? q.suggestion : chosen;
            return (
             <div key={q.column}>
+             {q.kind === 'unpivot' && <div className="text-[11px] font-semibold text-cyan-700 dark:text-cyan-300 mb-0.5">{tr('matrix')}</div>}
              <div className="text-sm font-medium text-slate-800 dark:text-slate-200">{q.question}</div>
              {q.samples.length > 0 && <div className="text-xs text-slate-500 mt-0.5">{q.samples.join(' · ')}</div>}
              <div className="flex flex-wrap gap-1.5 mt-2">

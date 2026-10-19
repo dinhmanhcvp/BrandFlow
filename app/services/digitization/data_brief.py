@@ -87,7 +87,7 @@ def compute_insights(con) -> List[Dict[str, Any]]:
   if _count(con, "budget_plan"):
     # Các bảng ngân sách thường là các phiên bản khác nhau → báo theo từng bảng, KHÔNG cộng dồn
     rows = con.execute(
-      "SELECT b._source_table, ANY_VALUE(m.sheet), ANY_VALUE(b._file), SUM(b.planned_amount), COUNT(*) "
+      "SELECT b._source_table, ANY_VALUE(m.sheet), ANY_VALUE(b._file), SUM(b.planned_amount), COUNT(DISTINCT b._source_row) "
       "FROM budget_plan b LEFT JOIN _tables m ON m.table_name = b._source_table "
       "WHERE b.planned_amount IS NOT NULL GROUP BY 1 ORDER BY 4 DESC LIMIT 5").fetchall()
     if rows:

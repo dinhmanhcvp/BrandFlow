@@ -101,8 +101,10 @@ def init_schema(con: duckdb.DuckDBPyConnection) -> None:
     cols = ", ".join(f'"{name}" {_SQL_TYPES[col.type]}' for name, col in entity.columns.items())
     con.execute(f"""
       CREATE TABLE IF NOT EXISTS {entity.name} (
-        {cols}, _source_table VARCHAR, _source_row INTEGER, _file VARCHAR
+        {cols}, _source_table VARCHAR, _source_row INTEGER, _file VARCHAR, _source_column VARCHAR
       )""")
+    # Kho tạo trước khi có unpivot: thêm cột lineage tới ô (header cột Excel gốc của giá trị)
+    con.execute(f"ALTER TABLE {entity.name} ADD COLUMN IF NOT EXISTS _source_column VARCHAR")
 
 
 # ─── Files ───────────────────────────────────────────────────────────────────
@@ -219,7 +221,8 @@ def create_raw_table(con, table: DetectedTable, profiles: List[ColumnProfile], t
 def register_table(con, table_name: str, file_id: str, filename: str, table: DetectedTable,
                    profiles: List[ColumnProfile], raw_names: List[str], recipe: Optional[MappingRecipe],
                    issues: List[Dict[str, Any]]) -> None:
-  columns = [{"name": n, "original": o} for n, o in zip(raw_names, table.columns)]
+  letters = table.column_letters or [None] * len(raw_names)
+  columns = [{"name": n, "original": o, "letter": l} for n, o, l in zip(raw_names, table.columns, letters)]
   # {số dòng Excel: [tên cột raw]} — ô của dòng nhóm là tổng dòng con
   aggregates = {str(table.row_numbers[i]): [raw_names[c] for c in cols]
                 for i, cols in table.aggregate_cells.items()}
@@ -274,14 +277,88 @@ def clear_canonical_rows(con, raw_table: str) -> None:
     con.execute(f"DELETE FROM {entity} WHERE _source_table = ?", [raw_table])
 
 
+def _mask_group_rows(fetched: List[tuple], raws: List[str], number_raws: set,
+                     aggregates: Dict[str, List[str]]) -> List[tuple]:
+  """
+  Dòng nhóm: bỏ ô là tổng dòng con; chỉ giữ dòng nhóm nếu còn số liệu riêng (vd. ngân sách cấp nhóm).
+  fetched = (_row, _kind, *giá trị theo raws) → trả về (_row, *giá trị).
+  """
+  rows = []
+  for r in fetched:
+    values = list(r[2:])
+    if r[1] == "group":
+      masked = set(aggregates.get(str(r[0]), []))
+      values = [None if raw in masked else v for raw, v in zip(raws, values)]
+      if not any(v is not None for raw, v in zip(raws, values) if raw in number_raws):
+        continue
+    rows.append((r[0], *values))
+  return rows
+
+
+def _insert_canonical(con, entity_name: str, columns: List[str], types: List[str], rows: List[tuple]) -> int:
+  """rows = (giá trị đã chuyển kiểu theo columns..., _source_table, _source_row, _file, _source_column)."""
+  data: Dict[str, Any] = {}
+  for j, (canon, ctype) in enumerate(zip(columns, types)):
+    data[canon] = pd.array([r[j] for r in rows], dtype="Float64" if ctype == "number" else "string")
+  n = len(columns)
+  data["_source_table"] = pd.array([r[n] for r in rows], dtype="string")
+  data["_source_row"] = pd.array([r[n + 1] for r in rows], dtype="Int64")
+  data["_file"] = pd.array([r[n + 2] for r in rows], dtype="string")
+  data["_source_column"] = pd.array([r[n + 3] for r in rows], dtype="string")
+  df = pd.DataFrame(data)
+
+  target_cols = list(columns) + ["_source_table", "_source_row", "_file", "_source_column"]
+  col_sql = ", ".join(f'"{c}"' for c in target_cols)
+  con.register("_incoming", df)
+  try:
+    con.execute(f"INSERT INTO {entity_name} ({col_sql}) SELECT {col_sql} FROM _incoming")
+  finally:
+    con.unregister("_incoming")
+  return len(rows)
+
+
+def _fetch_rows(con, raw_table: str, raws: List[str]) -> List[tuple]:
+  select = ", ".join(f'"{raw}"' for raw in raws)
+  return con.execute(
+    f'SELECT "_row", "_kind", {select} FROM "{raw_table}" WHERE "_kind" IN (\'data\', \'group\') ORDER BY "_row"'
+  ).fetchall()
+
+
+_YEAR_RE = re.compile(r"(?<!\d)(19\d{2}|20\d{2})(?!\d)")
+
+
+def unpivot_periods(period_columns: List[str], context_texts: List[str]) -> Dict[str, Optional[str]]:
+  """
+  Header cột kỳ → kỳ chuẩn. 'Tháng 10' chỉ cho 'M10'; nếu tiêu đề/tên file nêu đúng MỘT năm thì gắn năm
+  ('2026-10'), và tháng nhỏ hơn tháng trước (T12 → T1) thì sang năm sau.
+  """
+  years = {m for text in context_texts for m in _YEAR_RE.findall(str(text or ""))}
+  year = int(years.pop()) if len(years) == 1 else None
+  out: Dict[str, Optional[str]] = {}
+  prev = {"M": 0, "Q": 0}
+  bump = 0
+  for src in period_columns:
+    label = parse_period(src.split(".")[-1]) or parse_period(src)
+    if label and year and re.fullmatch(r"[MQ]\d{1,2}", label):
+      kind, n = label[0], int(label[1:])
+      if n < prev[kind]:
+        bump += 1
+      prev[kind] = n
+      label = f"{year + bump}-{n:02d}" if kind == "M" else f"{year + bump}-Q{n}"
+    out[src] = label
+  return out
+
+
 def load_canonical(con, raw_table: str, recipe: MappingRecipe) -> int:
   """Nạp lại (idempotent) các dòng 'data' của raw_table vào bảng chuẩn theo recipe."""
   clear_canonical_rows(con, raw_table)
-  if recipe.entity not in ENTITIES or not recipe.column_map:
+  if recipe.entity not in ENTITIES or not (recipe.column_map or recipe.unpivot):
     return 0
   meta = table_meta(con, raw_table)
   if not meta:
     return 0
+  if recipe.unpivot:
+    return _load_unpivoted(con, raw_table, recipe, meta)
   original_to_raw = {c["original"]: c["name"] for c in meta["columns"]}
   entity = ENTITIES[recipe.entity]
   pairs = [(original_to_raw[src], canon) for src, canon in recipe.column_map.items()
@@ -289,45 +366,64 @@ def load_canonical(con, raw_table: str, recipe: MappingRecipe) -> int:
   if not pairs:
     return 0
 
-  select = ", ".join(f'"{raw}"' for raw, _ in pairs)
-  fetched = con.execute(
-    f'SELECT "_row", "_kind", {select} FROM "{raw_table}" WHERE "_kind" IN (\'data\', \'group\') ORDER BY "_row"'
-  ).fetchall()
-  aggregates = meta.get("aggregates") or {}
-  number_canons = {c for _, c in pairs if entity.columns[c].type == "number"}
+  raws = [raw for raw, _ in pairs]
+  number_raws = {raw for raw, c in pairs if entity.columns[c].type == "number"}
+  rows = _mask_group_rows(_fetch_rows(con, raw_table, raws), raws, number_raws, meta.get("aggregates") or {})
+  types = [entity.columns[c].type for _, c in pairs]
+  converted = [
+    (*(_convert(v, t, c) for v, t, (_, c) in zip(r[1:], types, pairs)), raw_table, r[0], meta["filename"], None)
+    for r in rows
+  ]
+  return _insert_canonical(con, entity.name, [c for _, c in pairs], types, converted)
 
-  # Dòng nhóm: bỏ ô là tổng dòng con; chỉ giữ dòng nhóm nếu còn số liệu riêng (vd. ngân sách cấp nhóm)
-  rows = []
-  for r in fetched:
-    values = list(r[2:])
-    if r[1] == "group":
-      masked = set(aggregates.get(str(r[0]), []))
-      values = [None if raw in masked else v for (raw, _), v in zip(pairs, values)]
-      if not any(v is not None for (_, canon), v in zip(pairs, values) if canon in number_canons):
-        continue
-    rows.append((r[0], *values))
 
-  data: Dict[str, Any] = {}
-  for j, (_, canon) in enumerate(pairs, start=1):
-    ctype = entity.columns[canon].type
-    converted = [_convert(r[j], ctype, canon) for r in rows]
-    if ctype == "number":
-      data[canon] = pd.array(converted, dtype="Float64")
-    else:
-      data[canon] = pd.array(converted, dtype="string")
-  data["_source_table"] = pd.array([raw_table] * len(rows), dtype="string")
-  data["_source_row"] = pd.array([r[0] for r in rows], dtype="Int64")
-  data["_file"] = pd.array([meta["filename"]] * len(rows), dtype="string")
-  df = pd.DataFrame(data)
+def _load_unpivoted(con, raw_table: str, recipe: MappingRecipe, meta: Dict[str, Any]) -> int:
+  """
+  Ma trận theo kỳ → dạng dài: mỗi (dòng Excel × kỳ) thành một dòng chuẩn. Lineage tới tận ô:
+  _source_row = dòng Excel, _source_column = header cột kỳ gốc.
+  """
+  entity = ENTITIES[recipe.entity]
+  original_to_raw = {c["original"]: c["name"] for c in meta["columns"]}
+  periods = unpivot_periods(list(recipe.unpivot), [meta["filename"], meta["sheet"], *meta.get("context", [])])
+  value_cols = [(src, original_to_raw[src], periods[src], canon) for src, canon in recipe.unpivot.items()
+                if src in original_to_raw and periods.get(src) and canon in entity.columns
+                and entity.columns[canon].type == "number"]
+  if not value_cols:
+    return 0
+  value_targets = sorted({canon for *_, canon in value_cols})
+  # Cột định danh không được ghi đè kỳ (lấy từ header) hay cột giá trị (lấy từ các ô kỳ)
+  id_pairs = [(original_to_raw[src], canon) for src, canon in recipe.column_map.items()
+              if src in original_to_raw and src not in recipe.unpivot and canon in entity.columns
+              and canon != "period" and canon not in value_targets]
 
-  target_cols = [canon for _, canon in pairs] + ["_source_table", "_source_row", "_file"]
-  col_sql = ", ".join(f'"{c}"' for c in target_cols)
-  con.register("_incoming", df)
-  try:
-    con.execute(f"INSERT INTO {entity.name} ({col_sql}) SELECT {col_sql} FROM _incoming")
-  finally:
-    con.unregister("_incoming")
-  return len(rows)
+  raws = [raw for raw, _ in id_pairs] + [raw for _, raw, _, _ in value_cols]
+  number_raws = {raw for _, raw, _, _ in value_cols}
+  rows = _mask_group_rows(_fetch_rows(con, raw_table, raws), raws, number_raws, meta.get("aggregates") or {})
+
+  id_types = [entity.columns[c].type for _, c in id_pairs]
+  columns = [c for _, c in id_pairs] + ["period"] + value_targets
+  types = id_types + ["period"] + ["number"] * len(value_targets)
+  ordered_periods = list(dict.fromkeys(p for _, _, p, _ in value_cols))
+  n_id = len(id_pairs)
+
+  out = []
+  for r in rows:
+    excel_row, values = r[0], r[1:]
+    ids = [_convert(v, t, c) for v, t, (_, c) in zip(values[:n_id], id_types, id_pairs)]
+    cells = values[n_id:]
+    for period in ordered_periods:
+      picked: Dict[str, Any] = {}
+      sources = []
+      for (src, _, p, canon), v in zip(value_cols, cells):
+        num = _convert(v, "number") if p == period else None
+        if num is not None:
+          picked[canon] = num
+          sources.append(src)
+      if not picked:
+        continue  # ô trống = không có kế hoạch kỳ đó, không tạo dòng 0
+      out.append((*ids, period, *(picked.get(t) for t in value_targets),
+                  raw_table, excel_row, meta["filename"], ", ".join(sources)))
+  return _insert_canonical(con, entity.name, columns, types, out)
 
 
 def insert_org_profile(con, pairs: List[Tuple[str, Any, int]], filename: str, sheet: str) -> None:

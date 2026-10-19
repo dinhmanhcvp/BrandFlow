@@ -28,6 +28,7 @@ BAO_NGOC = os.path.join("docs", "MKT PLAN BAO NGOC IMC PLAN 5 THÁNG.N5.xlsx")
 def _isolated_warehouse(tmp_path, monkeypatch):
   monkeypatch.setenv("BRANDFLOW_WAREHOUSE_DIR", str(tmp_path / "wh"))
   monkeypatch.setenv("BRANDFLOW_DISABLE_LLM_MAPPING", "1")
+  monkeypatch.setenv("BRANDFLOW_DATA_JOBS", "thread")
 
 
 def _hash(path) -> str:
@@ -254,9 +255,14 @@ def test_data_api_requires_auth_and_scopes_by_jwt_user(tmp_path):
     ("files", ("ban_hang_copy.xlsx", content, "application/octet-stream")),
     ("files", ("ghi_chu.txt", b"hello", "text/plain")),
   ])
-  body = resp.json()
   assert resp.status_code == 200
-  assert (body["digitized"], body["duplicates"]) == (1, 1)
+  queued = resp.json()
+  assert queued["job_id"].startswith("job_") and queued["runner"] == "background"
+  assert queued["total"] == 3 and "pending" not in queued
+  # TestClient chạy BackgroundTasks xong trước khi trả response → job đã hoàn tất
+  body = client.get(f"/api/v1/data/jobs/{queued['job_id']}").json()
+  assert body["status"] == "done" and body["processed"] == body["total"] == 3
+  assert (body["digitized"], body["duplicates"], body["skipped"]) == (1, 1, 1)
   assert body["readiness"]["score"] > 0
 
   metric = client.post("/api/v1/data/metric", json={"name": "revenue"}).json()
@@ -266,6 +272,9 @@ def test_data_api_requires_auth_and_scopes_by_jwt_user(tmp_path):
 
   app.dependency_overrides[get_current_user] = lambda: "someone_else"
   assert client.get("/api/v1/data/tables").json()["files"] == 0
+  # job_id của tenant khác → 404 (job gắn với tenant trong JWT)
+  assert client.get(f"/api/v1/data/jobs/{queued['job_id']}").status_code == 404
+  assert client.get("/api/v1/data/jobs/..%2F..%2Fx").status_code == 404
 
 
 # ─── Business Analyst Agent (#0) với LLM giả ────────────────────────────────
@@ -371,3 +380,199 @@ def test_low_confidence_mapping_is_not_loaded_into_actuals(tmp_path):
   if table["entity"] != "custom":
     assert table["confidence"] < 0.8 and table["canonical_rows"] == 0 and table["needs_confirmation"]
   assert qt.get_metric("t", "revenue").rows[0]["value"] is None
+
+
+# ─── Upload lớn chạy nền (job) ───────────────────────────────────────────────
+
+def _stage(tenant, job_id, src_paths):
+  from app.services.digitization import jobs
+
+  stage = jobs.staging_dir(tenant, job_id)
+  os.makedirs(stage, exist_ok=True)
+  staged = []
+  for p in src_paths:
+    dst = os.path.join(stage, os.path.basename(p))
+    with open(p, "rb") as f, open(dst, "wb") as g:
+      g.write(f.read())
+    staged.append({"filename": os.path.basename(p), "path": dst, "file_hash": _hash(p)})
+  return staged
+
+
+def test_background_job_records_progress_per_file_and_isolates_errors(tmp_path, monkeypatch):
+  from app.services.digitization import jobs
+  from app.services.digitization import pipeline
+
+  paths = []
+  for m in (7, 8):
+    p = tmp_path / f"ban_hang_{m}.xlsx"
+    _sales_workbook(p, m, 30, seed=m)
+    paths.append(str(p))
+  broken = tmp_path / "hong.xlsx"
+  broken.write_bytes(b"not a real workbook")
+  paths.append(str(broken))
+
+  job_id = jobs.new_job_id()
+  staged = _stage("t", job_id, paths)
+  jobs.create_job("t", staged, [{"filename": "a.txt", "status": "skipped", "error": "x"}], job_id=job_id)
+  assert jobs.get_job("t", job_id)["status"] == "queued"
+
+  seen_progress = []
+  real = pipeline.digitize_file
+
+  def spy(tenant_id, path, filename, file_hash):
+    job = jobs.get_job("t", job_id)
+    seen_progress.append((job["status"], job["processed"], job["current_file"]))
+    return real(tenant_id, path, filename, file_hash)
+
+  monkeypatch.setattr(pipeline, "digitize_file", spy)
+  job = jobs.run_job("t", job_id)
+
+  # Tiến độ được ghi sau MỖI file, trước khi file kế tiếp chạy
+  assert seen_progress == [("running", 1, "ban_hang_7.xlsx"), ("running", 2, "ban_hang_8.xlsx"),
+                           ("running", 3, "hong.xlsx")]
+  assert job["status"] == "done" and job["processed"] == job["total"] == 4
+  assert (job["digitized"], job["errors"], job["skipped"]) == (2, 1, 1)
+  assert job["results"][-1]["status"] == "error" and job["readiness"]["score"] > 0
+  assert not os.path.exists(jobs.staging_dir("t", job_id))  # file tạm đã dọn
+  view = jobs.public_view(job)
+  assert "pending" not in view and view["progress"] == 1.0
+  assert qt.get_metric("t", "revenue").rows[0]["value"] > 0
+  # Job gắn tenant: tenant khác / job_id giả không đọc được
+  assert jobs.get_job("other", job_id) is None
+  assert jobs.get_job("t", "../t") is None
+
+
+def test_dispatch_prefers_celery_and_falls_back_without_redis(tmp_path, monkeypatch):
+  import sys
+  import time
+
+  from app.services.digitization import jobs
+
+  class _FakeTask:
+    calls = []
+
+    def delay(self, *args):
+      self.calls.append(args)
+
+  p = tmp_path / "s.xlsx"
+  _sales_workbook(p, 9, 10)
+
+  with monkeypatch.context() as m:
+    m.setattr(jobs, "_celery_task", lambda: _FakeTask())
+    job_id = jobs.new_job_id()
+    jobs.create_job("t", _stage("t", job_id, [str(p)]), [], job_id=job_id)
+    assert jobs.dispatch("t", job_id) == "celery"
+    assert _FakeTask.calls == [("t", job_id)]  # tenant do server truyền, worker không nhận gì từ client
+    assert jobs.get_job("t", job_id)["status"] == "queued"
+
+  # Không có Celery/Redis → chạy thread nền trong process API
+  monkeypatch.setenv("BRANDFLOW_DATA_JOBS", "auto")
+  monkeypatch.setitem(sys.modules, "app.core.celery_worker", None)  # import lỗi như khi thiếu celery
+  assert jobs._celery_task() is None
+  job_id = jobs.new_job_id()
+  jobs.create_job("t2", _stage("t2", job_id, [str(p)]), [], job_id=job_id)
+  assert jobs.dispatch("t2", job_id) == "thread"
+  deadline = time.time() + 30
+  while jobs.get_job("t2", job_id)["status"] not in ("done", "failed") and time.time() < deadline:
+    time.sleep(0.05)
+  assert jobs.get_job("t2", job_id)["status"] == "done"
+  assert jobs.get_job("t2", job_id)["digitized"] == 1
+
+  monkeypatch.setenv("BRANDFLOW_DATA_JOBS", "celery")  # bắt buộc Celery mà không có → lỗi rõ ràng
+  with pytest.raises(RuntimeError):
+    jobs._celery_task()
+
+
+# ─── Bảng ma trận theo kỳ → dạng dài (unpivot) ───────────────────────────────
+
+def _matrix_workbook(path, title, header, rows):
+  wb = openpyxl.Workbook()
+  ws = wb.active
+  ws.title = "Kế hoạch"
+  ws["A1"] = title
+  ws.append([])
+  ws.append(header)
+  for r in rows:
+    ws.append(r)
+  wb.save(path)
+
+
+def test_monthly_matrix_is_unpivoted_into_budget_plan_after_confirmation(tmp_path):
+  path = tmp_path / "ns_q4.xlsx"
+  _matrix_workbook(path, "KẾ HOẠCH NGÂN SÁCH MARKETING 2026",
+                   ["Hạng mục", "Chi tiết", "Tháng 11", "Tháng 12", "Tháng 1", "Tổng"], [
+                     ["Digital", "Facebook Ads", 100_000_000, 120_000_000, None, 220_000_000],
+                     ["Digital", "TikTok Ads", 50_000_000, 60_000_000, 70_000_000, 180_000_000],
+                   ])
+  table = digitize_file("t", str(path), path.name, _hash(path))["tables"][0]
+  # Chưa xác nhận → chưa nạp; đề xuất budget_plan, không phải sales_line
+  assert table["entity"] == "budget_plan" and table["canonical_rows"] == 0 and table["needs_confirmation"]
+  assert table["unpivot_periods"] == ["Tháng 11", "Tháng 12", "Tháng 1"]
+
+  pending = qt.pending_questions("t")[0]
+  question = pending["questions"][0]
+  assert question["kind"] == "unpivot" and question["suggestion"] == "planned_amount"
+  assert pending["column_map"] == {"Hạng mục": "category", "Chi tiết": "line_item"}
+
+  # sales_line / ánh xạ trực tiếp cột kỳ bị từ chối
+  with pytest.raises(ValueError):
+    remap_recipe("t", pending["recipe_id"], "sales_line", {"Chi tiết": "product_name"})
+  with pytest.raises(ValueError):
+    remap_recipe("t", pending["recipe_id"], "budget_plan", {"Tháng 11": "planned_amount"})
+
+  out = remap_recipe("t", pending["recipe_id"], "budget_plan", pending["column_map"])
+  assert out["reloaded_tables"] == {table["table_name"]: 5}  # ô trống không tạo dòng
+  with wh.connect("t", read_only=True) as con:
+    rows = con.execute(
+      "SELECT line_item, period, planned_amount, _source_row, _source_column FROM budget_plan "
+      "ORDER BY _source_row, period").fetchall()
+    assert con.execute("SELECT COUNT(*) FROM sales_line").fetchone()[0] == 0
+  # Năm lấy từ tiêu đề; Tháng 1 sau Tháng 12 sang năm sau; lineage tới dòng + cột Excel
+  assert rows == [
+    ("Facebook Ads", "2026-11", 100_000_000, 4, "Tháng 11"),
+    ("Facebook Ads", "2026-12", 120_000_000, 4, "Tháng 12"),
+    ("TikTok Ads", "2026-11", 50_000_000, 5, "Tháng 11"),
+    ("TikTok Ads", "2026-12", 60_000_000, 5, "Tháng 12"),
+    ("TikTok Ads", "2027-01", 70_000_000, 5, "Tháng 1"),
+  ]
+  lineage = qt.trace_lineage("t", table["table_name"], 5, "Tháng 1")
+  assert lineage["cells"] == ["E5"] and lineage["values"]["Tháng 1"] == 70_000_000
+  assert qt.get_metric("t", "revenue").rows[0]["value"] is None
+
+  # File sau cùng mẫu → recipe đã xác nhận áp dụng ngay, không hỏi lại
+  path2 = tmp_path / "ns_q4_v2.xlsx"
+  _matrix_workbook(path2, "KẾ HOẠCH NGÂN SÁCH 2026 (bản 2)",
+                   ["Hạng mục", "Chi tiết", "Tháng 11", "Tháng 12", "Tháng 1", "Tổng"],
+                   [["Trade", "POSM", 30_000_000, 30_000_000, 30_000_000, 90_000_000]])
+  t2 = digitize_file("t", str(path2), path2.name, _hash(path2))["tables"][0]
+  assert t2["canonical_rows"] == 3 and not t2["needs_confirmation"]
+  assert qt.pending_questions("t") == []
+
+
+def test_kpi_matrix_goes_to_kpi_target_and_value_column_can_be_overridden(tmp_path):
+  path = tmp_path / "kpi.xlsx"
+  _matrix_workbook(path, "CHỈ TIÊU KPI THEO QUÝ 2026", ["Chỉ số", "Kênh", "Q1", "Q2", "Q3"], [
+    ["Lượt tiếp cận", "Facebook", 1_000_000, 1_200_000, 1_500_000],
+    ["Lead", "TikTok", 2_000, 2_500, 3_000],
+  ])
+  table = digitize_file("t", str(path), path.name, _hash(path))["tables"][0]
+  assert table["entity"] == "kpi_target" and table["canonical_rows"] == 0
+  pending = qt.pending_questions("t")[0]
+  assert pending["questions"][0]["suggestion"] == "target"
+
+  with pytest.raises(ValueError):
+    remap_recipe("t", pending["recipe_id"], "kpi_target", pending["column_map"], value_column="metric")
+  remap_recipe("t", pending["recipe_id"], "kpi_target", pending["column_map"], value_column="actual")
+  with wh.connect("t", read_only=True) as con:
+    rows = con.execute("SELECT metric, channel, period, target, actual FROM kpi_target "
+                       "ORDER BY metric, period").fetchall()
+  assert len(rows) == 6 and rows[0] == ("Lead", "TikTok", "2026-Q1", None, 2_000)
+
+
+def test_timeline_with_text_in_month_columns_is_not_unpivoted(tmp_path):
+  path = tmp_path / "timeline.xlsx"
+  _matrix_workbook(path, "TIMELINE", ["Hoạt động", "Tháng 10", "Tháng 11"], [
+    ["Ra mắt sản phẩm", "x", ""], ["Livestream", "chuẩn bị", "x"],
+  ])
+  table = digitize_file("t", str(path), path.name, _hash(path))["tables"][0]
+  assert table["unpivot_periods"] == [] and table["canonical_rows"] == 0

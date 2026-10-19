@@ -121,7 +121,9 @@ def describe_table(tenant_id: str, name: str, sample_rows: int = 5) -> Dict[str,
                     for c, col in entity.columns.items()]
                    + [{"name": "_source_table", "type": "text", "description": "Bảng raw nguồn (lineage)"},
                       {"name": "_source_row", "type": "number", "description": "Số dòng Excel nguồn"},
-                      {"name": "_file", "type": "text", "description": "Tên file nguồn"}],
+                      {"name": "_file", "type": "text", "description": "Tên file nguồn"},
+                      {"name": "_source_column", "type": "text",
+                       "description": "Header cột Excel nguồn của giá trị (bảng ma trận theo kỳ đã unpivot)"}],
         "sample": [dict(zip(cols, map(_jsonable, r))) for r in rows],
       }
     meta = wh.table_meta(con, name)
@@ -218,7 +220,8 @@ def get_metric(tenant_id: str, name: str, group_by: Optional[List[str]] = None,
   )
 
 
-def trace_lineage(tenant_id: str, source_table: str, source_row: int) -> Dict[str, Any]:
+def trace_lineage(tenant_id: str, source_table: str, source_row: int,
+                  source_column: Optional[str] = None) -> Dict[str, Any]:
   with wh.connect(tenant_id, read_only=True) as con:
     meta = wh.table_meta(con, source_table)
     if meta is None:
@@ -226,10 +229,16 @@ def trace_lineage(tenant_id: str, source_table: str, source_row: int) -> Dict[st
     cols, rows = _run_with_timeout(con, f'SELECT * FROM "{source_table}" WHERE "_row" = ?', [int(source_row)],
                                    QUERY_TIMEOUT_S)
   names = {c["name"]: c["original"] for c in meta["columns"]}
-  return {
+  out = {
     "file": meta["filename"], "sheet": meta["sheet"], "range": meta["cell_range"], "excel_row": int(source_row),
     "values": {names.get(c, c): _jsonable(v) for c, v in zip(cols, rows[0])} if rows else {},
   }
+  if source_column:
+    # _source_column của dòng unpivot → địa chỉ ô Excel (vd. 'D12')
+    letters = {c["original"]: c.get("letter") for c in meta["columns"]}
+    out["cells"] = [f"{letters[c]}{int(source_row)}" for c in (s.strip() for s in source_column.split(","))
+                    if letters.get(c)]
+  return out
 
 
 def list_files(tenant_id: str) -> List[Dict[str, Any]]:

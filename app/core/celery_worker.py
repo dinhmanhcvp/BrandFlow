@@ -28,6 +28,17 @@ celery.conf.update(
 # sẽ được bứng từ main.py vứt vào đây.
 # =========================================================
 
+@celery.task(name="digitize_upload_job")
+def digitize_upload_job(tenant_id: str, job_id: str):
+  """
+  Data Foundry: số hóa một lượt upload lớn. tenant_id do API lấy từ JWT trước khi xếp hàng.
+  Tiến độ ghi vào file job cạnh kho DuckDB (GET /api/v1/data/jobs/{job_id}), không qua result backend.
+  """
+  from app.services.digitization.jobs import run_job
+
+  return run_job(tenant_id, job_id)["status"]
+
+
 @celery.task(name="execute_heavy_ai_plan", bind=True)
 def execute_heavy_ai_plan(self, payload: dict):
   """
