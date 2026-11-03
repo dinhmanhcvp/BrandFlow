@@ -109,7 +109,7 @@ export default function WorkspaceFlow() {
      {currentStage === 3 && <Phase4_Execution onNext={() => goToState(4)} onBack={() => goToState(2)} />}
      {currentStage === 4 && <Phase5_Creative onNext={() => goToState(5)} onBack={() => goToState(3)} />}
      {currentStage === 5 && <Phase6_AgentDeploy onNext={() => goToState(6)} onBack={() => goToState(4)} />}
-     {currentStage === 6 && <Phase7_Report onExport={() => alert('Exporting')} onBack={() => goToState(5)} />}
+     {currentStage === 6 && <Phase7_Report onExport={() => { window.location.href = '/planning/d0-report'; }} onBack={() => goToState(5)} />}
     </div>
    </div>
   </div>

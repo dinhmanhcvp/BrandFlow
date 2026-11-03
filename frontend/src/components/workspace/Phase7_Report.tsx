@@ -43,7 +43,9 @@ export default function Phase7_Report({ onExport, onBack }: { onExport: () => vo
 
     <h2 className="text-4xl font-black text-slate-900 dark:text-white mb-4">{language === 'vi' ? 'Kế Hoạch Tổng Thể Đã Sẵn Sàng' : 'Master Plan Generated'}</h2>
     <p className="text-lg text-slate-600 dark:text-slate-400 mb-12 font-medium">
-     BrandFlow has successfully analyzed Bếp Nhà Mộc's DNA, debated strategy, modeled financials, created brand assets, and deployed your custom AI agent.
+     {language === 'vi'
+      ? 'BrandFlow đã phân tích Brand DNA của Bếp Nhà Mộc, tranh luận chiến lược, mô hình hóa tài chính, tạo bộ nhận diện và triển khai trợ lý AI riêng cho doanh nghiệp.'
+      : "BrandFlow has successfully analyzed Bếp Nhà Mộc's DNA, debated strategy, modeled financials, created brand assets, and deployed your custom AI agent."}
     </p>
 
     
@@ -61,11 +63,13 @@ export default function Phase7_Report({ onExport, onBack }: { onExport: () => vo
      {/* Action 1 */}
      <motion.div 
       initial={{y: 20, opacity: 0}} animate={step >= 1 ? {y: 0, opacity: 1} : {}} 
+      onClick={() => { window.location.href = '/design-studio'; }}
+      role="button" tabIndex={0}
       className="bg-white/95 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-md hover:bg-slate-800 transition-all cursor-pointer group"
      >
       <Presentation className="w-8 h-8 text-blue-400 mx-auto mb-4 group-hover:scale-110 transition-transform" />
       <h3 className="text-sm font-bold text-slate-900 dark:text-slate-200 mb-1">Pitch Deck</h3>
-      <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">12 Slides (PPTX)</p>
+      <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">{language === 'vi' ? '12 slide (PPTX) · mở Design Studio' : '12 Slides (PPTX) · open Design Studio'}</p>
      </motion.div>
 
      {/* Action 2 */}
@@ -77,17 +81,30 @@ export default function Phase7_Report({ onExport, onBack }: { onExport: () => vo
      >
       <Download className="w-8 h-8 text-emerald-400 mx-auto mb-4 group-hover:-translate-y-1 transition-transform" />
       <h3 className="text-sm font-bold text-white mb-1">Executive Report</h3>
-      <p className="text-xs text-emerald-500/70">Comprehensive PDF</p>
+      <p className="text-xs text-emerald-500/70">{language === 'vi' ? 'Báo cáo PDF đầy đủ' : 'Comprehensive PDF'}</p>
      </motion.div>
 
      {/* Action 3 */}
      <motion.div 
       initial={{y: 20, opacity: 0}} animate={step >= 3 ? {y: 0, opacity: 1} : {}} transition={{delay: 0.2}}
+      onClick={() => {
+       const subject = encodeURIComponent('Kế hoạch marketing Bếp Nhà Mộc - BrandFlow');
+       const lines = [
+        'Kính gửi Ban điều hành,',
+        '',
+        'BrandFlow đã hoàn tất kế hoạch marketing cho Bếp Nhà Mộc: ngân sách 35.000.000đ đã được kiểm toán, lộ trình 8 tuần và Mộc Assistant sẵn sàng triển khai.',
+        '',
+        `Xem báo cáo: ${window.location.origin}/planning/d0-report`,
+       ];
+       const body = encodeURIComponent(lines.join('\n'));
+       window.location.href = `mailto:?subject=${subject}&body=${body}`;
+      }}
+      role="button" tabIndex={0}
       className="bg-white/95 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-md hover:bg-slate-800 transition-all cursor-pointer group"
      >
       <Mail className="w-8 h-8 text-purple-400 mx-auto mb-4 group-hover:scale-110 transition-transform" />
       <h3 className="text-sm font-bold text-slate-900 dark:text-slate-200 mb-1">Email C-Level</h3>
-      <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Share via Outlook</p>
+      <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">{language === 'vi' ? 'Gửi qua email' : 'Share via email'}</p>
      </motion.div>
     </div>
 
