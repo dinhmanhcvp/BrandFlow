@@ -5,28 +5,9 @@ import ServicesBento from '@/components/landing/ServicesBento';
 import PricingSection from '@/components/landing/PricingSection';
 import Footer from '@/components/landing/Footer';
 import EbookLeadMagnet from '@/components/landing/EbookLeadMagnet';
-import AnniversaryHomepage from '@/components/landing/AnniversaryHomepage';
-import AnniversaryBanner from '@/components/landing/AnniversaryBanner';
-import { ANNIVERSARY_CONFIG } from '@/config/anniversary';
 import { Terminal, BrainCircuit, LineChart } from 'lucide-react';
 
-interface PageProps {
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-export default async function LandingPage({ searchParams }: PageProps) {
-  const params = searchParams ? await searchParams : {};
-  const isShowcase =
-    params.trungbay === '1' ||
-    params.showcase === '1' ||
-    ANNIVERSARY_CONFIG.SHOWCASE_DEFAULT;
-
-  // Chế độ Lễ kỷ niệm / Màn hình trưng bày
-  if (isShowcase) {
-    return <AnniversaryHomepage />;
-  }
-
-  // Chế độ thường: Giữ 100% trang chủ gốc + dải chúc mừng nhỏ có thể đóng
+export default function LandingPage() {
   return (
     <div className="min-h-screen bg-transparent selection:bg-cyan-500/30 selection:text-cyan-50">
       <Navbar />

@@ -7,7 +7,6 @@ import { ArrowRight, Menu, X } from 'lucide-react';
 import { BrandFlowLogo } from '@/components/brand/BrandFlowLogo';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useLanguage } from '@/contexts/LanguageContext';
-import AnniversaryBanner from './AnniversaryBanner';
 
 export default function Navbar() {
  const { t, language, setLanguage, toggleLanguage } = useLanguage();
@@ -28,7 +27,7 @@ export default function Navbar() {
 
  return (
   <>
-   <div className="fixed top-0 w-full z-50"><AnniversaryBanner /><nav className={`w-full transition-all duration-500 ${
+   <div className="fixed top-0 w-full z-50"><nav className={`w-full transition-all duration-500 ${
     scrolled
      ? 'bg-slate-50/80 dark:bg-[#0B1120]/80 backdrop-blur-2xl shadow-lg shadow-black/5 dark:shadow-black/30 border-b border-linear-border/50'
      : 'bg-slate-50/50 dark:bg-[#0B1120]/50 backdrop-blur-lg border-b ultra-thin-border'
