@@ -1,0 +1,13 @@
+# Giữ backend Render không ngủ đông: gói free ngủ sau ~15 phút không có request,
+# lần gọi đầu mất 20-60 giây. Ping /health mỗi 10 phút (GitHub cron có thể trễ vài phút).
+name: keepalive
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend health
+        run: curl -fsS --max-time 90 https://brandflow-jfha.onrender.com/health || true

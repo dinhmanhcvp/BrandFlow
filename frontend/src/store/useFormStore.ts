@@ -24,6 +24,8 @@ const getAuthHeaders = (): Record<string, string> => {
 // Hàm xử lý 401 — Token hết hạn → redirect về Login
 const handleUnauthorized = () => {
  if (typeof window !== 'undefined') {
+  // Tài khoản demo dùng token giả: giữ nguyên, tránh mất phiên giữa buổi trình bày
+  if ((localStorage.getItem('brandflow_token') || '').startsWith('mock_')) return;
   localStorage.removeItem('brandflow_token');
   localStorage.removeItem('brandflow_user_id');
   // Bỏ redirect cứng để không làm đứt mạch demo
@@ -114,6 +116,8 @@ export const useFormStore = create<FormStore>((set, get) => ({
   set({ initialized: true });
 
   try {
+   // Tài khoản demo không có phiên thật ở backend: dùng ngay dữ liệu mẫu, không chờ 401
+   if (token.startsWith('mock_')) throw new Error('Demo account: dùng dữ liệu mẫu');
    // List projects của user, tìm project đã có
    const controller = new AbortController();
    const timeoutId = setTimeout(() => controller.abort(), 1500);

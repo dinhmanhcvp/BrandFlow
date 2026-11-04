@@ -13,7 +13,7 @@ type LanguageContextType = {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
- const [language, setLanguage] = useState<'en' | 'vi'>('en');
+ const [language, setLanguage] = useState<'en' | 'vi'>('vi');
  const [mounted, setMounted] = useState(false);
 
  useEffect(() => {
