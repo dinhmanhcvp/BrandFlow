@@ -178,7 +178,7 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
           spanWeeks: 4,
           budget: 1500000,
           status: 'scheduled',
-          kpi: '12 hợp đồng B2B dài hạn (Doanh thu cam kết 650M/tháng)',
+          kpi: '12 hợp đồng B2B dài hạn (Doanh thu cam kết ~60M/tháng)',
           description: 'Chốt hợp đồng cung ứng cố định từ 20 - 50 suất/ngày cho mỗi doanh nghiệp, đảm bảo doanh số nền tảng vững chắc.',
           deliverables: [
             'Bảng giá chiết khấu lũy tiến theo số lượng suất ăn',
@@ -278,14 +278,14 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
 
   // ── Growth Chart Data ──
   const chartData = [
-    { week: 'T1', reach: 60, orders: 450, revenue: 31.5, cpa: 28 },
-    { week: 'T2', reach: 180, orders: 920, revenue: 64.4, cpa: 26 },
-    { week: 'T3', reach: 420, orders: 1850, revenue: 129.5, cpa: 24 },
-    { week: 'T4', reach: 780, orders: 3100, revenue: 217.0, cpa: 23 },
-    { week: 'T5', reach: 1250, orders: 4900, revenue: 343.0, cpa: 22 },
-    { week: 'T6', reach: 1800, orders: 7200, revenue: 504.0, cpa: 21 },
-    { week: 'T7', reach: 2400, orders: 10500, revenue: 735.0, cpa: 20 },
-    { week: 'T8', reach: 3100, orders: 14200, revenue: 994.0, cpa: 19 },
+    { week: 'T1', reach: 60, orders: 57, revenue: 4, cpa: 28 },
+    { week: 'T2', reach: 180, orders: 114, revenue: 8, cpa: 26 },
+    { week: 'T3', reach: 420, orders: 229, revenue: 16, cpa: 24 },
+    { week: 'T4', reach: 780, orders: 400, revenue: 28, cpa: 23 },
+    { week: 'T5', reach: 1250, orders: 571, revenue: 40, cpa: 22 },
+    { week: 'T6', reach: 1800, orders: 714, revenue: 50, cpa: 21 },
+    { week: 'T7', reach: 2400, orders: 857, revenue: 60, cpa: 20 },
+    { week: 'T8', reach: 3100, orders: 1057, revenue: 74, cpa: 19 },
   ];
 
   const currentSelectedMilestone = GANTT_STREAMS
@@ -354,10 +354,10 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
             <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           </div>
           <div className="text-xl md:text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">
-            2.5 Tỷ VNĐ
+            280 Triệu VNĐ
           </div>
           <span className="text-[10px] text-slate-500 font-medium mt-1">
-            Mục tiêu 8 tuần (ROI 71.4x)
+            Mục tiêu 8 tuần (gấp 8 lần ngân sách)
           </span>
         </div>
 
@@ -736,7 +736,7 @@ export default function Phase4_Execution({ onBack, onNext }: { onBack: () => voi
                 </li>
                 <li className="flex justify-between pb-2 border-b border-emerald-200/60 dark:border-emerald-900/40">
                   <span className="text-slate-600 dark:text-slate-400">Dòng tiền dôi dư giữ lại:</span>
-                  <strong className="text-emerald-700 dark:text-emerald-300 font-black">+520.000.000đ / 8 tuần</strong>
+                  <strong className="text-emerald-700 dark:text-emerald-300 font-black">+245.000.000đ / 8 tuần</strong>
                 </li>
                 <li className="flex justify-between">
                   <span className="text-slate-600 dark:text-slate-400">Tệp dữ liệu khách hàng:</span>

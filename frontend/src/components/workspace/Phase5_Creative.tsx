@@ -139,7 +139,7 @@ Tại Bếp Nhà Mộc, chúng mình không bán một hộp cơm công nghiệp
       audience: 'Gen Z & Millennial Professionals · ASMR & Cinematic Foodie',
       copy: `🎬 KỊCH BẢN VIDEO ASMR (Thời lượng: 30 giây):
 
-[00:00 - 00:05] Cận cảnh âm thanh: Tiếng gõ bàn phím dồn dập $\\rightarrow$ Âm thanh bụng đói cồn cào $\\rightarrow$ Chuyển cảnh tiếng bốc khói xèo xèo của niêu cơm cá bống.
+[00:00 - 00:05] Cận cảnh âm thanh: Tiếng gõ bàn phím dồn dập → Âm thanh bụng đói cồn cào → Chuyển cảnh tiếng bốc khói xèo xèo của niêu cơm cá bống.
 [00:06 - 00:15] Visual chữa lành: Đôi bàn tay người đầu bếp mộc mạc rắc hành hoa tươi, múc từng muỗng canh cua mồng tơi xanh mướt vào hộp bã mía sinh học.
 [00:16 - 00:24] Unboxing tại văn phòng: Mở nắp hộp bã mía bốc khói ngun ngút tại bàn làm việc giữa giờ trưa. Tiếng cắn miếng cơm cháy giòn rụm "RỘM!".
 [00:25 - 00:30] Voiceover ấm áp: "Bão deadline ngoài kia cứ để sau. Giờ này là của mâm cơm mẹ nấu. Bếp Nhà Mộc - Chữa lành từng bữa trưa."
