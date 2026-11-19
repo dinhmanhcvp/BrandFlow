@@ -2,12 +2,11 @@ import os
 from typing import List, Dict, Any, Optional
 try:
   from langchain_core.tools import Tool
-  from langchain_community.tools import DuckDuckGoSearchResults
 except ImportError:
   Tool = type("Tool", (), {"__init__": lambda *args, **kwargs: None})
-  DuckDuckGoSearchResults = type("DuckDuckGoSearchResults", (), {"__init__": lambda *args, **kwargs: None})
 
 from app.services.memory_rag import search_niche_knowledge
+from app.services.trend_listener import news_search  # Google News VN (DuckDuckGo bị ratelimit, kết quả lạc đề)
 
 
 
@@ -159,15 +158,15 @@ class CustomAgentFactory:
   def _create_competitor_intel_tool() -> Tool:
     """Competitor intelligence via web search"""
     try:
-      from langchain_community.tools import DuckDuckGoSearchResults
-      return DuckDuckGoSearchResults(
+      return Tool(
+        func=news_search,
         name="CompetitorIntel",
         description=(
           "Thu thập và phân tích thông tin đối thủ cạnh tranh real-time: "
           "chiến lược giá, định vị thương hiệu, messaging, marketing mix, "
           "market share, recent moves, funding rounds. "
           "BẮT BUỘC trích dẫn URL nguồn cho mọi số liệu."
-        )
+      )
       )
     except Exception:
       return Tool(name="CompetitorIntel", func=lambda x: "Error: Could not load Search tool", description="Error")
@@ -176,15 +175,15 @@ class CustomAgentFactory:
   def _create_content_strategy_tool() -> Tool:
     """Content gap analysis and editorial planning"""
     try:
-      from langchain_community.tools import DuckDuckGoSearchResults
-      return DuckDuckGoSearchResults(
+      return Tool(
+        func=news_search,
         name="ContentStrategyResearch",
         description=(
           "Nghiên cứu content strategy cấp enterprise: content gap analysis, "
           "top-performing content benchmark, SEO keyword opportunities, "
           "social media trend analysis, editorial calendar best practices. "
           "Trích dẫn URL nguồn."
-        )
+      )
       )
     except Exception:
       return Tool(name="ContentStrategyResearch", func=lambda x: "Error: Could not load Search tool", description="Error")
@@ -193,15 +192,15 @@ class CustomAgentFactory:
   def _create_customer_insights_tool() -> Tool:
     """Customer insights via web research"""
     try:
-      from langchain_community.tools import DuckDuckGoSearchResults
-      return DuckDuckGoSearchResults(
+      return Tool(
+        func=news_search,
         name="CustomerInsightsSearch",
         description=(
           "Nghiên cứu insight khách hàng cấp sâu: persona profiling, "
           "customer journey mapping, Jobs-To-Be-Done analysis, "
           "sentiment trends, NPS/CSAT benchmark ngành, "
           "behavioral pattern analysis. Trích dẫn URL nguồn."
-        )
+      )
       )
     except Exception:
       return Tool(name="CustomerInsightsSearch", func=lambda x: "Error: Could not load Search tool", description="Error")
@@ -244,15 +243,15 @@ class CustomAgentFactory:
   def _create_brand_health_tool() -> Tool:
     """Brand health monitoring via web search"""
     try:
-      from langchain_community.tools import DuckDuckGoSearchResults
-      return DuckDuckGoSearchResults(
+      return Tool(
+        func=news_search,
         name="BrandHealthMonitor",
         description=(
           "Theo dõi sức khỏe thương hiệu cấp enterprise: "
           "brand awareness, brand recall, brand sentiment, share of voice, "
           "brand equity index, reputation risk monitoring. "
           "So sánh benchmark với top players trong ngành. Trích dẫn URL nguồn."
-        )
+      )
       )
     except Exception:
       return Tool(name="BrandHealthMonitor", func=lambda x: "Error", description="Error")
@@ -331,7 +330,8 @@ class CustomAgentFactory:
     tools = []
     
     capability_map = {
-      "web_search": lambda: DuckDuckGoSearchResults(
+      "web_search": lambda: Tool(
+        func=news_search,
         name="WebSearch",
         description="Tìm kiếm Internet real-time để lấy số liệu, tin tức, và benchmark thực tế. BẮT BUỘC trích dẫn URL nguồn."
       ),

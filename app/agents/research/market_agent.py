@@ -16,11 +16,6 @@ class MarketAgent:
   def __init__(self):
     self.llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.2, max_retries=1, timeout=120.0)
     self.output_parser = JsonOutputParser(pydantic_object=MarketResearchOutput)
-    try:
-      from langchain_community.tools import DuckDuckGoSearchRun
-      self.search_tool = DuckDuckGoSearchRun()
-    except ImportError:
-      self.search_tool = None
     self.prompt_template = ChatPromptTemplate.from_messages([
       ("system", 
        """Bạn là Giám đốc Nghiên cứu Thị trường (Market Research Director) cấp cao.
@@ -59,26 +54,21 @@ DỮ LIỆU TRINH SÁT TỪ INTERNET:
   async def run_research(self, industry: str, brand_dna: dict = None) -> dict:
     print(f"🔍 [Market Trợ lý AI] Đang khởi động trinh sát mạng cho ngành: {industry}...")
     
-    # Mapping industry names for better search queries
-    industry_keywords = {
-      "tech": "SaaS and Technology software startups market size and pain points",
-      "edu": "EdTech and online education market trends and competitors",
-      "cosmetics": "Beauty and cosmetics market trends, vegan ingredients and competitors",
-      "fnb": "Food and Beverage restaurant market trends and customer sentiment",
-      "fb": "Food and Beverage restaurant market trends and customer sentiment",
-    }
-    
-    query = industry_keywords.get(industry.lower(), f"{industry} market size, trends, and competitors")
-    
-    # Step 1: Run Web Search (Simulated real-time scraping)
-    print(f"🌐 [Market Trợ lý AI] Đang thu thập dữ liệu từ DuckDuckGo: '{query}'...")
+    # Google News VN 30 ngày (DuckDuckGo bị ratelimit và trả kết quả lạc đề cho truy vấn tiếng Việt)
+    from app.services.trend_listener import _google_news
+    industry_vi = {
+      "tech": "phần mềm công nghệ", "edu": "giáo dục trực tuyến", "cosmetics": "mỹ phẩm",
+      "fnb": "F&B nhà hàng đồ uống", "fb": "F&B nhà hàng đồ uống",
+    }.get(industry.lower(), industry)
+    queries = [f"thị trường {industry_vi} Việt Nam", f"thương hiệu {industry_vi} dẫn đầu Việt Nam", f"xu hướng {industry_vi}"]
+    print(f"🌐 [Market Trợ lý AI] Đang thu thập tin thị trường: {queries}...")
     try:
-      # Chạy search tool đồng bộ trong async (bằng cách dùng to_thread nếu cần, nhưng ddg_search chạy khá nhanh)
-      search_result = await asyncio.wait_for(
-        asyncio.to_thread(self.search_tool.run, query),
-        timeout=10.0
-      )
-      print("  ✅ Đã thu thập xong dữ liệu thô từ Internet.")
+      batches = await asyncio.wait_for(
+        asyncio.gather(*(asyncio.to_thread(_google_news, q, 30) for q in queries)), timeout=20.0)
+      search_result = "\n\n".join(
+        f"Tin cho '{q}':\n" + "\n".join(f"- {it['title']} — {it['source']} {it['date'][:10]}" for it in items[:8])
+        for q, items in zip(queries, batches) if items
+      ) or "Không thu được tin thị trường lúc này. Hãy sử dụng kiến thức sẵn có của bạn."
     except Exception as e:
       print(f"  ⚠️ Lỗi tìm kiếm: {e}")
       search_result = "Không thể truy xuất dữ liệu internet lúc này. Hãy sử dụng kiến thức sẵn có của bạn."

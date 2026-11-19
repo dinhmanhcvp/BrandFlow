@@ -21,11 +21,11 @@ GROQ_TIMEOUT_SECONDS = _resolve_groq_timeout_seconds()
 def run_autonomous_market_research(industry: str, audience: str, custom_workflow_rules: str = "") -> dict:
   """
   Quy trình Thám tử AI Fact-checker:
-  Sử dụng DuckDuckGo Search API để tìm tin tức Real-time.
+  Tìm tin tức real-time qua Google News VN (trend_listener.news_search).
   Bắt buộc xuất nguồn rõ ràng (Citation) để chống ảo giác (Hallucination).
   """
   from langchain_groq import ChatGroq
-  from langchain_community.tools import DuckDuckGoSearchResults
+  from app.services.trend_listener import news_search
   from langchain_core.messages import HumanMessage, SystemMessage
   
   print(f"\n{'═' * 70}")
@@ -38,8 +38,6 @@ def run_autonomous_market_research(industry: str, audience: str, custom_workflow
     # Sử dụng Model 70B siêu mạnh để tư duy công cụ Tìm kiếm
     llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.1, api_key=api_key)
     
-    # Công cụ tìm kiếm Web - Cắm cho AI quyền Lướt Net
-    search_tool = DuckDuckGoSearchResults()
     
     # Ràng buộc Schema để ép AI trả về Pydantic
     structured_llm = llm.with_structured_output(MarketContextResult)
@@ -61,12 +59,11 @@ def run_autonomous_market_research(industry: str, audience: str, custom_workflow
     - Nếu kết quả Web không có thông tin hữu ích, hãy thành thật nói "Không tìm thấy dữ liệu hiện thời" thay vì bịa ra.
     """
     
-    print("  🔍 Đang lướt Web tra cứu (DuckDuckGo Search)...")
+    print("  🔍 Đang lướt Web tra cứu (Google News VN)...")
     # Chạy Tool giả lập vì Trợ lý AI Execution Loop rườm rà.
     # Ở đây ta tối ưu Token bằng cách tự query Search rồi nhồi thẳng kết quả cho LLM dịch JSON.
-    query_string = f"Xu hướng ngành {industry} đối với {audience} tại Việt Nam"
-    
-    raw_search_results = search_tool.invoke(query_string)
+    # Google News khớp mọi từ → câu ngắn; tách ngành và khách hàng thành 2 truy vấn
+    raw_search_results = news_search(f"xu hướng {industry}") + "\n\n" + news_search(f"{audience} {industry}")
     print("  ✅ Đã lấy được bài báo từ Internet. Đang nén thành Báo cáo Khung...")
     
     # Nhồi kết quả tìm kiếm vào Promt cho con 70B

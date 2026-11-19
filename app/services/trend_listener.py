@@ -140,6 +140,14 @@ def clean_competitor_pages(raw) -> list[dict]:
   return pages[:5]
 
 
+def news_search(query: str, days: int = 30, limit: int = 8) -> str:
+  """Tìm tin Google News VN dạng văn bản có URL — cho agent/LangChain Tool cần trích dẫn nguồn."""
+  items = _google_news(query, days)[:limit]
+  if not items:
+    return f"Không tìm thấy tin {days} ngày qua cho '{query}'."
+  return "\n".join(f"[{i}] {it['title']} — {it['source']}, {it['date'][:10]} — {it['url']}" for i, it in enumerate(items, 1))
+
+
 def _words(text: str) -> set[str]:
   return {w for w in re.findall(r"\w+", (text or "").lower()) if len(w) > 2}
 

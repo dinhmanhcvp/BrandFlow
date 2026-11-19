@@ -228,13 +228,20 @@ def test_plan_job_runs_real_pipeline_with_registered_intent(session_factory, mon
   monkeypatch.setattr(ai_pipeline, "run_pipeline", fake_pipeline)
   monkeypatch.setattr("app.services.digitization.data_brief.brief_for_agents",
                       lambda tenant: {"text": "Doanh thu 2,1 tỷ"} if tenant == "u-9" else {})
+  monkeypatch.setattr("app.core.database.SessionLocal", session_factory)
+  from app.models.models import BrandDNA
+  with session_factory() as db:  # Brand DNA đã lưu (kèm Fanpage đối thủ) phải tới được pipeline
+    db.add(BrandDNA(user_id="u-9", brand_name="Bếp Nhà Mộc",
+                    dna_data={"competitor_pages": [{"name": "Katinat", "url": "https://www.facebook.com/katinat.vn"}]}))
+    db.commit()
   progress = []
   result = async_plan.run_plan_job({"plan_hash": "hash-1", "answers": {"constraints": "Không chạy TikTok"}},
                                    lambda p, m: progress.append(p))
 
   assert result["final_plan"] == {"ok": True} and result["internal_data_used"] is True
   assert calls["budget"] == 80_000_000 and calls["constraints"] == "Không chạy TikTok"
-  assert calls["brand_dna"] == {"internal_data": {"text": "Doanh thu 2,1 tỷ"}}
+  assert calls["brand_dna"] == {"competitor_pages": [{"name": "Katinat", "url": "https://www.facebook.com/katinat.vn"}],
+                                "brand_name": "Bếp Nhà Mộc", "internal_data": {"text": "Doanh thu 2,1 tỷ"}}
   assert progress[0] == 10 and progress[-1] == 100
 
   with pytest.raises(ValueError):

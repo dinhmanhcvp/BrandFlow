@@ -14,6 +14,25 @@ def _noop(_progress: int, _message: str) -> None:
   pass
 
 
+def _latest_brand_dna(user_id: str) -> Dict[str, Any]:
+  """Brand DNA mới nhất của user (cùng cách GET /brand-dna đọc). Lỗi DB → {} để job vẫn chạy."""
+  from app.core.database import SessionLocal
+  from app.models.models import BrandDNA
+
+  db = SessionLocal()
+  try:
+    row = db.query(BrandDNA).filter(BrandDNA.user_id == user_id).order_by(BrandDNA.created_at.desc()).first()
+    if not row:
+      return {}
+    dna = row.dna_data or {}
+    return {**dna, "brand_name": dna.get("brand_name") or row.brand_name or ""}
+  except Exception as e:
+    print(f"[async_plan] Không đọc được Brand DNA: {e}")
+    return {}
+  finally:
+    db.close()
+
+
 def run_plan_job(payload: Dict[str, Any], report: Optional[ProgressFn] = None) -> Dict[str, Any]:
   from app.core.ai_pipeline import run_pipeline
   from app.core.quota import WEEK1_PLAN_REGISTRY, _apply_clarification_answers
@@ -35,6 +54,11 @@ def run_plan_job(payload: Dict[str, Any], report: Optional[ProgressFn] = None) -
   if internal_data:
     report(20, "Đã nạp số liệu nội bộ từ Kho Dữ liệu")
 
+  # Brand DNA đã lưu → bước nghe trend biết sản phẩm, đối thủ, Fanpage đối thủ
+  brand_dna = _latest_brand_dna(user_id) if user_id and user_id != "anonymous" else {}
+  if internal_data:
+    brand_dna = {**brand_dna, "internal_data": internal_data}
+
   report(30, "Các trợ lý AI đang lập và phản biện kế hoạch")
   result = run_pipeline(
     goal=intent.get("goal", ""),
@@ -42,7 +66,7 @@ def run_plan_job(payload: Dict[str, Any], report: Optional[ProgressFn] = None) -
     budget=int(intent.get("budget", 0) or 0),
     target_audience=intent.get("target_audience") or "Tệp khách hàng chung",
     constraints=intent.get("constraints") or "Không có",
-    brand_dna={"internal_data": internal_data} if internal_data else None,
+    brand_dna=brand_dna or None,
   )
   report(100, "Hoàn tất")
   return {
