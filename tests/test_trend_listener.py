@@ -93,3 +93,30 @@ def test_marketable_keeps_only_ai_approved_and_fails_safe(monkeypatch):
 
   monkeypatch.setattr(agents_core, "_get_review_llm", lambda temperature=0: FakeLLM(None))
   assert tl._marketable(items, "trà sữa", "") == [items[0]]  # AI lỗi → bỏ trend MXH chung
+
+
+def test_clean_competitor_pages_keeps_only_facebook_links():
+  pages = tl.clean_competitor_pages([
+    {"name": "Phúc Long", "url": "https://m.facebook.com/PhucLongCoffeeandTea/?ref=x"},
+    {"name": "Katinat", "url": "facebook.com/katinat.vn"},
+    {"name": "Lừa đảo", "url": "https://evil.com/facebook.com/x"},
+    {"name": "Page id", "url": "https://www.facebook.com/profile.php?id=123"},
+    {"name": "", "url": "https://facebook.com/noname"},
+    {"name": "Chỉ tên"},
+    "rác",
+  ])
+  assert pages == [
+    {"name": "Phúc Long", "url": "https://www.facebook.com/PhucLongCoffeeandTea"},
+    {"name": "Katinat", "url": "https://www.facebook.com/katinat.vn"},
+    {"name": "Lừa đảo", "url": ""},
+    {"name": "Page id", "url": "https://www.facebook.com/profile.php?id=123"},
+    {"name": "Chỉ tên", "url": ""},
+  ]
+  assert tl.clean_competitor_pages(None) == []
+
+
+def test_entered_competitors_come_first_without_duplicates():
+  from app.agents.planner.agents_core import _product_and_competitors
+  dna = {"brand_name": "X", "competitor_pages": [{"name": "Katinat", "url": ""}],
+         "competitor_landscape": [{"name": "Phúc Long"}, {"name": "Katinat"}]}
+  assert _product_and_competitors(dna, None)[1] == ["Katinat", "Phúc Long"]

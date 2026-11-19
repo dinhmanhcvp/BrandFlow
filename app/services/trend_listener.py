@@ -84,6 +84,31 @@ def _youtube(query: str, days: int = 7) -> list[dict]:
           for kind, vids in (("youtube", found), ("youtube_trending", trending)) for v in vids]
 
 
+_FB_HOSTS = {"facebook.com", "www.facebook.com", "m.facebook.com", "web.facebook.com", "fb.com", "www.fb.com"}
+
+
+def clean_competitor_pages(raw) -> list[dict]:
+  """Danh sách {name, url} người dùng nhập → chỉ giữ link https Facebook hợp lệ (tối đa 5). Tên trống → bỏ."""
+  pages = []
+  for item in raw if isinstance(raw, list) else []:
+    if not isinstance(item, dict):
+      continue
+    name = str(item.get("name") or "").strip()[:80]
+    url = str(item.get("url") or "").strip()[:300]
+    if not name:
+      continue
+    if url:
+      parsed = urllib.parse.urlparse(url if "://" in url else f"https://{url}")
+      if parsed.scheme in ("http", "https") and parsed.hostname in _FB_HOSTS and parsed.path.strip("/"):
+        url = "https://www.facebook.com" + parsed.path.rstrip("/")
+        if parsed.path.startswith("/profile.php"):  # Page không có username: id nằm ở query
+          url += f"?{parsed.query}"
+      else:
+        url = ""
+    pages.append({"name": name, "url": url})
+  return pages[:5]
+
+
 def _words(text: str) -> set[str]:
   return {w for w in re.findall(r"\w+", (text or "").lower()) if len(w) > 2}
 

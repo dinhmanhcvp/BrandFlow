@@ -20,6 +20,12 @@ const INDUSTRIES = [
  { id: 'other', key: 'ind_other', icon: LayoutGrid, color: 'text-linear-text-muted', bg: 'bg-background dark:bg-slate-800', border: 'border-linear-border dark:border-slate-700' },
 ];
 
+type CompetitorPage = { name: string; url: string };
+
+// Khớp với clean_competitor_pages ở backend (backend vẫn là nơi kiểm tra cuối)
+const isFacebookUrl = (url: string) =>
+ /^(https?:\/\/)?(www\.|m\.|web\.)?(facebook|fb)\.com\/[^\s/]+/i.test(url.trim());
+
 export default function WizardStep1({ onNext }: { onNext?: () => void }) {
  const { t, language } = useLanguage();
  const runMarketResearch = useFormStore(state => state.runMarketResearch);
@@ -31,6 +37,13 @@ export default function WizardStep1({ onNext }: { onNext?: () => void }) {
  const setWizardAnswers = useFormStore(state => state.setWizardAnswers); 
  const selectedIndustry = wizardAnswers['selectedIndustry'] || null;
  const setSelectedIndustry = (ind: string) => setWizardAnswer('selectedIndustry', ind);
+
+ // Chưa sửa lần nào → gợi ý sẵn tên đối thủ AI tìm được; lưu vào wizardAnswers để gửi kèm khi lập kế hoạch
+ const competitorPages: CompetitorPage[] = wizardAnswers['competitor_pages']
+  ?? (marketResearchData?.competitors || []).slice(0, 5).map((c: any) => ({ name: c.name || '', url: '' }));
+ const setCompetitorPages = (pages: CompetitorPage[]) => setWizardAnswer('competitor_pages', pages);
+ const updatePage = (i: number, patch: Partial<CompetitorPage>) =>
+  setCompetitorPages(competitorPages.map((p, j) => (j === i ? { ...p, ...patch } : p)));
 
  useEffect(() => {
   if (selectedIndustry && extractedAnswers && Object.keys(extractedAnswers).length > 0) {
@@ -255,6 +268,52 @@ export default function WizardStep1({ onNext }: { onNext?: () => void }) {
            </div>
           </div>
          ))}
+        </div>
+
+        {/* Fanpage đối thủ: người dùng tự nhập để hệ thống theo dõi đúng Page (đoán từ tên dễ nhầm) */}
+        <div className="mt-5 pt-4 border-t border-slate-800">
+         <div className="text-xs font-bold text-slate-300 mb-1">{language === 'vi' ? 'Fanpage đối thủ cần theo dõi' : 'Competitor Facebook Pages to track'}</div>
+         <p className="text-xs text-slate-500 mb-3">{language === 'vi' ? 'Dán link Fanpage để AI theo dõi bài đăng và trend của đối thủ. Có thể sửa tên hoặc thêm đối thủ AI chưa tìm ra (tối đa 5).' : 'Paste Page links so the AI tracks competitor posts and trends. Edit names or add competitors the AI missed (max 5).'}</p>
+         <div className="space-y-2">
+          {competitorPages.map((p, i) => {
+           const badUrl = p.url.trim() !== '' && !isFacebookUrl(p.url);
+           return (
+            <div key={i}>
+             <div className="flex gap-2">
+              <input
+               value={p.name}
+               onChange={e => updatePage(i, { name: e.target.value })}
+               placeholder={language === 'vi' ? 'Tên đối thủ' : 'Competitor name'}
+               aria-label={language === 'vi' ? `Tên đối thủ ${i + 1}` : `Competitor ${i + 1} name`}
+               className="w-1/3 px-3 py-2 text-xs bg-slate-800/60 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:border-purple-500"
+              />
+              <input
+               value={p.url}
+               onChange={e => updatePage(i, { url: e.target.value })}
+               placeholder="https://www.facebook.com/..."
+               aria-label={language === 'vi' ? `Link Fanpage đối thủ ${i + 1}` : `Competitor ${i + 1} Page link`}
+               aria-invalid={badUrl}
+               className={cn("flex-1 px-3 py-2 text-xs bg-slate-800/60 border rounded-lg text-white placeholder:text-slate-500 focus:outline-none", badUrl ? "border-rose-500" : "border-slate-700 focus:border-purple-500")}
+              />
+              <button
+               type="button"
+               onClick={() => setCompetitorPages(competitorPages.filter((_, j) => j !== i))}
+               aria-label={language === 'vi' ? `Xoá đối thủ ${i + 1}` : `Remove competitor ${i + 1}`}
+               className="px-3 text-xs text-slate-400 hover:text-rose-400 bg-slate-800/60 border border-slate-700 rounded-lg"
+              >✕</button>
+             </div>
+             {badUrl && <p className="text-[11px] text-rose-400 mt-1">{language === 'vi' ? 'Cần là link Facebook, ví dụ https://www.facebook.com/tenpage' : 'Must be a Facebook link, e.g. https://www.facebook.com/pagename'}</p>}
+            </div>
+           );
+          })}
+          {competitorPages.length < 5 && (
+           <button
+            type="button"
+            onClick={() => setCompetitorPages([...competitorPages, { name: '', url: '' }])}
+            className="text-xs font-bold text-purple-400 hover:text-purple-300"
+           >+ {language === 'vi' ? 'Thêm đối thủ' : 'Add competitor'}</button>
+          )}
+         </div>
         </div>
        </div>
       </div>

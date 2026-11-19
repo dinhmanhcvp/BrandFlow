@@ -398,8 +398,10 @@ def _product_and_competitors(brand_dna: dict | None, idea_description: str | Non
   """Lấy tên sản phẩm + đối thủ từ Brand DNA (nếu có) để nghe trend đúng sản phẩm."""
   dna = brand_dna if isinstance(brand_dna, dict) else {}
   product = dna.get("product_name") or dna.get("brand_name") or dna.get("company_name") or (idea_description or "")
-  competitors = [c.get("name", "") if isinstance(c, dict) else str(c) for c in (dna.get("competitor_landscape") or [])]
-  return str(product), [c for c in competitors if c]
+  # đối thủ người dùng tự nhập (kèm Fanpage) ưu tiên trước đối thủ AI suy ra
+  entered = [p.get("name", "") for p in (dna.get("competitor_pages") or []) if isinstance(p, dict)]
+  inferred = [c.get("name", "") if isinstance(c, dict) else str(c) for c in (dna.get("competitor_landscape") or [])]
+  return str(product), list(dict.fromkeys(c for c in entered + inferred if c))
 
 
 def run_cmo_phase2_situation_audit(phase1_data: dict, industry: str, target_audience: str, account_profile: str = "STANDARD", brand_dna: dict = None, idea_description: str = None) -> dict:

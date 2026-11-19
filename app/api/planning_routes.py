@@ -30,6 +30,7 @@ from app.core.ai_pipeline import (
 from app.core.mock_manager import parse_mock_md
 from app.api.auth_routes import get_optional_user
 from app.services.digitization.data_brief import brief_for_agents
+from app.services.trend_listener import clean_competitor_pages
 from app.core.quota import (
     WEEK1_QUOTA_POLICY,
     _normalize_tier,
@@ -384,6 +385,9 @@ async def process_intake(request: RawInputRequest, user_id: Optional[str] = Depe
             raw_text += form_context
             
         brand_dna = request.brand_dna or {}
+        competitor_pages = clean_competitor_pages(comp_form.get("competitor_pages"))
+        if competitor_pages:
+            brand_dna = {**brand_dna, "competitor_pages": competitor_pages}
         if brand_dna:
             dna_context = f"\n[BRAND DNA & DESIGN DNA TỪ BỘ NHỚ]\n{json.dumps(brand_dna, ensure_ascii=False)}\n[HẾT BRAND DNA]"
             raw_text += dna_context
