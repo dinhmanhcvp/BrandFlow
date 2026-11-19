@@ -109,6 +109,13 @@ const DEMO_EXPERT_DATA = {
  }
 };
 
+type MarketSignal = { kind: string; title: string; source: string; url?: string; date?: string; is_new?: boolean };
+
+const SIGNAL_LABELS: Record<string, string> = {
+ product: 'Sản phẩm', competitor: 'Đối thủ', industry: 'Ngành', tiktok: 'TikTok',
+ social_trend: 'Trend MXH', youtube: 'YouTube', youtube_trending: 'YouTube', facebook: 'Facebook',
+};
+
 export default function ExecutiveReport() {
  const { wizardAnswers, tacticsPlan, debateLogs, brandDNA } = useFormStore();
  const { t, language } = useLanguage();
@@ -121,6 +128,10 @@ export default function ExecutiveReport() {
  const tactics = planData.tactics || DEMO_EXPERT_DATA.tactics;
  const cfo = planData.cfo_risk || DEMO_EXPERT_DATA.cfo_risk;
  const brandName = brandDNA?.brand_name || wizardAnswers?.company_name || wizardAnswers?.industry || 'BrandFlow Client';
+ // Backend trả 2 trường này ở cấp ngoài cùng của plan (engine_adapters.final_plan)
+ const trendOpportunities: string[] = planData.trend_opportunities || [];
+ const marketSignals: MarketSignal[] = planData.market_signals || [];
+ const marketScannedAt: string | undefined = planData.market_scanned_at;
 
  const budgetPieData = React.useMemo(() => {
   if (!tactics || !tactics.tactics_7ps) return [];
@@ -348,6 +359,48 @@ export default function ExecutiveReport() {
         </div>
        </div>
       </section>
+
+      {/* Trend đang lên — chỉ có ở kế hoạch thật (bản demo không có), kèm nguồn để người đọc tự kiểm chứng */}
+      {(trendOpportunities.length > 0 || marketSignals.length > 0) && (
+       <section className="mb-10">
+        <div className="flex items-center mb-4">
+         <TrendingUp className="w-5 h-5 text-teal-600 mr-3" />
+         <h2 className={`${InterFont} text-sm font-black text-slate-900 uppercase tracking-widest`}>Trend đang lên & Tín hiệu thị trường</h2>
+        </div>
+        {trendOpportunities.length > 0 && (
+         <ol className="space-y-2 mb-5">
+          {trendOpportunities.map((trend, i) => (
+           <li key={i} className="flex items-start border-l-4 border-teal-500 bg-teal-50/60 px-4 py-3 rounded-r-md">
+            <span className={`${InterFont} text-[10px] font-black text-teal-700 mr-3 mt-0.5`}>{String(i + 1).padStart(2, '0')}</span>
+            <span className={`${InterFont} text-xs text-slate-700 leading-relaxed`}>{trend}</span>
+           </li>
+          ))}
+         </ol>
+        )}
+        {marketSignals.length > 0 && (
+         <div className="border border-slate-200 rounded-lg overflow-hidden">
+          <div className={`${InterFont} bg-slate-50 border-b border-slate-200 px-4 py-2 text-[9px] text-slate-500 font-bold uppercase tracking-widest`}>
+           Nguồn tín hiệu 7 ngày qua{marketScannedAt ? ` · quét lúc ${marketScannedAt}` : ''}
+          </div>
+          <ul className="divide-y divide-slate-100">
+           {marketSignals.slice(0, 8).map((s, i) => (
+            <li key={i} className="px-4 py-2 flex items-start gap-3">
+             <span className={`${InterFont} shrink-0 w-24 text-[9px] font-bold uppercase tracking-wider text-slate-400 pt-0.5`}>
+              {SIGNAL_LABELS[s.kind] || s.kind}{s.is_new ? <span className="ml-1 text-rose-500">· Mới</span> : null}
+             </span>
+             <span className={`${InterFont} text-xs text-slate-700 leading-relaxed flex-1`}>
+              {/^https:\/\//.test(s.url || '') ? (
+               <a href={s.url} target="_blank" rel="noopener noreferrer" className="hover:text-teal-700 hover:underline">{s.title}</a>
+              ) : s.title}
+              <span className="text-slate-400"> — {s.source}{s.date ? `, ${s.date.slice(0, 10)}` : ''}</span>
+             </span>
+            </li>
+           ))}
+          </ul>
+         </div>
+        )}
+       </section>
+      )}
 
       {/* Target Audience */}
       <section>

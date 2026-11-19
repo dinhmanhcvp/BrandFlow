@@ -439,7 +439,7 @@ def run_cmo_phase2_situation_audit(phase1_data: dict, industry: str, target_audi
 
   print(f"👑 [CMO] Đang phân tích Thị trường & Chọn CSFs (Phase 2) — Ngành: {normalized_industry}...")
   res = structured_llm.invoke(prompt).model_dump()
-  res["market_signals"] = [{k: s[k] for k in ("kind", "title", "source", "url", "date", "outlets", "score", "is_new") if k in s} for s in snap.get("signals", [])[:15]]
+  res["market_signals"] = [{k: s[k] for k in ("kind", "title", "source", "url", "date", "outlets", "score", "is_new", "views", "engagement") if k in s} for s in snap.get("signals", [])[:15] + snap.get("social", [])[:5] + snap.get("facebook", [])[:5]]
   res["market_scanned_at"] = snap.get("scanned_at")
   return res
 
