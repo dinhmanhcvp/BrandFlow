@@ -33,7 +33,9 @@
         "phase1_data": "$phase1_data",
         "industry": "$industry",
         "target_audience": "$target_audience",
-        "account_profile": "$account_profile"
+        "account_profile": "$account_profile",
+        "brand_dna": "$brand_dna",
+        "idea_description": "$idea_description"
       },
       "output_key": "phase2_data",
       "timeout": 120,

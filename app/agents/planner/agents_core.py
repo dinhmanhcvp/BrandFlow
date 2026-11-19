@@ -329,27 +329,16 @@ def run_cmo_phase1_goal_setting(goal: str, industry: str, budget: int, brand_dna
 # =============================================================================
 
 def fetch_market_context(industry: str, target_audience: str) -> str:
-  """Sử dụng DuckDuckGo Search để lấy dữ liệu thị trường mới nhất."""
-  try:
-    from duckduckgo_search import DDGS
-    queries = [
-      f"Báo cáo thị trường ngành {industry} tại Việt Nam năm nay",
-      f"Nhu cầu và xu hướng tiêu dùng của {target_audience} trong ngành {industry} tại Việt Nam"
-    ]
-    context_parts = []
-    with DDGS() as ddgs:
-      for query in queries:
-        results = ddgs.text(query, max_results=3, region="vn-vi")
-        if results:
-          snippets = [f"- {r.get('title', '')}: {r.get('body', '')}" for r in results]
-          context_parts.append(f"Kết quả tìm kiếm cho '{query}':\n" + "\n".join(snippets))
-    
-    if context_parts:
-      return "\n\n".join(context_parts)
-    return "Không tìm thấy dữ liệu bổ sung từ Internet."
-  except Exception as e:
-    print(f"⚠️ [WEB SEARCH] Lỗi khi tìm kiếm dữ liệu thị trường: {e}")
-    return "Không thể truy cập dữ liệu thị trường do lỗi mạng."
+  """Tin thị trường 30 ngày qua từ Google News VN (DuckDuckGo bị ratelimit và trả kết quả lạc đề)."""
+  from app.services.trend_listener import _google_news
+  queries = [f"thị trường {industry} Việt Nam", f"{target_audience} tiêu dùng {industry}"]
+  context_parts = []
+  for query in queries:
+    results = _google_news(query, days=30)[:5]
+    if results:
+      snippets = [f"- {r['title']} — {r['source']} {r['date'][:10]}" for r in results]
+      context_parts.append(f"Kết quả tìm kiếm cho '{query}':\n" + "\n".join(snippets))
+  return "\n\n".join(context_parts) or "Không tìm thấy dữ liệu bổ sung từ Internet."
 
 PHASE2_PROMPT = """Bạn là Chuyên gia Tư vấn Chiến lược Cấp cao (Senior Strategy Consultant) từ McKinsey với chuyên môn sâu về Consumer Insights và Competitive Intelligence tại Đông Nam Á.
 
@@ -405,18 +394,33 @@ Dữ liệu thị trường mới nhất từ Internet:
 Trả về chuẩn JSON.
 """
 
-def run_cmo_phase2_situation_audit(phase1_data: dict, industry: str, target_audience: str, account_profile: str = "STANDARD") -> dict:
+def _product_and_competitors(brand_dna: dict | None, idea_description: str | None) -> tuple[str, list[str]]:
+  """Lấy tên sản phẩm + đối thủ từ Brand DNA (nếu có) để nghe trend đúng sản phẩm."""
+  dna = brand_dna if isinstance(brand_dna, dict) else {}
+  product = dna.get("product_name") or dna.get("brand_name") or dna.get("company_name") or (idea_description or "")
+  competitors = [c.get("name", "") if isinstance(c, dict) else str(c) for c in (dna.get("competitor_landscape") or [])]
+  return str(product), [c for c in competitors if c]
+
+
+def run_cmo_phase2_situation_audit(phase1_data: dict, industry: str, target_audience: str, account_profile: str = "STANDARD", brand_dna: dict = None, idea_description: str = None) -> dict:
+  from app.services import trend_listener
+
   llm = _get_strategy_llm(temperature=0.3)
   structured_llm = llm.with_structured_output(SituationAuditPhase2)
-  
+
   # Industry context injection
   normalized_industry = normalize_industry(industry)
-  company_size = detect_company_size(phase1_data.get("brand_dna"))
+  company_size = detect_company_size(brand_dna or phase1_data.get("brand_dna"))
   industry_context = get_industry_prompt_context(normalized_industry, company_size)
-  
+
   print(f"🌍 [WEB SEARCH] Đang tra cứu dữ liệu thị trường thực tế cho ngành {industry}...")
   market_context = fetch_market_context(industry, target_audience)
-  
+  product, competitors = _product_and_competitors(brand_dna, idea_description)
+  dna = brand_dna if isinstance(brand_dna, dict) else {}
+  fit_context = " ".join([target_audience or "", " ".join(map(str, dna.get("core_usps") or [])), idea_description or ""])
+  snap = trend_listener.listen(industry, product, competitors, context=fit_context)
+  market_context += "\n\nTÍN HIỆU THỊ TRƯỜNG 7 NGÀY QUA:\n" + trend_listener.to_prompt(snap)
+
   prompt = PHASE2_PROMPT.format(
     phase1_data=json.dumps(phase1_data, ensure_ascii=False), 
     target_audience=target_audience,
@@ -429,9 +433,13 @@ def run_cmo_phase2_situation_audit(phase1_data: dict, industry: str, target_audi
     
   prompt += "\n\nDEEP DIVE: Output phải thể hiện tầm nhìn của một chuyên gia McKinsey. Khuyến khích giải thích cặn kẽ, luận điểm bén và dựa trên dữ liệu. KHÔNG viết quá ngắn. Hãy duy trì chất lượng ngang ngửa bản mẫu 'Bếp Nhà Mộc'."
   
+  prompt += "\n\n7. TREND OPPORTUNITIES: Từ 'TÍN HIỆU THỊ TRƯỜNG 7 NGÀY QUA' (đã xếp theo độ mới + nóng + khớp; ưu tiên tin [MỚI], nhiều báo đưa, và tin về đối thủ), chọn 2-3 trend hay nhất và fit nhất với sản phẩm, định vị và khách hàng mục tiêu, ghi rõ nguồn và hành động marketing cụ thể vào trend_opportunities. Có thể bắt 1 trend MXH chung (TikTok/YouTube) nếu khớp tự nhiên với thương hiệu. BỎ QUA trend tiêu cực, pháp lý, bạo lực, chính trị hoặc gây tranh cãi (rủi ro thương hiệu). Không bịa trend không có trong dữ liệu; nếu không có tín hiệu thì để trống."
+
   print(f"👑 [CMO] Đang phân tích Thị trường & Chọn CSFs (Phase 2) — Ngành: {normalized_industry}...")
-  res = structured_llm.invoke(prompt)
-  return res.model_dump()
+  res = structured_llm.invoke(prompt).model_dump()
+  res["market_signals"] = [{k: s[k] for k in ("kind", "title", "source", "url", "date", "outlets", "score", "is_new") if k in s} for s in snap.get("signals", [])[:15]]
+  res["market_scanned_at"] = snap.get("scanned_at")
+  return res
 
 
 # =============================================================================
@@ -496,9 +504,15 @@ def run_cmo_phase3_strategy_formulation(gap_analysis: dict, segments_data: dict,
     
   prompt += "\n\nDEEP DIVE: Yêu cầu giải thích cặn kẽ TẠI SAO chọn chiến lược đó. Hãy cung cấp luận điểm mạnh mẽ, không bị giới hạn độ dài. Chất lượng phân tích phải xuất sắc."
   
+  trends = (segments_data or {}).get("trend_opportunities") if isinstance(segments_data, dict) else None
+  if trends:
+    prompt += "\n\nBÁM TREND: Chiến lược phải tận dụng trend_opportunities trong dữ liệu Audit, nêu rõ trend nào được khai thác và vì sao."
+
   print(f"👑 [CMO] Đang hoạch định Chiến lược Ansoff (Phase 3)...")
-  res = structured_llm.invoke(prompt)
-  return res.model_dump()
+  res = structured_llm.invoke(prompt).model_dump()
+  if trends:
+    res["trend_opportunities"] = trends  # chuyển tiếp để Phase 4 gắn tactic vào trend
+  return res
 
 
 # =============================================================================
@@ -568,7 +582,9 @@ def run_cmo_phase4_tactical_allocator(strategy_data: dict, budget: int, scenario
   
   prompt = PHASE4_PROMPT.format(strategy=json.dumps(strategy_data, ensure_ascii=False), budget=budget, scenario_type=scenario_type)
   prompt += f"\n\n{industry_context}"
-  
+  if isinstance(strategy_data, dict) and strategy_data.get("trend_opportunities"):
+    prompt += "\n\nBÁM TREND: Có trend_opportunities trong chiến lược. Ít nhất 1-2 tactic (ưu tiên giai đoạn TEASE/LAUNCH) phải khai thác trực tiếp các trend này, ghi tên trend trong action_bullet."
+
   if scenario_type == "idea_driven":
     prompt += "\n\nLƯU Ý ĐẶC BIỆT: Đây là kịch bản TÍNH TOÁN THEO Ý TƯỞNG (idea_driven). Ngân sách đầu vào có thể là 0. Bạn hãy tự tin định giá và đề xuất ngân sách phù hợp cho từng tactic dựa trên chi phí thực tế thị trường để hiện thực hóa ý tưởng này."
     

@@ -192,6 +192,8 @@ def finalize_and_export(state: Dict[str, Any]) -> dict:
     "goal_setting": phase1_data,
     "target_segments": phase2_data.get("target_segments", []) if isinstance(phase2_data, dict) else [],
     "benchmarks": phase2_data.get("benchmarks", []) if isinstance(phase2_data, dict) else [],
+    "trend_opportunities": phase2_data.get("trend_opportunities", []) if isinstance(phase2_data, dict) else [],
+    "market_signals": phase2_data.get("market_signals", []) if isinstance(phase2_data, dict) else [],
     "gap_analysis_result": json.dumps(state.get("gap_result", {}), ensure_ascii=False),
     "ansoff_strategy": phase3_data.get("ansoff_matrix_choice", "") if isinstance(phase3_data, dict) else "",
     "campaign_phasing": campaign_phasing,

@@ -244,6 +244,7 @@ class SituationAuditPhase2(BaseModel):
   benchmarks: list[CompetitiveBenchmark] = Field(..., max_length=3)
   tows_strategic_options: list[str] = Field(..., max_length=2, description="2 chiến lược TOWS rút ra từ Audit")
   data_sources: list[str] = Field(..., description="Trích dẫn nguồn dữ liệu thực tế / mô phỏng sử dụng trong Audit")
+  trend_opportunities: list[str] = Field(default_factory=list, max_length=3, description="2-3 trend đang lên lấy từ tín hiệu thị trường 7 ngày qua, mỗi dòng: 'Trend (nguồn) → hành động marketing cụ thể cho sản phẩm'")
 
 class StrategyPhase3(BaseModel):
   ansoff_matrix_choice: str = Field(..., description="Chiến lược cốt lõi Ansoff")
