@@ -38,7 +38,7 @@
         "idea_description": "$idea_description"
       },
       "output_key": "phase2_data",
-      "timeout": 120,
+      "timeout": 180,
       "next": "math_swot"
     },
     "math_swot": {

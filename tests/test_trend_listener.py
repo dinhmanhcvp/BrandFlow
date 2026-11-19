@@ -120,3 +120,49 @@ def test_entered_competitors_come_first_without_duplicates():
   dna = {"brand_name": "X", "competitor_pages": [{"name": "Katinat", "url": ""}],
          "competitor_landscape": [{"name": "Phúc Long"}, {"name": "Katinat"}]}
   assert _product_and_competitors(dna, None)[1] == ["Katinat", "Phúc Long"]
+
+
+def test_facebook_posts_parsed_ranked_and_skips_errors(monkeypatch):
+  import io, json as _json
+  monkeypatch.setenv("APIFY_TOKEN", "t")
+  posts = [
+    {"text": "Ra mắt trà sữa ít đường", "url": "u1", "pageName": "Katinat", "time": "2026-11-18T10:00:00Z", "likes": 100, "comments": 10, "shares": 1},
+    {"text": "Minigame tặng voucher", "url": "u2", "pageName": "Katinat", "time": "2026-11-17T10:00:00Z", "likes": 50, "comments": 80, "shares": 20},
+    {"error": "Page not available", "url": "https://facebook.com/x"},
+  ]
+  seen = {}
+  def fake_urlopen(req, timeout):
+    seen["auth"], seen["body"] = req.headers.get("Authorization"), _json.loads(req.data)
+    return io.BytesIO(_json.dumps(posts).encode())
+  monkeypatch.setattr(tl.urllib.request, "urlopen", fake_urlopen)
+
+  out = tl._facebook_posts(["https://www.facebook.com/katinat.vn"])
+  assert [p["url"] for p in out] == ["u2", "u1"]  # 50+160+60 > 100+20+3
+  assert seen["auth"] == "Bearer t" and seen["body"]["resultsLimit"] == 5  # token ở header, không lộ trên URL
+
+
+def test_facebook_skipped_without_token(monkeypatch):
+  monkeypatch.delenv("APIFY_TOKEN", raising=False)
+  assert tl._facebook_posts(["https://www.facebook.com/katinat.vn"]) == []
+
+
+def test_listen_reuses_facebook_for_6h_and_filters_it(monkeypatch):
+  monkeypatch.setattr(tl, "_store", {})
+  monkeypatch.setattr(tl, "_google_news", lambda q, days=7: [])
+  monkeypatch.setattr(tl, "_google_trends_vn", lambda: [])
+  monkeypatch.setattr(tl, "_youtube", lambda q: [])
+  calls = []
+  post = {"kind": "facebook", "title": "Bài khuyến mãi", "source": "Katinat", "url": "u1", "date": "2026-11-18",
+          "likes": 1, "comments": 0, "shares": 0, "engagement": 1}
+  scandal = {**post, "title": "Phốt", "url": "u2"}
+  monkeypatch.setattr(tl, "_facebook_posts", lambda urls: calls.append(urls) or [post, scandal])
+  monkeypatch.setattr(tl, "_marketable", lambda items, p, c: [i for i in items if i["title"] != "Phốt"])
+  pages = [{"name": "Katinat", "url": "https://www.facebook.com/katinat.vn"}]
+
+  first = tl.listen("F&B", "trà sữa", pages=pages)
+  assert [p["url"] for p in first["facebook"]] == ["u1"]
+  assert "Fanpage đối thủ" in tl.to_prompt(first)
+  tl.listen("F&B", "trà sữa", pages=pages, force=True)  # tin tức quét lại, Facebook còn mới → không gọi Apify
+  assert len(calls) == 1
+  tl.listen("F&B", "trà sữa", pages=pages + [{"name": "Phúc Long", "url": "https://www.facebook.com/phuclong"}], force=True)
+  assert len(calls) == 2  # đổi danh sách Page → quét lại

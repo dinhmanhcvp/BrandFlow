@@ -420,7 +420,7 @@ def run_cmo_phase2_situation_audit(phase1_data: dict, industry: str, target_audi
   product, competitors = _product_and_competitors(brand_dna, idea_description)
   dna = brand_dna if isinstance(brand_dna, dict) else {}
   fit_context = " ".join([target_audience or "", " ".join(map(str, dna.get("core_usps") or [])), idea_description or ""])
-  snap = trend_listener.listen(industry, product, competitors, context=fit_context)
+  snap = trend_listener.listen(industry, product, competitors, context=fit_context, pages=dna.get("competitor_pages"))
   market_context += "\n\nTÍN HIỆU THỊ TRƯỜNG 7 NGÀY QUA:\n" + trend_listener.to_prompt(snap)
 
   prompt = PHASE2_PROMPT.format(

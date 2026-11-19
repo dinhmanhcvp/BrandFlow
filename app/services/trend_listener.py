@@ -13,6 +13,7 @@ import time
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 
@@ -22,6 +23,7 @@ logger = logging.getLogger(__name__)
 _store = PersistentStore("trend_snapshots")
 _FRESH_SECONDS = 3600  # quét lại sau 1h: đủ realtime cho kế hoạch, không spam nguồn
 _UA = {"User-Agent": "Mozilla/5.0"}
+_FB_FRESH_SECONDS = 6 * 3600  # bài Fanpage đổi chậm + Apify tính tiền theo bài → quét lại tối đa 4 lần/ngày
 
 
 def _key(industry: str, product: str) -> str:
@@ -82,6 +84,35 @@ def _youtube(query: str, days: int = 7) -> list[dict]:
            "url": f"https://youtu.be/{v['id']}", "date": v["snippet"]["publishedAt"],
            "views": int(v.get("statistics", {}).get("viewCount", 0))}
           for kind, vids in (("youtube", found), ("youtube_trending", trending)) for v in vids]
+
+
+def _facebook_posts(urls: list[str], days: int = 7) -> list[dict]:
+  """Bài đăng 7 ngày qua của các Fanpage (Apify facebook-posts-scraper), xếp theo tương tác. Cần APIFY_TOKEN.
+  Chi phí ~5-7 USD/1000 bài: tối đa 5 bài × 5 Page mỗi lần quét. Giới hạn 45s để không làm quá giờ Phase 2."""
+  token = os.environ.get("APIFY_TOKEN")
+  if not token or not urls:
+    return []
+  body = json.dumps({"startUrls": [{"url": u} for u in urls], "resultsLimit": 5,
+                     "onlyPostsNewerThan": f"{days} days"}).encode("utf-8")
+  req = urllib.request.Request(
+    "https://api.apify.com/v2/acts/apify~facebook-posts-scraper/run-sync-get-dataset-items?timeout=45",
+    data=body, headers={"Content-Type": "application/json", "Authorization": f"Bearer {token}"})
+  try:
+    with urllib.request.urlopen(req, timeout=55) as resp:
+      posts = json.load(resp)
+  except Exception as e:
+    logger.warning(f"[TrendListener] Apify Facebook lỗi: {e}")
+    return []
+  items = []
+  for p in posts if isinstance(posts, list) else []:
+    text = " ".join(str(p.get("text") or "").split())
+    if not text or not p.get("url"):
+      continue  # Page lỗi/không truy cập được → Apify trả bản ghi error
+    likes, comments, shares = (int(p.get(k) or 0) for k in ("likes", "comments", "shares"))
+    items.append({"kind": "facebook", "title": text[:220], "source": p.get("pageName") or "", "url": p["url"],
+                  "date": p.get("time") or "", "likes": likes, "comments": comments, "shares": shares,
+                  "engagement": likes + 2 * comments + 3 * shares})
+  return sorted(items, key=lambda x: x["engagement"], reverse=True)[:10]
 
 
 _FB_HOSTS = {"facebook.com", "www.facebook.com", "m.facebook.com", "web.facebook.com", "fb.com", "www.fb.com"}
@@ -164,7 +195,7 @@ tin tiêu cực về chính sản phẩm/ngành không thể phản hồi tích 
 
 
 def listen(industry: str, product: str = "", competitors: list[str] | None = None,
-           context: str = "", force: bool = False) -> dict:
+           context: str = "", force: bool = False, pages: list[dict] | None = None) -> dict:
   """Quét (hoặc trả snapshot < 1h) cho một sản phẩm. context: USP/khách hàng để chấm độ khớp. Không raise."""
   product = (product or "").strip()[:80]
   subject = product or industry
@@ -174,11 +205,22 @@ def listen(industry: str, product: str = "", competitors: list[str] | None = Non
     return prev
 
   competitors = [c for c in (competitors or []) if c][:3]
+  fb_urls = sorted({p["url"] for p in (pages or []) if isinstance(p, dict) and p.get("url")})[:5]
+  reuse_fb = prev.get("fb_urls") == fb_urls and time.time() - prev.get("fb_ts", 0) < _FB_FRESH_SECONDS
   # ngoặc kép = đúng cụm từ (tránh "Phúc Long" khớp "chúc phúc")
   # TikTok không có nguồn công khai (Creative Center bắt đăng nhập) → nghe qua báo viết về trend TikTok
   queries = [("product", f'"{subject}"', 7), ("industry", f"xu hướng {industry}", 7),
              ("tiktok", f"{subject} TikTok", 30)] + [("competitor", f'"{c}"', 7) for c in competitors]
-  raw = [(kind, item) for kind, q, days in queries for item in _google_news(q, days)
+  viral_queries = ("trend gây sốt mạng xã hội", "trend viral giới trẻ", "\"bắt trend\"")
+  # quét song song: tổng thời gian ≈ nguồn chậm nhất (Apify ≤ 55s), không cộng dồn → không quá giờ Phase 2
+  with ThreadPoolExecutor(max_workers=12) as pool:
+    news_f = [(kind, q, pool.submit(_google_news, q, days)) for kind, q, days in queries]
+    viral_f = [pool.submit(_google_news, q) for q in viral_queries]
+    trends_f = pool.submit(_google_trends_vn)
+    yt_f = pool.submit(_youtube, subject)
+    fb_f = None if reuse_fb else pool.submit(_facebook_posts, fb_urls)
+
+  raw = [(kind, item) for kind, q, f in news_f for item in f.result()
          if (kind != "competitor" or q.strip('"').lower() in item["title"].lower())
          and (kind != "tiktok" or "tiktok" in item["title"].lower())]
   brand = _words(f"{product} {' '.join(competitors)}")
@@ -186,16 +228,18 @@ def listen(industry: str, product: str = "", competitors: list[str] | None = Non
   now = datetime.now(timezone.utc)
   signals = _rank(raw, brand, ctx, now)[:20]
   # trend MXH chung tuần qua: không cần khớp sản phẩm — AI tự đánh giá có bắt trend được không
-  viral_raw = [("social_trend", it) for q in ("trend gây sốt mạng xã hội", "trend viral giới trẻ", "\"bắt trend\"") for it in _google_news(q)]
+  viral_raw = [("social_trend", it) for f in viral_f for it in f.result()]
   signals += _rank(viral_raw, brand, ctx, now, keep_unmatched=True)[:5]
-  hot = [t for t in _google_trends_vn() if _words(t) & (brand | ctx)]
-  videos = [v for v in _youtube(subject) if v["kind"] == "youtube" or _words(v["title"]) & (brand | ctx)]
+  hot = [t for t in trends_f.result() if _words(t) & (brand | ctx)]
+  videos = [v for v in yt_f.result() if v["kind"] == "youtube" or _words(v["title"]) & (brand | ctx)]
   social = sorted(videos, key=lambda v: (len(_words(v["title"]) & (brand | ctx)), v["views"]), reverse=True)[:10]
-  kept = _marketable(signals + social, subject, context)
-  signals = [x for x in kept if "views" not in x]
+  fb_new = fb_f.result() if fb_f else []
+  kept = _marketable(signals + social + fb_new, subject, context)
+  signals = [x for x in kept if "views" not in x and x["kind"] != "facebook"]
   social = [x for x in kept if "views" in x]
+  facebook = prev.get("facebook", []) if reuse_fb else [x for x in kept if x["kind"] == "facebook"]
 
-  if not signals and not hot and not social and prev:
+  if not signals and not hot and not social and not facebook and prev:
     return prev  # mạng lỗi: giữ snapshot cũ thay vì ghi đè bằng rỗng
 
   old_topics = {s.get("topic") for s in prev.get("signals", [])}
@@ -203,7 +247,8 @@ def listen(industry: str, product: str = "", competitors: list[str] | None = Non
     s["is_new"] = bool(prev) and s["topic"] not in old_topics
 
   snap = {"ts": time.time(), "scanned_at": datetime.now().strftime("%Y-%m-%d %H:%M"), "industry": industry,
-          "product": product, "competitors": competitors, "signals": signals, "google_trends": hot, "social": social}
+          "product": product, "competitors": competitors, "signals": signals, "google_trends": hot, "social": social,
+          "facebook": facebook, "fb_urls": fb_urls, "fb_ts": prev.get("fb_ts", 0) if reuse_fb else time.time()}
   try:
     _store[key] = snap
   except Exception as e:
@@ -213,7 +258,7 @@ def listen(industry: str, product: str = "", competitors: list[str] | None = Non
 
 def to_prompt(snap: dict) -> str:
   """Định dạng snapshot cho prompt lập kế hoạch (đã xếp hạng sẵn)."""
-  if not snap.get("signals") and not snap.get("google_trends") and not snap.get("social"):
+  if not any(snap.get(k) for k in ("signals", "google_trends", "social", "facebook")):
     return "Không thu được tín hiệu thị trường liên quan trong 7 ngày qua."
   labels = {"product": "Sản phẩm", "competitor": "Đối thủ", "industry": "Ngành", "tiktok": "TikTok qua báo", "social_trend": "Trend MXH chung"}
   lines = [f"Quét lúc {snap.get('scanned_at')} — tin 7 ngày qua cho '{snap.get('product') or snap.get('industry')}', xếp theo độ mới + nóng + khớp:"]
@@ -228,4 +273,8 @@ def to_prompt(snap: dict) -> str:
     for v in snap["social"]:
       hot_tag = " [THỊNH HÀNH VN]" if v["kind"] == "youtube_trending" else ""
       lines.append(f"- {v['title']} — {v['source']}, {v['views']:,} lượt xem, {v['date'][:10]}{hot_tag}")
+  if snap.get("facebook"):
+    lines.append("Fanpage đối thủ 7 ngày qua (bài tương tác cao nhất):")
+    for p in snap["facebook"]:
+      lines.append(f"- {p['source']}: \"{p['title']}\" — {p['likes']:,} thích, {p['comments']:,} bình luận, {p['shares']:,} chia sẻ, {p['date'][:10]}")
   return "\n".join(lines)
